@@ -3,7 +3,11 @@
 import React, { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import styles from "./Steps.module.css";
-import Lottie from "lottie-react";
+import dynamic from "next/dynamic"; // Import next/dynamic
+
+// Dynamically import Lottie (disable SSR)
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+
 import step1Animation from "../../../../public/lottie/step1.json";
 import step2Animation from "../../../../public/lottie/step2.json";
 import step3Animation from "../../../../public/lottie/step3.json";
@@ -63,13 +67,13 @@ export default function Steps() {
               You can expect transparent communication, prompt updates, and a commitment to achieving the best possible outcome for your case.
             </p>
             <a href="/free-case-evaluation" className={styles.blueButton}>
-  Free Case Evaluation
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
-    </g>
-  </svg>
-</a>
+              Free Case Evaluation
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+                </g>
+              </svg>
+            </a>
           </div>
 
           {/* Right Column: Slider */}
