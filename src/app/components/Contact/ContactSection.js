@@ -4,7 +4,13 @@ import styles from "./ContactSection.module.css";
 import HeroForm from "../Hero/HeroForm";
 import Lottie from "lottie-react";
 import contactAnimation from "../../../../public/lottie/contact.json"; // Replace with the actual path to your Lottie file
-import { Instagram, Facebook, Linkedin, Phone } from "lucide-react"; // Icons from lucide-react
+import dynamic from "next/dynamic";
+
+// Dynamically import lucide-react icons
+const Instagram = dynamic(() => import("lucide-react").then((mod) => mod.Instagram), { ssr: false });
+const Facebook = dynamic(() => import("lucide-react").then((mod) => mod.Facebook), { ssr: false });
+const Linkedin = dynamic(() => import("lucide-react").then((mod) => mod.Linkedin), { ssr: false });
+const Phone = dynamic(() => import("lucide-react").then((mod) => mod.Phone), { ssr: false });
 
 const ContactSection = () => {
   return (
