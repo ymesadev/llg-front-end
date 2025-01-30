@@ -1,0 +1,67 @@
+.servicesSection{
+    background-color: #1a2b49;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    color: #ede7e7;
+}
+.headerServices .title {
+    max-width: 700px;
+    font-size: 4.5rem;
+    text-transform: uppercase;
+    
+
+}
+.headerServices{
+    margin-bottom: 2rem;
+}
+.serviceBox{
+    padding: 2rem;
+    border: solid 1px #e7e2e3;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.serviceBox h3{
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #ece7e7;
+    font-family: Work Sans, serif;
+    font-weight: 600;
+}
+
+.description{
+    max-width: 1024px;
+}
+
+.arrowLink {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #f4f4f4;
+    border-radius: 50%;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+  
+  .arrowLink:hover {
+    background: #ddd;
+  }
+  
+  .arrowIcon {
+    width: 24px;
+    height: 24px;
+  }
+
+
+  @media screen and (max-width:980px) {
+    .headerServices .title {
+       
+        font-size: 2.5rem;}
+  }

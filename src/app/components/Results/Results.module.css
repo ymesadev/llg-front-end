@@ -1,0 +1,112 @@
+/* Results.module.css */
+
+/* Results section container */
+.resultsSection {
+  
+  background-color:#ede7e7;
+  padding-top: 4rem;
+    padding-bottom: 4rem;
+  
+}
+.resultsCont{
+  margin-top: 2rem;
+}
+
+.resultsTitle {
+  font-size: 4.5rem;
+  font-weight: bold;
+  color: #1a2b49;
+  margin-bottom: 1rem;
+  max-width: 1000px;
+  text-transform: uppercase;
+}
+
+.resultsParagraph {
+  font-size: 1.1rem;
+  color: #1a2b49;;
+  max-width: 1000px;
+  margin: 0 ;
+}
+
+.moneyResults{    
+  color: #ffb800;
+  background-color: #1a2b49;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  margin-right: 1rem;
+}
+
+/* Left Column: Image styling */
+.imageColumn {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.resultsImage {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+/* Right Column: Accordion styling */
+.accordionColumn {
+  flex: 1;
+  min-width: 300px;
+  text-align: left;
+}
+
+/* Accordion item styles */
+.accordionItem {
+  border-bottom: 1px solid #ddd;
+  padding: 0.5rem 0;
+}
+
+.accordionButton {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  outline: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+.accordionButton:hover {
+  color: #497DCB;
+}
+
+.accordionAmount {
+  font-weight: bold;
+  color: #ede7e7;
+  font-size: 3rem;
+}
+.accordionCompany {
+  display: block;
+  color: #777;
+  margin-top: 0.2rem;
+}
+
+.accordionContent {
+  padding: 0.5rem 0 1rem 0;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+@media screen and (max-width:980px) {
+  .resultsTitle{
+    font-size: 2.5rem;
+  }
+  .accordionAmount{
+    font-weight: bold;
+    color: #ede7e7;
+    font-size: 2rem;
+  }
+  .accordionColumn{
+    padding: 1rem;
+  }
+  
+}

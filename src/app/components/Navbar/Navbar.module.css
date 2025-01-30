@@ -1,0 +1,183 @@
+/* Base navbar container */
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Transparent state */
+.transparent {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* Background state when scrolled */
+.navBackground {  
+  background-color: #1a2b49;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar Content */
+.navContainer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 1️⃣ Logo */
+.logo img {
+  height: 50px;
+}
+.navLinks{
+  margin-left: 4rem;
+}
+/* 2️⃣ Phone Button */
+.phone {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;  /* This ensures it's centered in mobile */
+}
+
+/* Desktop: Phone stays at the right */
+.phone a {
+  background-color: #ffb800;
+  border-radius: 30px;
+  box-shadow: 4px 7px #ede7e7;
+  color: #1a2b49 !important;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  touch-action: manipulation;
+  transition: 0.3s;
+}
+
+.phone a:hover {
+  background-color: #e6a500;
+}
+
+/* 3️⃣ Desktop Navigation */
+.navLinks ul {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.navLinks ul li a {
+  text-decoration: none;
+  color: #ede7e7;
+  font-size: 1rem;
+}
+
+/* 4️⃣ Hamburger Menu */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Open State */
+.hamburger .open:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburger .open:nth-child(2) {
+  opacity: 0;
+}
+.hamburger .open:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* 📌 Mobile Slide-In Menu */
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  left: -100%; /* Hidden Off-screen */
+  width: 75%;
+  max-width: 300px;
+  height: 100vh;
+  background-color: #1a2b49;
+  padding-top: 4rem;
+  transition: left 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+/* Show Mobile Menu */
+.mobileMenu.show {
+  left: 0;
+}
+
+/* Mobile Menu Links */
+.mobileMenu ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  padding-left: 2rem;
+}
+
+.mobileMenu ul li {
+  margin: 1.2rem 0;
+}
+
+.mobileMenu ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.3rem;
+  display: block;
+}
+
+/* Close Button */
+.closeButton {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  background: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+/* 📌 Mobile FIXES */
+@media (max-width: 1024px) {
+  .hamburger {
+    display: flex; /* Show hamburger menu */
+  }
+
+  .navLinks {
+    display: none; /* Hide desktop nav on mobile */
+  }
+
+  .phone {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+
+  .phone a {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}

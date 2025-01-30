@@ -1,42 +1,88 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
+body{
   margin: 0;
+  font-family: "Work Sans", serif;
+  font-weight: 300;
+  letter-spacing: 2px;
+  font-size: 1.1rem;
+}
+section{
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+
+h1,h2,h3{
+  font-family: "Anton", serif;
+  font-weight: 400;
+  font-style: normal;
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+}
+.container {
+  max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+}
+.blueBg{background-color: #1a2b49;}
+
+.fullHeight{
+  height:100vh;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+.yellowText{
+  color:#ffb800;
+}
+.column-1,
+.column-2a,
+.column-3,
+.column-4,
+.column-5 {
+  display: grid;
+  gap: 20px; /* Adjust the gap between columns as needed */
+  border-radius: 20px; /* Optional: Rounded corners for the grid */
+}
+
+/* Single-column layout */
+.column-1 {
+  grid-template-columns: 1fr;
+}
+
+/* Two-column layout */
+.column-2a {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Three-column layout */
+.column-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Four-column layout */
+.column-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Five-column layout */
+.column-5 {
+  grid-template-columns: repeat(5, 1fr);
+}
+
+/* Responsive Design */
+@media (max-width: 980px) {
+  .column-1,
+  .column-2a,
+  .column-3,
+  .column-4,
+  .column-5 {
+    grid-template-columns: 1fr; /* Stack columns vertically on small screens */
   }
+  section{
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
 }
+
