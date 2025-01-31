@@ -47,7 +47,7 @@ export default function Results() {
     <section className={styles.resultsSection}>
       <div className="container">
         <h2 className={styles.resultsTitle}>
-          We have recovered over <span className={styles.moneyResults}>$82,621,313</span> for our clients.
+          We have recovered over <span className={styles.moneyResults}>$82,000,000</span> for our clients.
         </h2>
         <p className={styles.resultsParagraph}>
           If you’ve encountered property damage, been in an accident, had a health claim denied, or need assistance with an SSDI claim,
