@@ -8,12 +8,12 @@ import Contact from "../components/Contact/ContactSection";
 
 export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
-// **Fetch all page slugs for Static Generation**
+// ✅ **Generate Static Paths for All Pages**
 export async function generateStaticParams() {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
 
   try {
-    const res = await fetch(`${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000`, {
+    const res = await fetch(`${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent`, {
       cache: "no-store",
     });
 
@@ -21,30 +21,67 @@ export async function generateStaticParams() {
 
     const data = await res.json();
 
-    return data.data.map((page) => ({
-      slug: page.Slug.split("/"), // Convert to array for Next.js routing
-    }));
+    return data.data.map((page) => {
+      let fullSlug = page.Slug;
+      if (page.parent) {
+        fullSlug = `${page.parent.Slug}/${page.Slug}`;
+      }
+      return { slug: fullSlug.split("/") }; // Convert to array for Next.js routing
+    });
   } catch (error) {
     console.error("Error in generateStaticParams:", error);
     return [];
   }
 }
 
-// **Fetch and Render Page Content**
+// ✅ **Fetch and Render Page Content**
 export default async function Page({ params }) {
-  const slugArray = params.slug || []; // Ensure it's always an array
-  const slug = slugArray.join("/"); // Convert array to a full slug string
+  const slugArray = params.slug || [];
+  if (slugArray.length === 0) {
+    return (
+      <Layout>
+        <div className={styles.error}>
+          <h1>404 - Page Not Found</h1>
+          <p>The page you are looking for does not exist.</p>
+        </div>
+      </Layout>
+    );
+  }
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  const apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${slug}&populate=*`;
+  let apiUrl;
 
-  console.log("Fetching page for slug:", slug, "API:", apiUrl);
+  // ✅ Extract parent/child slug correctly
+  const childSlug = slugArray[slugArray.length - 1]; // Last part of URL (child page)
+  const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null; // Parent part
 
-  // Fetch the page content from Strapi
+  console.log("Checking Parent/Child", { parentSlug, childSlug });
+
+  // ✅ Correct API Request with Populate Fix
+  if (parentSlug) {
+    apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent][Slug][$eq]=${parentSlug}&populate[0]=parent&populate[1]=Hero&populate[2]=Sections&populate[3]=Services`;
+  } else {
+    apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate[0]=parent&populate[1]=Hero&populate[2]=Sections&populate[3]=Services`;
+  }
+
+  console.log("Fetching page for slug:", slugArray.join("/"), "API:", apiUrl);
+
+  // ✅ Fetch the page content from Strapi
   const res = await fetch(apiUrl, { cache: "no-store" });
-  const data = await res.json();
 
-  if (!res.ok || data.data.length === 0) {
+  if (!res.ok) {
+    return (
+      <Layout>
+        <div className={styles.error}>
+          <h1>404 - Page Not Found</h1>
+          <p>The page you are looking for does not exist.</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  const data = await res.json();
+  if (data.data.length === 0) {
     return (
       <Layout>
         <div className={styles.error}>
@@ -59,8 +96,8 @@ export default async function Page({ params }) {
 
   return (
     <Layout>
-      {/* ✅ Render Hero Section (Only If It Exists) */}
-      {page.Hero && page.Hero.title && (
+      {/* ✅ Render Hero Section */}
+      {page.Hero && (
         <section className={`${styles.darkBg} ${styles.fullHeight} ${styles.verticalCenter}`}>
           <div className="container">
             <div className="column-2a">
@@ -87,7 +124,7 @@ export default async function Page({ params }) {
         </section>
       )}
 
-      {/* ✅ Render Sections (Only If They Exist) */}
+      {/* ✅ Render Sections */}
       {page.Sections && page.Sections.body && page.Sections.body.length > 0 && (
         <section className={styles.Descriptionsection}>
           <div className="container">
@@ -100,7 +137,7 @@ export default async function Page({ params }) {
         </section>
       )}
 
-      {/* ✅ Render Services (Only If They Exist) */}
+      {/* ✅ Render Services */}
       {Array.isArray(page.Services) && page.Services.length > 0 && (
         <ServicesCarousel services={page.Services} />
       )}
