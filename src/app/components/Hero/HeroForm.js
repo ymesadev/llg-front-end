@@ -3,7 +3,7 @@
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import Lottie from "lottie-react";
-import successAnimation from "@/public/lotties/success.json";
+import successAnimation from "../../../../public/lottie/success.json";
 import styles from "./Hero.module.css";
 
 /**
