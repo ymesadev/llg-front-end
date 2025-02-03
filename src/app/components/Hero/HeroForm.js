@@ -1,15 +1,9 @@
-"use client"; // <-- This is critical to avoid "document is not defined" errors
+"use client"; // Important if you're on Next.js 13 App Router
 
 import { useState } from "react";
 import emailjs from "@emailjs/browser";
-import Lottie from "lottie-react";
-import successAnimation from "../../../../public/lottie/success.json";
 import styles from "./Hero.module.css";
 
-/**
- * This component is fully client-side, so it can safely use
- * `document`, `window`, or any browser-based library (like Lottie).
- */
 export default function FreeCaseEvaluationPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({
@@ -22,13 +16,13 @@ export default function FreeCaseEvaluationPage() {
     consent: false,
   });
 
-  // Focus states for placeholders
+  // Focus states for custom placeholders
   const [isNameFocused, setIsNameFocused] = useState(false);
   const [isPhoneFocused, setIsPhoneFocused] = useState(false);
   const [isZipcodeFocused, setIsZipcodeFocused] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
 
-  // Track overall status: 'idle' | 'submitting' | 'success' | 'error'
+  // Form status tracking: 'idle' | 'submitting' | 'success' | 'error'
   const [formStatus, setFormStatus] = useState("idle");
 
   const steps = [
@@ -67,7 +61,6 @@ export default function FreeCaseEvaluationPage() {
     const templateID = "template_ni4v0do";
     const publicKey = "bQdrcK7Eju1NykCqt";
 
-    // Map form fields to your EmailJS template variables
     const templateParams = {
       name: formData.name,
       phone: formData.phone,
@@ -83,7 +76,7 @@ export default function FreeCaseEvaluationPage() {
       .then((response) => {
         console.log("SUCCESS!", response.status, response.text);
         setFormStatus("success");
-        // Optionally reset
+        // Optionally reset the form
         setFormData({
           name: "",
           phone: "",
@@ -101,7 +94,7 @@ export default function FreeCaseEvaluationPage() {
       });
   };
 
-  // Renders the content for each step
+  // Render content for each step
   const renderStepContent = (index) => {
     switch (index) {
       case 0:
@@ -242,7 +235,7 @@ export default function FreeCaseEvaluationPage() {
     }
   };
 
-  // Renders a "preview" of the next step
+  // Render a small preview of the next step
   const renderStepPreview = (index) => (
     <div className={styles.previewContainer}>
       <div className={styles.previewHeader}>
@@ -255,10 +248,7 @@ export default function FreeCaseEvaluationPage() {
 
   return (
     <div>
-      {/* 
-        Only show the FORM if not successful yet. 
-        If formStatus === "success", the form is hidden 
-      */}
+      {/* Show form only if not submitted successfully */}
       {formStatus !== "success" && (
         <form onSubmit={handleSubmit} className={styles.heroForm}>
           <div className={styles.stepHeader}>
@@ -270,14 +260,12 @@ export default function FreeCaseEvaluationPage() {
             {renderStepContent(currentStep)}
           </div>
 
-          {/* Show next step preview if not on last step */}
           {currentStep < steps.length - 1 && (
             <div className={styles.nextStepPreview}>
               {renderStepPreview(currentStep + 1)}
             </div>
           )}
 
-          {/* Navigation Buttons */}
           <div className={styles.navigationButtons}>
             {currentStep > 0 && (
               <button
@@ -305,12 +293,14 @@ export default function FreeCaseEvaluationPage() {
                 className={styles.submitButton}
                 disabled={formStatus === "submitting"}
               >
-                {formStatus === "submitting" ? "Submitting..." : "Free Case Evaluation"}
+                {formStatus === "submitting"
+                  ? "Submitting..."
+                  : "Free Case Evaluation"}
               </button>
             )}
           </div>
 
-          {/* Show an error message if submission fails */}
+          {/* Show error message if submission fails */}
           {formStatus === "error" && (
             <div className={styles.errorContainer}>
               <p className={styles.errorMessage}>
@@ -321,14 +311,9 @@ export default function FreeCaseEvaluationPage() {
         </form>
       )}
 
-      {/* If submission is successful, show Lottie animation + success message */}
+      {/* Show a simple success message if formStatus === "success" */}
       {formStatus === "success" && (
         <div className={styles.successContainer}>
-          <Lottie
-            animationData={successAnimation}
-            loop={false}
-            className={styles.lottieAnimation}
-          />
           <p className={styles.successMessage}>
             Thank you! Your form has been submitted successfully.
           </p>
