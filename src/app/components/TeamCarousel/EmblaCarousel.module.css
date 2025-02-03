@@ -1,0 +1,140 @@
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Wrapper to keep the carousel in bounds */
+  .carouselWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 20px 0;
+  }
+  
+  /* Embla carousel container */
+  .embla {
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* Embla inner container */
+  .emblaContainer {
+    display: flex;
+    gap: 15px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  /* Slide */
+  .emblaSlide {
+    position: relative;
+    flex: 0 0 100%; /* Default: 1 slide per view */
+    max-width: 100%;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    text-align: center;
+  }
+  
+  /* Images */
+  .teamImage {
+    width: 100%;
+    border-radius: 10px;
+    transition: transform .3s ease-in-out;
+    filter: grayscale(1);
+}
+  
+  .emblaSlide:hover .teamImage {
+    transform: scale(1.05);
+  }
+  
+  /* Hover Overlay */
+  .infoOverlay {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 12px;
+    border-radius: 5px;
+    text-align: center;
+    color: #fff;
+    width: 90%;
+  }
+  
+  .name {
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "Work Sans", serif;
+  }
+  
+  .description {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+  
+  .learnMore {
+    display: inline-block;
+    padding: 6px 12px;
+    color: #fff;
+    background: #007bff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s ease;
+  }
+  
+  .learnMore:hover {
+    background: #0056b3;
+  }
+  
+  /* Responsive - Show 3 per row on Desktop */
+  @media (min-width: 768px) {
+    .emblaSlide {
+      flex: 0 0 30%;
+      max-width: 30%;
+    }
+  }
+  
+  /* Navigation Buttons */
+  .navButton {
+    background: rgba(0, 0, 0, 0.8);
+    border: none;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.3s ease;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+  }
+  
+  .navButton:hover {
+    background: rgba(0, 0, 0, 1);
+  }
+  
+  .hidden {
+    display: none !important;
+  }
+  
+  .prevButton {
+    left: 10px;
+  }
+  
+  .nextButton {
+    right: 10px;
+  }
+  
+  /* Mobile: Ensure Only 1 Slide Per View */
+  @media (max-width: 767px) {
+    .emblaSlide {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }

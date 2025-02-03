@@ -26,19 +26,19 @@ export default function Results() {
       company: "vs. HERITAGE PROPERTY & CASUALTY INSURANCE COMPANY" 
     },
     { 
-      amount: "$7,267,537", 
+      amount: "$10,069,868", 
       company: "vs. CITIZENS PROPERTY INSURANCE CORPORATION" 
     },
     { 
-      amount: "$7,266,807", 
+      amount: "$9,849,677", 
       company: "vs. UNIVERSAL PROPERTY & CASUALTY INSURANCE COMPANY" 
     },
     { 
-      amount: "$3,388,748", 
+      amount: "$3,915,108", 
       company: "vs. AMERICAN INTEGRITY INSURANCE COMPANY OF FLORIDA" 
     },
     { 
-      amount: "$2,993,279", 
+      amount: "$3,521,573", 
       company: "vs. TOWER HILL INSURANCE EXCHANGE" 
     },
   ];
@@ -47,7 +47,7 @@ export default function Results() {
     <section className={styles.resultsSection}>
       <div className="container">
         <h2 className={styles.resultsTitle}>
-          We have recovered over <span className={styles.moneyResults}>$82,000,000</span> for our clients.
+          We have recovered over <span className={styles.moneyResults}>$88,000,000</span> for our clients.
         </h2>
         <p className={styles.resultsParagraph}>
           If you’ve encountered property damage, been in an accident, had a health claim denied, or need assistance with an SSDI claim,
