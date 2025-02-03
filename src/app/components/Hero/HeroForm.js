@@ -1,6 +1,11 @@
 "use client";
 import { useState } from "react";
 import styles from "./Hero.module.css";
+import emailjs from "@emailjs/browser";
+
+// 1) Import the Lottie component and your JSON animation
+import Lottie from "lottie-react";
+import successAnimation from "../../../../public/lottie/success.json";
 
 export default function HeroForm() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -19,6 +24,10 @@ export default function HeroForm() {
   const [isPhoneFocused, setIsPhoneFocused] = useState(false);
   const [isZipcodeFocused, setIsZipcodeFocused] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
+
+  // Track form status to handle success / error states
+  const [formStatus, setFormStatus] = useState("idle"); 
+  // 'idle' | 'submitting' | 'success' | 'error'
 
   const steps = [
     { label: "What is your name?" },
@@ -47,8 +56,44 @@ export default function HeroForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Replace with your API call logic if needed.
+    setFormStatus("submitting");
+
+    // Your EmailJS credentials
+    const serviceID = "service_1nkcxkl";
+    const templateID = "template_ni4v0do";
+    const publicKey = "bQdrcK7Eju1NykCqt";
+
+    const templateParams = {
+      name: formData.name,
+      phone: formData.phone,
+      zipcode: formData.zipcode,
+      email: formData.email,
+      caseType: formData.caseType,
+      description: formData.description,
+      consent: formData.consent ? "Yes" : "No",
+    };
+
+    emailjs
+      .send(serviceID, templateID, templateParams, publicKey)
+      .then((response) => {
+        console.log("SUCCESS!", response.status, response.text);
+        setFormStatus("success");
+        // Optionally reset the form data and steps
+        setFormData({
+          name: "",
+          phone: "",
+          zipcode: "",
+          email: "",
+          caseType: "",
+          description: "",
+          consent: false,
+        });
+        setCurrentStep(0);
+      })
+      .catch((err) => {
+        console.error("FAILED...", err);
+        setFormStatus("error");
+      });
   };
 
   const renderStepContent = (index) => {
@@ -67,7 +112,7 @@ export default function HeroForm() {
                 onBlur={() => setIsNameFocused(false)}
                 required
               />
-              {(!isNameFocused && formData.name === "") && (
+              {!isNameFocused && formData.name === "" && (
                 <span className={styles.placeholderOverlay}>
                   begin by typing here…..<span className={styles.caret}>|</span>
                 </span>
@@ -90,7 +135,7 @@ export default function HeroForm() {
                   onBlur={() => setIsPhoneFocused(false)}
                   required
                 />
-                {(!isPhoneFocused && formData.phone === "") && (
+                {!isPhoneFocused && formData.phone === "" && (
                   <span className={styles.placeholderOverlay}>
                     Phone Number…<span className={styles.caret}>|</span>
                   </span>
@@ -109,7 +154,7 @@ export default function HeroForm() {
                   onBlur={() => setIsZipcodeFocused(false)}
                   required
                 />
-                {(!isZipcodeFocused && formData.zipcode === "") && (
+                {!isZipcodeFocused && formData.zipcode === "" && (
                   <span className={styles.placeholderOverlay}>
                     Zipcode…<span className={styles.caret}>|</span>
                   </span>
@@ -132,7 +177,7 @@ export default function HeroForm() {
                 onBlur={() => setIsEmailFocused(false)}
                 required
               />
-              {(!isEmailFocused && formData.email === "") && (
+              {!isEmailFocused && formData.email === "" && (
                 <span className={styles.placeholderOverlay}>
                   Email Address…<span className={styles.caret}>|</span>
                 </span>
@@ -145,7 +190,7 @@ export default function HeroForm() {
           <div className={styles.formGroup}>
             <select
               name="caseType"
-              className={styles.input} // reusing the same input style for consistency
+              className={styles.input}
               value={formData.caseType}
               onChange={handleInputChange}
               required
@@ -162,7 +207,7 @@ export default function HeroForm() {
           <div className={styles.formGroup}>
             <textarea
               name="description"
-              className={styles.input} // reusing the same styling
+              className={styles.input}
               rows="4"
               value={formData.description}
               onChange={handleInputChange}
@@ -181,8 +226,8 @@ export default function HeroForm() {
               required
             />
             <label>
-              I hereby expressly consent to receive automated communications including
-              calls, texts, emails, and/or prerecorded messages.
+              I hereby expressly consent to receive automated communications
+              including calls, texts, emails, and/or prerecorded messages.
             </label>
           </div>
         );
@@ -202,34 +247,84 @@ export default function HeroForm() {
   );
 
   return (
-    <form onSubmit={handleSubmit} className={styles.heroForm}>
-      <div className={styles.stepHeader}>
-        <div className={styles.stepCircle}>{currentStep + 1}</div>
-        <p className={styles.stepQuestion}>{steps[currentStep].label}</p>
-      </div>
-      <div className={styles.stepContent}>{renderStepContent(currentStep)}</div>
-      {currentStep < steps.length - 1 && (
-        <div className={styles.nextStepPreview}>
-          {renderStepPreview(currentStep + 1)}
+    <div>
+      {/* 
+        Only show the FORM if not successful yet. 
+        If 'error', we still show it (so user can retry). 
+      */}
+      {formStatus !== "success" && (
+        <form onSubmit={handleSubmit} className={styles.heroForm}>
+          <div className={styles.stepHeader}>
+            <div className={styles.stepCircle}>{currentStep + 1}</div>
+            <p className={styles.stepQuestion}>{steps[currentStep].label}</p>
+          </div>
+          <div className={styles.stepContent}>{renderStepContent(currentStep)}</div>
+
+          {/* Show the next step preview only if not on last step */}
+          {currentStep < steps.length - 1 && (
+            <div className={styles.nextStepPreview}>
+              {renderStepPreview(currentStep + 1)}
+            </div>
+          )}
+
+          <div className={styles.navigationButtons}>
+            {currentStep > 0 && (
+              <button
+                type="button"
+                onClick={prevStep}
+                className={styles.navButton}
+                disabled={formStatus === "submitting"}
+              >
+                Back
+              </button>
+            )}
+            {currentStep < steps.length - 1 && (
+              <button
+                type="button"
+                onClick={nextStep}
+                className={styles.navButton}
+                disabled={formStatus === "submitting"}
+              >
+                Next
+              </button>
+            )}
+            {currentStep === steps.length - 1 && (
+              <button
+                type="submit"
+                className={styles.submitButton}
+                disabled={formStatus === "submitting"}
+              >
+                {formStatus === "submitting"
+                  ? "Submitting..."
+                  : "Free Case Evaluation"}
+              </button>
+            )}
+          </div>
+
+          {/* Show an error message if submission failed */}
+          {formStatus === "error" && (
+            <div className={styles.errorContainer}>
+              <p className={styles.errorMessage}>
+                Oops! Something went wrong. Please try again.
+              </p>
+            </div>
+          )}
+        </form>
+      )}
+
+      {/* If submission is successful, show Lottie animation + success message */}
+      {formStatus === "success" && (
+        <div className={styles.successContainer}>
+          <Lottie 
+            animationData={successAnimation} 
+            loop={false}  
+            className={styles.lottieAnimation} 
+          />
+          <p className={styles.successMessage}>
+            Thank you! Your form has been submitted successfully.
+          </p>
         </div>
       )}
-      <div className={styles.navigationButtons}>
-        {currentStep > 0 && (
-          <button type="button" onClick={prevStep} className={styles.navButton}>
-            Back
-          </button>
-        )}
-        {currentStep < steps.length - 1 && (
-          <button type="button" onClick={nextStep} className={styles.navButton}>
-            Next
-          </button>
-        )}
-        {currentStep === steps.length - 1 && (
-          <button type="submit" className={styles.submitButton}>
-            Free Case Evaluation
-          </button>
-        )}
-      </div>
-    </form>
+    </div>
   );
 }

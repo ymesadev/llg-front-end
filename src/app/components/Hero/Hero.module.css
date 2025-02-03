@@ -373,6 +373,35 @@
   pointer-events: none;
 }
 
+
+.successContainer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.lottieAnimation {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.successMessage {
+  font-size: 1.4rem;
+  color: #ede7e7;
+  margin-top: 1rem;
+  font-weight: 500;
+}
+
+.errorContainer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.errorMessage {
+  font-size: 1.2rem;
+  color: #dc3545;
+}
+
+
 @media screen and (max-width:980px) {
     .verticalCenter{
         padding-top: 9rem;
