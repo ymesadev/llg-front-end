@@ -315,7 +315,7 @@ export default function HeroForm() {
       {/* If submission is successful, show Lottie animation + success message */}
       {formStatus === "success" && (
         <div className={styles.successContainer}>
-          <Lottie 
+          <LottieNoSSR
             animationData={successAnimation} 
             loop={false}  
             className={styles.lottieAnimation} 
