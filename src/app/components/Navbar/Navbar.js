@@ -45,6 +45,10 @@ export default function Navbar() {
             <li>
               <Link href="/social-security-disability-lawyers">Social Security</Link>
             </li>
+            
+            <li>
+              <Link href="/team">Our Team</Link>
+            </li>
             <li>
               <Link href="/free-case-evaluation">Free Case Evaluation</Link>
             </li>

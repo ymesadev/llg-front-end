@@ -68,6 +68,33 @@
       .servicesContainer{
         background-color: #1a2b49;
       }
+      .attorneyHero{
+        padding-top: 6rem;
+        background-color: #1a2b49;
+        padding-bottom: 4rem;
+       
+      }
+
+      .teamImage {
+        border-radius: 20px;
+        max-width: 500px !important;
+        width: 100%;
+      }
+      .attorneyTitle{
+        color: #ebe5e5;
+        font-size: 4rem;
+        text-transform: uppercase;
+      }
+
+      .bioContainer{
+        max-width: 800px;
+      }
+      .attorneyBio{
+        background-color:#f4f4f4;
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+
+      }
 
 
       @media screen and (max-width:980px) {
@@ -87,6 +114,9 @@
     color: #ece7e7;
     font-size: 16px;
   }
+
+
+
 
   .title{
     font-size: 2.5rem;

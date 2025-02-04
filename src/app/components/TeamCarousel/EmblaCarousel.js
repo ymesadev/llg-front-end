@@ -10,31 +10,31 @@ const teamMembers = [
     name: "Pierre Louis, Esq",
     photo: "/images/Pierre-A-Louis-Esq-LLG.jpg",
     description: "Founder & Senior Managing Attorney",
-    link: "/team/pierre-louis",
+    link: "/pierre-a-louis-esq",
   },
   {
     name: "Bibin Mannattuparampil, Esq",
     photo: "/images/Bibin-Mannattuparampil-Esq-LLG.jpg",
-    description: "Insurance Litigation Attorney",
-    link: "/team/bibin-mannattuparampil",
+    description: "Of Counsel",
+    link: "/bibin-mannattuparampil",
   },
   {
     name: "Cathleen Rodriguez, Esq",
     photo: "/images/Cathleen-V-Rodriguez-Esq-LLG.jpg",
-    description: "Insurance & Property Claims Attorney",
-    link: "/team/cathleen-rodriguez",
+    description: "Associate Attorney",
+    link: "/cathleen-rodriguez-esq",
   },
   {
     name: "Benaejah Simmonds, Esq",
     photo: "/images/Benaejah-Simmonds-Esq-LLG.jpg",
     description: "Associate Attorney",
-    link: "/team/benaejah-simmonds",
+
   },
   {
     name: "Magdaline Mintz, Esq",
     photo: "/images/Magdaline-Mintz-Esq-LLG.jpg",
     description: "Associate Attorney",
-    link: "/team/magdaline-mintz",
+   
   },
 ];
 

@@ -14,7 +14,7 @@ export default function Team() {
         <section className={styles.teamsHero}>
             
       <div className={styles.teamContainer}>
-        <h1 className={styles.teamTitle}>Team</h1>
+        <h1 className={styles.teamTitle}>Our Team</h1>
         <p className={styles.teamDescription}>
           When navigating the complex world of insurance claims in Florida, having a seasoned insurance claims lawyer by your side can make all the difference. At Louis Law Group, our team of dedicated attorneys specializes in insurance litigation, offering you the legal expertise needed to maximize your insurance claim.
         </p>
