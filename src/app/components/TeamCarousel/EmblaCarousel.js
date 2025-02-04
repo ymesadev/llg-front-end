@@ -28,6 +28,7 @@ const teamMembers = [
     name: "Benaejah Simmonds, Esq",
     photo: "/images/Benaejah-Simmonds-Esq-LLG.jpg",
     description: "Associate Attorney",
+    link: "/benaejah-simmonds-esq",
 
   },
   {
