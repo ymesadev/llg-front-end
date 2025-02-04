@@ -81,6 +81,9 @@ export default function Navbar() {
             <Link href="/social-security-disability-lawyers">Social Security</Link>
           </li>
           <li onClick={toggleMenu}>
+            <Link href="/team">Our Team</Link>
+          </li>
+          <li onClick={toggleMenu}>
             <Link href="/free-case-evaluation">Free Case Evaluation</Link>
           </li>
         </ul>
