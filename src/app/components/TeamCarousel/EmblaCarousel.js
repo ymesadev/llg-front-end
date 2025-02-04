@@ -32,8 +32,21 @@ const teamMembers = [
 
   },
   {
+    name: "Melissa Romerop, Esq",
+    photo: "/images/Melissa-Romero-Esq.jpg",
+    description: "Associate Attorney",
+    link: "/melissa-romero-esq",
+
+  },
+  {
     name: "Magdaline Mintz, Esq",
     photo: "/images/Magdaline-Mintz-Esq-LLG.jpg",
+    description: "Associate Attorney",
+   
+  },
+  {
+    name: "Damian Zimmerman, Esq",
+    photo: "/images/placeholder.jpg",
     description: "Associate Attorney",
    
   },
