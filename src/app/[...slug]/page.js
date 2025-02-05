@@ -113,7 +113,7 @@ export default async function Page({ params }) {
     return (
       <Layout>
         <div className={styles.error}>
-          <h1>404 - Page Not Found</h1>
+          <h1>404 - Page Not Foun</h1>
           <p>The page you are looking for does not exist.</p>
         </div>
       </Layout>
