@@ -15,15 +15,15 @@ export async function generateStaticParams() {
   try {
     const resPages = await fetch(
       `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent`,
-      { cache: "no-store" }
+      { next: { revalidate: 60 } } // ISR every 60 seconds
     );
     const resAttorneys = await fetch(
       `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
-      { cache: "no-store" }
+      { next: { revalidate: 60 } } // ISR every 60 seconds
     );
     const resArticles = await fetch(
       `${strapiURL}/api/articles?fields[]=Slug&pagination[limit]=1000`,
-      { cache: "no-store" }
+      { next: { revalidate: 60 } } // ISR every 60 seconds
     );
 
     if (!resPages.ok || !resAttorneys.ok || !resArticles.ok) throw new Error("Failed to fetch slugs");
