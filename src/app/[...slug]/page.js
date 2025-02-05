@@ -67,11 +67,11 @@ export default async function Page({ params }) {
 
   try {
     const attorneyRes = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
-      cache: "no-store",
+      next: { revalidate: 60 }, // ✅ ISR: Revalidate every 60 seconds
     });
 
     const articleRes = await fetch(`${strapiURL}/api/articles?fields[]=slug&pagination[limit]=1000`, {
-      cache: "no-store",
+      next: { revalidate: 60 }, // ✅ ISR: Revalidate every 60 seconds
     });
 
     const attorneyData = await attorneyRes.json();
@@ -106,7 +106,7 @@ export default async function Page({ params }) {
 
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
 
-  const res = await fetch(apiUrl, { cache: "no-store" });
+  const res = await fetch(apiUrl, { next: { revalidate: 60 } }); // ✅ ISR: Revalidate every 60 seconds
 
   if (!res.ok) {
     console.error("❌ API Error:", res.status, res.statusText);
