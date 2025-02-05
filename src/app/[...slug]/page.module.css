@@ -97,6 +97,30 @@
       }
 
 
+      .blogPost{
+        padding-top: 8rem;
+        padding-bottom: 4rem;
+      }
+
+      .blogPost .container{
+        max-width: 640px;
+      }
+
+      .blogImageContainer img{
+        width: 640px ;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+
+      }
+
+      .blogImage {
+        max-width: 640px;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+      }
+
       @media screen and (max-width:980px) {
         .verticalCenter{
             padding-top: 9rem;

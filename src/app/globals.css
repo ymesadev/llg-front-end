@@ -70,6 +70,10 @@ h1,h2,h3{
   grid-template-columns: repeat(5, 1fr);
 }
 
+.blogContainer{
+  max-width: 640px;
+}
+
 /* Responsive Design */
 @media (max-width: 980px) {
   .column-1,

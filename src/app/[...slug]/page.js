@@ -5,6 +5,7 @@ import ServicesCarousel from "../components/ServicesCarousel/ServicesCarousel";
 import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
 import Contact from "../components/Contact/ContactSection";
+import ReactMarkdown from "react-markdown";
 
 export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
@@ -12,75 +13,88 @@ export async function generateStaticParams() {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
 
   try {
-    // Fetch regular pages
     const resPages = await fetch(
       `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent`,
       { cache: "no-store" }
     );
-
-    // Fetch attorney pages separately
     const resAttorneys = await fetch(
       `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
       { cache: "no-store" }
     );
+    const resArticles = await fetch(
+      `${strapiURL}/api/articles?fields[]=Slug&pagination[limit]=1000`,
+      { cache: "no-store" }
+    );
 
-    if (!resPages.ok || !resAttorneys.ok) throw new Error("Failed to fetch page slugs");
+    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok) throw new Error("Failed to fetch slugs");
 
     const dataPages = await resPages.json();
     const dataAttorneys = await resAttorneys.json();
+    const dataArticles = await resArticles.json();
 
-    // Regular Pages
     const pages = dataPages.data.map((page) => {
       let fullSlug = page.Slug;
       if (page.parent) {
         fullSlug = `${page.parent.Slug}/${page.Slug}`;
       }
-      return { slug: fullSlug.split("/") }; // Convert to array for Next.js dynamic routing
+      return { slug: fullSlug.split("/") };
     });
 
-    // Attorney Pages (single slugs, no parent)
     const attorneys = dataAttorneys.data.map((attorney) => ({
-      slug: [attorney.Slug], // Ensure the slug is an array for Next.js
+      slug: [attorney.Slug],
     }));
 
-    console.log("✅ Regular Pages:", pages);
-    console.log("✅ Attorney Pages:", attorneys);
+    const articles = dataArticles.data.map((article) => ({
+      slug: [article.slug],
+    }));
 
-    return [...pages, ...attorneys];
+    return [...pages, ...attorneys, ...articles];
   } catch (error) {
     console.error("Error in generateStaticParams:", error);
     return [];
   }
 }
 
-// ✅ **Fetch and Render Page Content**
+// ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
   const slugArray = params.slug || [];
-  const slug = slugArray.join("/"); // Convert to a full slug string
+  const slug = slugArray.join("/");
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   let apiUrl;
   let isAttorneyPage = false;
+  let isArticlePage = false;
 
-  // ✅ Fetch the list of attorney slugs to check if current slug is an attorney page
   try {
     const attorneyRes = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
       cache: "no-store",
     });
-    const attorneyData = await attorneyRes.json();
-    const attorneySlugs = attorneyData.data.map((attorney) => attorney.Slug);
 
-    isAttorneyPage = attorneySlugs.includes(slug);
+    const articleRes = await fetch(`${strapiURL}/api/articles?fields[]=slug&pagination[limit]=1000`, {
+      cache: "no-store",
+    });
+
+    const attorneyData = await attorneyRes.json();
+    const articleData = await articleRes.json();
+
+    const attorneySlugs = attorneyData.data.map((attorney) => attorney.Slug);
+    const articleSlugs = articleData.data.map((article) => article.slug);
+
+    if (attorneySlugs.includes(slug)) {
+      isAttorneyPage = true;
+    } else if (articleSlugs.includes(slug)) {
+      isArticlePage = true;
+    }
   } catch (error) {
-    console.error("Error fetching attorney slugs:", error);
+    console.error("Error fetching slugs:", error);
   }
 
   if (isAttorneyPage) {
-    // ✅ Fetch attorney page
     apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&populate=Image.Image`;
+  } else if (isArticlePage) {
+    apiUrl = `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&populate=blocks.file&populate=cover`;
   } else {
-    // ✅ Fetch regular page with parent-child structure
-    const childSlug = slugArray[slugArray.length - 1]; // Last part of URL
+    const childSlug = slugArray[slugArray.length - 1];
     const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
@@ -93,6 +107,7 @@ export default async function Page({ params }) {
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
 
   const res = await fetch(apiUrl, { cache: "no-store" });
+
   if (!res.ok) {
     console.error("❌ API Error:", res.status, res.statusText);
     return (
@@ -119,20 +134,58 @@ export default async function Page({ params }) {
 
   const page = data.data[0];
 
-  console.log("🖼️ Image Data:", page.Image);
-  console.log("🖼️ Nested Image Data:", page.Image?.Image);
-  console.log("✅ Final Image URL:", page.Image?.Image?.url);
-
   return (
     <Layout>
-      {/* ✅ If Attorney Page, Render Attorney Layout */}
-      {isAttorneyPage ? (
+      {isArticlePage ? (
         <>
-          {/* ✅ Hero Section */}
+          <section className={styles.blogPost}>
+            <div className="container blogContainer">
+              <h1 className={styles.blogTitle}>{page.title}</h1>
+              <p className={styles.blogDate}>
+                📅 {new Date(page.createdAt).toLocaleDateString()} | ⏳{" "}
+                {Math.ceil(page.blocks.length * 0.5)} min read
+              </p>
+              {page.cover && (
+                <img
+                  src={`https://login.louislawgroup.com${page.cover.url}`}
+                  alt={page.title}
+                  className={styles.blogImage}
+                />
+              )}
+              <div className={styles.blogContent}>
+                {page.blocks.map((block, index) => {
+                  if (block.__component === "shared.rich-text") {
+                    return (
+                      <div key={index} className={styles.blogText}>
+                        <ReactMarkdown>{block.body}</ReactMarkdown>
+                      </div>
+                    );
+                  }
+                  if (block.__component === "shared.media" && block.file?.url) {
+                    const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
+                    return (
+                      <div key={index} className={styles.blogImageContainer}>
+                        <img
+                          src={imageUrl}
+                          alt={block.file.alternativeText || "Blog Image"}
+                          className={styles.blogPostImage}
+                        />
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          </section>
+          <Steps />
+          <Contact />
+        </>
+      ) : isAttorneyPage ? (
+        <>
           <section className={styles.attorneyHero}>
             <div className="container">
               <div className="column-2a">
-                {/* Left: Attorney Image */}
                 <div className={styles.leftColumn}>
                   <img
                     src={page.Image?.Image?.url ? `https://login.louislawgroup.com${page.Image.Image.url}` : "/placeholder.jpg"}
@@ -141,30 +194,24 @@ export default async function Page({ params }) {
                   />
                   <h1 className={styles.attorneyTitle}>{page.title}</h1>
                 </div>
-
-                {/* Right: Hero Form */}
                 <div className={styles.rightColumn}>
                   <HeroForm />
                 </div>
               </div>
             </div>
           </section>
-
-          {/* ✅ Bio Section */}
           <section className={styles.attorneyBio}>
             <div className="container">
-            <div className={styles.bioContainer}>
-              <h2 className="bioHeading">Bio.</h2>
-              {Array.isArray(page.Description) &&
-                page.Description.map((block, idx) => (
-                  <p key={idx} className={styles.attorneyBioText}>
-                    {block.children?.[0]?.text || ""}
-                  </p>
-                ))}
-                </div>
+              <div className={styles.bioContainer}>
+                <h2 className="bioHeading">Bio.</h2>
+                {Array.isArray(page.Description) &&
+                  page.Description.map((block, idx) => (
+                    <p key={idx} className={styles.attorneyBioText}>
+                      {block.children?.[0]?.text || ""}
+                    </p>
+                  ))}
+              </div>
             </div>
-        
-
           </section>
           <Results />
           <Steps />
@@ -172,8 +219,8 @@ export default async function Page({ params }) {
         </>
       ) : (
         <>
-          {/* ✅ Render Regular Page Content */}
-          {page.Hero && (
+         {/* ✅ Render Regular Page Content */}
+         {page.Hero && (
             <section className={`${styles.darkBg} ${styles.fullHeight} ${styles.verticalCenter}`}>
               <div className="container">
                 <div className="column-2a">
@@ -223,6 +270,7 @@ export default async function Page({ params }) {
           <Contact />
         </>
       )}
+      
     </Layout>
   );
 }
