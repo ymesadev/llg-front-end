@@ -50,6 +50,9 @@ export default function Navbar() {
               <Link href="/team">Our Team</Link>
             </li>
             <li>
+              <Link href="/resources">Resources</Link>
+            </li>
+            <li>
               <Link href="/free-case-evaluation">Free Case Evaluation</Link>
             </li>
           </ul>
