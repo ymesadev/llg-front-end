@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 
 
 body{
@@ -70,8 +70,28 @@ h1,h2,h3{
   grid-template-columns: repeat(5, 1fr);
 }
 
-.blogContainer{
-  max-width: 640px;
+.blogContainer {
+  max-width: 680px;
+  overflow: hidden;
+
+}
+
+.blogContainer h1,.blogContainer h2, .blogContainer h3,.blogContainer h4,.blogContainer h5, .blogContainer h6 {
+  font-family: "Montserrat", serif !important;
+}
+
+.blogContainer p{
+  font-family: Work Sans, serif;
+  font-weight: 300;
+  letter-spacing: -0.06px;
+  font-size: 20px;
+  line-height: 32px;
+  /* overflow-wrap: break-word; */
+  text-size-adjust: 100%;
+  margin-inline-end: 0px;
+  margin-inline-start: 0px;
+  word-break: break-word;
+
 }
 
 /* Responsive Design */

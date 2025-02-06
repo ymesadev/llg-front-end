@@ -104,6 +104,7 @@
 
       .blogPost .container{
         max-width: 640px;
+        overflow: hidden;
       }
 
       .blogImageContainer img{
