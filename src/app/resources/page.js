@@ -1,6 +1,9 @@
 import Layout from "../components/Layout/Layout";
 import styles from "./resources.module.css";
 import Link from "next/link";
+import Results from "../components/Results/Results";
+import Steps from "../components/Steps/Steps";
+import Contact from "../components/Contact/ContactSection";
 
 export const revalidate = 60; // ISR: Refresh every 60 seconds
 
@@ -55,6 +58,9 @@ export default async function ResourcesPage() {
           </div>
         </div>
       </section>
+      <Results />
+          <Steps />
+          <Contact />
     </Layout>
   );
 }
