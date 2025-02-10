@@ -9,7 +9,7 @@ const teamMembers = [
   {
     name: "Pierre Louis, Esq",
     photo: "/images/Pierre-A-Louis-Esq-LLG.jpg",
-    description: "Founder & Senior Managing Attorney",
+    description: "Founder/CEO",
     link: "/pierre-a-louis-esq",
   },
   {

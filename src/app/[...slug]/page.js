@@ -6,6 +6,8 @@ import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
 import Contact from "../components/Contact/ContactSection";
 import ReactMarkdown from "react-markdown";
+import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 
 export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
@@ -137,51 +139,91 @@ export default async function Page({ params }) {
   return (
     <Layout>
       {isArticlePage ? (
-        <>
-          <section className={styles.blogPost}>
-            <div className="container blogContainer">
-              <h1 className={styles.blogTitle}>{page.title}</h1>
-              <p className={styles.blogDate}>
-                📅 {new Date(page.createdAt).toLocaleDateString()} | ⏳{" "}
-                {Math.ceil(page.blocks.length * 0.5)} min read
-              </p>
-              {page.cover && (
-                <img
-                  src={`https://login.louislawgroup.com${page.cover.url}`}
-                  alt={page.title}
-                  className={styles.blogImage}
-                />
-              )}
-              <div className={styles.blogContent}>
-                {page.blocks.map((block, index) => {
-                  if (block.__component === "shared.rich-text") {
-                    return (
-                      <div key={index} className={styles.blogText}>
-                        <ReactMarkdown>{block.body}</ReactMarkdown>
-                      </div>
-                    );
-                  }
-                  if (block.__component === "shared.media" && block.file?.url) {
-                    const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
-                    return (
-                      <div key={index} className={styles.blogImageContainer}>
-                        <img
-                          src={imageUrl}
-                          alt={block.file.alternativeText || "Blog Image"}
-                          className={styles.blogPostImage}
-                        />
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-            </div>
-          </section>
-          <Steps />
-          <Contact />
-        </>
-      ) : isAttorneyPage ? (
+    <>
+      <section className={styles.blogPost}>
+        <div className="container blogContainer">
+          <h1 className={styles.blogTitle}>{page.title}</h1>
+          <p className={styles.blogDate}>
+            <FaRegCalendarAlt className={styles.icon} />{" "}
+            {new Date(page.createdAt).toLocaleDateString()} |{" "}
+            <FaRegClock className={styles.icon} /> {Math.ceil(page.blocks.length * 0.5)} min read
+          </p>
+
+
+          
+                    {/* Social Media Sharing Icons */}
+                    <div className={styles.socialShare}>
+         
+            <a
+  href={`https://www.facebook.com/sharer/sharer.php?u=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+<FaFacebook className={styles.socialIcon} />
+</a>
+<a
+  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+    typeof window !== "undefined" ? window.location.href : ""
+  )}&text=${encodeURIComponent(page.title)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <FaTwitter className={styles.socialIcon} />
+</a>
+<a
+  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+    typeof window !== "undefined" ? window.location.href : ""
+  )}&title=${encodeURIComponent(page.title)}`}
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <FaLinkedin className={styles.socialIcon} />
+</a>
+          </div>
+
+          {page.cover && (
+            <img
+              src={`https://login.louislawgroup.com${page.cover.url}`}
+              alt={page.title}
+              className={styles.blogImage}
+            />
+          )}
+
+          <div className={styles.blogContent}>
+            {page.blocks.map((block, index) => {
+              if (block.__component === "shared.rich-text") {
+                return (
+                  <div key={index} className={styles.blogText}>
+                    <ReactMarkdown>{block.body}</ReactMarkdown>
+                  </div>
+                );
+              }
+              if (block.__component === "shared.media" && block.file?.url) {
+                const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
+                return (
+                  <div key={index} className={styles.blogImageContainer}>
+                    <img
+                      src={imageUrl}
+                      alt={block.file.alternativeText || "Blog Image"}
+                      className={styles.blogPostImage}
+                    />
+                  </div>
+                );
+              }
+              return null;
+            })}
+          </div>
+
+
+
+          
+        </div>
+      </section>
+
+      <Steps />
+      <Contact />
+    </>
+  ) : isAttorneyPage ? (
         <>
           <section className={styles.attorneyHero}>
             <div className="container">

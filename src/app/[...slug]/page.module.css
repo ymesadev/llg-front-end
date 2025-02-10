@@ -77,13 +77,16 @@
 
       .teamImage {
         border-radius: 20px;
-        max-width: 500px !important;
         width: 100%;
+        max-width: 500px !important;
+        filter: grayscale(0.9);
       }
       .attorneyTitle{
-        color: #ebe5e5;
-        font-size: 4rem;
+        color: #ffb800;
+        font-size: 2rem;
         text-transform: uppercase;
+        text-shadow: 1px 1px 2px #000000;
+        margin-top: 1rem;
       }
 
       .bioContainer{
@@ -95,7 +98,7 @@
         padding-bottom: 4rem;
 
       }
-
+    
 
       .blogPost{
         padding-top: 8rem;
@@ -120,6 +123,9 @@
         margin-top: 1rem;
         margin-bottom: 1rem;
         width: 100%;
+      }
+      .socialShare svg{
+        margin-left: 1rem;
       }
 
       @media screen and (max-width:980px) {
