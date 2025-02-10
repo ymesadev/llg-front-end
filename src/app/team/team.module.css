@@ -1,124 +1,152 @@
-.teamContainer {
-    max-width: 1400px;
-    margin: 0 auto;
-    text-align: left;
-    padding: 40px 20px;
-  }
-  
-  .teamTitle {
-    font-size: 4.5rem;
-   
-    color: #ffb800;
-    text-transform: uppercase;
-  }
-  
-  .teamDescription {
-    font-size: 18px;
-    margin-bottom: 40px;
-    color: #ede7e7;
-    max-width: 600px;
-  }
-  .teamsHero{
-    padding-top: 4rem;
-    background-color: #1a2b49;
-  }
-  .positionTitle{
-    font-family: Montserrat, serif !important;
-    color: #ede7e7;
-    font-weight: 500;
-  }
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 20px;
+  justify-content: center;
+}
 
-  .locationIcon {
-    margin-right: 8px;
-    color: #ffb800
-  }
+.teamCard {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  width: 100%;
+  height: auto;
+}
 
-  .teamsHero {
-    padding: 4rem 0;
-    background-color: #1a2c49;
-  }
-  
-  .teamContainer {
+.teamImageContainer {
+  width: 100%;
+  height: auto;
+}
 
-    max-width: 1400px;
-    margin: 0 auto;
-    text-align: left;
-  }
-  
-  .teamTitle {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: #ece7e7;
-  }
-  
-  .teamDescription {
-    font-size: 1rem;
-    margin-bottom: 40px;
-    color: #ece7e7;
-  }
-  
-  .teamGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    justify-content: center;
-  }
-  
-  .teamCard {
-    display: flex
-    ;
-        align-items: center;
-        /* background: #fff; */
-        /* border-radius: 10px; */
-        padding: 20px;
-        /* box-shadow: 0 4px 8px #0000001a; */
-        border-bottom: solid 0.2px #817e7e;
-  }
-  .teampageTitle{
-    text-transform: uppercase;
-    font-size: 3rem;
-    color: #ffb800;
-  }
-  
-  .teamInfo {
-    flex: 1;
-    text-align: left;
-  }
-  
-  .teamName {
-    font-size: 13px;
-    font-weight: bold;
-    font-family: Montserrat, serif !important;
-    color: #ece7e7;
-  }
-  
-  .teamTitle {
-    font-size: 10px;
-    color: #666;
-    margin: 5px 0;
-    color: #ece7e7;
-    margin-bottom: 1rem;
-  }
-  
-  .teamLink {
-    color: #1a2c49;
-    text-decoration: none;
-    /* font-weight: bold; */
-    background-color: #ffb800;
-    font-size: 12px;
-    padding: 8px;
-    border-radius: 30px;
-  }
-  
-  .teamImageContainer {
-    flex-shrink: 0;
-    margin-left: 20px;
-  }
-  
-  .teamImage {
-    border-radius: 50%;
-    object-fit: cover;
-    max-width: 100px;
-    height: auto;
-    filter: grayscale(1);
-  }
+.teamImage {
+  width: 100%;
+  height: auto;
+  transition: filter .3s ease-in-out;
+  filter: grayscale(1);
+  border-radius: 7px;
+}
+
+.teamInfo {
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  text-align: center;
+  padding: 15px;
+}
+
+.teamCard:hover .teamInfo {
+  opacity: 1;
+}
+
+.teamCard:hover .teamImage {
+  filter: brightness(0.4);
+}
+
+.teamName {
+  font-size: 16px;
+  font-weight: bold;
+  font-family: Montserrat, serif !important;
+  color: #ece7e7;
+}
+
+.teamTitle {
+  font-size: 12px;
+  margin: 5px 0;
+  color: #ece7e7;
+}
+
+.locationIcon {
+  margin-right: 8px;
+  color: #ffb800;
+}
+
+.teamLink {
+  color: #1a2c49;
+  text-decoration: none;
+  background-color: #ffb800;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 30px;
+  margin-top: 10px;
+}
+
+.teamCard {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer;
+}
+
+.teamImageContainer {
+  width: 100%;
+}
+
+.teamImage {
+  width: 100%;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+/* Hide text initially */
+.teamInfo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Show text on hover */
+.teamCard:hover .teamInfo {
+  opacity: 1;
+}
+
+/* Removes border from hover */
+.teamCard:hover {
+  border-bottom: none;
+}
+
+.teamCard {
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  cursor: pointer; /* Makes cursor a pointer */
+  transition: transform 0.2s ease;
+}
+
+.teamCard:hover {
+  transform: scale(1.02); /* Slight zoom effect */
+  cursor: pointer; /* Ensures pointer stays on hover */
+}
+
+
+.teamSection{
+  background-color: #1a2c49;
+  padding-top: 6rem;
+  padding-bottom: 4rem;
+}
+.teamSectionTitle{
+  font-size: 3rem;
+  text-transform: uppercase;
+  color:#ffb800;
+}
+
+.teamDescription{
+  max-width: 700px;
+  color: #ece7e7;
+  margin-bottom: 2rem;
+}
