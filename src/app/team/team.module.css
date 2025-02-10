@@ -146,7 +146,8 @@
 }
 
 .teamDescription{
-  max-width: 700px;
+  max-width: 714px;
   color: #ece7e7;
   margin-bottom: 2rem;
+  text-align: justify;
 }
