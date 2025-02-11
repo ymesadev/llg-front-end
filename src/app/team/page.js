@@ -20,6 +20,7 @@ const teamMembers = [
   { name: "Matthew Mobley", photo: "/images/matthew-mobley.jpg", description: "Miami, FL" },
   { name: "Yonel Mesa", photo: "/images/yonel-mesa.jpg", description: "Miami, FL" },
   { name: "Esarine Nervil", photo: "/images/esarine-nervil.jpg", description: "Miami, FL" },
+  { name: "Romina Murias", photo: "/images/romina-murias.jpg", description: "Miami, FL" },
   { name: "Marie Augustin", photo: "/images/marie-augustine.jpg", description: "Miami, FL" },
   { name: "Kellei Johnson", photo: "/images/kellei-johnson.jpg", description: "Inverness, FL" },
   { name: "Monica Abay", photo: "/images/Monica-Abay.jpg", description: "Homestead, FL" },
@@ -28,12 +29,13 @@ const teamMembers = [
   { name: "Jeanmar Negron", photo: "/images/jeanmar-negron.jpg", description: "Orlando, FL" },
   { name: "Jennifer Dougherty", photo: "/images/jennifer-dougherty.jpg", description: "Lutz, FL" },
   { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL" },
+  { name: "Natalia Melendez", photo: "/images/natalia-melendez.jpg", description: "Orlando, FL" },
+
   { name: "Damian Zimmerman, Esq", photo: "/images/no-data.jpg", description: "Pensacola, FL" },
   
   { name: "Marie Fabre", photo: "/images/no-data.jpg", description: "Miami, FL" },
-  { name: "Romina Murias", photo: "/images/no-data.jpg", description: "Miami, FL" },
-  { name: "Natalia Melendez", photo: "/images/no-data.jpg", description: "Orlando, FL" },
 ];
+ 
 
 export default function Team() {
   return (
