@@ -10,7 +10,7 @@ import ContactSection from "../components/Contact/ContactSection";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
 const teamMembers = [
-  { name: "Pierre Louis, Esq", photo: "/images/Pierre-A-Louis-Esq-LLG.jpg", description: "Miami, FL", link: "/pierre-a-louis-esq" },
+  { name: "Pierre Louis, Esq", photo: "/images/pierre-louis-new.jpg", description: "Miami, FL", link: "/pierre-a-louis-esq" },
   { name: "Bibin Mannattuparampil, Esq", photo: "/images/Bibin-Mannattuparampil-Esq-LLG.jpg", description: "Miami, FL", link: "/bibin-mannattuparampil" },
   { name: "Cathleen Rodriguez, Esq", photo: "/images/Cathleen-V-Rodriguez-Esq-LLG.jpg", description: "Miami, FL", link: "/cathleen-rodriguez-esq" },
   { name: "Benaejah Simmonds, Esq", photo: "/images/Benaejah-Simmonds-Esq-LLG.jpg", description: "Miami, FL", link: "/benaejah-simmonds-esq" },

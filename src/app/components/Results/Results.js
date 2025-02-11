@@ -21,25 +21,31 @@ function AccordionItem({ amount, company, details }) {
 
 export default function Results() {
   const data = [
+    
     { 
-      amount: "$28,440,000", 
-      company: "vs. HERITAGE PROPERTY & CASUALTY INSURANCE COMPANY" 
-    },
-    { 
-      amount: "$10,069,868", 
-      company: "vs. CITIZENS PROPERTY INSURANCE CORPORATION" 
-    },
-    { 
-      amount: "$9,849,677", 
+      amount: "1600+ CASES ", 
       company: "vs. UNIVERSAL PROPERTY & CASUALTY INSURANCE COMPANY" 
     },
     { 
-      amount: "$3,915,108", 
+      amount: "920+ CASES", 
+      company: "vs. CITIZENS PROPERTY INSURANCE CORPORATION" 
+    },
+    { 
+      amount: "270+ CASES", 
+      company: "vs. HERITAGE PROPERTY & CASUALTY INSURANCE COMPANY" 
+    },
+   
+    { 
+      amount: "250+ CASES", 
+      company: "vs. AMERICAN SECURITY INSURANCE COMPANY" 
+    },
+    { 
+      amount: "250+ CASES", 
       company: "vs. AMERICAN INTEGRITY INSURANCE COMPANY OF FLORIDA" 
     },
     { 
-      amount: "$3,521,573", 
-      company: "vs. TOWER HILL INSURANCE EXCHANGE" 
+      amount: "250+ CASES", 
+      company: "vs. STATE FARM FLORIDA INSURANCE COMPANY" 
     },
   ];
   
@@ -47,7 +53,7 @@ export default function Results() {
     <section className={styles.resultsSection}>
       <div className="container">
         <h2 className={styles.resultsTitle}>
-          We have recovered over <span className={styles.moneyResults}>$88,000,000</span> for our clients.
+          We have recovered over <span className={styles.moneyResults}>$200,000,000</span> for our clients.
         </h2>
         <p className={styles.resultsParagraph}>
           If you’ve encountered property damage, been in an accident, had a health claim denied, or need assistance with an SSDI claim,
