@@ -9,7 +9,8 @@ export const revalidate = 60; // ISR: Refresh every 60 seconds
 
 export async function getBlogPosts() {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  const apiUrl = `${strapiURL}/api/articles?populate=cover&fields[]=title&fields[]=slug&fields[]=description`;
+  // Sort posts by createdAt in descending order so the latest posts come first
+  const apiUrl = `${strapiURL}/api/articles?populate=cover&fields[]=title&fields[]=slug&fields[]=description&sort[0]=createdAt:desc`;
   
   try {
     const res = await fetch(apiUrl, { next: { revalidate: 60 } });
@@ -36,7 +37,7 @@ export default async function ResourcesPage() {
           <div className={styles.grid}>
             {blogPosts.length > 0 ? (
               blogPosts.map((post) => (
-                <Link key={post.id} href={`${post.slug}`} className={styles.postCard}>
+                <Link key={post.id} href={`/${post.slug}`} className={styles.postCard}>
                   {/* ✅ Display Feature Image */}
                   {post.cover && (
                     <img
@@ -59,8 +60,8 @@ export default async function ResourcesPage() {
         </div>
       </section>
       <Results />
-          <Steps />
-          <Contact />
+      <Steps />
+      <Contact />
     </Layout>
   );
 }
