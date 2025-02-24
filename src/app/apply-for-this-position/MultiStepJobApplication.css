@@ -1,0 +1,9 @@
+/* New container to center the form vertically on the page */
+.form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Full viewport height */
+  padding: 2rem;
+  background: #f5f5f5; /* Optional: a light background color */
+}

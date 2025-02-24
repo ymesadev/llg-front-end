@@ -8,6 +8,7 @@ import Contact from "../components/Contact/ContactSection";
 import ReactMarkdown from "react-markdown";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
+import Link from "next/link";
 
 export const revalidate = 60; // ISR: Revalidate every 60 seconds
 
@@ -27,12 +28,19 @@ export async function generateStaticParams() {
       `${strapiURL}/api/articles?fields[]=Slug&pagination[limit]=1000`,
       { next: { revalidate: 60 } } // ISR every 60 seconds
     );
+    // --- Added for jobs pages ---
+    const resJobs = await fetch(
+      `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
+      { next: { revalidate: 60 } }
+    );
 
-    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok) throw new Error("Failed to fetch slugs");
+    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok || !resJobs.ok)
+      throw new Error("Failed to fetch slugs");
 
     const dataPages = await resPages.json();
     const dataAttorneys = await resAttorneys.json();
     const dataArticles = await resArticles.json();
+    const dataJobs = await resJobs.json();
 
     const pages = dataPages.data.map((page) => {
       let fullSlug = page.Slug;
@@ -50,7 +58,12 @@ export async function generateStaticParams() {
       slug: [article.slug],
     }));
 
-    return [...pages, ...attorneys, ...articles];
+    // --- Map jobs slugs ---
+    const jobs = dataJobs.data.map((job) => ({
+      slug: [job.Slug],
+    }));
+
+    return [...pages, ...attorneys, ...articles, ...jobs];
   } catch (error) {
     console.error("Error in generateStaticParams:", error);
     return [];
@@ -66,26 +79,35 @@ export default async function Page({ params }) {
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
+  // --- Added for jobs pages ---
+  let isJobPage = false;
 
   try {
     const attorneyRes = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
-      next: { revalidate: 60 }, // ✅ ISR: Revalidate every 60 seconds
+      next: { revalidate: 60 },
     });
-
     const articleRes = await fetch(`${strapiURL}/api/articles?fields[]=slug&pagination[limit]=1000`, {
-      next: { revalidate: 60 }, // ✅ ISR: Revalidate every 60 seconds
+      next: { revalidate: 60 },
+    });
+    // --- Fetch jobs slugs ---
+    const jobRes = await fetch(`${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`, {
+      next: { revalidate: 60 },
     });
 
     const attorneyData = await attorneyRes.json();
     const articleData = await articleRes.json();
+    const jobData = await jobRes.json();
 
     const attorneySlugs = attorneyData.data.map((attorney) => attorney.Slug);
     const articleSlugs = articleData.data.map((article) => article.slug);
+    const jobSlugs = jobData.data.map((job) => job.Slug);
 
     if (attorneySlugs.includes(slug)) {
       isAttorneyPage = true;
     } else if (articleSlugs.includes(slug)) {
       isArticlePage = true;
+    } else if (jobSlugs.includes(slug)) {
+      isJobPage = true;
     }
   } catch (error) {
     console.error("Error fetching slugs:", error);
@@ -95,6 +117,10 @@ export default async function Page({ params }) {
     apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&populate=Image.Image`;
   } else if (isArticlePage) {
     apiUrl = `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&populate=blocks.file&populate=cover`;
+  }
+  // --- Add API URL for jobs pages ---
+  else if (isJobPage) {
+    apiUrl = `${strapiURL}/api/jobs?filters[Slug][$eq]=${slug}&populate=block`;
   } else {
     const childSlug = slugArray[slugArray.length - 1];
     const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
@@ -108,7 +134,7 @@ export default async function Page({ params }) {
 
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
 
-  const res = await fetch(apiUrl, { next: { revalidate: 60 } }); // ✅ ISR: Revalidate every 60 seconds
+  const res = await fetch(apiUrl, { next: { revalidate: 60 } });
 
   if (!res.ok) {
     console.error("❌ API Error:", res.status, res.statusText);
@@ -138,9 +164,43 @@ export default async function Page({ params }) {
 
   return (
     <Layout>
-      {isArticlePage ? (
-    <>
-      <section className={styles.blogPost}>
+      {isJobPage ? (
+        <>
+          <section className={styles.jobHero}>
+            <div className="container">
+              <h1 className={styles.jobTitle}>{page.Title}</h1>
+              <Link href="/apply-for-this-position" className={styles.blueButton}>
+  Apply Now
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+    </g>
+  </svg>
+</Link>
+            </div>
+          </section>
+          <section className={styles.jobDescription}>
+            <div className="container">
+              {page.block.map((block, index) => {
+                if (block.__component === "shared.description") {
+                  return (
+                    <div key={index} className={styles.jobText}>
+                      {block.Description.map((desc, j) => (
+                        <p key={j}>{desc.children?.[0]?.text || ""}</p>
+                      ))}
+                    </div>
+                  );
+                }
+                return null;
+              })}
+            </div>
+          </section>
+          <Steps />
+          <Contact />
+        </>
+      ) : isArticlePage ? (
+        <>
+          <section className={styles.blogPost}>
         <div className="container blogContainer">
           <h1 className={styles.blogTitle}>{page.title}</h1>
           <p className={styles.blogDate}>
@@ -220,10 +280,11 @@ export default async function Page({ params }) {
         </div>
       </section>
 
-      <Steps />
-      <Contact />
-    </>
-  ) : isAttorneyPage ? (
+
+          <Steps />
+          <Contact />
+        </>
+      ) : isAttorneyPage ? (
         <>
           <section className={styles.attorneyHero}>
             <div className="container">
@@ -261,8 +322,7 @@ export default async function Page({ params }) {
         </>
       ) : (
         <>
-         {/* ✅ Render Regular Page Content */}
-         {page.Hero && (
+          {page.Hero && (
             <section className={`${styles.darkBg} ${styles.fullHeight} ${styles.verticalCenter}`}>
               <div className="container">
                 <div className="column-2a">
@@ -289,7 +349,6 @@ export default async function Page({ params }) {
             </section>
           )}
 
-          {/* ✅ Render Sections */}
           {page.Sections && page.Sections.body && page.Sections.body.length > 0 && (
             <section className={styles.Descriptionsection}>
               <div className="container">
@@ -302,7 +361,6 @@ export default async function Page({ params }) {
             </section>
           )}
 
-          {/* ✅ Render Services */}
           {Array.isArray(page.Services) && page.Services.length > 0 && (
             <ServicesCarousel services={page.Services} />
           )}
@@ -312,7 +370,6 @@ export default async function Page({ params }) {
           <Contact />
         </>
       )}
-      
     </Layout>
   );
 }

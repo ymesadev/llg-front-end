@@ -1,0 +1,191 @@
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+
+/* Container & Form Styling */
+.multi-step-form {
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+
+    overflow: hidden;  /* Helps contain floated/positioned children */
+
+  min-height: 600px; /* Fixed height (or minimum height) */
+    
+  }
+  
+  /* Step Indicator Styling */
+  .step-indicator {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .step-indicator-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e0e0e0;
+    color: #555;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .step-indicator-item.active {
+    background-color:#1a2c49;
+    color: #fff;
+  }
+
+  .reference-group h3{
+    font-family: Montserrat, serif !important;
+    margin-bottom: 1rem;
+
+  }
+  
+  /* Step Content Styling */
+  .step-content {
+    margin-bottom: 2rem;
+  }
+  
+  .step-content h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-family: Montserrat, serif !important;
+  }
+  
+  .step-content label {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    color: #444;
+  }
+  
+  .step-content input[type="text"],
+  .step-content input[type="email"],
+  .step-content input[type="tel"],
+  .step-content input[type="file"] {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  .step-content input[type="text"]:focus,
+  .step-content input[type="email"]:focus,
+  .step-content input[type="tel"]:focus,
+  .step-content input[type="file"]:focus {
+    border-color: #0070f3;
+    outline: none;
+  }
+  
+  /* Reference Group Styling */
+  .reference-group {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f9f9f9;
+  }
+  
+  /* Add Reference Button */
+  .add-reference-button {
+    background-color: #1a2c49;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 1rem;
+  }
+  
+  .add-reference-button:hover {
+    background-color: #005bb5;
+  }
+  
+  /* Navigation Buttons */
+  .navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  
+  .navigation-buttons button {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .back-button {
+    background-color: #ccc;
+    color: #333;
+  }
+  
+  .back-button:hover {
+    background-color: #b3b3b3;
+  }
+  
+  .next-button {
+    background-color: #1a2c49;
+    color: #fff;
+  }
+  
+  .next-button:hover {
+    background-color: #005bb5;
+  }
+  
+  .submit-button {
+    background-color: #ffb800;
+    color: #1a2c49;
+}
+  
+  .submit-button:hover {
+    background-color: #b58200;
+  }
+
+
+/* File Upload Wrapper & Custom File Upload Button */
+.file-upload-wrapper {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .file-upload-wrapper span {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+  
+  .custom-file-upload {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    border: solid 0.4px #1a2c49;
+    border-radius: 4px;
+    background-color: #ffffff00;
+    color: #fff;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+  }
+  
+  .custom-file-upload:hover {
+    background-color: #005bb5;
+  }
