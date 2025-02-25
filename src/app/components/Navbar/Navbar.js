@@ -87,6 +87,9 @@ export default function Navbar() {
             <Link href="/team">Our Team</Link>
           </li>
           <li onClick={toggleMenu}>
+            <Link href="/resources">Resources</Link>
+          </li>
+          <li onClick={toggleMenu}>
             <Link href="/free-case-evaluation">Free Case Evaluation</Link>
           </li>
         </ul>
