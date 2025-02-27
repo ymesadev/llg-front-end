@@ -18,29 +18,35 @@ export async function generateStaticParams() {
   try {
     const resPages = await fetch(
       `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent`,
-      { next: { revalidate: 60 } } // ISR every 60 seconds
+      { next: { revalidate: 60 } }
     );
     const resAttorneys = await fetch(
       `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } } // ISR every 60 seconds
+      { next: { revalidate: 60 } }
     );
     const resArticles = await fetch(
       `${strapiURL}/api/articles?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } } // ISR every 60 seconds
+      { next: { revalidate: 60 } }
     );
     // --- Added for jobs pages ---
     const resJobs = await fetch(
       `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
       { next: { revalidate: 60 } }
     );
+    // --- Added for FAQs-and-legal pages ---
+    const resFaqs = await fetch(
+      `${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`,
+      { next: { revalidate: 60 } }
+    );
 
-    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok || !resJobs.ok)
+    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok || !resJobs.ok || !resFaqs.ok)
       throw new Error("Failed to fetch slugs");
 
     const dataPages = await resPages.json();
     const dataAttorneys = await resAttorneys.json();
     const dataArticles = await resArticles.json();
     const dataJobs = await resJobs.json();
+    const dataFaqs = await resFaqs.json();
 
     const pages = dataPages.data.map((page) => {
       let fullSlug = page.Slug;
@@ -63,7 +69,13 @@ export async function generateStaticParams() {
       slug: [job.Slug],
     }));
 
-    return [...pages, ...attorneys, ...articles, ...jobs];
+    // --- Map FAQs-and-legal slugs safely ---
+    const faqs = dataFaqs.data.map((faq) => {
+      const faqSlug = faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug;
+      return { slug: [faqSlug] };
+    });
+
+    return [...pages, ...attorneys, ...articles, ...jobs, ...faqs];
   } catch (error) {
     console.error("Error in generateStaticParams:", error);
     return [];
@@ -79,8 +91,8 @@ export default async function Page({ params }) {
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
-  // --- Added for jobs pages ---
   let isJobPage = false;
+  let isFaqsPage = false;
 
   try {
     const attorneyRes = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
@@ -93,14 +105,22 @@ export default async function Page({ params }) {
     const jobRes = await fetch(`${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`, {
       next: { revalidate: 60 },
     });
+    // --- Fetch FAQs-and-legal slugs ---
+    const faqsRes = await fetch(`${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`, {
+      next: { revalidate: 60 },
+    });
 
     const attorneyData = await attorneyRes.json();
     const articleData = await articleRes.json();
     const jobData = await jobRes.json();
+    const faqsData = await faqsRes.json();
 
     const attorneySlugs = attorneyData.data.map((attorney) => attorney.Slug);
     const articleSlugs = articleData.data.map((article) => article.slug);
     const jobSlugs = jobData.data.map((job) => job.Slug);
+    const faqsSlugs = faqsData.data.map((faq) =>
+      faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug
+    );
 
     if (attorneySlugs.includes(slug)) {
       isAttorneyPage = true;
@@ -108,6 +128,8 @@ export default async function Page({ params }) {
       isArticlePage = true;
     } else if (jobSlugs.includes(slug)) {
       isJobPage = true;
+    } else if (faqsSlugs.includes(slug)) {
+      isFaqsPage = true;
     }
   } catch (error) {
     console.error("Error fetching slugs:", error);
@@ -118,9 +140,13 @@ export default async function Page({ params }) {
   } else if (isArticlePage) {
     apiUrl = `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&populate=blocks.file&populate=cover`;
   }
-  // --- Add API URL for jobs pages ---
+  // --- API URL for jobs pages ---
   else if (isJobPage) {
     apiUrl = `${strapiURL}/api/jobs?filters[Slug][$eq]=${slug}&populate=block`;
+  }
+  // --- API URL for FAQs-and-legal pages ---
+  else if (isFaqsPage) {
+    apiUrl = `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${slug}&populate=*`;
   } else {
     const childSlug = slugArray[slugArray.length - 1];
     const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
@@ -170,13 +196,13 @@ export default async function Page({ params }) {
             <div className="container">
               <h1 className={styles.jobTitle}>{page.Title}</h1>
               <Link href="/apply-for-this-position" className={styles.blueButton}>
-  Apply Now
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
-      <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
-    </g>
-  </svg>
-</Link>
+                Apply Now
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+                  </g>
+                </svg>
+              </Link>
             </div>
           </section>
           <section className={styles.jobDescription}>
@@ -201,86 +227,73 @@ export default async function Page({ params }) {
       ) : isArticlePage ? (
         <>
           <section className={styles.blogPost}>
-        <div className="container blogContainer">
-          <h1 className={styles.blogTitle}>{page.title}</h1>
-          <p className={styles.blogDate}>
-            <FaRegCalendarAlt className={styles.icon} />{" "}
-            {new Date(page.createdAt).toLocaleDateString()} |{" "}
-            <FaRegClock className={styles.icon} /> {Math.ceil(page.blocks.length * 0.5)} min read
-          </p>
-
-
-          
-                    {/* Social Media Sharing Icons */}
-                    <div className={styles.socialShare}>
-         
-            <a
-  href={`https://www.facebook.com/sharer/sharer.php?u=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-<FaFacebook className={styles.socialIcon} />
-</a>
-<a
-  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-    typeof window !== "undefined" ? window.location.href : ""
-  )}&text=${encodeURIComponent(page.title)}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <FaTwitter className={styles.socialIcon} />
-</a>
-<a
-  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-    typeof window !== "undefined" ? window.location.href : ""
-  )}&title=${encodeURIComponent(page.title)}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <FaLinkedin className={styles.socialIcon} />
-</a>
-          </div>
-
-          {page.cover && (
-            <img
-              src={`https://login.louislawgroup.com${page.cover.url}`}
-              alt={page.title}
-              className={styles.blogImage}
-            />
-          )}
-
-          <div className={styles.blogContent}>
-            {page.blocks.map((block, index) => {
-              if (block.__component === "shared.rich-text") {
-                return (
-                  <div key={index} className={styles.blogText}>
-                    <ReactMarkdown>{block.body}</ReactMarkdown>
-                  </div>
-                );
-              }
-              if (block.__component === "shared.media" && block.file?.url) {
-                const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
-                return (
-                  <div key={index} className={styles.blogImageContainer}>
-                    <img
-                      src={imageUrl}
-                      alt={block.file.alternativeText || "Blog Image"}
-                      className={styles.blogPostImage}
-                    />
-                  </div>
-                );
-              }
-              return null;
-            })}
-          </div>
-
-
-
-          
-        </div>
-      </section>
-
-
+            <div className="container blogContainer">
+              <h1 className={styles.blogTitle}>{page.title}</h1>
+              <p className={styles.blogDate}>
+                <FaRegCalendarAlt className={styles.icon} />{" "}
+                {new Date(page.createdAt).toLocaleDateString()} |{" "}
+                <FaRegClock className={styles.icon} /> {Math.ceil(page.blocks.length * 0.5)} min read
+              </p>
+              <div className={styles.socialShare}>
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaFacebook className={styles.socialIcon} />
+                </a>
+                <a
+                  href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                    typeof window !== "undefined" ? window.location.href : ""
+                  )}&text=${encodeURIComponent(page.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaTwitter className={styles.socialIcon} />
+                </a>
+                <a
+                  href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                    typeof window !== "undefined" ? window.location.href : ""
+                  )}&title=${encodeURIComponent(page.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <FaLinkedin className={styles.socialIcon} />
+                </a>
+              </div>
+              {page.cover && (
+                <img
+                  src={`https://login.louislawgroup.com${page.cover.url}`}
+                  alt={page.title}
+                  className={styles.blogImage}
+                />
+              )}
+              <div className={styles.blogContent}>
+                {page.blocks.map((block, index) => {
+                  if (block.__component === "shared.rich-text") {
+                    return (
+                      <div key={index} className={styles.blogText}>
+                        <ReactMarkdown>{block.body}</ReactMarkdown>
+                      </div>
+                    );
+                  }
+                  if (block.__component === "shared.media" && block.file?.url) {
+                    const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
+                    return (
+                      <div key={index} className={styles.blogImageContainer}>
+                        <img
+                          src={imageUrl}
+                          alt={block.file.alternativeText || "Blog Image"}
+                          className={styles.blogPostImage}
+                        />
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
+              </div>
+            </div>
+          </section>
           <Steps />
           <Contact />
         </>
@@ -291,7 +304,11 @@ export default async function Page({ params }) {
               <div className="column-2a">
                 <div className={styles.leftColumn}>
                   <img
-                    src={page.Image?.Image?.url ? `https://login.louislawgroup.com${page.Image.Image.url}` : "/placeholder.jpg"}
+                    src={
+                      page.Image?.Image?.url
+                        ? `https://login.louislawgroup.com${page.Image.Image.url}`
+                        : "/placeholder.jpg"
+                    }
                     alt={page.Image?.Alt || "Attorney"}
                     className={styles.teamImage}
                   />
@@ -314,6 +331,40 @@ export default async function Page({ params }) {
                     </p>
                   ))}
               </div>
+            </div>
+          </section>
+          <Results />
+          <Steps />
+          <Contact />
+        </>
+      ) : isFaqsPage ? (
+        <>
+          <section className={styles.faqHero}>
+            <div className={styles.container}>
+              {(() => {
+                const faqTitle =
+                  page.title ||
+                  page.slug
+                    .split("-")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ");
+                return <h1 className={styles.faqTitle}>{faqTitle}</h1>;
+              })()}
+            </div>
+          </section>
+          <section className={styles.faqContent}>
+          <div className={styles.container}>
+              {page.blocks &&
+                page.blocks.map((block, index) => {
+                  if (block.__component === "shared.rich-text") {
+                    return (
+                      <div key={index} className={styles.faqText}>
+                        <ReactMarkdown>{block.body}</ReactMarkdown>
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
             </div>
           </section>
           <Results />
