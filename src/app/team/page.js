@@ -30,7 +30,7 @@ const teamMembers = [
   { name: "Jeanmar Negron", photo: "/images/jeanmar-negron.jpg", description: "Orlando, FL" ,link: "/jeanmar-negron"},
   { name: "Jennifer Dougherty", photo: "/images/jennifer-dougherty.jpg", description: "Lutz, FL",link: "/jennifer-dougherty" },
   { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL",link: "/diana-vergara" },
-  { name: "Natalia Melendez", photo: "/images/natalia-melendez.jpg", description: "Orlando, FL" },
+ 
 
   { name: "Damian Zimmerman, Esq", photo: "/images/no-data.jpg", description: "Pensacola, FL" },
   
