@@ -11,6 +11,24 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* Inline RDCD script using Next.js Script with dangerouslySetInnerHTML */}
+        <Script
+          id="rdcdn-script"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function (w, d, s, u, dbg) {
+                  var js, fjs = d.getElementsByTagName(s)[0];
+                  window.rdcndbg = dbg;
+                  js = d.createElement(s);
+                  js.async = true;
+                  js.src = u;
+                  fjs.parentNode.insertBefore(js, fjs);
+              })(window, document, 'script', 'https://rdcdn.com/rtjs?aid=27431', false);
+            `,
+          }}
+        />
+
         {/* ✅ Load jQuery First */}
         <Script
           id="jquery"
@@ -24,10 +42,15 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              (function(w,d,s,l,i){
+                w[l]=w[l]||[];
+                w[l].push({'gtm.start': new Date().getTime(), event:'gtm.js'});
+                var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),
+                    dl=l!='dataLayer'?'&l='+l:'';
+                j.async=true;
+                j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+                f.parentNode.insertBefore(j,f);
               })(window,document,'script','dataLayer','GTM-KC6Q66XC');
             `,
           }}
@@ -55,21 +78,37 @@ export default function RootLayout({ children }) {
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              !function(f,b,e,v,n,t,s)
-              {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-              n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-              if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-              n.queue=[];t=b.createElement(e);t.async=!0;
-              t.src=v;s=b.getElementsByTagName(e)[0];
-              s.parentNode.insertBefore(t,s)}(window, document,'script',
-              'https://connect.facebook.net/en_US/fbevents.js');
+              !function(f,b,e,v,n,t,s){
+                if(f.fbq)return;
+                n=f.fbq=function(){
+                  n.callMethod? n.callMethod.apply(n,arguments):n.queue.push(arguments)
+                };
+                if(!f._fbq) f._fbq=n;
+                n.push=n;
+                n.loaded=!0;
+                n.version='2.0';
+                n.queue=[];
+                t=b.createElement(e);
+                t.async=!0;
+                t.src=v;
+                s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)
+              }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
               fbq('init', '909380096123158');
               fbq('track', 'PageView');
             `,
           }}
         />
 
-<script data-nowprocket data-nitro-exclude type="text/javascript" id="sa-dynamic-optimization" data-uuid="928463d9-5ab9-4587-9a52-867f72639ae6" src="data:text/javascript;base64,dmFyIHNjcmlwdCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoInNjcmlwdCIpO3NjcmlwdC5zZXRBdHRyaWJ1dGUoIm5vd3Byb2NrZXQiLCAiIik7c2NyaXB0LnNldEF0dHJpYnV0ZSgibml0cm8tZXhjbHVkZSIsICIiKTtzY3JpcHQuc3JjID0gImh0dHBzOi8vZGFzaGJvYXJkLnNlYXJjaGF0bGFzLmNvbS9zY3JpcHRzL2R5bmFtaWNfb3B0aW1pemF0aW9uLmpzIjtzY3JpcHQuZGF0YXNldC51dWlkID0gIjkyODQ2M2Q5LTVhYjktNDU4Ny05YTUyLTg2N2Y3MjYzOWFlNiI7c2NyaXB0LmlkID0gInNhLWR5bmFtaWMtb3B0aW1pemF0aW9uLWxvYWRlciI7ZG9jdW1lbnQuaGVhZC5hcHBlbmRDaGlsZChzY3JpcHQpOw=="></script>
+        {/* Example of another inline script (encoded data) */}
+        <Script
+          id="sa-dynamic-optimization"
+          data-nowprocket
+          data-nitro-exclude
+          type="text/javascript"
+          strategy="afterInteractive"
+          src="data:text/javascript;base64,dmFyIHNjcmlwdCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoInNjcmlwdCIpO3NjcmlwdC5zZXRBdHRyaWJ1dGUoIm5vd3Byb2NrZXQiLCAiIik7c2NyaXB0LnNldEF0dHJpYnV0ZSgibml0cm8tZXhjbHVkZSIsICIiKTtzY3JpcHQuc3JjID0gImh0dHBzOi8vZGFzaGJvYXJkLnNlYXJjaGF0bGFzLmNvbS9zY3JpcHRzL2R5bmFtaWNfb3B0aW1pemF0aW9uLmpzIjtzY3JpcHQuZGF0YXNldC51dWlkID0gIjkyODQ2M2Q5LTVhYjktNDU4Ny05YTUyLTg2N2Y3MjYzOWFlNiI7c2NyaXB0LmlkID0gInNhLWR5bmFtaWMtb3B0aW1pemF0aW9uLWxvYWRlciI7ZG9jdW1lbnQuaGVhZC5hcHBlbmRDaGlsZChzY3JpcHQpOw=="
+        />
       </head>
       <body>
         {/* ✅ Google Tag Manager (NoScript Fallback) */}
