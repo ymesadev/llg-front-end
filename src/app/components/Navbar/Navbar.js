@@ -8,10 +8,10 @@ export default function Navbar() {
   const [navBackground, setNavBackground] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navLinks, setNavLinks] = useState([]);
-  const [activeMenu, setActiveMenu] = useState(null); 
-  const [activeMobileMenu, setActiveMobileMenu] = useState(null); 
+  const [activeMenu, setActiveMenu] = useState(null);        // Desktop submenu
+  const [activeMobileMenu, setActiveMobileMenu] = useState(null); // Mobile submenu
 
-  // Handle scrolling effect
+  // Change navbar background on scroll
   useEffect(() => {
     const handleScroll = () => {
       setNavBackground(window.scrollY > 100);
@@ -38,10 +38,10 @@ export default function Navbar() {
         // Build a menu tree (main items + sub-pages)
         const menuItems = sortedNav.reduce((acc, item) => {
           if (item.parent.length === 0) {
-            // top-level item
+            // top-level navigation
             acc[item.id] = { ...item, subPages: [] };
           } else {
-            // sub-page
+            // submenu item
             const parentId = item.parent[0].id;
             if (acc[parentId]) {
               acc[parentId].subPages.push(item);
@@ -49,6 +49,7 @@ export default function Navbar() {
           }
           return acc;
         }, {});
+
         setNavLinks(Object.values(menuItems));
       } catch (error) {
         console.error("❌ Error fetching navigation:", error);
@@ -58,18 +59,18 @@ export default function Navbar() {
     fetchNavLinks();
   }, []);
 
-  // Toggle Mobile Menu
+  // Toggle the mobile menu open/closed
   const toggleMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
-    setActiveMobileMenu(null); // Close submenus when toggling
+    setActiveMobileMenu(null); // Reset submenus on open/close
   };
 
-  // Toggle Submenu (Desktop)
+  // Toggle a submenu in desktop
   const toggleSubMenu = (id) => {
     setActiveMenu(activeMenu === id ? null : id);
   };
 
-  // Toggle Submenu (Mobile)
+  // Toggle a submenu in mobile
   const toggleMobileSubMenu = (id) => {
     setActiveMobileMenu(activeMobileMenu === id ? null : id);
   };
@@ -97,7 +98,9 @@ export default function Navbar() {
                   className={styles.navLink}
                   onClick={() => toggleSubMenu(link.id)}
                 >
+                  {/* Main link */}
                   <Link href={link.URL}>{link.label}</Link>
+                  {/* Arrow if submenu exists */}
                   {link.subPages.length > 0 && (
                     <span className={styles.arrowIcon}>
                       {activeMenu === link.id ? (
@@ -109,7 +112,7 @@ export default function Navbar() {
                   )}
                 </div>
 
-                {/* Only render subPages if active */}
+                {/* Conditionally render the submenu if active */}
                 {link.subPages.length > 0 && activeMenu === link.id && (
                   <ul className={styles.subMenu}>
                     {link.subPages.map((sub) => (
@@ -124,12 +127,12 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Phone Button (Desktop) */}
+        {/* Phone number on desktop */}
         <div className={styles.phone}>
           <a href="tel:8336574812">+(833)-657-4812</a>
         </div>
 
-        {/* Hamburger Icon (Mobile) */}
+        {/* Hamburger icon for mobile */}
         <div className={styles.hamburger} onClick={toggleMenu}>
           <div
             className={`${styles.bar} ${mobileMenuOpen ? styles.open : ""}`}
@@ -158,6 +161,7 @@ export default function Navbar() {
                 onClick={() => toggleMobileSubMenu(link.id)}
               >
                 {link.label}
+                {/* Arrow if submenu exists */}
                 {link.subPages.length > 0 && (
                   <span className={styles.arrowIcon}>
                     {activeMobileMenu === link.id ? (
@@ -168,7 +172,8 @@ export default function Navbar() {
                   </span>
                 )}
               </div>
-              {/* Only render subPages if active */}
+
+              {/* Conditionally render submenu for mobile if active */}
               {link.subPages.length > 0 && activeMobileMenu === link.id && (
                 <ul className={styles.subMenu}>
                   {link.subPages.map((sub) => (

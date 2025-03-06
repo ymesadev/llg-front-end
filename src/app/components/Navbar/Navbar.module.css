@@ -49,7 +49,7 @@
 
 .navLinks ul li a {
   text-decoration: none;
-  color: #ede7e7;
+  color: #ede7e7; /* main nav link color on desktop */
   font-size: 1rem;
 }
 
@@ -80,7 +80,7 @@
   background-color: #e6a500;
 }
 
-/* Hamburger Menu */
+/* Hamburger Menu (hidden on desktop) */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -96,7 +96,7 @@
   transition: 0.3s;
 }
 
-/* Open State */
+/* Hamburger "open" state animations */
 .hamburger .open:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
@@ -115,7 +115,7 @@
   width: 75%;
   max-width: 300px;
   height: 100vh;
-  background-color: #1a2b49;
+  background-color: #1a2b49; /* Mobile background */
   padding-top: 4rem;
   transition: left 0.3s ease-in-out;
   display: flex;
@@ -124,22 +124,12 @@
   z-index: 1000;
 }
 
-.mobileMenu .subMenu{
-  background: #f3ebeb00;
-  color: #ffffff !important;
-  font-size: 17px !important;
-}
-.mobileMenu a{
-  font-size: 17px !important;
-}
-
-
 /* Show Mobile Menu */
 .mobileMenu.show {
   left: 0;
 }
 
-/* Mobile Menu Links */
+/* Mobile Menu Links (top-level) */
 .mobileMenu ul {
   list-style: none;
   padding: 0;
@@ -158,7 +148,7 @@
   display: block;
 }
 
-/* Close Button */
+/* Close Button in Mobile Menu */
 .closeButton {
   position: absolute;
   top: 1rem;
@@ -193,20 +183,14 @@
   margin-top: 5px;
 }
 
-/* Submenu in Desktop (Dropdown) and Mobile (Nested) */
-
-/*
-  IMPORTANT: 
-  Since we are conditionally rendering the subMenu in React, 
-  you do NOT need display: none here. Just let it be visible by default 
-  if it is in the DOM. If you want different positioning for desktop vs. mobile, 
-  use media queries below.
+/* Submenu (Desktop) 
+   Conditionally rendered => no 'display:none' needed 
 */
 .subMenu {
   background: #f8f8f8;
   padding: 10px;
   list-style: none;
-  position: absolute;
+  position: absolute;  /* classic dropdown for desktop */
   left: 0;
   top: 100%;
   width: 200px;
@@ -215,27 +199,25 @@
   flex-direction: column;
 }
 
+/* Desktop subMenu items => color: #1a2b49 */
 .subMenu li {
   padding: 10px 15px;
   border-bottom: 1px solid #ddd;
 }
-
 .subMenu li:last-child {
   border-bottom: none;
 }
-
 .subMenu li a {
-  color: #1a2b49 ;
+  color: #1a2b49 !important;
   text-decoration: none;
   display: block;
   width: 100%;
 }
-
 .subMenu li:hover {
   background: #ddd;
 }
 
-/* Mobile menu adjustments */
+/* Responsive Adjustments */
 @media (max-width: 1024px) {
   .hamburger {
     display: flex;
@@ -256,10 +238,31 @@
     padding: 8px 16px;
   }
 
-  /* Submenu in mobile should be static so it expands downward */
+  /* Submenu in mobile is no longer absolute */
   .subMenu {
     position: static;
     box-shadow: none;
     width: auto;
+    background: none; /* No background color on mobile submenu container */
+  }
+
+  /* 
+    Mobile sub-items => 
+    no background color, 
+    text color #ece7e7, 
+    font size 17px
+  */
+  .mobileMenu .subMenu li a {
+    background: none !important;
+    color: #ece7e7 !important;
+    font-size: 17px !important;
+  }
+
+  /* If you want to remove hover background on mobile sub-items, 
+     ensure there's no .subMenu li:hover background change 
+     in mobile context. You can override it here if needed:
+  */
+  .mobileMenu .subMenu li:hover {
+    background: none;
   }
 }
