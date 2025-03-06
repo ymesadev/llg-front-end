@@ -11,6 +11,7 @@ export default function Layout({ children, seo = {} }) {
       <Head>
         <title>{seo.SEO_Title || "Default Title"}</title>
         <meta name="description" content={seo.MetaDescription || "Default meta description"} />
+        
       </Head>
 
       {/* Navbar */}

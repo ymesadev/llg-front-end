@@ -14,7 +14,7 @@
 }
 
 /* Background state when scrolled */
-.navBackground {  
+.navBackground {
   background-color: #1a2b49;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -29,21 +29,37 @@
   align-items: center;
 }
 
-/* 1️⃣ Logo */
+/* Logo */
 .logo img {
   height: 50px;
 }
-.navLinks{
+
+/* Desktop Navigation */
+.navLinks {
   margin-left: 4rem;
 }
-/* 2️⃣ Phone Button */
+
+.navLinks ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: baseline;
+}
+
+.navLinks ul li a {
+  text-decoration: none;
+  color: #ede7e7;
+  font-size: 1rem;
+}
+
+/* Phone Button */
 .phone {
   display: flex;
   justify-content: flex-end;
-  flex: 1;  /* This ensures it's centered in mobile */
+  flex: 1;
 }
 
-/* Desktop: Phone stays at the right */
 .phone a {
   background-color: #ffb800;
   border-radius: 30px;
@@ -64,23 +80,7 @@
   background-color: #e6a500;
 }
 
-/* 3️⃣ Desktop Navigation */
-.navLinks ul {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  align-items: center;
-}
-
-.navLinks ul li a {
-  text-decoration: none;
-  color: #ede7e7;
-  font-size: 1rem;
-}
-
-/* 4️⃣ Hamburger Menu */
+/* Hamburger Menu */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -107,11 +107,11 @@
   transform: translateY(-8px) rotate(-45deg);
 }
 
-/* 📌 Mobile Slide-In Menu */
+/* Mobile Slide-In Menu */
 .mobileMenu {
   position: fixed;
   top: 0;
-  left: -100%; /* Hidden Off-screen */
+  left: -100%;
   width: 75%;
   max-width: 300px;
   height: 100vh;
@@ -123,6 +123,16 @@
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
+
+.mobileMenu .subMenu{
+  background: #f3ebeb00;
+  color: #ffffff !important;
+  font-size: 17px !important;
+}
+.mobileMenu a{
+  font-size: 17px !important;
+}
+
 
 /* Show Mobile Menu */
 .mobileMenu.show {
@@ -160,14 +170,79 @@
   cursor: pointer;
 }
 
-/* 📌 Mobile FIXES */
+/* Dropdown Navigation */
+.navItem {
+  position: relative;
+  list-style: none;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 10px 15px;
+  color: white;
+  text-decoration: none;
+}
+
+/* Arrow Icon */
+.arrowIcon {
+  margin-left: 5px;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+/* Submenu in Desktop (Dropdown) and Mobile (Nested) */
+
+/*
+  IMPORTANT: 
+  Since we are conditionally rendering the subMenu in React, 
+  you do NOT need display: none here. Just let it be visible by default 
+  if it is in the DOM. If you want different positioning for desktop vs. mobile, 
+  use media queries below.
+*/
+.subMenu {
+  background: #f8f8f8;
+  padding: 10px;
+  list-style: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 200px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  flex-direction: column;
+}
+
+.subMenu li {
+  padding: 10px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.subMenu li:last-child {
+  border-bottom: none;
+}
+
+.subMenu li a {
+  color: #1a2b49 ;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+.subMenu li:hover {
+  background: #ddd;
+}
+
+/* Mobile menu adjustments */
 @media (max-width: 1024px) {
   .hamburger {
-    display: flex; /* Show hamburger menu */
+    display: flex;
   }
 
   .navLinks {
-    display: none; /* Hide desktop nav on mobile */
+    display: none;
   }
 
   .phone {
@@ -179,5 +254,12 @@
   .phone a {
     font-size: 0.9rem;
     padding: 8px 16px;
+  }
+
+  /* Submenu in mobile should be static so it expands downward */
+  .subMenu {
+    position: static;
+    box-shadow: none;
+    width: auto;
   }
 }
