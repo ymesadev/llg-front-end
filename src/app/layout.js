@@ -1,6 +1,7 @@
 import "./globals.css";
 import Script from "next/script";
 import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
+import CookieConsent from "./components/CookieConsent/CookieConsent";
 
 export const metadata = {
   title: "Louis Law Group",
@@ -131,10 +132,13 @@ export default function RootLayout({ children }) {
           />
         </noscript>
 
-        {/* ✅ Trovo Tracking Component */}
-        <TrovoTracking />
+       
+      
 
         {children}
+
+        <CookieConsent /> 
+        
       </body>
     </html>
   );
