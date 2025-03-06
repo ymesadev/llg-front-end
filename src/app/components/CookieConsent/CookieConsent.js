@@ -21,6 +21,7 @@ export default function CookieConsent() {
 
   return (
     <div className={styles.cookieConsent}>
+        <div className={styles.cookieConsentContainer}>
       
       <p>
         This website uses cookies to ensure you get the best experience on our website.
@@ -30,6 +31,7 @@ export default function CookieConsent() {
       <button className={styles.acceptButton} onClick={acceptCookies}>
         ACCEPT ALL COOKIES
       </button>
+      </div>
     </div>
   );
 }
