@@ -10,8 +10,10 @@ export default function Layout({ children, seo = {} }) {
       {/* SEO Metadata */}
       <Head>
         <title>{seo.SEO_Title || "Default Title"}</title>
-        <meta name="description" content={seo.MetaDescription || "Default meta description"} />
-        
+        <meta
+          name="description"
+          content={seo.MetaDescription || "Default meta description"}
+        />
       </Head>
 
       {/* Navbar */}
@@ -19,6 +21,9 @@ export default function Layout({ children, seo = {} }) {
 
       {/* Main Content */}
       <main className={styles.mainContent}>{children}</main>
+
+      {/* Footer */}
+      
     </div>
   );
 }
