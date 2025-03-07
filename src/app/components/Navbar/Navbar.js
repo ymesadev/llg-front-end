@@ -8,7 +8,7 @@ export default function Navbar() {
   const [navBackground, setNavBackground] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navLinks, setNavLinks] = useState([]);
-  const [activeMenu, setActiveMenu] = useState(null);        // Desktop submenu
+  const [activeMenu, setActiveMenu] = useState(null); // Desktop submenu
   const [activeMobileMenu, setActiveMobileMenu] = useState(null); // Mobile submenu
 
   // Change navbar background on scroll
@@ -94,15 +94,13 @@ export default function Navbar() {
           <ul>
             {navLinks.map((link) => (
               <li key={link.id} className={styles.navItem}>
-                <div
-                  className={styles.navLink}
-                  onClick={() => toggleSubMenu(link.id)}
-                >
-                  {/* Main link */}
+                <div className={styles.navLink}>
                   <Link href={link.URL}>{link.label}</Link>
-                  {/* Arrow if submenu exists */}
                   {link.subPages.length > 0 && (
-                    <span className={styles.arrowIcon}>
+                    <span
+                      className={styles.arrowIcon}
+                      onClick={() => toggleSubMenu(link.id)}
+                    >
                       {activeMenu === link.id ? (
                         <FaChevronDown />
                       ) : (
@@ -111,8 +109,6 @@ export default function Navbar() {
                     </span>
                   )}
                 </div>
-
-                {/* Conditionally render the submenu if active */}
                 {link.subPages.length > 0 && activeMenu === link.id && (
                   <ul className={styles.subMenu}>
                     {link.subPages.map((sub) => (
@@ -156,14 +152,17 @@ export default function Navbar() {
         <ul>
           {navLinks.map((link) => (
             <li key={link.id} className={styles.navItem}>
-              <div
-                className={styles.navLink}
-                onClick={() => toggleMobileSubMenu(link.id)}
-              >
-                {link.label}
-                {/* Arrow if submenu exists */}
+              <div className={styles.navLink}>
+                {/* Separate the link and the arrow toggle */}
+                <Link href={link.URL}>{link.label}</Link>
                 {link.subPages.length > 0 && (
-                  <span className={styles.arrowIcon}>
+                  <span
+                    className={styles.arrowIcon}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleMobileSubMenu(link.id);
+                    }}
+                  >
                     {activeMobileMenu === link.id ? (
                       <FaChevronDown />
                     ) : (
@@ -172,8 +171,6 @@ export default function Navbar() {
                   </span>
                 )}
               </div>
-
-              {/* Conditionally render submenu for mobile if active */}
               {link.subPages.length > 0 && activeMobileMenu === link.id && (
                 <ul className={styles.subMenu}>
                   {link.subPages.map((sub) => (
