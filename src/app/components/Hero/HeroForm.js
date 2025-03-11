@@ -1,7 +1,6 @@
 "use client"; // Important if you're on Next.js 13 App Router
 
 import { useState } from "react";
-import emailjs from "@emailjs/browser";
 import styles from "./Hero.module.css";
 
 export default function FreeCaseEvaluationPage() {
@@ -51,17 +50,13 @@ export default function FreeCaseEvaluationPage() {
     if (currentStep > 0) setCurrentStep(currentStep - 1);
   };
 
-  // Final submission (EmailJS)
+  // Final submission (to Go High Level)
   const handleSubmit = (e) => {
     e.preventDefault();
     setFormStatus("submitting");
 
-    // Your EmailJS credentials
-    const serviceID = "service_1nkcxkl";
-    const templateID = "template_ni4v0do";
-    const publicKey = "bQdrcK7Eju1NykCqt";
-
-    const templateParams = {
+    // Build the payload for Go High Level
+    const payload = {
       name: formData.name,
       phone: formData.phone,
       zipcode: formData.zipcode,
@@ -71,12 +66,28 @@ export default function FreeCaseEvaluationPage() {
       consent: formData.consent ? "Yes" : "No",
     };
 
-    emailjs
-      .send(serviceID, templateID, templateParams, publicKey)
+    // Replace with your actual Go High Level webhook/API endpoint
+    const ghlEndpoint = "https://services.leadconnectorhq.com/hooks/OpuRBif1UwDh1UMMiJ7o/webhook-trigger/52c60449-a7a0-42ca-b25a-6b1b93ed4f66";
+
+    fetch(ghlEndpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // If your endpoint requires an API key, add it here:
+       "Authorization": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2NhdGlvbl9pZCI6Ik9wdVJCaWYxVXdEaDFVTU1pSjdvIiwiY29tcGFueV9pZCI6Ik5PeVlnSFd0a0xqcVpLWllwcVV6IiwidmVyc2lvbiI6MSwiaWF0IjoxNzAxMjc0MjQ4NjcyLCJzdWIiOiJUdjBYcjRBVWdlQWZYWmdmMXdYSSJ9.mulKiJrZUZOnUgx7hKwI_wKMCd7ghNQtAou7Ux7_cQ8",
+      },
+      body: JSON.stringify(payload),
+    })
       .then((response) => {
-        console.log("SUCCESS!", response.status, response.text);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("SUCCESS!", data);
         setFormStatus("success");
-        // Optionally reset the form
+        // Optionally reset the form data and step
         setFormData({
           name: "",
           phone: "",
@@ -248,7 +259,6 @@ export default function FreeCaseEvaluationPage() {
 
   return (
     <div>
-      {/* Show form only if not submitted successfully */}
       {formStatus !== "success" && (
         <form onSubmit={handleSubmit} className={styles.heroForm}>
           <div className={styles.stepHeader}>
@@ -293,14 +303,11 @@ export default function FreeCaseEvaluationPage() {
                 className={styles.submitButton}
                 disabled={formStatus === "submitting"}
               >
-                {formStatus === "submitting"
-                  ? "Submitting..."
-                  : "Free Case Evaluation"}
+                {formStatus === "submitting" ? "Submitting..." : "Free Case Evaluation"}
               </button>
             )}
           </div>
 
-          {/* Show error message if submission fails */}
           {formStatus === "error" && (
             <div className={styles.errorContainer}>
               <p className={styles.errorMessage}>
@@ -311,7 +318,6 @@ export default function FreeCaseEvaluationPage() {
         </form>
       )}
 
-      {/* Show a simple success message if formStatus === "success" */}
       {formStatus === "success" && (
         <div className={styles.successContainer}>
           <p className={styles.successMessage}>
