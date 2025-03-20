@@ -98,7 +98,7 @@ export default async function Page({ params }) {
     const attorneyRes = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
       next: { revalidate: 60 },
     });
-    const articleRes = await fetch(`${strapiURL}/api/articles?fields[]=slug&pagination[limit]=1000`, {
+    const articleRes = await fetch(`${strapiURL}/api/articles?fields[]=slug&pagination[limit]=2000`, {
       next: { revalidate: 60 },
     });
     // --- Fetch jobs slugs ---
