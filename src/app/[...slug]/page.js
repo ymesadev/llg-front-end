@@ -10,7 +10,11 @@ import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 
-export const revalidate = 60; // ISR: Revalidate every 60 seconds
+// 1) Allow new slugs at runtime (fallback):
+export const dynamicParams = true;
+
+// 2) Keep revalidate if you want ISR for existing pages
+export const revalidate = 60; // Revalidate existing pages every 60s
 
 export async function generateStaticParams() {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
@@ -28,19 +32,18 @@ export async function generateStaticParams() {
       `${strapiURL}/api/articles?fields[]=slug&pagination[limit]=1000`,
       { next: { revalidate: 60 } }
     );
-    // --- Added for jobs pages ---
     const resJobs = await fetch(
       `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
       { next: { revalidate: 60 } }
     );
-    // --- Added for FAQs-and-legal pages ---
     const resFaqs = await fetch(
       `${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`,
       { next: { revalidate: 60 } }
     );
 
-    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok || !resJobs.ok || !resFaqs.ok)
+    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok || !resJobs.ok || !resFaqs.ok) {
       throw new Error("Failed to fetch slugs");
+    }
 
     const dataPages = await resPages.json();
     const dataAttorneys = await resAttorneys.json();
@@ -64,12 +67,10 @@ export async function generateStaticParams() {
       slug: [article.slug],
     }));
 
-    // --- Map jobs slugs ---
     const jobs = dataJobs.data.map((job) => ({
       slug: [job.Slug],
     }));
 
-    // --- Map FAQs-and-legal slugs safely ---
     const faqs = dataFaqs.data.map((faq) => {
       const faqSlug = faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug;
       return { slug: [faqSlug] };
@@ -98,14 +99,13 @@ export default async function Page({ params }) {
     const attorneyRes = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
       next: { revalidate: 60 },
     });
-    const articleRes = await fetch(`${strapiURL}/api/articles?fields[]=slug&pagination[limit]=2000`, {
-      next: { revalidate: 60 },
-    });
-    // --- Fetch jobs slugs ---
+    const articleRes = await fetch(
+      `${strapiURL}/api/articles?fields[]=slug&pagination[pageSize]=2000`,
+      { next: { revalidate: 60 } }
+    );
     const jobRes = await fetch(`${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`, {
       next: { revalidate: 60 },
     });
-    // --- Fetch FAQs-and-legal slugs ---
     const faqsRes = await fetch(`${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`, {
       next: { revalidate: 60 },
     });
@@ -115,6 +115,7 @@ export default async function Page({ params }) {
     const jobData = await jobRes.json();
     const faqsData = await faqsRes.json();
 
+    // Now define the slug arrays
     const attorneySlugs = attorneyData.data.map((attorney) => attorney.Slug);
     const articleSlugs = articleData.data.map((article) => article.slug);
     const jobSlugs = jobData.data.map((job) => job.Slug);
@@ -122,6 +123,10 @@ export default async function Page({ params }) {
       faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug
     );
 
+    // Now safe to log articleSlugs
+    console.log("Article slugs from Strapi:", articleSlugs);
+
+    // Decide which type of page it is
     if (attorneySlugs.includes(slug)) {
       isAttorneyPage = true;
     } else if (articleSlugs.includes(slug)) {
@@ -139,13 +144,9 @@ export default async function Page({ params }) {
     apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&populate=Image.Image`;
   } else if (isArticlePage) {
     apiUrl = `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&populate=blocks.file&populate=cover`;
-  }
-  // --- API URL for jobs pages ---
-  else if (isJobPage) {
+  } else if (isJobPage) {
     apiUrl = `${strapiURL}/api/jobs?filters[Slug][$eq]=${slug}&populate=block`;
-  }
-  // --- API URL for FAQs-and-legal pages ---
-  else if (isFaqsPage) {
+  } else if (isFaqsPage) {
     apiUrl = `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${slug}&populate=*`;
   } else {
     const childSlug = slugArray[slugArray.length - 1];
@@ -160,6 +161,7 @@ export default async function Page({ params }) {
 
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
 
+  // Fetch the data
   const res = await fetch(apiUrl, { next: { revalidate: 60 } });
 
   if (!res.ok) {
@@ -175,7 +177,7 @@ export default async function Page({ params }) {
   }
 
   const data = await res.json();
-  if (data.data.length === 0) {
+  if (!data.data || data.data.length === 0) {
     return (
       <Layout>
         <div className={styles.error}>
@@ -188,6 +190,7 @@ export default async function Page({ params }) {
 
   const page = data.data[0];
 
+  // -- RENDER LOGIC BELOW, UNCHANGED --
   return (
     <Layout>
       {isJobPage ? (
@@ -236,7 +239,9 @@ export default async function Page({ params }) {
               </p>
               <div className={styles.socialShare}>
                 <a
-                  href={`https://www.facebook.com/sharer/sharer.php?u=${typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""}`}
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${
+                    typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""
+                  }`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -353,7 +358,7 @@ export default async function Page({ params }) {
             </div>
           </section>
           <section className={styles.faqContent}>
-          <div className={styles.container}>
+            <div className={styles.container}>
               {page.blocks &&
                 page.blocks.map((block, index) => {
                   if (block.__component === "shared.rich-text") {
