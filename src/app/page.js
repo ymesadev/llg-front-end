@@ -7,12 +7,14 @@ import Services from "./components/Services/Services";
 import Navbar from "./components/Navbar/Navbar";
 import Steps from "./components/Steps/Steps"; // Import Steps component
 import ContactSection from "./components/Contact/ContactSection"; // Import ContactSection component
+import Popup from "./components/Popup/Popup";
 
 export default function HomePage() {
   return (
     <ReactLenis root>
       <main>
         <Navbar />
+        <Popup/>
         <Hero />
         <Results />
         <Services />

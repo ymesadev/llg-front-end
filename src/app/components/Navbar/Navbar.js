@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import styles from "./Navbar.module.css";
 
 export default function Navbar() {
@@ -10,6 +11,8 @@ export default function Navbar() {
   const [navLinks, setNavLinks] = useState([]);
   const [activeMenu, setActiveMenu] = useState(null); // Desktop submenu
   const [activeMobileMenu, setActiveMobileMenu] = useState(null); // Mobile submenu
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Change navbar background on scroll
   useEffect(() => {
@@ -75,6 +78,17 @@ export default function Navbar() {
     setActiveMobileMenu(activeMobileMenu === id ? null : id);
   };
 
+
+  const handleOpen = () => setIsModalOpen(true);
+  const handleClose = () => setIsModalOpen(false);
+  const popularTopics = [
+    "Insurance Claims",
+    "Property Damage",
+    "Denied Claims",
+    "Personal Injury",
+    "Storm Damage",
+    "Water Damage",
+  ];
   return (
     <header
       className={`${styles.navbar} ${
@@ -120,7 +134,42 @@ export default function Navbar() {
                 )}
               </li>
             ))}
+            <button onClick={handleOpen} className={styles.searchButton}>
+              <HiMiniMagnifyingGlass />
+            </button>
           </ul>
+          {isModalOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
+          <button className={styles.closeX} onClick={handleClose}>✕</button>
+  
+            <div className={styles.inputWrapper}>
+              <HiMiniMagnifyingGlass className={styles.inputIcon} />
+              <input
+                type="text"
+                placeholder="Search www.louislawgroup.com/"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={styles.searchInput}
+              />
+            </div>
+            <div className={styles.popularTopics}>
+              <p className={styles.popularTitle}>Popular Topics</p>
+              <div className={styles.tagsContainer}>
+                {popularTopics.map((topic) => (
+                  <button
+                    key={topic}
+                    className={styles.tag}
+                    onClick={() => handleTagClick(topic)}
+                  >
+                    {topic}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
         </nav>
 
         {/* Phone number on desktop */}

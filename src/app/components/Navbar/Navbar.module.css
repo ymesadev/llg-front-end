@@ -53,6 +53,14 @@
   font-size: 1rem;
 }
 
+.navLinks ul li{
+  margin-block:auto;
+}
+.navLinks ul li:hover{
+  border-radius: 50%;
+  background: #ede7e738;
+
+}
 /* Phone Button */
 .phone {
   display: flex;
@@ -78,6 +86,89 @@
 
 .phone a:hover {
   background-color: #e6a500;
+}
+
+.searchButton {
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  cursor: pointer;
+  background: transparent;
+  color: #ede7e7;
+  border-radius: 50%;
+  border: none;
+  box-shadow: none;
+  transition: background 0.3s ease;
+}
+
+.searchButton:hover {
+ background: #ede7e738;
+}
+/* Modal Overlay */
+.modalOverlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    padding-bottom: 50%;
+    z-index: 1000;
+}
+/* Modal Box */
+.modal {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 36rem;
+  height: fit-content;
+  top: 4rem;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  padding: 2rem 1rem 1rem 1rem;
+  border-bottom: 1px solid #ddd;
+  outline: none;
+
+}
+
+.inputIcon {
+  font-size: 1.2rem;
+  color: #777;
+  background: #ececec;
+  padding: 0.5rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+}
+
+/* Close Button */
+.closeX {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #838383;
+  transition: all 0.2s ease-in;
+  z-index: 1000;
+}
+
+.closeX:hover {
+  transform: rotate(90deg);
 }
 
 /* Hamburger Menu (hidden on desktop) */
