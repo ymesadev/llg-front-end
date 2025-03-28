@@ -3,7 +3,11 @@ import { useSearchParams } from "next/navigation";
 import styles from "./search.module.css";
 const SearchResults = () => {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query");
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    setQuery(searchParams.get("query") || "");
+  }, [searchParams]);
   console.log("render");
   return (
     <div className={styles.container}>
