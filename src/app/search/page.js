@@ -1,20 +1,24 @@
 "use client";
-import { useSearchParams } from "next/navigation";
-import styles from "./search.module.css";
-const SearchResults = () => {
-  const searchParams = useSearchParams();
-  const [query, setQuery] = useState("");
 
-  useEffect(() => {
-    setQuery(searchParams.get("query") || "");
-  }, [searchParams]);
-  console.log("render");
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import styles from "./search.module.css";
+
+const SearchResults = () => {
   return (
     <div className={styles.container}>
-      <h2>Search Results for: "{query}"</h2>
-      {/* Fetch & display search results based on query */}
+      <Suspense fallback={<h2>Loading...</h2>}>
+        <SearchContent />
+      </Suspense>
     </div>
   );
+};
+
+const SearchContent = () => {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
+
+  return <h2>Search Results for: "{query}"</h2>;
 };
 
 export default SearchResults;
