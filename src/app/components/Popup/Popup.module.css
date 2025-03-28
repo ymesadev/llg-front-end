@@ -12,7 +12,7 @@
   background-color: #fff;
   border-radius: 0.25rem;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  width: 90%;
+  width: calc(100% - 6rem);
   padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
@@ -58,7 +58,7 @@
 .popupContainer {
   border-radius: 0.25rem;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  width: 90%;
+  width: calc(100% - 6rem);
   max-width: 20rem;
   position: relative;
   overflow: hidden;

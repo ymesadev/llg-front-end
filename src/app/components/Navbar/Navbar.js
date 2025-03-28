@@ -158,7 +158,7 @@ export default function Navbar() {
         >
           <input
             type="text"
-            placeholder="Search..."
+            placeholder="Search"
             className={styles.searchInput}
           />
         </div>
