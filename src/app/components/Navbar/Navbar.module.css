@@ -44,7 +44,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  align-items: baseline;
+  align-items: center;
 }
 
 .navLinks ul li a {
@@ -54,6 +54,7 @@
 }
 
 .navLinks ul li {
+  margin-right: 0.25rem;
   margin-block: auto;
 }
 .navLinks ul li:hover {
@@ -72,6 +73,7 @@
 
 /* Phone Button */
 .phone {
+  white-space: nowrap;
   display: flex;
   justify-content: flex-end;
   flex: 1;
@@ -80,7 +82,8 @@
 .phone a {
   background-color: #ffb800;
   border-radius: 30px;
-  box-shadow: 4px 7px #ede7e7;
+  border: none;
+  outline: none;
   color: #1a2b49 !important;
   cursor: pointer;
   font-weight: 600;
@@ -91,10 +94,19 @@
   user-select: none;
   touch-action: manipulation;
   transition: 0.3s;
+  margin-left: 1rem;
+  box-shadow: 1px 3px #ede7e7;
 }
 
 .phone a:hover {
-  background-color: #e6a500;
+  background-color: #ffb800;
+  transform: translateY(-3px); /* Lifts the button */
+  box-shadow: 1px 6px #ffe5a3;
+}
+.phone a:active {
+  transform: translateY(1px); /* Press-down effect */
+  box-shadow: 0px 0px #ffe5a3; /* Shadow softens to match press */
+  background-color: #cc9400;
 }
 
 .searchContainer {
@@ -102,7 +114,7 @@
   z-index: -1;
   bottom: -60px;
   left: 0;
-  width: 100%;
+  width: 100vw;
   background: rgba(255, 255, 255, 0.95);
   padding: 10px;
   display: flex;
@@ -122,17 +134,58 @@
   transform: translateY(0);
   pointer-events: auto;
 }
-
-.searchContainer input {
+.inputWrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.searchInput {
   width: 80%;
-  padding: 10px;
+  padding: 0.75rem;
+  padding-left: 1.5rem;
   font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
+  border: none;
+  outline: none;
+  border-radius: 2rem;
+}
+.clearIcon {
+  position: absolute;
+  top: 50%;
+  right: calc(10% + 2rem);
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #fff;
+  background: #dddddd;
+  font-size: 0.875rem;
+}
+
+.clearIcon:hover {
+  background: #969696;
+}
+
+.searchIcon {
+  width: 1rem;
+  height: 1rem;
+  padding: 0.625rem;
+  border-radius: 50%;
+  position: absolute;
+  right: calc(10% - 0.75rem);
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  background-color: #ffb800;
+  color: #1a2c49;
+  font-size: 20px;
+  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.searchIcon:hover {
+  background-color: #e6a500;
 }
 
 .searchButton {
-  margin-left: 0.25rem;
   font-size: 1.5rem;
   padding: 0.5rem;
   width: 2.5rem;
@@ -145,6 +198,7 @@
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
+
 .searchButton.show {
   cursor: pointer;
   background: #ffffff;
@@ -296,7 +350,7 @@
 }
 
 /* Responsive Adjustments */
-@media (max-width: 1024px) {
+@media (max-width: 72rem) {
   .hamburger {
     display: flex;
   }
@@ -306,9 +360,7 @@
   }
 
   .phone {
-    flex: 1;
-    display: flex;
-    justify-content: center;
+    margin-right: 1rem;
   }
 
   .phone a {

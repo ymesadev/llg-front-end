@@ -1,76 +1,75 @@
 .resourcesPage {
-    padding-top: 8rem;
-    padding-bottom: 4rem;
-  }
-  
-  .pageTitle {
-    text-align: left;
-    font-size: 2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    color: #1a2c49;
-  }
-  
-  .pageSubtitle {
-    text-align: left;
-    font-size: 18px;
-    color: #1a2c49;
-    margin-bottom: 40px;
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px;
-    justify-content: center;
-    padding: 20px;
-  }
-  
-  .postCard {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .postCard:hover {
-    transform: scale(1.02);
-  }
-  
-  .postImage {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .postContent {
-    padding: 15px;
-  }
-  
-  .postTitle {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    font-family: "Montserrat", serif !important;
-    color: #1a2c49;
-  }
-  
-  .postExcerpt {
-    font-size: 16px;
-    color: #666;
-  }
-  
-  .noPosts {
-    text-align: center;
-    font-size: 18px;
-    color: #999;
-  }
+  padding-top: 8rem;
+  padding-bottom: 4rem;
+}
 
+.pageTitle {
+  text-align: left;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: #1a2c49;
+}
+
+.pageSubtitle {
+  text-align: left;
+  font-size: 18px;
+  color: #1a2c49;
+  margin-bottom: 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  padding: 20px;
+}
+
+.postCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease-in-out;
+}
+
+.postCard:hover {
+  transform: scale(1.02);
+}
+
+.postImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.postContent {
+  padding: 15px;
+}
+
+.postTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-family: "Montserrat", serif !important;
+  color: #1a2c49;
+}
+
+.postExcerpt {
+  font-size: 16px;
+  color: #666;
+}
+
+.noPosts {
+  text-align: center;
+  font-size: 18px;
+  color: #999;
+}
 
 .pagination {
   text-align: center;

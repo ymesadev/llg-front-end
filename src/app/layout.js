@@ -138,7 +138,6 @@ export default function RootLayout({ children }) {
             src="https://www.facebook.com/tr?id=909380096123158&ev=PageView&noscript=1"
           />
         </noscript>
-
         {children}
       </body>
     </html>
