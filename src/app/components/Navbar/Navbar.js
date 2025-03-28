@@ -1,7 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import { IoCloseOutline } from "react-icons/io5";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import styles from "./Navbar.module.css";
 
@@ -11,8 +13,9 @@ export default function Navbar() {
   const [navLinks, setNavLinks] = useState([]);
   const [activeMenu, setActiveMenu] = useState(null); // Desktop submenu
   const [activeMobileMenu, setActiveMobileMenu] = useState(null); // Mobile submenu
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchVisible, setSearchVisible] = useState(false);
+
+  const pathname = usePathname();
 
   // Change navbar background on scroll
   useEffect(() => {
@@ -78,17 +81,11 @@ export default function Navbar() {
     setActiveMobileMenu(activeMobileMenu === id ? null : id);
   };
 
+  const toggleSearch = () => {
+    setSearchVisible((prev) => !prev);
+    console.log(searchVisible);
+  };
 
-  const handleOpen = () => setIsModalOpen(true);
-  const handleClose = () => setIsModalOpen(false);
-  const popularTopics = [
-    "Insurance Claims",
-    "Property Damage",
-    "Denied Claims",
-    "Personal Injury",
-    "Storm Damage",
-    "Water Damage",
-  ];
   return (
     <header
       className={`${styles.navbar} ${
@@ -106,71 +103,65 @@ export default function Navbar() {
         {/* Desktop Navigation */}
         <nav className={styles.navLinks}>
           <ul>
-            {navLinks.map((link) => (
-              <li key={link.id} className={styles.navItem}>
-                <div className={styles.navLink}>
-                  <Link href={link.URL}>{link.label}</Link>
-                  {link.subPages.length > 0 && (
-                    <span
-                      className={styles.arrowIcon}
-                      onClick={() => toggleSubMenu(link.id)}
-                    >
-                      {activeMenu === link.id ? (
-                        <FaChevronDown />
-                      ) : (
-                        <FaChevronRight />
-                      )}
-                    </span>
+            {navLinks.map((link) => {
+              const isActive = pathname === link.URL;
+              return (
+                <li
+                  key={link.id}
+                  className={`${styles.navItem} ${
+                    isActive ? styles.activeNavItem : ""
+                  }`}
+                >
+                  <div className={styles.navLink}>
+                    <Link href={link.URL}>{link.label}</Link>
+                    {link.subPages.length > 0 && (
+                      <span
+                        className={styles.arrowIcon}
+                        onClick={() => toggleSubMenu(link.id)}
+                      >
+                        {activeMenu === link.id ? (
+                          <FaChevronDown />
+                        ) : (
+                          <FaChevronRight />
+                        )}
+                      </span>
+                    )}
+                  </div>
+                  {link.subPages.length > 0 && activeMenu === link.id && (
+                    <ul className={styles.subMenu}>
+                      {link.subPages.map((sub) => (
+                        <li key={sub.id}>
+                          <Link href={sub.URL}>{sub.label}</Link>
+                        </li>
+                      ))}
+                    </ul>
                   )}
-                </div>
-                {link.subPages.length > 0 && activeMenu === link.id && (
-                  <ul className={styles.subMenu}>
-                    {link.subPages.map((sub) => (
-                      <li key={sub.id}>
-                        <Link href={sub.URL}>{sub.label}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
-            <button onClick={handleOpen} className={styles.searchButton}>
-              <HiMiniMagnifyingGlass />
-            </button>
+                </li>
+              );
+            })}
+            {navLinks?.length > 0 && (
+              <button
+                onClick={toggleSearch}
+                className={`${styles.searchButton} ${
+                  searchVisible ? styles.show : ""
+                }`}
+              >
+                {searchVisible ? <IoCloseOutline /> : <HiMiniMagnifyingGlass />}
+              </button>
+            )}
           </ul>
-          {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-          <button className={styles.closeX} onClick={handleClose}>✕</button>
-  
-            <div className={styles.inputWrapper}>
-              <HiMiniMagnifyingGlass className={styles.inputIcon} />
-              <input
-                type="text"
-                placeholder="Search www.louislawgroup.com/"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={styles.searchInput}
-              />
-            </div>
-            <div className={styles.popularTopics}>
-              <p className={styles.popularTitle}>Popular Topics</p>
-              <div className={styles.tagsContainer}>
-                {popularTopics.map((topic) => (
-                  <button
-                    key={topic}
-                    className={styles.tag}
-                    onClick={() => handleTagClick(topic)}
-                  >
-                    {topic}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
         </nav>
+        <div
+          className={`${styles.searchContainer} ${
+            searchVisible ? styles.show : ""
+          }`}
+        >
+          <input
+            type="text"
+            placeholder="Search..."
+            className={styles.searchInput}
+          />
+        </div>
 
         {/* Phone number on desktop */}
         <div className={styles.phone}>

@@ -53,14 +53,23 @@
   font-size: 1rem;
 }
 
-.navLinks ul li{
-  margin-block:auto;
+.navLinks ul li {
+  margin-block: auto;
 }
-.navLinks ul li:hover{
-  border-radius: 50%;
+.navLinks ul li:hover {
+  border-radius: 1.5rem;
   background: #ede7e738;
-
 }
+
+.activeNavItem {
+  border-radius: 1.5rem;
+  background: #ede7e738;
+}
+
+.activeNavItem a {
+  color: #ffb800 !important;
+}
+
 /* Phone Button */
 .phone {
   display: flex;
@@ -88,89 +97,67 @@
   background-color: #e6a500;
 }
 
+.searchContainer {
+  position: absolute;
+  z-index: -1;
+  bottom: -60px;
+  left: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  /* Default state (hidden) */
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.searchContainer.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.searchContainer input {
+  width: 80%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
 .searchButton {
+  margin-left: 0.25rem;
   font-size: 1.5rem;
   padding: 0.5rem;
   width: 2.5rem;
   height: 2.5rem;
   cursor: pointer;
-  background: transparent;
+  background: #ede7e737;
   color: #ede7e7;
   border-radius: 50%;
   border: none;
-  box-shadow: none;
-  transition: background 0.3s ease;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+.searchButton.show {
+  cursor: pointer;
+  background: #ffffff;
+  color: #676767;
 }
 
 .searchButton:hover {
- background: #ede7e738;
-}
-/* Modal Overlay */
-.modalOverlay {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    padding-bottom: 50%;
-    z-index: 1000;
-}
-/* Modal Box */
-.modal {
-  position: relative;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  width: 36rem;
-  height: fit-content;
-  top: 4rem;
+  background-color: rgba(236, 231, 231, 0.442);
 }
 
-.inputWrapper {
-  display: flex;
-  align-items: center;
-  border-radius: 4px;
-  padding: 2rem 1rem 1rem 1rem;
-  border-bottom: 1px solid #ddd;
-  outline: none;
-
+.searchButton.show:hover {
+  background-color: #ede7e7ab;
 }
-
-.inputIcon {
-  font-size: 1.2rem;
-  color: #777;
-  background: #ececec;
-  padding: 0.5rem;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-}
-
-.searchInput {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 1rem;
-}
-
-/* Close Button */
-.closeX {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #838383;
-  transition: all 0.2s ease-in;
-  z-index: 1000;
-}
-
-.closeX:hover {
-  transform: rotate(90deg);
-}
-
 /* Hamburger Menu (hidden on desktop) */
 .hamburger {
   display: none;
@@ -281,7 +268,7 @@
   background: #f8f8f8;
   padding: 10px;
   list-style: none;
-  position: absolute;  /* classic dropdown for desktop */
+  position: absolute; /* classic dropdown for desktop */
   left: 0;
   top: 100%;
   width: 200px;

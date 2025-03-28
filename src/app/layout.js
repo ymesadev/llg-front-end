@@ -2,6 +2,8 @@ import "./globals.css";
 import Script from "next/script";
 import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
 import CookieConsent from "./components/CookieConsent/CookieConsent";
+import Popup from "./components/Popup/Popup";
+import Navbar from "./components/Navbar/Navbar";
 
 export const metadata = {
   title: "Louis Law Group",
@@ -58,7 +60,10 @@ export default function RootLayout({ children }) {
         />
 
         {/* ✅ Google Analytics (GA4 & Ads Pixel) */}
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=AW-722091953" />
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-722091953"
+        />
         <Script
           id="google-analytics"
           strategy="afterInteractive"
@@ -112,6 +117,8 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+        <Navbar />
+        <Popup />
         {/* ✅ Google Tag Manager (NoScript Fallback) */}
         <noscript>
           <iframe
@@ -132,13 +139,7 @@ export default function RootLayout({ children }) {
           />
         </noscript>
 
-       
-      
-
         {children}
-
-        <CookieConsent /> 
-        
       </body>
     </html>
   );

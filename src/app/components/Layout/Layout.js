@@ -1,7 +1,6 @@
 // src/app/components/Layout/Layout.js
 
 import Head from "next/head"; // Import Next.js Head component
-import Navbar from "../Navbar/Navbar";
 import styles from "./Layout.module.css"; // Ensure the path is correct
 
 export default function Layout({ children, seo = {} }) {
@@ -16,14 +15,10 @@ export default function Layout({ children, seo = {} }) {
         />
       </Head>
 
-      {/* Navbar */}
-      <Navbar />
-
       {/* Main Content */}
       <main className={styles.mainContent}>{children}</main>
 
       {/* Footer */}
-      
     </div>
   );
 }
