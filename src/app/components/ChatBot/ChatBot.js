@@ -29,6 +29,9 @@ export default function ChatbotPopup({ open }) {
 
   return (
     <div className={styles.container}>
+      {isOpen && (
+        <div className={styles.overlay} onClick={() => setIsOpen(false)} />
+      )}
       <div
         className={`${styles.chatbox} ${
           isOpen ? styles.fadeIn : styles.fadeOut

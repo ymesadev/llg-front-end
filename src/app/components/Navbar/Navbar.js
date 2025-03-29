@@ -188,7 +188,7 @@ export default function Navbar() {
               {searchVisible ? <IoCloseOutline /> : <HiMiniMagnifyingGlass />}
             </button>
           )}
-          <a href="tel:8336574812">+(833)-657-4812</a>
+          <a href="tel:8336574812">(833)657-4812</a>
         </div>
 
         {/* Hamburger icon for mobile */}
