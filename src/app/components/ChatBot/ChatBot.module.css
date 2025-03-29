@@ -71,9 +71,9 @@
   background-color: rgb(11, 220, 11);
 }
 .closeButton {
-  width: 2rem;
-  height: 2rem;
-  font-size: 1.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.75rem;
   display: flex;
   justify-content: center;
   align-items: center;
