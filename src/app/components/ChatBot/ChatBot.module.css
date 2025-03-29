@@ -222,10 +222,6 @@
     transform: translateY(100%);
   }
 
-  .chatButton {
-    bottom: 1rem;
-    right: 1rem;
-  }
   .messages {
     height: calc(100% - 11.375rem);
   }
