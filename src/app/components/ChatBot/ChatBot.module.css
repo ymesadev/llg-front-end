@@ -191,6 +191,11 @@
 }
 
 @media (max-width: 768px) {
+  .container {
+    right: 1rem;
+    bottom: 1rem;
+  }
+
   .overlay {
     position: fixed;
     top: 0;
