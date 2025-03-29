@@ -4,6 +4,7 @@ import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
 import CookieConsent from "./components/CookieConsent/CookieConsent";
 import Popup from "./components/Popup/Popup";
 import Navbar from "./components/Navbar/Navbar";
+import ChatbotPopup from "./components/ChatBot/ChatBot";
 
 export const metadata = {
   title: "Louis Law Group",
