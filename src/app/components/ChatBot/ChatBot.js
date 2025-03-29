@@ -42,12 +42,9 @@ export default function ChatbotPopup({ open }) {
               <p>Online</p>
             </div>
           </div>
-          <button
-            onClick={() => setIsOpen(false)}
-            className={styles.closeButton}
-          >
+          <div onClick={() => setIsOpen(false)} className={styles.closeButton}>
             <PiMinusCircleLight />
-          </button>
+          </div>
         </div>
         <div className={styles.messages}>
           <p className={styles.message}>How can I assist you today?</p>
