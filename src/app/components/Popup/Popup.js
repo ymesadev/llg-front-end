@@ -10,7 +10,6 @@ import ChatbotPopup from "../ChatBot/ChatBot";
 
 const Popup = () => {
   const pathname = usePathname();
-  const [showCookiesConsent, setShowCookiesConsent] = useState(false);
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [lastVisitedPath, setLastVisitedPath] = useState("");
@@ -18,12 +17,8 @@ const Popup = () => {
 
   useEffect(() => {
     const hasAgreed = localStorage.getItem("agreedToTerms");
-    const cookieConsent = localStorage.getItem("cookieConsent");
-
     if (!hasAgreed) {
       setTimeout(() => setIsTermsOpen(true), 1000);
-    } else if (!cookieConsent) {
-      setTimeout(() => setShowCookiesConsent(true), 2000);
     }
   }, []);
 
@@ -33,23 +28,16 @@ const Popup = () => {
       lastVisitedPath &&
       lastVisitedPath !== pathname &&
       localStorage.getItem("agreedToTerms") &&
-      localStorage.getItem("cookieConsent") &&
       !consultationDismissed
     ) {
-      setTimeout(() => setIsConsultationOpen(true), 3000); // Delay Consultation popup by 3 secs
+      setTimeout(() => setIsConsultationOpen(true), 3000);
     }
     setLastVisitedPath(pathname);
   }, [pathname, lastVisitedPath]);
 
-  const acceptCookies = () => {
-    localStorage.setItem("cookieConsent", "true");
-    setShowCookiesConsent(false);
-  };
-
   const agreeToTerms = () => {
     localStorage.setItem("agreedToTerms", "true");
     setIsTermsOpen(false);
-    setTimeout(() => setShowCookiesConsent(true), 2000);
   };
 
   const closeConsultation = () => {
@@ -81,25 +69,6 @@ const Popup = () => {
                 Continue
               </button>
             </div>
-          </div>
-        </div>
-      )}
-      {/* Cookie Consent Popup */}
-      {showCookiesConsent && (
-        <div className={styles.cookieConsent}>
-          <div className={styles.cookieConsentContainer}>
-            <p>
-              This website uses cookies to ensure you get the best experience.
-              By using this website, you consent to the use of cookies as
-              described in our{" "}
-              <Link href="/privacy-policy" className={styles.cookieLink}>
-                Privacy Policy
-              </Link>
-              .
-            </p>
-            <button className={styles.acceptButton} onClick={acceptCookies}>
-              ACCEPT ALL COOKIES
-            </button>
           </div>
         </div>
       )}

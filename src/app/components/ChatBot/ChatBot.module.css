@@ -29,6 +29,7 @@
 .fadeOut {
   opacity: 0;
   transform: translateY(1.5rem);
+  pointer-events: none;
 }
 
 .header {
