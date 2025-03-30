@@ -140,7 +140,7 @@
 .input {
   font-size: 16px;
   padding: 0.75rem;
-  width: calc(100% - 1.5rem);
+  width: 100%;
   background-color: #6a6a6a20;
   border: none;
   outline: none;
@@ -152,9 +152,14 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.5rem;
+  height: 100%;
+  padding: 0.75rem;
   color: #007bff;
   right: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .sendButton:hover {
