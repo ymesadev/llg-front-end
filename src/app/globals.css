@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 body {
   margin: 0;
@@ -7,6 +8,12 @@ body {
   letter-spacing: 2px;
   font-size: 1.1rem;
 }
+
+body.no-scroll {
+  overflow: hidden;
+  height: 100%;
+}
+
 section {
   padding-left: 2rem;
   padding-right: 2rem;

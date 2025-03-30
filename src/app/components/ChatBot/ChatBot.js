@@ -10,6 +10,10 @@ import styles from "./ChatBot.module.css";
 export default function ChatbotPopup({ open }) {
   const [isOpen, setIsOpen] = useState(open);
   const [inputValue, setInputValue] = useState("");
+  const [messages, setMessages] = useState([
+    { text: "How can I assist you today?", sender: "bot" },
+  ]);
+
   const suggestions = [
     "What are your practice areas?",
     "How can I schedule a consultation?",
@@ -20,18 +24,46 @@ export default function ChatbotPopup({ open }) {
     setIsOpen(open);
   }, [open]);
 
-  const handleSendMessage = () => {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add("no-scroll");
+    } else {
+      document.body.classList.remove("no-scroll");
+    }
+
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [isOpen]);
+
+  const sendMessage = (message) => {
     if (message.trim()) {
-      console.log("Message sent:", message);
-      setMessage(""); // Clear input after sending
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: message, sender: "user" },
+      ]);
+
+      // Simulate bot response after a short delay
+      setTimeout(() => {
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            text: "Thank you for reaching out! We'll get back to you soon.",
+            sender: "bot",
+          },
+        ]);
+      }, 1000);
     }
   };
 
+  const handleSendMessage = () => {
+    if (inputValue.trim()) {
+      sendMessage(inputValue);
+      setInputValue(""); // Clear input field after sending
+    }
+  };
   return (
     <div className={styles.container}>
-      {isOpen && (
-        <div className={styles.overlay} onClick={() => setIsOpen(false)} />
-      )}
       <div
         className={`${styles.chatbox} ${
           isOpen ? styles.fadeIn : styles.fadeOut
@@ -50,7 +82,16 @@ export default function ChatbotPopup({ open }) {
           </div>
         </div>
         <div className={styles.messages}>
-          <p className={styles.message}>How can I assist you today?</p>
+          {messages.map((msg, index) => (
+            <p
+              key={index}
+              className={`${
+                msg.sender === "bot" ? styles.botMessage : styles.userMessage
+              } ${styles.message}`}
+            >
+              {msg.text}
+            </p>
+          ))}
         </div>
         <div className={styles.inputContainer}>
           <div className={styles.suggestions}>
@@ -58,7 +99,7 @@ export default function ChatbotPopup({ open }) {
               <button
                 key={index}
                 className={styles.suggestionButton}
-                onClick={() => setInputValue(suggestion)}
+                onClick={() => sendMessage(suggestion)}
               >
                 {suggestion}
               </button>
