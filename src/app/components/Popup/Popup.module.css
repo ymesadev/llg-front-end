@@ -1,0 +1,277 @@
+.popupOverlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.termsContainer {
+  background-color: #fff;
+  border-radius: 0.25rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: calc(100% - 6rem);
+  padding: 1rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 20rem;
+  position: relative;
+}
+
+.termsContent {
+  text-align: center;
+}
+
+.termsContent h2 {
+  font-size: 1.25rem;
+}
+
+.termsContent p {
+  font-size: 0.875rem;
+  text-align: justify;
+  max-width: 24rem;
+}
+.termsContent p a {
+  text-decoration: none;
+  color: rgb(62, 120, 221);
+}
+
+.ctaButton {
+  background-color: #1a2b49;
+  color: white;
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.ctaButton:hover {
+  cursor: pointer;
+  background-color: #11213d;
+}
+.popupContainer {
+  border-radius: 1rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: calc(100% - 6rem);
+  width: fit-content;
+  position: relative;
+  overflow: hidden;
+}
+
+.popupHeader {
+  height: 5rem;
+  background-color: #1a2b49;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+}
+
+.popupHeader img {
+  height: auto;
+  width: auto;
+}
+
+.closeButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 1001;
+}
+
+.closeButton:hover {
+  color: #ffffffbc;
+}
+
+.popupContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: #1a2b49;
+  background-color: #fff;
+  padding: 1rem;
+}
+
+.popupContentWrapper span {
+  display: flex;
+}
+.needHelp {
+  letter-spacing: 0;
+  width: 100%;
+  text-align: start;
+}
+
+.popupContentWrapper span h2 {
+  font-size: 3rem;
+}
+
+.popupContentWrapper span h2:last-child {
+  background-color: #1a2b49;
+  color: #ffb800;
+  padding: 0 0.5rem;
+}
+
+.popupContentWrapper p {
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 0.25rem;
+}
+.popupContentWrapper p:last-child {
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.chatButtonContainer {
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+  background-color: #fff;
+  padding: 1.5rem 0rem 2rem 0rem;
+}
+
+.chatButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  width: 100%;
+  background-color: #1a2b49;
+  color: #fff;
+  border: none;
+  border-radius: 2rem;
+  height: 2.5rem;
+  cursor: pointer;
+}
+
+.chatButton:hover {
+  background-color: #1a2b49f4;
+  color: #fff;
+}
+
+.textUs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #ffb800;
+  color: #1a2b49;
+  width: 100%;
+  font-size: 0.875rem;
+  font-family: "Montserrat", sans-serif;
+  letter-spacing: normal;
+  font-weight: 500;
+  border-radius: 2rem;
+  height: 2.5rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.textUs:hover {
+  background-color: #e0a700;
+}
+
+.icon {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.75rem;
+  padding: 0.25rem;
+}
+.textUsIcon {
+  color: #1a2b49;
+}
+.noThanks {
+  margin-top: 8px;
+  color: #666;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.cookieConsent {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(26, 43, 73, 0.9);
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 14px;
+  z-index: 9999;
+}
+
+.cookieConsent p {
+  margin: 0;
+  flex: 1;
+  max-width: 1200px;
+  margin-bottom: 1rem;
+}
+
+.cookieLink {
+  color: #ffb800;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.acceptButton {
+  background: #ffb800;
+  color: #1a2b49;
+  border: none;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.acceptButton:hover {
+  background: #e0a700;
+}
+
+.textUsButton {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  background-color: #ffb800;
+  color: #1a2b49;
+  padding: 0 1rem;
+  border-radius: 50px;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  display: none;
+  z-index: 9999;
+}
+
+.textUsButton:hover {
+  background-color: #e0a700;
+}
+
+.mobileIcon {
+  font-size: 1.5rem;
+}
+
+@media (max-width: 48rem) {
+  .textUsButton {
+    display: flex;
+  }
+}
