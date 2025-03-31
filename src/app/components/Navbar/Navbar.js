@@ -187,6 +187,7 @@ export default function Navbar() {
             >
               {searchVisible ? <IoCloseOutline /> : <HiMiniMagnifyingGlass />}
             </button>
+            // <SearchButton />
           )}
           <a href="tel:8336574812">(833)657-4812</a>
         </div>

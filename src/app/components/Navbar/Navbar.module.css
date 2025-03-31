@@ -153,7 +153,7 @@
 .clearIcon {
   position: absolute;
   top: 50%;
-  right: calc(10% + 2rem);
+  right: calc(10% + 3rem);
   transform: translateY(-50%);
   cursor: pointer;
   color: #fff;
@@ -166,12 +166,12 @@
 }
 
 .searchIcon {
-  width: 1rem;
-  height: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
   padding: 0.625rem;
   border-radius: 50%;
   position: absolute;
-  right: calc(10% - 0.75rem);
+  right: calc(10% + 1px);
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;

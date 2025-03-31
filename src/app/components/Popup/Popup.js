@@ -1,18 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation"; // Detect route changes
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Popup.module.css";
 import Attorney from "../../../../public/images/transparent-pierre.webp";
 import { IoMdChatboxes } from "react-icons/io";
+import { CiMobile3 } from "react-icons/ci";
 import ChatbotPopup from "../ChatBot/ChatBot";
 
 const Popup = () => {
-  const pathname = usePathname();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
-  const [lastVisitedPath, setLastVisitedPath] = useState("");
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
@@ -23,17 +21,13 @@ const Popup = () => {
   }, []);
 
   useEffect(() => {
-    const consultationDismissed = localStorage.getItem("consultationDismissed");
-    if (
-      lastVisitedPath &&
-      lastVisitedPath !== pathname &&
-      localStorage.getItem("agreedToTerms") &&
-      !consultationDismissed
-    ) {
+    const consultationDismissed = sessionStorage.getItem(
+      "consultationDismissed"
+    );
+    if (localStorage.getItem("agreedToTerms") && !consultationDismissed) {
       setTimeout(() => setIsConsultationOpen(true), 3000);
     }
-    setLastVisitedPath(pathname);
-  }, [pathname, lastVisitedPath]);
+  }, []);
 
   const agreeToTerms = () => {
     localStorage.setItem("agreedToTerms", "true");
@@ -41,12 +35,12 @@ const Popup = () => {
   };
 
   const closeConsultation = () => {
-    localStorage.setItem("consultationDismissed", "true");
+    sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
   };
 
   const handleMessageUs = () => {
-    localStorage.setItem("consultationDismissed", "true");
+    sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
     setIsChatOpen(true);
   };
@@ -104,6 +98,12 @@ const Popup = () => {
           </div>
         </div>
       )}
+      {/* Floating SMS Button*/}
+      <a href="sms:8336574812" className={styles.textUsButton}>
+        <CiMobile3 className={styles.mobileIcon} />
+        <p>Text Us</p>
+      </a>
+
       <ChatbotPopup open={isChatOpen} />
     </>
   );
