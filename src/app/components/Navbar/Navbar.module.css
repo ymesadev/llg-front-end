@@ -9,7 +9,7 @@
 
 /* Transparent state */
 .transparent {
-  background-color: #1a2c49;
+  background-color: #1a2b49;
   box-shadow: none;
 }
 
@@ -176,7 +176,7 @@
   transform: translateY(-50%);
   cursor: pointer;
   background-color: #ffb800;
-  color: #1a2c49;
+  color: #1a2b49;
   font-size: 20px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
 }

@@ -7,7 +7,7 @@ import Attorney from "../../../../public/images/transparent-pierre.webp";
 import { IoMdChatboxes } from "react-icons/io";
 import { CiMobile3 } from "react-icons/ci";
 import ChatbotPopup from "../ChatBot/ChatBot";
-import { ChatUsPopup, TextUsPopup } from "../../../../public/icons";
+import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
 
 const Popup = () => {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
@@ -80,12 +80,10 @@ const Popup = () => {
               />
             </div>
             <div className={styles.popupContent}>
-              <button
+              <ClosePopup
                 className={styles.closeButton}
                 onClick={closeConsultation}
-              >
-                ✕
-              </button>
+              />
               <div className={styles.popupContentWrapper}>
                 <h2 className={styles.needHelp}>NEED HELP?</h2>
                 <span>
