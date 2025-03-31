@@ -7,6 +7,7 @@ import Attorney from "../../../../public/images/transparent-pierre.webp";
 import { IoMdChatboxes } from "react-icons/io";
 import { CiMobile3 } from "react-icons/ci";
 import ChatbotPopup from "../ChatBot/ChatBot";
+import { ChatUsPopup, TextUsPopup } from "../../../../public/icons";
 
 const Popup = () => {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
@@ -70,6 +71,14 @@ const Popup = () => {
       {isConsultationOpen && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContainer}>
+            <div className={styles.popupHeader}>
+              <Image
+                src="/images/logo.png"
+                alt="Logo"
+                width={100}
+                height={100}
+              />
+            </div>
             <div className={styles.popupContent}>
               <button
                 className={styles.closeButton}
@@ -77,23 +86,25 @@ const Popup = () => {
               >
                 ✕
               </button>
-              <h2>Need Legal Help?</h2>
-              <div className={styles.chatImageContainer}>
-                <Image
-                  src={Attorney}
-                  alt="Attorney"
-                  width={500}
-                  height={500}
-                  className={styles.attorneyImage}
-                />
+              <div className={styles.popupContentWrapper}>
+                <h2 className={styles.needHelp}>NEED HELP?</h2>
+                <span>
+                  <h2>NO WIN,</h2>
+                  <h2>NO FEE</h2>
+                </span>
+                <p>Call, Text or Chat 24/7</p>
+                <p> Free Case Review!</p>
               </div>
-              <p>Message us. 24/7 Free Case Review</p>
-            </div>
-            <div className={styles.chatButtonContainer}>
-              <button className={styles.chatButton} onClick={handleMessageUs}>
-                <IoMdChatboxes className={styles.icon} />
-                <p>Let's Chat</p>
-              </button>
+              <div className={styles.chatButtonContainer}>
+                <button className={styles.chatButton} onClick={handleMessageUs}>
+                  <p>Let's Chat</p>
+                  <ChatUsPopup className={styles.icon} />
+                </button>
+                <a href="sms:8336574812" className={styles.textUs}>
+                  <p>Text Us</p>
+                  <TextUsPopup className={styles.textUsIcon} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
