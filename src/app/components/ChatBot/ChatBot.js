@@ -62,70 +62,28 @@ export default function ChatbotPopup({ open }) {
       setInputValue(""); // Clear input field after sending
     }
   };
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://widgets.leadconnectorhq.com/loader.js";
+    script.async = true;
+    script.setAttribute(
+      "data-resources-url",
+      "https://widgets.leadconnectorhq.com/chat-widget/loader.js"
+    );
+    script.setAttribute("data-widget-id", "67eae95f331e4f0cb95bd413");
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
   return (
     <div className={styles.container}>
       <div
-        className={`${styles.chatbox} ${
-          isOpen ? styles.fadeIn : styles.fadeOut
-        }`}
-      >
-        <div className={styles.header}>
-          <div className={styles.headerInfo}>
-            <h2 className={styles.title}>Louis Law Group</h2>
-            <div className={styles.statusContainer}>
-              <span className={styles.onlineStatus} />
-              <p>Online</p>
-            </div>
-          </div>
-          <div onClick={() => setIsOpen(false)} className={styles.closeButton}>
-            <PiMinusCircleLight />
-          </div>
-        </div>
-        <div className={styles.messages}>
-          {messages.map((msg, index) => (
-            <p
-              key={index}
-              className={`${
-                msg.sender === "bot" ? styles.botMessage : styles.userMessage
-              } ${styles.message}`}
-            >
-              {msg.text}
-            </p>
-          ))}
-        </div>
-        <div className={styles.inputContainer}>
-          <div className={styles.suggestions}>
-            {suggestions.map((suggestion, index) => (
-              <button
-                key={index}
-                className={styles.suggestionButton}
-                onClick={() => sendMessage(suggestion)}
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-          <div className={styles.inputWrapper}>
-            <input
-              type="text"
-              placeholder="Type a message..."
-              className={styles.input}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            />
-            <button className={styles.sendButton} onClick={handleSendMessage}>
-              <VscSend size={20} />
-            </button>
-          </div>
-        </div>
-      </div>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`${styles.chatButton} ${isOpen ? styles.buttonClicked : ""}`}
-      >
-        <FaComments size={24} />
-      </button>
+        data-chat-widget
+        data-widget-id="67eae95f331e4f0cb95bd413"
+        data-location-id="OpuRBif1UwDh1UMMiJ7o"
+      ></div>
     </div>
   );
 }

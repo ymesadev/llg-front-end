@@ -41,7 +41,13 @@ export async function generateStaticParams() {
       { next: { revalidate: 60 } }
     );
 
-    if (!resPages.ok || !resAttorneys.ok || !resArticles.ok || !resJobs.ok || !resFaqs.ok) {
+    if (
+      !resPages.ok ||
+      !resAttorneys.ok ||
+      !resArticles.ok ||
+      !resJobs.ok ||
+      !resFaqs.ok
+    ) {
       throw new Error("Failed to fetch slugs");
     }
 
@@ -72,7 +78,8 @@ export async function generateStaticParams() {
     }));
 
     const faqs = dataFaqs.data.map((faq) => {
-      const faqSlug = faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug;
+      const faqSlug =
+        faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug;
       return { slug: [faqSlug] };
     });
 
@@ -96,19 +103,28 @@ export default async function Page({ params }) {
   let isFaqsPage = false;
 
   try {
-    const attorneyRes = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
-      next: { revalidate: 60 },
-    });
+    const attorneyRes = await fetch(
+      `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
     const articleRes = await fetch(
       `${strapiURL}/api/articles?fields[]=slug&pagination[pageSize]=2000`,
       { next: { revalidate: 60 } }
     );
-    const jobRes = await fetch(`${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`, {
-      next: { revalidate: 60 },
-    });
-    const faqsRes = await fetch(`${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`, {
-      next: { revalidate: 60 },
-    });
+    const jobRes = await fetch(
+      `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
+    const faqsRes = await fetch(
+      `${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`,
+      {
+        next: { revalidate: 60 },
+      }
+    );
 
     const attorneyData = await attorneyRes.json();
     const articleData = await articleRes.json();
@@ -150,7 +166,8 @@ export default async function Page({ params }) {
     apiUrl = `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${slug}&populate=*`;
   } else {
     const childSlug = slugArray[slugArray.length - 1];
-    const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
+    const parentSlug =
+      slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
       apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent][Slug][$eq]=${parentSlug}&populate=*`;
@@ -198,10 +215,18 @@ export default async function Page({ params }) {
           <section className={styles.jobHero}>
             <div className="container">
               <h1 className={styles.jobTitle}>{page.Title}</h1>
-              <Link href="/apply-for-this-position" className={styles.blueButton}>
+              <Link
+                href="/apply-for-this-position"
+                className={styles.blueButton}
+              >
                 Apply Now
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                  <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                  <g
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
                   </g>
                 </svg>
@@ -235,12 +260,15 @@ export default async function Page({ params }) {
               <p className={styles.blogDate}>
                 <FaRegCalendarAlt className={styles.icon} />{" "}
                 {new Date(page.createdAt).toLocaleDateString()} |{" "}
-                <FaRegClock className={styles.icon} /> {Math.ceil(page.blocks.length * 0.5)} min read
+                <FaRegClock className={styles.icon} />{" "}
+                {Math.ceil(page.blocks.length * 0.5)} min read
               </p>
               <div className={styles.socialShare}>
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${
-                    typeof window !== "undefined" ? encodeURIComponent(window.location.href) : ""
+                    typeof window !== "undefined"
+                      ? encodeURIComponent(window.location.href)
+                      : ""
                   }`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -379,11 +407,15 @@ export default async function Page({ params }) {
       ) : (
         <>
           {page.Hero && (
-            <section className={`${styles.darkBg} ${styles.fullHeight} ${styles.verticalCenter}`}>
+            <section
+              className={`${styles.darkBg} ${styles.fullHeight} ${styles.verticalCenter}`}
+            >
               <div className="container">
                 <div className="column-2a">
                   <div className={styles.leftColumn}>
-                    {page.Hero.subtitle && <h3 className={styles.subtitle}>{page.Hero.subtitle}</h3>}
+                    {page.Hero.subtitle && (
+                      <h3 className={styles.subtitle}>{page.Hero.subtitle}</h3>
+                    )}
                     <h1 className={styles.title}>{page.Hero.title}</h1>
                     {Array.isArray(page.Hero.intro) &&
                       page.Hero.intro.map((block, index) => (
@@ -395,7 +427,8 @@ export default async function Page({ params }) {
                   <div className={styles.rightColumn}>
                     <div className={styles.evaluationText}>
                       <p className={styles.evaluationTitle}>
-                        Get a <span className={styles.free}>FREE</span> case evaluation today.
+                        Get a <span className={styles.free}>FREE</span> case
+                        evaluation today.
                       </p>
                     </div>
                     <HeroForm />
@@ -405,17 +438,27 @@ export default async function Page({ params }) {
             </section>
           )}
 
-          {page.Sections && page.Sections.body && page.Sections.body.length > 0 && (
-            <section className={styles.Descriptionsection}>
-              <div className="container">
-                {page.Sections.title && <h2 className={styles.DescriptionTitle}>{page.Sections.title}</h2>}
-                {page.Sections.subtitle && <h3 className={styles.Descriptionsubtitle}>{page.Sections.subtitle}</h3>}
-                {page.Sections.body.map((block, idx) => (
-                  <p key={idx}>{block.children?.[0]?.text || ""}</p>
-                ))}
-              </div>
-            </section>
-          )}
+          {page.Sections &&
+            page.Sections.body &&
+            page.Sections.body.length > 0 && (
+              <section className={styles.Descriptionsection}>
+                <div className="container">
+                  {page.Sections.title && (
+                    <h2 className={styles.DescriptionTitle}>
+                      {page.Sections.title}
+                    </h2>
+                  )}
+                  {page.Sections.subtitle && (
+                    <h3 className={styles.Descriptionsubtitle}>
+                      {page.Sections.subtitle}
+                    </h3>
+                  )}
+                  {page.Sections.body.map((block, idx) => (
+                    <p key={idx}>{block.children?.[0]?.text || ""}</p>
+                  ))}
+                </div>
+              </section>
+            )}
 
           {Array.isArray(page.Services) && page.Services.length > 0 && (
             <ServicesCarousel services={page.Services} />
