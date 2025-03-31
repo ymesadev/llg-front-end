@@ -125,3 +125,6 @@ h3 {
     padding-right: 1rem;
   }
 }
+.widget-open-icon {
+  display: none !important;
+}

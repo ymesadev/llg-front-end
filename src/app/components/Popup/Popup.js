@@ -109,8 +109,8 @@ const Popup = () => {
       )}
       {/* Floating SMS Button*/}
       <a href="sms:8336574812" className={styles.textUsButton}>
-        <CiMobile3 className={styles.mobileIcon} />
         <p>Text Us</p>
+        <TextUsPopup className={styles.textUsIcon} />
       </a>
 
       <ChatbotPopup open={isChatOpen} />
