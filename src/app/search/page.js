@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import styles from "./search.module.css";
 import { limitText } from "../utils/LimitText";
@@ -88,9 +88,16 @@ function getPagesArray(currentPage, totalPages) {
 }
 
 export default function SearchResults() {
-  const searchParams = useSearchParams();
+  return (
+    <Suspense fallback={<SkeletonSearch />}>
+      <SearchResultsContent />
+    </Suspense>
+  );
+}
 
-  const [query, setQuery] = useState("");
+function SearchResultsContent() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("query");
 
   const [allItems, setAllItems] = useState([]);
 
@@ -101,10 +108,6 @@ export default function SearchResults() {
   // Loading / Error
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    setQuery(searchParams.get("query") || "");
-  }, [searchParams]);
 
   useEffect(() => {
     if (!query) return;
