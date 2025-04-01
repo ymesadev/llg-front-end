@@ -89,7 +89,8 @@ function getPagesArray(currentPage, totalPages) {
 
 export default function SearchResults() {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query");
+
+  const [query, setQuery] = useState("");
 
   const [allItems, setAllItems] = useState([]);
 
@@ -100,6 +101,10 @@ export default function SearchResults() {
   // Loading / Error
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setQuery(searchParams.get("query") || "");
+  }, [searchParams]);
 
   useEffect(() => {
     if (!query) return;
