@@ -2,7 +2,7 @@ import "./globals.css";
 import Script from "next/script";
 import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
 import CookieConsent from "./components/CookieConsent/CookieConsent";
-
+import Popup from "./components/Popup/Popup"; // Import Popup component
 
 
 export const metadata = {
@@ -114,6 +114,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
+      <Popup />
         {/* ✅ Google Tag Manager (NoScript Fallback) */}
         <noscript>
           <iframe
