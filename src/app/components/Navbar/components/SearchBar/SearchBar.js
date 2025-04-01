@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { IoCloseOutline } from "react-icons/io5";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
@@ -9,22 +9,30 @@ const popularSearches = [
   "Insurance Claims",
   "Personal Injury",
   "Property Damage",
+  "SSDI",
+  "Social Security",
 ];
 
 const SearchBar = () => {
   const [searchVisible, setSearchVisible] = useState(false);
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const inputRef = useRef(null);
 
   const toggleSearch = () => {
-    setSearchVisible((prev) => !prev);
+    setSearchVisible((prev) => {
+      if (!prev) {
+        setTimeout(() => inputRef.current?.focus(), 100);
+      }
+      return !prev;
+    });
   };
 
   const handleSearch = (searchQuery) => {
     const searchTerm = searchQuery || query;
     if (searchTerm.trim()) {
       router.push(`/search?query=${encodeURIComponent(searchTerm)}`);
-      setSearchVisible(false); // Close search bar after search
+      setSearchVisible(false);
     }
   };
 
@@ -45,37 +53,40 @@ const SearchBar = () => {
           searchVisible ? styles.show : ""
         }`}
       >
-        <div className={styles.inputWrapper}>
-          <input
-            type="text"
-            placeholder="Search anything"
-            className={styles.searchInput}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-          />
-          {query && (
-            <IoCloseOutline
-              className={styles.clearIcon}
-              onClick={() => setQuery("")}
+        <div className={styles.searchWrapper}>
+          <div className={styles.inputWrapper}>
+            <input
+              ref={inputRef} // Attach ref to input
+              type="text"
+              placeholder="Search anything"
+              className={styles.searchInput}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
-          )}
-          <HiMiniMagnifyingGlass
-            className={styles.searchIcon}
-            onClick={() => handleSearch()}
-          />
-        </div>
+            {query && (
+              <IoCloseOutline
+                className={styles.clearIcon}
+                onClick={() => setQuery("")}
+              />
+            )}
+            <HiMiniMagnifyingGlass
+              className={styles.searchIcon}
+              onClick={() => handleSearch()}
+            />
+          </div>
 
-        {/* Popular Searches */}
-        <div className={styles.popularSearches}>
-          <h3>Popular Searches</h3>
-          <ul>
-            {popularSearches.map((term, index) => (
-              <li key={index} onClick={() => handleSearch(term)}>
-                {term}
-              </li>
-            ))}
-          </ul>
+          {/* Popular Searches */}
+          <div className={styles.popularSearches}>
+            <h3>Looking For...</h3>
+            <ul>
+              {popularSearches.map((term, index) => (
+                <li key={index} onClick={() => handleSearch(term)}>
+                  {term}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

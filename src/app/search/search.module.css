@@ -2,10 +2,15 @@
   padding-top: 8rem;
   padding-bottom: 4rem;
   padding-inline: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .container h2 {
+  font-family: "Montserrat", sans-serif;
   font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: normal;
 }
 
 .resultItem {
@@ -21,6 +26,7 @@
   border-radius: 2rem;
   background-color: #1a2b49;
   color: #fff;
+  text-transform: uppercase;
 }
 .resultTitle {
   font-weight: 600;
@@ -95,5 +101,11 @@
   }
   100% {
     background-position: 0 50%;
+  }
+}
+
+@media (max-width: 48rem) {
+  .container h2 {
+    font-size: 2rem;
   }
 }

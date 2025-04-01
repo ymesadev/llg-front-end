@@ -199,7 +199,13 @@ function SearchResultsContent() {
               const title = item?.Title || item?.title || "No Title";
               return (
                 <div key={item.id} className={styles.resultItem}>
-                  <small>{item.__collectionName}</small>
+                  <small>
+                    {item.__collectionName === "pages"
+                      ? "PRACTICE AREA"
+                      : item.__collectionName === "team-pages"
+                      ? "TEAMS"
+                      : item.__collectionName}
+                  </small>
                   <h3 className={styles.resultTitle}>{title}</h3>
 
                   {/* PAGES */}

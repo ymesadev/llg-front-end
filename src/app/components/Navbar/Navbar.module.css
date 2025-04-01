@@ -109,6 +109,22 @@
   background-color: #cc9400;
 }
 
+/* Hamburger Menu (hidden on desktop) */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.bar {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
 /* Hamburger "open" state animations */
 .hamburger .open:nth-child(1) {
   transform: translateY(8px) rotate(45deg);

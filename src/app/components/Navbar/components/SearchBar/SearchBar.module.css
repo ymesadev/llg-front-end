@@ -1,17 +1,17 @@
 .overlay {
   position: fixed;
-  top: 9rem;
+  top: 86.5px;
   left: 0;
   width: 100%;
   height: calc(100%);
   background: rgba(0, 0, 0, 0.65);
-  z-index: 1000;
+  z-index: 1;
 }
 
 .searchContainer {
   position: absolute;
-  z-index: -1;
-  bottom: -13.5rem;
+  z-index: 2;
+  top: 86.5px;
   left: 0;
   width: 100vw;
   background: rgba(255, 255, 255);
@@ -21,11 +21,18 @@
   justify-content: center;
   align-items: center;
   gap: 10px;
-
   opacity: 0;
   transform: translateY(-0.5rem);
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
+}
+
+.searchWrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .searchContainer.show {
@@ -40,11 +47,12 @@
   width: 100%;
 }
 .searchInput {
-  width: 80%;
+  width: calc(100% - 5rem);
   padding: 0.75rem;
   padding-left: 1.5rem;
   font-size: 16px;
-  box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.1);
+  background-color: #96969622;
+  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.1);
   border: none;
   outline: none;
   border-radius: 2rem;
@@ -52,11 +60,11 @@
 .clearIcon {
   position: absolute;
   top: 50%;
-  right: calc(10% + 3rem);
+  right: 6rem;
   transform: translateY(-50%);
   cursor: pointer;
   color: #fff;
-  background: #dddddd;
+  background: #b4b4b4;
   font-size: 0.875rem;
 }
 
@@ -70,7 +78,7 @@
   padding: 0.625rem;
   border-radius: 50%;
   position: absolute;
-  right: calc(10% + 1px);
+  right: 2.625rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -110,4 +118,43 @@
 
 .searchButton.show:hover {
   background-color: #ede7e7ab;
+}
+
+.popularSearches {
+  max-width: 1400px;
+  width: calc(100% - 5rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.popularSearches h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1rem;
+  text-align: left;
+  width: 100%;
+  margin-top: 1rem;
+  margin-left: 2rem;
+}
+.popularSearches ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+  gap: 1rem;
+}
+
+.popularSearches ul li {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #1a2b49;
+  border-radius: 2rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.popularSearches ul li:hover {
+  background-color: #1a2b49f2;
 }
