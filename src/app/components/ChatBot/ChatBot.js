@@ -1,131 +1,69 @@
-"use client";
+"use client"; // Only needed in Next.js 13+ App Router
 
-import { useEffect, useState } from "react";
-import { FaComments } from "react-icons/fa";
-import { PiMinusCircleLight } from "react-icons/pi";
-import { VscSend } from "react-icons/vsc";
-
+import React, { useEffect } from "react";
+import Script from "next/script";
+import { ChatUsPopup } from "../../../../public/icons";
 import styles from "./ChatBot.module.css";
-
-export default function ChatbotPopup({ open }) {
-  const [isOpen, setIsOpen] = useState(open);
-  const [inputValue, setInputValue] = useState("");
-  const [messages, setMessages] = useState([
-    { text: "How can I assist you today?", sender: "bot" },
-  ]);
-
-  const suggestions = [
-    "What are your practice areas?",
-    "How can I schedule a consultation?",
-    "What are your fees?",
-  ];
-
+function ChatBot() {
   useEffect(() => {
-    setIsOpen(open);
-  }, [open]);
+    // Function to hide elements inside the shadow root
+    const hideShadowElements = () => {
+      // 1) Grab the <chat-widget> element
+      const chatWidget = document.querySelector("chat-widget");
+      if (!chatWidget || !chatWidget.shadowRoot) {
+        console.warn("Chat widget or shadow root not found yet.");
+        return;
+      }
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add("no-scroll");
-    } else {
-      document.body.classList.remove("no-scroll");
-    }
+      // 2) Query elements INSIDE the shadow root you want to hide
+      // Adjust the selector(s) based on what you see in DevTools
+      // For example:
+      const otherButton = chatWidget.shadowRoot.querySelector(
+        ".lc_text-widget--bubble"
+      );
+
+      if (otherButton) {
+        otherButton.style.display = "none"; // Hide it
+        console.log("Hid the other button inside the shadow root.");
+      } else {
+        console.warn("No lc_text-widget--bubble found in the shadow root.");
+      }
+    };
+
+    // Listen for the GHL widget to finish loading, then hide the default bubble/button
+    window.addEventListener("LC_chatWidgetLoaded", hideShadowElements);
 
     return () => {
-      document.body.classList.remove("no-scroll");
+      window.removeEventListener("LC_chatWidgetLoaded", hideShadowElements);
     };
-  }, [isOpen]);
+  }, []);
 
-  const sendMessage = (message) => {
-    if (message.trim()) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: message, sender: "user" },
-      ]);
-
-      // Simulate bot response after a short delay
-      setTimeout(() => {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          {
-            text: "Thank you for reaching out! We'll get back to you soon.",
-            sender: "bot",
-          },
-        ]);
-      }, 1000);
+  // 3) Function to open the chat widget programmatically
+  const openWidget = () => {
+    if (window?.leadConnector?.chatWidget) {
+      window.leadConnector.chatWidget.openWidget();
+    } else {
+      console.warn("Chat widget not loaded yet.");
     }
   };
 
-  const handleSendMessage = () => {
-    if (inputValue.trim()) {
-      sendMessage(inputValue);
-      setInputValue(""); // Clear input field after sending
-    }
-  };
   return (
-    <div className={styles.container}>
-      <div
-        className={`${styles.chatbox} ${
-          isOpen ? styles.fadeIn : styles.fadeOut
-        }`}
-      >
-        <div className={styles.header}>
-          <div className={styles.headerInfo}>
-            <h2 className={styles.title}>Louis Law Group</h2>
-            <div className={styles.statusContainer}>
-              <span className={styles.onlineStatus} />
-              <p>Online</p>
-            </div>
-          </div>
-          <div onClick={() => setIsOpen(false)} className={styles.closeButton}>
-            <PiMinusCircleLight />
-          </div>
-        </div>
-        <div className={styles.messages}>
-          {messages.map((msg, index) => (
-            <p
-              key={index}
-              className={`${
-                msg.sender === "bot" ? styles.botMessage : styles.userMessage
-              } ${styles.message}`}
-            >
-              {msg.text}
-            </p>
-          ))}
-        </div>
-        <div className={styles.inputContainer}>
-          <div className={styles.suggestions}>
-            {suggestions.map((suggestion, index) => (
-              <button
-                key={index}
-                className={styles.suggestionButton}
-                onClick={() => sendMessage(suggestion)}
-              >
-                {suggestion}
-              </button>
-            ))}
-          </div>
-          <div className={styles.inputWrapper}>
-            <input
-              type="text"
-              placeholder="Type a message..."
-              className={styles.input}
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-            />
-            <button className={styles.sendButton} onClick={handleSendMessage}>
-              <VscSend size={20} />
-            </button>
-          </div>
-        </div>
-      </div>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className={`${styles.chatButton} ${isOpen ? styles.buttonClicked : ""}`}
-      >
-        <FaComments size={24} />
+    <>
+      {/* Custom "Let’s Chat" button */}
+      <button onClick={openWidget} className={styles.chatUs}>
+        Let’s Chat
+        <ChatUsPopup />
       </button>
-    </div>
+
+      {/* Load the external chat widget script after the page becomes interactive */}
+      <Script
+        src="https://widgets.leadconnectorhq.com/loader.js"
+        data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js"
+        data-widget-id="67eae95f331e4f0cb95bd413"
+        strategy="afterInteractive"
+      />
+    </>
   );
 }
+
+export default ChatBot;

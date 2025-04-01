@@ -3,6 +3,8 @@ import Script from "next/script";
 import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
 import CookieConsent from "./components/CookieConsent/CookieConsent";
 
+
+
 export const metadata = {
   title: "Louis Law Group",
   description: "Trusted legal services",
