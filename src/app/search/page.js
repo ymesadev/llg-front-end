@@ -24,9 +24,9 @@ export default function MyComponent() {
     const fetchData = async () => {
       try {
         // Three separate endpoints
-        const urlPages = `${strapiURL}/api/pages?filters[Title][$containsi]=${query}`;
-        const urlTeam = `${strapiURL}/api/team-pages?filters[title][$containsi]=${query}`;
-        const urlArticles = `${strapiURL}/api/articles?filters[title][$containsi]=${query}`;
+        const urlPages = `${strapiURL}/api/pages?filters[$or][0][Title][$containsi]=${query}&filters[$or][1][Sections][body][$containsi]=${query}&populate=*`;
+        const urlTeam = `${strapiURL}/api/team-pages?filters[$or][0][title][$containsi]=${query}&filters[$or][1][Description][$containsi]=${query}&populate=*`;
+        const urlArticles = `${strapiURL}/api/articles?filters[$or][0][title][$containsi]=${query}&filters[$or][1][description][$containsi]=${query}&populate=*`;
 
         // Fetch in parallel
         const [pagesRes, teamRes, articlesRes] = await Promise.all([

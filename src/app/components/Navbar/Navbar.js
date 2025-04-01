@@ -6,6 +6,7 @@ import { FaChevronRight, FaChevronDown } from "react-icons/fa";
 import { IoCloseOutline } from "react-icons/io5";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import styles from "./Navbar.module.css";
+import SearchBar from "./components/SearchBar/SearchBar";
 
 export default function Navbar() {
   const [navBackground, setNavBackground] = useState(false);
@@ -13,8 +14,6 @@ export default function Navbar() {
   const [navLinks, setNavLinks] = useState([]);
   const [activeMenu, setActiveMenu] = useState(null); // Desktop submenu
   const [activeMobileMenu, setActiveMobileMenu] = useState(null); // Mobile submenu
-  const [searchVisible, setSearchVisible] = useState(false);
-  const [query, setQuery] = useState("");
   const router = useRouter();
   const pathname = usePathname();
 
@@ -82,17 +81,6 @@ export default function Navbar() {
     setActiveMobileMenu(activeMobileMenu === id ? null : id);
   };
 
-  const toggleSearch = () => {
-    setSearchVisible((prev) => !prev);
-  };
-
-  const handleSearch = () => {
-    if (query.trim()) {
-      router.push(`/search?query=${encodeURIComponent(query)}`);
-    }
-    setSearchVisible((prev) => !prev);
-  };
-
   return (
     <header
       className={`${styles.navbar} ${
@@ -149,46 +137,9 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        <div
-          className={`${styles.searchContainer} ${
-            searchVisible ? styles.show : ""
-          }`}
-        >
-          <div className={styles.inputWrapper}>
-            <input
-              type="text"
-              placeholder="Search anything"
-              className={styles.searchInput}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            />
-            {query && (
-              <IoCloseOutline
-                className={styles.clearIcon}
-                onClick={() => setQuery("")}
-              />
-            )}
-            <HiMiniMagnifyingGlass
-              className={styles.searchIcon}
-              onClick={handleSearch}
-            />
-          </div>
-        </div>
-
         {/* Phone number on desktop */}
         <div className={styles.phone}>
-          {navLinks?.length > 0 && (
-            <button
-              onClick={toggleSearch}
-              className={`${styles.searchButton} ${
-                searchVisible ? styles.show : ""
-              }`}
-            >
-              {searchVisible ? <IoCloseOutline /> : <HiMiniMagnifyingGlass />}
-            </button>
-            // <SearchButton />
-          )}
+          {navLinks?.length > 0 && <SearchBar />}
           <a href="tel:8336574812">(833)657-4812</a>
         </div>
 
