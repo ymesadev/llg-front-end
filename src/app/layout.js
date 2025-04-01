@@ -6,6 +6,8 @@ import Popup from "./components/Popup/Popup";
 import Navbar from "./components/Navbar/Navbar";
 import ChatbotPopup from "./components/ChatBot/ChatBot";
 
+
+
 export const metadata = {
   title: "Louis Law Group",
   description: "Trusted legal services",

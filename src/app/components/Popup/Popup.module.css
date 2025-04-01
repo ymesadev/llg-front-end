@@ -10,20 +10,38 @@
 
 .termsContainer {
   background-color: #fff;
+<<<<<<< HEAD
   border-radius: 0.25rem;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   width: calc(100% - 6rem);
   padding: 1rem 2rem;
   display: flex;
+=======
+  border-radius: .25rem;
+  box-shadow: 0 4px 10px #0003;
+  width: 100%;
+  padding: 2rem 2rem;
+  display: flex
+;
+>>>>>>> ee26e08024641277d160ea4575815771fcfbc626
   flex-direction: column;
   align-items: center;
   justify-content: center;
   max-width: 20rem;
   position: relative;
+<<<<<<< HEAD
+=======
+  max-width: 600px;
+  /* height: 500px; */
+  /* padding-top: 56px; */
+  /* padding-bottom: 56px; */
+  height: 332px;
+>>>>>>> ee26e08024641277d160ea4575815771fcfbc626
 }
 
 .termsContent {
   text-align: center;
+<<<<<<< HEAD
 }
 
 .termsContent h2 {
@@ -34,6 +52,27 @@
   font-size: 0.875rem;
   text-align: justify;
   max-width: 24rem;
+=======
+  width: 100%;
+  /* padding: 6rem; */
+  max-width: 514px;
+}
+
+
+.termsContent h2 {
+  font-size: 2rem;
+  text-align: left;
+  margin-bottom: 23px;
+  font-family: Montserrat, serif !important;
+}
+
+
+.termsContent p {
+  font-size: 16px;
+  text-align: justify;
+  /* max-width: 24rem; */
+  margin-bottom: 40px;
+>>>>>>> ee26e08024641277d160ea4575815771fcfbc626
 }
 .termsContent p a {
   text-decoration: none;
@@ -42,6 +81,7 @@
 
 .ctaButton {
   background-color: #1a2b49;
+<<<<<<< HEAD
   color: white;
   font-size: 1rem;
   padding: 0.5rem 1.25rem;
@@ -49,6 +89,15 @@
   outline: none;
   border: none;
   border-radius: 0.25rem;
+=======
+  color: #fff;
+  font-size: 20px;
+  padding: 1em 1.25rem;
+  width: 100%;
+  outline: none;
+  border: none;
+  border-radius: 30px;
+>>>>>>> ee26e08024641277d160ea4575815771fcfbc626
 }
 
 .ctaButton:hover {
