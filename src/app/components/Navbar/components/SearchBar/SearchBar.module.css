@@ -140,7 +140,7 @@
 .popularSearches ul {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   list-style-type: none;
   padding: 0;
   gap: 1rem;

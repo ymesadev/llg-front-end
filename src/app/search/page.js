@@ -11,6 +11,13 @@ import ContactSection from "../components/Contact/ContactSection";
 
 const collections = [
   {
+    name: "articles",
+    filters: [
+      { field: "title", condition: "containsi" },
+      { field: "description", condition: "containsi" },
+    ],
+  },
+  {
     name: "pages",
     filters: [
       { field: "Title", condition: "containsi" },
@@ -22,13 +29,6 @@ const collections = [
     filters: [
       { field: "title", condition: "containsi" },
       { field: "Description", condition: "containsi" },
-    ],
-  },
-  {
-    name: "articles",
-    filters: [
-      { field: "title", condition: "containsi" },
-      { field: "description", condition: "containsi" },
     ],
   },
 ];
