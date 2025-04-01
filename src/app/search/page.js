@@ -1,66 +1,98 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState, useEffect } from "react";
-import styles from "./search.module.css";
+import React, { useState, useEffect } from "react";
 
-const SearchResults = () => {
-  return (
-    <div className={styles.container}>
-      <Suspense fallback={<h2>Loading...</h2>}>
-        <SearchContent />
-      </Suspense>
-    </div>
+export default function MyComponent() {
+  const [resultsMap, setResultsMap] = useState(
+    () =>
+      new Map([
+        ["pages", []],
+        ["team", []],
+        ["articles", []],
+      ])
   );
-};
 
-const SearchContent = () => {
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
 
-  // Handle case where query is not found
-  if (!query) {
-    return <h2>No search query provided.</h2>;
-  }
-
-  return <SearchQueryDisplay query={query} />;
-};
-
-const SearchQueryDisplay = ({ query }) => {
-  // Simulate search results fetching logic
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    const fetchResults = async () => {
-      const res = await fetch(`/api/search?query=${query}`);
-      const data = await res.json();
-      setResults(data.results || []);
-      setLoading(false);
+    const fetchData = async () => {
+      try {
+        // Three separate endpoints
+        const urlPages = `${strapiURL}/api/pages?filters[Title][$containsi]=${query}`;
+        const urlTeam = `${strapiURL}/api/team-pages?filters[title][$containsi]=${query}`;
+        const urlArticles = `${strapiURL}/api/articles?filters[title][$containsi]=${query}`;
+
+        // Fetch in parallel
+        const [pagesRes, teamRes, articlesRes] = await Promise.all([
+          fetch(urlPages),
+          fetch(urlTeam),
+          fetch(urlArticles),
+        ]);
+
+        if (!pagesRes.ok || !teamRes.ok || !articlesRes.ok) {
+          throw new Error("One or more requests failed");
+        }
+
+        // Parse JSON
+        const [pagesData, teamData, articlesData] = await Promise.all([
+          pagesRes.json(),
+          teamRes.json(),
+          articlesRes.json(),
+        ]);
+
+        // Update Map immutably
+        setResultsMap((prevMap) => {
+          // create a copy so we have a new reference (otherwise React might not re-render)
+          const newMap = new Map(prevMap);
+          newMap.set("pages", pagesData.data || []);
+          newMap.set("team", teamData.data || []);
+          newMap.set("articles", articlesData.data || []);
+          return newMap;
+        });
+      } catch (err) {
+        setError(err.message || "An error occurred");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchResults();
-  }, [query]);
+    fetchData();
+  }, [strapiURL, query]);
 
-  if (loading) {
-    return <h2>Loading results for "{query}"...</h2>;
-  }
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
-    <>
-      <h2>Search Results for: "{query}"</h2>
-      {results.length === 0 ? (
-        <p>No results found.</p>
-      ) : (
-        results.map((result) => (
-          <div key={result.id}>
-            <h3>{result.title}</h3>
-            <p>{result.excerpt}</p>
-          </div>
-        ))
-      )}
-    </>
-  );
-};
+    <div>
+      <h2>Results for: {query}</h2>
 
-export default SearchResults;
+      {/*
+        Convert the Map into an array of [key, value] pairs so we can .map over them.
+        key => "pages" | "team" | "articles"
+        value => array of items
+      */}
+      {[...resultsMap.entries()].map(([collectionName, items]) => (
+        <div key={collectionName}>
+          <h3>{collectionName}</h3>
+
+          {items.length === 0 ? (
+            <p>No {collectionName} found.</p>
+          ) : (
+            items.map((item) => (
+              <div key={item.id}>
+                {/* If item has a 'title' or 'Title', adapt as needed */}
+                <h4>{item.Title || item.title || "Untitled"}</h4>
+              </div>
+            ))
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
