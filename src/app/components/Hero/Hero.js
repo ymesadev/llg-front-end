@@ -3,7 +3,7 @@ import { useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Hero.module.css";
-import HeroForm from "./HeroForm";
+import HeroForm from "./components/HeroForm";
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -1,6 +1,6 @@
 import Layout from "../components/Layout/Layout";
 import styles from "./page.module.css";
-import HeroForm from "../components/Hero/HeroForm";
+import HeroForm from "../components/Hero/components/HeroForm";
 import ServicesCarousel from "../components/ServicesCarousel/ServicesCarousel";
 import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
