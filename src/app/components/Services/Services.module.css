@@ -18,6 +18,9 @@
   border-radius: 20px;
   overflow: hidden;
   position: relative;
+  text-decoration: none;
+  color: #ece7e7;
+  transition: transform 0.2s ease;
 }
 
 .serviceBox h3 {
@@ -32,7 +35,7 @@
   max-width: 1024px;
 }
 
-.arrowLink {
+.arrowCircle {
   position: absolute;
   bottom: 1rem;
   right: 1rem;
@@ -48,7 +51,7 @@
   transition: background 0.3s ease;
 }
 
-.arrowLink:hover {
+.arrowCircle:hover {
   background: #d4d4d4;
 }
 
@@ -60,8 +63,11 @@
 .arrowIcon {
   transition: transform 0.3s ease;
 }
-
-.arrowLink:hover .arrowIcon {
+.serviceBox:hover {
+  background-color: #21365c;
+  transform: scale(1.02);
+}
+.serviceBox:hover .arrowIcon {
   transform: rotate(45deg);
 }
 

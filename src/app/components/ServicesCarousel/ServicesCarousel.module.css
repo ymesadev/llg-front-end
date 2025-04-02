@@ -43,8 +43,8 @@
 
 /* Slide */
 .embla__slide {
-  flex: 0 0 80%; /* Show 1 full slide, 20% of the next one */
-  min-width: 80%;
+  flex: 0 0 20%; /* Show 1 full slide, 20% of the next one */
+  min-width: 33%;
   transition: transform 0.3s ease-out;
 }
 
