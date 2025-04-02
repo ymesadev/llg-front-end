@@ -60,7 +60,7 @@ export async function generateStaticParams() {
     const pages = dataPages.data.map((page) => {
       let fullSlug = page.Slug;
       if (page.parent) {
-        fullSlug = `${page.parent.Slug}/${page.Slug}`;
+        fullSlug = `${page.parent.url}/${page.Slug}`;
       }
       return { slug: fullSlug.split("/") };
     });
@@ -139,9 +139,6 @@ export default async function Page({ params }) {
       faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug
     );
 
-    // Now safe to log articleSlugs
-    console.log("Article slugs from Strapi:", articleSlugs);
-
     // Decide which type of page it is
     if (attorneySlugs.includes(slug)) {
       isAttorneyPage = true;
@@ -170,7 +167,7 @@ export default async function Page({ params }) {
       slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
-      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent][Slug][$eq]=${parentSlug}&populate=*`;
+      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent][URL][$eq]=/${parentSlug}&populate=*`;
     } else {
       apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate=*`;
     }

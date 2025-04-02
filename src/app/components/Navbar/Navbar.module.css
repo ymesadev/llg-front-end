@@ -40,7 +40,7 @@
   width: 100%;
 }
 
-.navLinks ul {
+.navLinksWrapper {
   display: flex;
   list-style: none;
   margin: 0;
@@ -50,19 +50,21 @@
   width: 100%;
 }
 
-.navLinks ul li a {
+.navLink a {
   width: auto;
   text-decoration: none;
   color: #ede7e7;
   font-size: 1rem;
   padding: 0.5rem 0.75rem;
+  display: flex;
+  align-items: center;
   cursor: pointer;
 }
 
-.navLinks ul li {
+.navLink {
   width: fit-content;
 }
-.navLinks ul li a:hover {
+.navLink a:hover {
   border-radius: 1.5rem;
   background: #ede7e738;
 }
@@ -101,11 +103,12 @@
   transition: 0.3s;
   margin-left: 1rem;
   box-shadow: 1px 3px #ede7e7;
+  transition: all 0.3 ease;
 }
 
 .phone a:hover {
   background-color: #ffb800;
-  transform: translateY(-3px); /* Lifts the button */
+  transform: translateY(-3px);
   box-shadow: 1px 6px #ffe5a3;
 }
 .phone a:active {
@@ -194,9 +197,7 @@
   cursor: pointer;
 }
 
-/* Dropdown Navigation */
 .navItem {
-  position: relative;
   list-style: none;
 }
 
@@ -207,46 +208,56 @@
   color: white;
   text-decoration: none;
 }
-
-/* Arrow Icon */
+.navItem:hover .arrowIcon svg {
+  transform: rotate(180deg);
+}
 .arrowIcon {
-  margin-left: 5px;
-  font-size: 12px;
-  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Submenu (Desktop) 
-   Conditionally rendered => no 'display:none' needed 
-*/
+.arrowIcon svg {
+  width: 1.5rem;
+  height: 1.5rem;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
 .subMenu {
-  background: #f8f8f8;
-  padding: 10px;
-  list-style: none;
-  position: absolute; /* classic dropdown for desktop */
+  display: none;
+  position: absolute;
+  background: #497dcb;
+  width: 100vw;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   left: 0;
   top: 100%;
-  width: 200px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  flex-direction: column;
+  padding: 1rem 2rem;
+  margin: 0;
+}
+.subMenu ul {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* Desktop subMenu items => color: #1a2b49 */
-.subMenu li {
-  padding: 10px 15px;
-  border-bottom: 1px solid #ddd;
-}
-.subMenu li:last-child {
-  border-bottom: none;
-}
-.subMenu li a {
-  color: #1a2b49 !important;
-  text-decoration: none;
+.navItem:hover .subMenu {
   display: block;
-  width: 100%;
 }
-.subMenu li:hover {
-  background: #ddd;
+.subMenu ul li {
+  list-style-type: none;
+  padding: 8px 16px;
+}
+
+.subMenu ul li a {
+  text-decoration: none;
+  color: #fff !important;
+}
+
+.subMenu li a:hover {
+  color: #0070f3;
 }
 
 /* Responsive Adjustments */
@@ -288,10 +299,6 @@
     font-size: 17px !important;
   }
 
-  /* If you want to remove hover background on mobile sub-items, 
-     ensure there's no .subMenu li:hover background change 
-     in mobile context. You can override it here if needed:
-  */
   .mobileMenu .subMenu li:hover {
     background: none;
   }
