@@ -7,9 +7,42 @@ import styles from "./Navbar.module.css";
 export default function Navbar() {
   const [navBackground, setNavBackground] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [navLinks, setNavLinks] = useState([]);
   const [activeMenu, setActiveMenu] = useState(null); // Desktop submenu
   const [activeMobileMenu, setActiveMobileMenu] = useState(null); // Mobile submenu
+
+  // Static nav links
+  const navLinks = [
+    {
+      id: 1,
+      label: "Property Damage",
+      URL: "/property-damage-claims",
+      subPages: [],
+    },
+    {
+      id: 2,
+      label: "Personal Injury",
+      URL: "/personal-injury-attorneys",
+      subPages: [],
+    },
+    {
+      id: 3,
+      label: "Social Security",
+      URL: "/social-security-disability-lawyers",
+      subPages: [],
+    },
+    {
+      id: 4,
+      label: "Our Team",
+      URL: "/team",
+      subPages: [],
+    },
+    {
+      id: 5,
+      label: "Resources",
+      URL: "/resources",
+      subPages: [],
+    },
+  ];
 
   // Change navbar background on scroll
   useEffect(() => {
@@ -20,57 +53,15 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Fetch navigation links from Strapi
-  useEffect(() => {
-    const fetchNavLinks = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate=parent`
-        );
-        if (!response.ok) throw new Error("Failed to fetch navigation links");
-
-        const data = await response.json();
-        console.log("🔍 Fetched Navigation Data:", data);
-
-        // Sort navigation by "Order"
-        const sortedNav = data.data.sort((a, b) => a.Order - b.Order);
-
-        // Build a menu tree (main items + sub-pages)
-        const menuItems = sortedNav.reduce((acc, item) => {
-          if (item.parent.length === 0) {
-            // top-level navigation
-            acc[item.id] = { ...item, subPages: [] };
-          } else {
-            // submenu item
-            const parentId = item.parent[0].id;
-            if (acc[parentId]) {
-              acc[parentId].subPages.push(item);
-            }
-          }
-          return acc;
-        }, {});
-
-        setNavLinks(Object.values(menuItems));
-      } catch (error) {
-        console.error("❌ Error fetching navigation:", error);
-      }
-    };
-
-    fetchNavLinks();
-  }, []);
-
-  // Toggle the mobile menu open/closed
   const toggleMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
     setActiveMobileMenu(null); // Reset submenus on open/close
   };
 
-  // Toggle a submenu in desktop
   const toggleSubMenu = (id) => {
     setActiveMenu(activeMenu === id ? null : id);
   };
 
-  // Toggle a submenu in mobile
   const toggleMobileSubMenu = (id) => {
     setActiveMobileMenu(activeMobileMenu === id ? null : id);
   };
@@ -153,7 +144,6 @@ export default function Navbar() {
           {navLinks.map((link) => (
             <li key={link.id} className={styles.navItem}>
               <div className={styles.navLink}>
-                {/* Separate the link and the arrow toggle */}
                 <Link href={link.URL}>{link.label}</Link>
                 {link.subPages.length > 0 && (
                   <span
@@ -171,15 +161,16 @@ export default function Navbar() {
                   </span>
                 )}
               </div>
-              {link.subPages.length > 0 && activeMobileMenu === link.id && (
-                <ul className={styles.subMenu}>
-                  {link.subPages.map((sub) => (
-                    <li key={sub.id}>
-                      <Link href={sub.URL}>{sub.label}</Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {link.subPages.length > 0 &&
+                activeMobileMenu === link.id && (
+                  <ul className={styles.subMenu}>
+                    {link.subPages.map((sub) => (
+                      <li key={sub.id}>
+                        <Link href={sub.URL}>{sub.label}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
             </li>
           ))}
         </ul>
