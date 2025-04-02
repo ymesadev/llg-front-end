@@ -12,6 +12,10 @@
 .headerServices {
   margin-bottom: 2rem;
 }
+
+.servicesRow {
+  opacity: 1;
+}
 .serviceBox {
   padding: 2rem;
   border: solid 1px #e7e2e3;
