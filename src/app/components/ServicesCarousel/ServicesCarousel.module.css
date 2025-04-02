@@ -52,7 +52,8 @@
 .serviceBox {
   padding: 2rem;
   border: 1px solid #e7e2e3;
-  border-radius: 20px;
+  border-radius: 0.5rem;
+  height: 100%;
 }
 
 /* Title */
@@ -113,57 +114,57 @@
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
   .embla__slide {
-      flex: 0 0 85%;
-      min-width: 85%;
+    flex: 0 0 85%;
+    min-width: 85%;
   }
 
   .prevButton {
-      left: 5px;
+    left: 5px;
   }
 
   .nextButton {
-      right: 5px;
+    right: 5px;
   }
 }
 
 @media (max-width: 768px) {
   .embla__slide {
-      flex: 0 0 90%;
-      min-width: 90%;
+    flex: 0 0 90%;
+    min-width: 90%;
   }
 
   .navButton {
-      width: 35px;
-      height: 35px;
-      font-size: 1.2rem;
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
   }
 
   .prevButton {
-      left: 0px;
+    left: 0px;
   }
 
   .nextButton {
-      right: 0px;
+    right: 0px;
   }
 }
 
 @media (max-width: 480px) {
   .embla__slide {
-      flex: 0 0 100%;
-      min-width: 100%;
+    flex: 0 0 100%;
+    min-width: 100%;
   }
 
   .navButton {
-      width: 30px;
-      height: 30px;
-      font-size: 1rem;
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
   }
 
   .prevButton {
-      left: -5px;
+    left: -5px;
   }
 
   .nextButton {
-      right: -5px;
+    right: -5px;
   }
 }

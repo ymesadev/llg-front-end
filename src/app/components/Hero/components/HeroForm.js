@@ -180,12 +180,14 @@ export default function FreeCaseEvaluationPage() {
       <div className={styles.inputContainer}>
         <select
           name="caseType"
-          className={styles.input}
           value={formData.caseType}
           onChange={handleInputChange}
+          className={formData.caseType === "" ? styles.placeholder : ""}
           required
         >
-          <option value="">Select Case Type</option>
+          <option value="" disabled>
+            Select Case Type
+          </option>
           <option value="Property Damage">Property Damage</option>
           <option value="Personal Injury">Personal Injury</option>
           <option value="SSDI">SSDI</option>
@@ -224,6 +226,16 @@ export default function FreeCaseEvaluationPage() {
       {/* Submission Button */}
       <button type="submit" className={styles.submitButton}>
         Free Case Evaluation
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <g
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+          </g>
+        </svg>
       </button>
     </form>
   );
