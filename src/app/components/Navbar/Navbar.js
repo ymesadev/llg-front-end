@@ -116,7 +116,7 @@ export default function Navbar() {
 
         {/* Phone number on desktop */}
         <div className={styles.phone}>
-          <a href="tel:8336574812">+(833)-657-4812</a>
+          <a href="tel:8336574812">(833)-657-4812</a>
         </div>
 
         {/* Hamburger icon for mobile */}
