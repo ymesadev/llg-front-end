@@ -199,6 +199,7 @@
 
 .navItem {
   list-style: none;
+  position: relative;
 }
 
 .navLink {
@@ -208,9 +209,11 @@
   color: white;
   text-decoration: none;
 }
+
 .navItem:hover .arrowIcon svg {
   transform: rotate(180deg);
 }
+
 .arrowIcon {
   display: flex;
   justify-content: center;
@@ -226,26 +229,40 @@
 
 .subMenu {
   display: none;
-  position: absolute;
-  background: #497dcb;
-  width: 100vw;
+  position: fixed;
+  background: #2b4b7d;
+  width: 100%;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   left: 0;
-  top: 100%;
-  padding: 1rem 2rem;
+  right: 0;
+  top: 72px; /* Adjust this to match your navbar height exactly */
+  padding: 2rem 0;
   margin: 0;
+  z-index: 1001;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  display: block !important; /* Always keep it in the DOM */
 }
+
+.navItem:hover .subMenu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.navItem::after {
+  display: none;
+}
+
 .subMenu ul {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   max-width: 1400px;
   margin: 0 auto;
+  padding: 0 2rem;
 }
 
-.navItem:hover .subMenu {
-  display: block;
-}
 .subMenu ul li {
   list-style-type: none;
   padding: 8px 16px;
@@ -279,12 +296,23 @@
     padding: 8px 16px;
   }
 
-  /* Submenu in mobile is no longer absolute */
+  .navItem {
+    padding-bottom: 0; /* Remove padding on mobile */
+  }
+  
   .subMenu {
     position: static;
+    opacity: 1;
+    visibility: visible;
     box-shadow: none;
     width: auto;
-    background: none; /* No background color on mobile submenu container */
+    background: none;
+    padding: 0;
+    display: none !important; /* Reset display for mobile */
+  }
+  
+  .navItem:hover .subMenu {
+    display: block !important;
   }
 
   /* 

@@ -30,7 +30,7 @@ export default function Navbar() {
     const fetchNavLinks = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate=children`
+          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate=pages`
         );
         if (!response.ok) throw new Error("Failed to fetch navigation links");
 
@@ -39,7 +39,6 @@ export default function Navbar() {
 
         // Sort navigation by "Order"
         const sortedNav = data.data.sort((a, b) => a.Order - b.Order);
-
         setNavLinks(sortedNav);
       } catch (error) {
         console.error("❌ Error fetching navigation:", error);
@@ -94,21 +93,20 @@ export default function Navbar() {
                   <div className={styles.navLink}>
                     <Link href={link.URL}>
                       {link.label}
-                      {link.children.length > 0 && (
+                      {link.pages.length > 0 && (
                         <span className={styles.arrowIcon}>
                           <NavArrowButton />
                         </span>
                       )}
                     </Link>
                   </div>
-                  {link.children.length > 0 && (
+                  {link.pages.length > 0 && (
                     <div className={styles.subMenu}>
-                      <div></div>
                       <ul>
-                        {link.children.map((sub) => (
+                        {link.pages.map((sub) => (
                           <li key={sub.id}>
                             <Link href={`${link.URL}/${sub.Slug}`}>
-                              {sub.submenu_title}
+                              {sub.Title}
                             </Link>
                           </li>
                         ))}
@@ -154,7 +152,7 @@ export default function Navbar() {
               <div className={styles.navLink}>
                 {/* Separate the link and the arrow toggle */}
                 <Link href={link.URL}>{link.label}</Link>
-                {link.children.length > 0 && (
+                {link.pages.length > 0 && (
                   <span
                     className={styles.arrowIcon}
                     onClick={(e) => {
@@ -170,9 +168,9 @@ export default function Navbar() {
                   </span>
                 )}
               </div>
-              {link.children.length > 0 && activeMobileMenu === link.id && (
+              {link.pages.length > 0 && activeMobileMenu === link.id && (
                 <ul className={styles.subMenu}>
-                  {link.children.map((sub) => (
+                  {link.pages.map((sub) => (
                     <li key={sub.id}>
                       <Link href={sub.URL}>{sub.label}</Link>
                     </li>
