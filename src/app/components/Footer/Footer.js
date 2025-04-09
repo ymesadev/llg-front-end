@@ -49,30 +49,6 @@ export default function Footer() {
               </ul>
             </div>
           ))}
-
-          {/* Contact Column */}
-          <div className={styles.column}>
-            <h3>Contact</h3>
-            <ul className={styles.navList}>
-              <li className={styles.navItem}>
-                <a href="tel:8336574812" className={styles.navLink}>
-                  (833)657-4812
-                </a>
-              </li>
-              <li className={styles.navItem}>
-                <Link href="/free-case-evaluation" className={styles.navLink}>
-                  Free Case Evaluation
-                </Link>
-              </li>
-              <li className={styles.navItem}>
-                <p className={styles.address}>
-                  290 NW 165th Street, Suite M-500
-                  <br />
-                  Miami, FL 33169
-                </p>
-              </li>
-            </ul>
-          </div>
         </div>
 
         {/* Copyright section */}
