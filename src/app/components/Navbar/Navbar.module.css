@@ -36,8 +36,8 @@
 
 /* Desktop Navigation */
 .navLinks {
-  margin-left: 4rem;
-  width: 100%;
+  margin-left: 2rem;
+  flex: 1;
 }
 
 .navLinksWrapper {
@@ -45,48 +45,42 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  align-items: center;
-  gap: 0.25rem;
-  width: 100%;
+  gap: 0.5rem;
 }
 
-.navLink a {
-  width: auto;
-  text-decoration: none;
-  color: #ede7e7;
-  font-size: 1rem;
-  padding: 0.5rem 0.75rem;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+.navItem {
+  position: relative;
 }
 
 .navLink {
-  width: fit-content;
-}
-.navLink a:hover {
-  border-radius: 1.5rem;
-  background: #ede7e738;
-}
-
-.activeNavItem {
-  border-radius: 1.5rem;
-  background: #ede7e738;
-}
-
-.activeNavItem a {
-  color: #ffb800 !important;
-}
-
-/* Phone Button */
-.phone {
-  white-space: nowrap;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
   display: flex;
-  justify-content: flex-end;
-  flex: 1;
+  align-items: center;
+  border-radius: 1.5rem;
+  transition: background-color 0.2s ease;
 }
 
-.phone a {
+.navLink:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.activeNavItem .navLink {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffb800;
+}
+
+/* Right Section (Search and Phone) */
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Phone Link */
+.phoneLink {
   background-color: #ffb800;
   border-radius: 30px;
   border: none;
@@ -101,205 +95,116 @@
   user-select: none;
   touch-action: manipulation;
   transition: 0.3s;
-  margin-left: 1rem;
   box-shadow: 1px 3px #ede7e7;
-  transition: all 0.3 ease;
+  white-space: nowrap;
 }
 
-.phone a:hover {
+.phoneLink:hover {
   background-color: #ffb800;
   transform: translateY(-3px);
   box-shadow: 1px 6px #ffe5a3;
 }
-.phone a:active {
-  transform: translateY(1px); /* Press-down effect */
-  box-shadow: 0px 0px #ffe5a3; /* Shadow softens to match press */
+
+.phoneLink:active {
+  transform: translateY(1px);
+  box-shadow: 0px 0px #ffe5a3;
   background-color: #cc9400;
 }
 
-/* Hamburger Menu (hidden on desktop) */
-.hamburger {
+/* Mobile Menu Button */
+.mobileMenuButton {
   display: none;
   flex-direction: column;
   gap: 4px;
+  background: none;
+  border: none;
   cursor: pointer;
+  padding: 0.5rem;
+  margin-left: 1rem;
 }
 
 .bar {
-  width: 25px;
-  height: 3px;
-  background: white;
-  border-radius: 2px;
+  width: 24px;
+  height: 2px;
+  background: #ffffff;
   transition: 0.3s;
 }
 
-/* Hamburger "open" state animations */
-.hamburger .open:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
-}
-.hamburger .open:nth-child(2) {
-  opacity: 0;
-}
-.hamburger .open:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+.bar.open:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
 }
 
-/* Mobile Slide-In Menu */
+.bar.open:nth-child(2) {
+  opacity: 0;
+}
+
+.bar.open:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Mobile Menu */
 .mobileMenu {
   position: fixed;
   top: 0;
-  left: -100%;
-  width: 75%;
+  right: -100%;
+  width: 80%;
   max-width: 300px;
   height: 100vh;
-  background-color: #1a2b49; /* Mobile background */
-  padding-top: 4rem;
-  transition: left 0.3s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  background: #1a2b49;
+  padding: 4rem 1rem 1rem;
+  transition: right 0.3s ease;
+  z-index: 1001;
 }
 
-/* Show Mobile Menu */
 .mobileMenu.show {
-  left: 0;
+  right: 0;
 }
 
-/* Mobile Menu Links (top-level) */
-.mobileMenu ul {
-  list-style: none;
-  padding: 0;
-  text-align: left;
-  padding-left: 2rem;
-}
-
-.mobileMenu ul li {
-  margin: 1.2rem 0;
-}
-
-.mobileMenu ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 1.3rem;
-  display: block;
-}
-
-/* Close Button in Mobile Menu */
 .closeButton {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  font-size: 2rem;
   background: none;
-  color: white;
   border: none;
+  color: #ffffff;
+  font-size: 1.5rem;
   cursor: pointer;
 }
 
-.navItem {
-  list-style: none;
+.mobileNavItem {
+  margin: 0.5rem 0;
 }
 
-.navLink {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: white;
+.mobileNavItem a {
+  color: #ffffff;
   text-decoration: none;
-}
-.navItem:hover .arrowIcon svg {
-  transform: rotate(180deg);
-}
-.arrowIcon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.arrowIcon svg {
-  width: 1.5rem;
-  height: 1.5rem;
-  font-size: 12px;
-  transition: transform 0.2s ease;
-}
-
-.subMenu {
-  display: none;
-  position: absolute;
-  background: #497dcb;
-  width: 100vw;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  left: 0;
-  top: 100%;
-  padding: 1rem 2rem;
-  margin: 0;
-}
-.subMenu ul {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-.navItem:hover .subMenu {
+  font-size: 1.1rem;
+  padding: 0.5rem 0;
   display: block;
-}
-.subMenu ul li {
-  list-style-type: none;
-  padding: 8px 16px;
-}
-
-.subMenu ul li a {
-  text-decoration: none;
-  color: #fff !important;
-}
-
-.subMenu li a:hover {
-  color: #0070f3;
 }
 
 /* Responsive Adjustments */
-@media (max-width: 72rem) {
-  .hamburger {
-    display: flex;
-  }
-
+@media (max-width: 1024px) {
   .navLinks {
     display: none;
   }
 
-  .phone {
-    margin-right: 1rem;
+  .mobileMenuButton {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .navContainer {
+    padding: 0.75rem;
   }
 
-  .phone a {
+  .logo img {
+    height: 40px;
+  }
+
+  .phoneLink {
     font-size: 0.9rem;
     padding: 8px 16px;
-  }
-
-  /* Submenu in mobile is no longer absolute */
-  .subMenu {
-    position: static;
-    box-shadow: none;
-    width: auto;
-    background: none; /* No background color on mobile submenu container */
-  }
-
-  /* 
-    Mobile sub-items => 
-    no background color, 
-    text color #ece7e7, 
-    font size 17px
-  */
-  .mobileMenu .subMenu li a {
-    background: none !important;
-    color: #ece7e7 !important;
-    font-size: 17px !important;
-  }
-
-  .mobileMenu .subMenu li:hover {
-    background: none;
   }
 }
