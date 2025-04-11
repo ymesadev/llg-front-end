@@ -83,16 +83,18 @@ export default function Footer() {
                 <Link href={section.URL || '#'} className={styles.sectionLink}>
                   <h3>{section.label}</h3>
                 </Link>
-                <button 
-                  className={styles.toggleButton}
-                  onClick={() => toggleSection(section.id)}
-                  aria-expanded={expandedSections[section.id]}
-                  aria-label={`Toggle ${section.label} submenu`}
-                >
-                  <span className={`${styles.arrow} ${expandedSections[section.id] ? styles.expanded : ''}`}>
-                    ▼
-                  </span>
-                </button>
+                {section.pages && section.pages.length > 0 && (
+                  <button 
+                    className={styles.toggleButton}
+                    onClick={() => toggleSection(section.id)}
+                    aria-expanded={expandedSections[section.id]}
+                    aria-label={`Toggle ${section.label} submenu`}
+                  >
+                    <span className={`${styles.arrow} ${expandedSections[section.id] ? styles.expanded : ''}`}>
+                      ▼
+                    </span>
+                  </button>
+                )}
               </div>
               <ul className={`${styles.navList} ${expandedSections[section.id] ? styles.expanded : ''}`}>
                 {section.pages?.map((page) => (
