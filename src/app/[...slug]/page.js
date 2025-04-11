@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
   try {
     const resPages = await fetch(
-      `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent`,
+      `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent_page`,
       { next: { revalidate: 60 } }
     );
     const resAttorneys = await fetch(
@@ -59,8 +59,8 @@ export async function generateStaticParams() {
 
     const pages = dataPages.data.map((page) => {
       let fullSlug = page.Slug;
-      if (page.parent) {
-        fullSlug = `${page.parent.url}/${page.Slug}`;
+      if (page.parent_page) {
+        fullSlug = `${page.parent_page.URL}/${page.Slug}`;
       }
       return { slug: fullSlug.split("/") };
     });
@@ -167,7 +167,7 @@ export default async function Page({ params }) {
       slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
-      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent][URL][$eq]=/${parentSlug}&populate=*`;
+      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent_page][URL][$eq]=/${parentSlug}&populate=*`;
     } else {
       apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate=*`;
     }
