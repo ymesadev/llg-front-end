@@ -55,24 +55,23 @@ export default function Footer() {
   // Helper function to construct proper URL based on page data
   const constructUrl = (page, parentSection) => {
     if (!page) return '/';
-    console.log('Constructing URL for page:', page);
-    console.log('Parent section:', parentSection);
 
-    // Get the parent URL from the section
-    const parentUrl = parentSection?.URL || '';
-    const pageSlug = page.Slug || '';
+    // Get the parent URL and page slug, removing any leading/trailing slashes
+    const parentUrl = (parentSection?.URL || '').replace(/^\/+|\/+$/g, '');
+    const pageSlug = (page.Slug || '').replace(/^\/+|\/+$/g, '');
 
-    console.log('Parent URL:', parentUrl, 'Page Slug:', pageSlug);
-
-    // Clean up URLs and construct the final URL
-    const cleanParentUrl = parentUrl.replace(/^\/+|\/+$/g, '');
-    const cleanPageSlug = pageSlug.replace(/^\/+|\/+$/g, '');
-
-    if (cleanParentUrl && cleanPageSlug) {
-      return `/${cleanParentUrl}/${cleanPageSlug}`;
+    // Construct the URL ensuring no double slashes
+    if (parentUrl && pageSlug) {
+      return `/${parentUrl}/${pageSlug}`;
     }
 
-    return cleanPageSlug ? `/${cleanPageSlug}` : '/';
+    // If only pageSlug exists
+    if (pageSlug) {
+      return `/${pageSlug}`;
+    }
+
+    // Default to homepage
+    return '/';
   };
 
   // Toggle section expansion
