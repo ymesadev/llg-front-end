@@ -8,6 +8,7 @@ export default function Footer() {
   const [navLinks, setNavLinks] = useState([]);
   const [currentYear, setCurrentYear] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({});
 
   // Set isClient to true when component mounts
   useEffect(() => {
@@ -25,8 +26,15 @@ export default function Footer() {
         if (!response.ok) throw new Error("Failed to fetch navigation links");
 
         const data = await response.json();
-        console.log('Navigation Data:', data); // For debugging
         const sortedNav = data.data.sort((a, b) => a.Order - b.Order);
+        
+        // Initialize expanded state for all sections
+        const initialExpandedState = {};
+        sortedNav.forEach(section => {
+          initialExpandedState[section.id] = false; // Start collapsed by default
+        });
+        setExpandedSections(initialExpandedState);
+        
         setNavLinks(sortedNav);
       } catch (error) {
         console.error("❌ Error fetching navigation:", error);
@@ -44,16 +52,23 @@ export default function Footer() {
     if (page.full_slug) {
       return `/${page.full_slug.replace(/^\/+|\/+$/g, '')}`;
     }
-
+    console.log(page.parent?.URL)
     // If page has a parent, construct URL with parent's URL
     if (page.parent?.URL) {
       const parentUrl = page.parent.URL.replace(/^\/+|\/+$/g, '');
       const pageSlug = page.Slug.replace(/^\/+|\/+$/g, '');
       return `/${parentUrl}/${pageSlug}`;
     }
-
     // Otherwise, just use the page's slug
     return `/${page.Slug.replace(/^\/+|\/+$/g, '')}`;
+  };
+
+  // Toggle section expansion
+  const toggleSection = (sectionId) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
   };
 
   return (
@@ -62,9 +77,24 @@ export default function Footer() {
         <div className={styles.grid}>
           {/* Navigation Columns */}
           {navLinks.map((section) => (
+         
             <div key={section.id} className={styles.column}>
-              <h3>{section.label}</h3>
-              <ul className={styles.navList}>
+              <div className={styles.sectionHeader}>
+                <Link href={section.URL || '#'} className={styles.sectionLink}>
+                  <h3>{section.label}</h3>
+                </Link>
+                <button 
+                  className={styles.toggleButton}
+                  onClick={() => toggleSection(section.id)}
+                  aria-expanded={expandedSections[section.id]}
+                  aria-label={`Toggle ${section.label} submenu`}
+                >
+                  <span className={`${styles.arrow} ${expandedSections[section.id] ? styles.expanded : ''}`}>
+                    ▼
+                  </span>
+                </button>
+              </div>
+              <ul className={`${styles.navList} ${expandedSections[section.id] ? styles.expanded : ''}`}>
                 {section.pages?.map((page) => (
                   <li key={page.id} className={styles.navItem}>
                     <Link
