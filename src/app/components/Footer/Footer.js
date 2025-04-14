@@ -20,14 +20,22 @@ export default function Footer() {
   useEffect(() => {
     const fetchNavLinks = async () => {
       try {
+        // Update the API endpoint to match Strapi structure
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate[pages][populate]=*&populate=parent`
+          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate[pages][populate]=*&populate=pages`
         );
-        if (!response.ok) throw new Error("Failed to fetch navigation links");
-
+        if (!response.ok) throw new Error("Failed to fetch navigation");
         const data = await response.json();
-        const sortedNav = data.data.sort((a, b) => a.Order - b.Order);
         
+        console.log('Navigation Data:', data); // Debug log
+
+        // Sort navigation items by Order
+        const sortedNav = data.data.sort((a, b) => {
+          return (a.Order || 0) - (b.Order || 0);
+        });
+
+        console.log('Sorted Navigation:', sortedNav); // Debug log
+
         // Initialize expanded state for all sections
         const initialExpandedState = {};
         sortedNav.forEach(section => {
@@ -37,7 +45,7 @@ export default function Footer() {
         
         setNavLinks(sortedNav);
       } catch (error) {
-        console.error("❌ Error fetching navigation:", error);
+        console.error("Error fetching navigation:", error);
       }
     };
 
@@ -45,22 +53,25 @@ export default function Footer() {
   }, []);
 
   // Helper function to construct proper URL based on page data
-  const constructUrl = (page) => {
+  const constructUrl = (page, parentSection) => {
     if (!page) return '/';
 
-    // If page has a full_slug, use it
-    if (page.full_slug) {
-      return `/${page.full_slug.replace(/^\/+|\/+$/g, '')}`;
-    }
-    console.log(page.parent?.URL)
-    // If page has a parent, construct URL with parent's URL
-    if (page.parent?.URL) {
-      const parentUrl = page.parent.URL.replace(/^\/+|\/+$/g, '');
-      const pageSlug = page.Slug.replace(/^\/+|\/+$/g, '');
+    // Get the parent URL and page slug, removing any leading/trailing slashes
+    const parentUrl = (parentSection?.URL || '').replace(/^\/+|\/+$/g, '');
+    const pageSlug = (page.Slug || '').replace(/^\/+|\/+$/g, '');
+
+    // Construct the URL ensuring no double slashes
+    if (parentUrl && pageSlug) {
       return `/${parentUrl}/${pageSlug}`;
     }
-    // Otherwise, just use the page's slug
-    return `/${page.Slug.replace(/^\/+|\/+$/g, '')}`;
+
+    // If only pageSlug exists
+    if (pageSlug) {
+      return `/${pageSlug}`;
+    }
+
+    // Default to homepage
+    return '/';
   };
 
   // Toggle section expansion
@@ -100,7 +111,7 @@ export default function Footer() {
                 {section.pages?.map((page) => (
                   <li key={page.id} className={styles.navItem}>
                     <Link
-                      href={constructUrl(page)}
+                      href={constructUrl(page, section)}
                       className={styles.navLink}
                     >
                       {page.submenu_title || page.Title}
