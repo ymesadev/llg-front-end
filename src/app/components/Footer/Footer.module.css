@@ -1,139 +1,4 @@
 .footer {
-  background-color: #1B2537;
-  padding: 2rem 0;
-  color: #ffffff;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.grid {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-  width: 100%;
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  position: relative;
-  flex: 1;
-}
-
-.sectionHeader {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-  min-height: 24px;
-}
-
-.sectionLink {
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-}
-
-.sectionLink h1 {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: #ffffff;
-  white-space: nowrap;
-  line-height: 1;
-}
-
-.toggleButton {
-  background: none;
-  border: none;
-  padding: 0.25rem;
-  cursor: pointer;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.arrow {
-  font-size: 0.7rem;
-  transition: transform 0.3s ease;
-  display: inline-block;
-  color: #ffffff;
-}
-
-.arrow.expanded {
-  transform: rotate(180deg);
-}
-
-.navList {
-  position: relative;
-  background-color: transparent;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-  width: 100%;
-}
-
-.navList.expanded {
-  max-height: 1000px;
-  padding-top: 0.5rem;
-  padding: 1rem;
-  padding-left: 0;
-}
-
-.navItem {
-  margin-bottom: 0.5rem;
-  text-align: left;
-}
-
-.navItem:last-child {
-  margin-bottom: 0;
-}
-
-.navLink {
-  color: #ffffff;
-  text-decoration: none;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.75rem;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.navLink:hover {
-  opacity: 1;
-}
-
-.copyright {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 2rem;
-  text-align: center;
-  font-size: 0.75rem;
-  opacity: 0.7;
-  font-family: 'Montserrat', sans-serif;
-}
-
-/* Responsive styles */
-@media (max-width: 768px) {
-  .grid {
-    flex-wrap: wrap;
-  }
-
-  .column {
-    width: calc(50% - 1rem);
-    flex: none;
-  }
-}
-
-.footer {
   background-color: #1a2b49;
   color: #ffffff;
   padding: 4rem 2rem 2rem;
@@ -147,16 +12,16 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 0rem;
+  gap: 2rem;
   margin-bottom: 3rem;
-  padding: 0rem;
 }
 
-.column h3 {
-  color: #ffb800;
-  margin-bottom: 1.5rem;
-  font-size: 1.25rem;
-  font-weight: 600;
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 200px;
 }
 
 .sectionHeader {
@@ -167,33 +32,77 @@
   margin-bottom: 1rem;
 }
 
+.sectionLink {
+  text-decoration: none;
+}
+
+.sectionLink h1 {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
 .sectionLink:hover h1 {
   opacity: 0.8;
 }
 
-.subLink {
-  padding-left: 1rem;
-  font-size: 0.9rem;
-  opacity: 0.8;
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
-.address {
+.navList .navList {
+  margin-left: 1rem;
+  margin-top: 0.5rem;
+  display: none;
+}
+
+.navList .navList.expanded {
+  display: block;
+}
+
+.navItem {
+  margin-bottom: 0.5rem;
+}
+
+.navLink {
   color: #ffffff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 400;
   opacity: 0.8;
-  line-height: 1.6;
-  margin: 0;
+  transition: opacity 0.2s ease;
+  line-height: 1.4;
+}
+
+.navLink:hover {
+  opacity: 1;
 }
 
 .copyright {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 2rem;
-  margin-top: 2rem;
   font-size: 0.875rem;
   line-height: 1.5;
-  text-align: left;
+  opacity: 0.7;
+  font-family: 'Montserrat', sans-serif;
 }
 
-/* Responsive styles for mobile */
+.copyright p {
+  margin-bottom: 1rem;
+}
+
+.copyright p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive styles */
 @media (max-width: 768px) {
   .footer {
     padding: 3rem 1rem 1rem;
@@ -203,20 +112,15 @@
     gap: 2rem;
   }
 
-  .column h3 {
-    margin-bottom: 1rem;
-  }
-
   .column {
     width: 100%;
-    margin-bottom: 1rem;
   }
 
   .sectionHeader {
     padding: 0.5rem 0;
   }
 
-  .navList {
-    padding-left: 1rem;
+  .navList .navList {
+    margin-left: 1.5rem;
   }
 } 
