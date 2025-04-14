@@ -74,14 +74,12 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        <div className={styles.grid}>
-          {/* Navigation Columns */}
+        <nav className={styles.grid}>
           {navLinks.map((section) => (
-         
             <div key={section.id} className={styles.column}>
               <div className={styles.sectionHeader}>
                 <Link href={section.URL || '#'} className={styles.sectionLink}>
-                  <h3>{section.label}</h3>
+                  <h1>{section.label}</h1>
                 </Link>
                 {section.pages && section.pages.length > 0 && (
                   <button 
@@ -96,23 +94,24 @@ export default function Footer() {
                   </button>
                 )}
               </div>
-              <ul className={`${styles.navList} ${expandedSections[section.id] ? styles.expanded : ''}`}>
-                {section.pages?.map((page) => (
-                  <li key={page.id} className={styles.navItem}>
-                    <Link
-                      href={constructUrl(page)}
-                      className={styles.navLink}
-                    >
-                      {page.submenu_title || page.Title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+              {section.pages && section.pages.length > 0 && (
+                <ul className={`${styles.navList} ${expandedSections[section.id] ? styles.expanded : ''}`}>
+                  {section.pages.map((page) => (
+                    <li key={page.id} className={styles.navItem}>
+                      <Link
+                        href={constructUrl(page)}
+                        className={styles.navLink}
+                      >
+                        {page.submenu_title || page.Title}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
-        </div>
+        </nav>
 
-        {/* Copyright section */}
         <div className={styles.copyright}>
           <p>Copyright © {isClient ? currentYear : ''} Louis Law Group</p>
           <p>
