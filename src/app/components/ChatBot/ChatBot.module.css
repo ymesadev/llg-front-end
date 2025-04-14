@@ -18,7 +18,7 @@
   right: 20px;
   padding: 10px 15px;
   background-color: #1a2b49;
-  box-shadow: 1px 3px #4d7ed1;
+  box-shadow: 1px 3px #030c1d;
   color: white;
   border: none;
   border-radius: 50px;
@@ -32,7 +32,7 @@
 
 .chatUs:hover {
   transform: translateY(-3px);
-  box-shadow: 1px 6px #4d7ed1;
+  box-shadow: 1px 3px #030c1d;
 }
 
 .chatUs:active {
