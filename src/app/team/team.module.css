@@ -21,7 +21,7 @@
 .teamImage {
   width: 100%;
   height: auto;
-  transition: filter .3s ease-in-out;
+  transition: filter 0.3s ease-in-out;
   filter: grayscale(1);
   border-radius: 7px;
 }
@@ -71,7 +71,7 @@
 }
 
 .teamLink {
-  color: #1a2c49;
+  color: #1a2b49;
   text-decoration: none;
   background-color: #ffb800;
   font-size: 12px;
@@ -133,19 +133,18 @@
   cursor: pointer; /* Ensures pointer stays on hover */
 }
 
-
-.teamSection{
-  background-color: #1a2c49;
+.teamSection {
+  background-color: #1a2b49;
   padding-top: 6rem;
   padding-bottom: 4rem;
 }
-.teamSectionTitle{
+.teamSectionTitle {
   font-size: 3rem;
   text-transform: uppercase;
-  color:#ffb800;
+  color: #ffb800;
 }
 
-.teamDescription{
+.teamDescription {
   max-width: 714px;
   color: #ece7e7;
   margin-bottom: 2rem;

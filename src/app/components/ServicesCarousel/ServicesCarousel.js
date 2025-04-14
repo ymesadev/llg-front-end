@@ -1,8 +1,9 @@
-'use client'; // This directive makes the component a Client Component
+"use client"; // This directive makes the component a Client Component
 
-import React, { useEffect, useState } from 'react';
-import useEmblaCarousel from 'embla-carousel-react';
-import styles from './ServicesCarousel.module.css'; // Import the CSS module
+import React, { useEffect, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import styles from "./ServicesCarousel.module.css"; // Import the CSS module
+import { ArrowRight } from "../../../../public/icons";
 
 const ServicesCarousel = ({ services }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
@@ -18,7 +19,7 @@ const ServicesCarousel = ({ services }) => {
 
   useEffect(() => {
     if (!emblaApi) return;
-    emblaApi.on('select', updateButtons);
+    emblaApi.on("select", updateButtons);
     updateButtons();
   }, [emblaApi]);
 
@@ -26,20 +27,16 @@ const ServicesCarousel = ({ services }) => {
     <section className={styles.darkBg}>
       <div className="container">
         <div className={styles.servicesContainer}>
-         
-          
-          
+          {/* Previous Button */}
+          <button
+            className={`${styles.navButton} ${styles.prevButton}`}
+            onClick={() => emblaApi && emblaApi.scrollPrev()}
+            disabled={!canScrollPrev}
+            aria-label="Previous Slide"
+          >
+            <ArrowRight />
+          </button>
           <div className={styles.carouselWrapper}>
-            {/* Previous Button */}
-            <button
-              className={`${styles.navButton} ${styles.prevButton}`}
-              onClick={() => emblaApi && emblaApi.scrollPrev()}
-              disabled={!canScrollPrev}
-              aria-label="Previous Slide"
-            >
-              ‹
-            </button>
-
             {/* Embla Carousel */}
             <div className={styles.carousel} ref={emblaRef}>
               <div className={styles.embla__container}>
@@ -57,17 +54,16 @@ const ServicesCarousel = ({ services }) => {
                 ))}
               </div>
             </div>
-
-            {/* Next Button */}
-            <button
-              className={`${styles.navButton} ${styles.nextButton}`}
-              onClick={() => emblaApi && emblaApi.scrollNext()}
-              disabled={!canScrollNext}
-              aria-label="Next Slide"
-            >
-              ›
-            </button>
           </div>
+          {/* Next Button */}
+          <button
+            className={`${styles.navButton} ${styles.nextButton}`}
+            onClick={() => emblaApi && emblaApi.scrollNext()}
+            disabled={!canScrollNext}
+            aria-label="Next Slide"
+          >
+            <ArrowRight />
+          </button>
         </div>
       </div>
     </section>

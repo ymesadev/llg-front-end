@@ -2,423 +2,110 @@
 
 /* We won’t redefine the grid properties that are already set globally (container and column-2a),
    but we’ll add the Hero-specific styles: */
-   .heroLeft {
-    /* Your styles here */
-    padding: 0rem;
-    /* etc. */
-  }
+.heroLeft {
+  /* Your styles here */
+  padding: 0rem;
+  /* etc. */
+}
 
+.heroTitle {
+  font-size: 4.5rem;
+  font-weight: bold;
+  line-height: 1.2;
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+}
+
+.heroTitle span {
+  display: block;
+  /* Each span forces a new line */
+  margin-bottom: 0.5rem;
+}
+
+.heroImage {
+  width: 100%;
+  max-width: 300px;
+  margin-top: 1rem;
+  border-radius: 8px;
+}
+
+/* Right Section (Form) */
+.heroRight {
+  padding: 1rem;
+  padding-top: 0;
+  border-radius: 8px;
+}
+
+.formRow {
+  display: flex;
+  gap: 3rem;
+}
+
+.darkBg {
+  background-color: #1a2b49;
+}
+
+.verticalCenter {
+  padding-top: 9rem;
+  display: flex;
+  align-items: center;
+}
+
+/* Florida: yellow color */
+.florida {
+  color: #ffb800;
+}
+
+/* Insurance: light color with translation */
+.insurance {
+  color: #ede7e7;
+}
+
+/* Litigation: yellow color with translation */
+.litigation {
+  color: #ffb800;
+}
+.free {
+  color: #ffb800;
+}
+/* Attorneys: light color */
+.attorneys {
+  color: #ede7e7;
+  /* No translate here or adjust as needed */
+}
+
+.introParagraph {
+  color: #fff;
+  max-width: 560px;
+}
+.evaluationTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  margin-top: 0;
+  text-align: start;
+  color: #fff; /* Adjust the color as needed */
+}
+
+.evaluationSubtitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}
+@media screen and (max-width: 980px) {
   .heroTitle {
-    font-size: 4.5rem;
-    font-weight: bold;
-    line-height: 1.2;
-    margin: 0 0 1rem;
-    text-transform: uppercase;
+    font-size: 2.5rem;
   }
-  
-  .heroTitle span {
-    display: block;
-    /* Each span forces a new line */
-    margin-bottom: 0.5rem;
-  }
-  
-  .heroImage {
-    width: 100%;
-    max-width: 300px;
-    margin-top: 1rem;
-    border-radius: 8px;
-  }
-  
-  /* Right Section (Form) */
+
   .heroRight {
-   
-    padding: 1rem;
-    border-radius: 8px;
-  }
-  
-  .formRow {
-    display: flex;
-        gap: 3rem;
-     
-    
-  }
-  
-  .formGroup {
-    flex: 1;
-    margin-bottom: 2rem;
-  }
-  
- 
-  .checkboxContainer {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    color: #1a2b49;
-  }
-  
-  .submitButton {
-    background-color:#ffb800;
-    color: #497DCB;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    font-size: 1.1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .submitButton:hover {
-    background-color: #e0e0e0;
-  }
-  .darkBg{
-    background-color: #1a2b49;;
-  }
-
-
-  .verticalCenter {
-    display: flex;
-    align-items: center; /* vertical centering */
-    /* Optionally center horizontally too:
-       justify-content: center; 
-    */
-  }
-
-  
-  /* Florida: yellow color */
-  .florida {
-    color: #ffb800;
-  }
-  
-  /* Insurance: light color with translation */
-  .insurance {
-    color: #EDE7E7;
-   
-  }
-  
-  /* Litigation: yellow color with translation */
-  .litigation {
-    color: #ffb800;
- 
-  }
-  .free{
-    color: #ffb800;
-  }
-  /* Attorneys: light color */
-  .attorneys {
-    color: #ede7e7;
-    /* No translate here or adjust as needed */
-  }
-
-  .evaluationText {
-    margin-bottom: 1rem;
-    text-align: left;
-    
-  }
-  .introParagraph{
-    color:#fff;
-    max-width: 560px;
-  }
-  .evaluationTitle {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    color: #fff; /* Adjust the color as needed */
-  }
-  
-  .evaluationSubtitle {
-    font-size: 2rem;  /* Larger font */
-    font-weight: bold;
-    color: #fff; /* Adjust if needed */
-  }
-
-  /* Overall Hero Form Container */
-/* General form container styling */
-.heroForm {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    position: relative;
-  }
-  
-  /* Step header styles */
-  .stepHeader {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1.5rem;
-  }
-  .stepCircle {
-    background-color: #fff;
-    color: #1a2b49;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex
-;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    margin-right: 1rem;
-    border: .3px solid;
-  }
-  .stepQuestion {
-    font-size: 16px;
-    color: #333;
-    margin: 0;
-  }
-  
-  /* Fade-in effect for active step content */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  .stepContent {
-    animation: fadeIn 0.5s ease;
-  }
-  
-  /* Next step preview styling */
-  .nextStepPreview {
-    opacity: 0.3;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-    margin-top: 1rem;
-  }
-  
-  /* Preview container */
-  .previewContainer {
-    border: 1px dashed #ccc;
-    border-radius: 6px;
-    padding: 1rem;
-    margin-top: 1rem;
-  }
-  .previewHeader {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-  .previewCircle {
-    background-color: #ffffff;
-    color: #1a2b49;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* font-weight: bold; */
-    font-size: 1.2rem;
-    margin-right: 1rem;
-    border: solid .3px;
-  }
-  .previewQuestion {
-    font-size: 1.2rem;
-    color: #333;
-    margin: 0;
-  }
-  .previewContent {
-    font-family: "Roboto", serif;
-  }
-  
-  /* Form rows and groups */
-  .formRow {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-  }
-  .formGroup {
-    flex: 1;
-    margin-bottom: 1rem;
-  }
-  
-  /* Input container wrapper */
-  .inputContainer {
-    position: relative;
-    display: block;
-  }
-  
-  /* Shared styling for inputs, selects, and textareas (unstyled) */
-  .input,
-  .select,
-  .textarea {
-    width: 100%;
-    padding: 0.85rem;
-    border: none !important;
-    background: transparent !important;
-    font-size: 1rem;
-    color: #333;
-    outline: none;
-  }
-  
-  /* Placeholder overlay: positioned over the input */
-  .placeholderOverlay {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translateY(-50%);
-    pointer-events: none;
-    color: #999;
-    font-size: 1rem;
-  }
-  
-  /* Blinking caret positioned immediately after overlay text */
-  .caret {
-    animation: blinkCaret 1s step-start infinite;
-  }
-  @keyframes blinkCaret {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-  }
-  
-  /* Checkbox container */
-  .checkboxContainer {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  /* Navigation buttons */
-  .navigationButtons {
-    display: flex;
-    justify-content: flex-start;
-    gap: 1rem;
-    margin-top: 1.5rem;
-  }
-  .navButton {
-    background-color: #1a2b49;
-    color: #fff;
-    border: none;
-    padding: 0.75rem 1.25rem;
-    font-size: 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    flex: 1;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    max-width: 111px;
-    border-radius: 67px;
-  }
-  .navButton:hover {
-    background-color: #3a63a2;
-    transform: translateY(-2px);
-  }
-  .submitButton {
-    text-decoration: none;
-    color: #f4f4f4;
-    background-color: #1a2c49;
-    padding: 1rem 2rem;
-    border-radius: 30px;
-    display: inline-flex
-;
-
-    align-items: center;
-    gap: 10px;
-    font-weight: bold;
-    transition: background-color .3s;
+    padding: 0rem;
+    padding-bottom: 2rem;
     text-align: center;
   }
-  .submitButton:hover {
-    background-color: #497DCB;
-    color: #fff;
-    transform: translateY(-2px);
-  }
-
-  .input,
-.select,
-.textarea {
-  width: 100%;
-  padding: 0.85rem;
-  border: none !important;
-  background: transparent !important;
-  font-size: 1rem;
-  color: #333;
-  outline: none;
 }
 
-.inputContainer {
-    position: relative;
-    display: block;
-  }
-
-
-/* Shared styling for inputs, select, textarea (unstyled) */
-.input,
-.select,
-.textarea {
-  width: 100%;
-  padding: 0.85rem;
-  border: none !important;
-  background: transparent !important;
-  font-size: 1rem;
-  color: #333;
-  outline: none;
-}
-
-/* Custom placeholder overlay positioned inside the input area */
-.placeholderOverlay {
-  position: absolute;
-  top: 50%;
-  left: 0.85rem; /* match the input padding */
-  transform: translateY(-50%);
-  color: #999;
-  font-size: 1rem;
-  pointer-events: none;
-}
-
-
-.successContainer {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.lottieAnimation {
-  max-width: 300px;
-  margin: 0 auto;
-}
-
-.successMessage {
-  font-size: 1.4rem;
-  color: #ede7e7;
-  margin-top: 1rem;
-  font-weight: 500;
-}
-
-.errorContainer {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.errorMessage {
-  font-size: 1.2rem;
-  color: #dc3545;
-}
-
-
-@media screen and (max-width:980px) {
-    .verticalCenter{
-        padding-top: 9rem;
-    }
-    .heroTitle {
-        font-size: 2.5rem;}
-
-        .heroRight{
-            padding: 0rem;
-            padding-bottom: 2rem;
-        }
-
-  }
-
-  @media screen and (min-width:980px) {
-
-.fullHeight {
+@media screen and (min-width: 980px) {
+  .fullHeight {
     height: 100vh;
-}}
-  
+  }
+}

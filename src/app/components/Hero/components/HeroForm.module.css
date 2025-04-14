@@ -1,0 +1,215 @@
+.heroForm {
+  width: 100%;
+  margin: 0 auto;
+  padding: 2.5rem 2rem 2rem 2rem;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+/* The title of your form (optional) */
+.formTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+.inputContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.inputContainer label {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #888;
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+.placeholder {
+  color: #888;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 300;
+}
+
+.inputContainer input,
+.inputContainer select {
+  width: 100%;
+  padding: 4px 10px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+.inputContainer select {
+  padding: 4px 6px;
+}
+.inputContainer input:focus {
+  border-color: #1a2b49;
+}
+
+.inputContainer input:focus + label,
+.inputContainer input:not(:placeholder-shown) + label {
+  top: -0.5rem;
+  font-size: 12px;
+}
+.message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+.message label {
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.message textarea {
+  font-size: 16px;
+  background-color: #e7e7e76f;
+  border: none;
+  border-radius: 0.5rem;
+  resize: none;
+  outline: none;
+  padding: 1rem;
+}
+
+.message textarea::placeholder {
+  color: #aaa;
+  font-size: 16px;
+  font-weight: 300;
+  font-family: "Work Sans", sans-serif;
+  font-style: italic;
+  opacity: 1;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: start;
+  font-size: 0.875rem;
+}
+
+.submitButton {
+  font-size: 1rem;
+  font-family: "Work sans", sans-serif;
+  text-decoration: none;
+  color: #f4f4f4;
+  background-color: #1a2b49;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  display: inline-flex;
+  border: none;
+  align-items: center;
+  letter-spacing: 0.125rem;
+  gap: 10px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  text-align: center;
+  cursor: pointer;
+}
+.submitButton:hover {
+  background-color: #497dcb;
+  color: #fff;
+  transform: translateY(-2px);
+}
+.submitButton svg {
+  width: 20px;
+  height: 20px;
+  stroke: #f4f4f4;
+  transition: transform 0.3s ease;
+}
+
+.submitButton:hover svg {
+  transform: rotate(45deg);
+}
+
+/* Animation for success and error states */
+.successContainer,
+.errorContainer {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-self: start;
+  text-align: center;
+  margin-top: 2.5rem;
+  animation: fadeIn 1s ease-out;
+  max-width: 450px;
+}
+
+.successMessage,
+.errorMessage {
+  font-size: 16px;
+  font-weight: normal;
+  color: #fff;
+}
+
+.errorIcon {
+  width: 7.5rem;
+  height: 7.5rem;
+  color: #dc3545;
+  margin-bottom: 1rem;
+}
+
+.successIcon {
+  width: 7.5rem;
+  height: 7.5rem;
+  color: #28a745;
+  margin-bottom: 1rem;
+}
+
+/* Spinner (Loading) */
+.spinnerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-self: start;
+  text-align: center;
+  padding: 2.5rem;
+  width: 450px;
+}
+
+.spinnerContainer p {
+  font-size: 16px;
+  color: #fff;
+  margin-top: 1rem;
+}
+
+.spinner {
+  width: 7.5rem;
+  height: 7.5rem;
+  margin-bottom: 1rem;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-left-color: #28a745;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .successContainer,
+  .errorContainer,
+  .spinnerContainer {
+    justify-self: center;
+  }
+}

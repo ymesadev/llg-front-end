@@ -1,48 +1,16 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaChevronRight, FaChevronDown } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 import styles from "./Navbar.module.css";
+import SearchBar from "./components/SearchBar/SearchBar";
 
 export default function Navbar() {
   const [navBackground, setNavBackground] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(null); // Desktop submenu
-  const [activeMobileMenu, setActiveMobileMenu] = useState(null); // Mobile submenu
-
-  // Static nav links
-  const navLinks = [
-    {
-      id: 1,
-      label: "Property Damage",
-      URL: "/property-damage-claims",
-      subPages: [],
-    },
-    {
-      id: 2,
-      label: "Personal Injury",
-      URL: "/personal-injury-attorneys",
-      subPages: [],
-    },
-    {
-      id: 3,
-      label: "Social Security",
-      URL: "/social-security-disability-lawyers",
-      subPages: [],
-    },
-    {
-      id: 4,
-      label: "Our Team",
-      URL: "/team",
-      subPages: [],
-    },
-    {
-      id: 5,
-      label: "Resources",
-      URL: "/resources",
-      subPages: [],
-    },
-  ];
+  const [navLinks, setNavLinks] = useState([]);
+  const pathname = usePathname();
 
   // Change navbar background on scroll
   useEffect(() => {
@@ -53,17 +21,29 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Fetch navigation links from Strapi
+  useEffect(() => {
+    const fetchNavLinks = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate=pages`
+        );
+        if (!response.ok) throw new Error("Failed to fetch navigation links");
+
+        const data = await response.json();
+        const sortedNav = data.data.sort((a, b) => a.Order - b.Order);
+        setNavLinks(sortedNav);
+      } catch (error) {
+        console.error("❌ Error fetching navigation:", error);
+      }
+    };
+
+    fetchNavLinks();
+  }, []);
+
+  // Toggle mobile menu
   const toggleMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
-    setActiveMobileMenu(null); // Reset submenus on open/close
-  };
-
-  const toggleSubMenu = (id) => {
-    setActiveMenu(activeMenu === id ? null : id);
-  };
-
-  const toggleMobileSubMenu = (id) => {
-    setActiveMobileMenu(activeMobileMenu === id ? null : id);
   };
 
   return (
@@ -82,95 +62,52 @@ export default function Navbar() {
 
         {/* Desktop Navigation */}
         <nav className={styles.navLinks}>
-          <ul>
-            {navLinks.map((link) => (
-              <li key={link.id} className={styles.navItem}>
-                <div className={styles.navLink}>
-                  <Link href={link.URL}>{link.label}</Link>
-                  {link.subPages.length > 0 && (
-                    <span
-                      className={styles.arrowIcon}
-                      onClick={() => toggleSubMenu(link.id)}
-                    >
-                      {activeMenu === link.id ? (
-                        <FaChevronDown />
-                      ) : (
-                        <FaChevronRight />
-                      )}
-                    </span>
-                  )}
-                </div>
-                {link.subPages.length > 0 && activeMenu === link.id && (
-                  <ul className={styles.subMenu}>
-                    {link.subPages.map((sub) => (
-                      <li key={sub.id}>
-                        <Link href={sub.URL}>{sub.label}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </li>
-            ))}
+          <ul className={styles.navLinksWrapper}>
+            {navLinks.map((link) => {
+              const isActive = pathname === link.URL;
+              return (
+                <li
+                  key={link.id}
+                  className={`${styles.navItem} ${
+                    isActive ? styles.activeNavItem : ""
+                  }`}
+                >
+                  <Link href={link.URL} className={styles.navLink}>
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
-        {/* Phone number on desktop */}
-        <div className={styles.phone}>
-          <a href="tel:8336574812">(833)-657-4812</a>
+        {/* Search and Phone */}
+        <div className={styles.rightSection}>
+          <SearchBar />
+          <a href="tel:8336574812" className={styles.phoneLink}>
+            (833)657-4812
+          </a>
         </div>
 
-        {/* Hamburger icon for mobile */}
-        <div className={styles.hamburger} onClick={toggleMenu}>
-          <div
-            className={`${styles.bar} ${mobileMenuOpen ? styles.open : ""}`}
-          ></div>
-          <div
-            className={`${styles.bar} ${mobileMenuOpen ? styles.open : ""}`}
-          ></div>
-          <div
-            className={`${styles.bar} ${mobileMenuOpen ? styles.open : ""}`}
-          ></div>
-        </div>
+        {/* Mobile Menu Button */}
+        <button className={styles.mobileMenuButton} onClick={toggleMenu}>
+          <div className={`${styles.bar} ${mobileMenuOpen ? styles.open : ""}`} />
+          <div className={`${styles.bar} ${mobileMenuOpen ? styles.open : ""}`} />
+          <div className={`${styles.bar} ${mobileMenuOpen ? styles.open : ""}`} />
+        </button>
       </div>
 
-      {/* Mobile Slide-In Menu */}
-      <nav
-        className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.show : ""}`}
-      >
+      {/* Mobile Menu */}
+      <nav className={`${styles.mobileMenu} ${mobileMenuOpen ? styles.show : ""}`}>
         <button className={styles.closeButton} onClick={toggleMenu}>
           ×
         </button>
         <ul>
           {navLinks.map((link) => (
-            <li key={link.id} className={styles.navItem}>
-              <div className={styles.navLink}>
-                <Link href={link.URL}>{link.label}</Link>
-                {link.subPages.length > 0 && (
-                  <span
-                    className={styles.arrowIcon}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleMobileSubMenu(link.id);
-                    }}
-                  >
-                    {activeMobileMenu === link.id ? (
-                      <FaChevronDown />
-                    ) : (
-                      <FaChevronRight />
-                    )}
-                  </span>
-                )}
-              </div>
-              {link.subPages.length > 0 &&
-                activeMobileMenu === link.id && (
-                  <ul className={styles.subMenu}>
-                    {link.subPages.map((sub) => (
-                      <li key={sub.id}>
-                        <Link href={sub.URL}>{sub.label}</Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+            <li key={link.id} className={styles.mobileNavItem}>
+              <Link href={link.URL} onClick={toggleMenu}>
+                {link.label}
+              </Link>
             </li>
           ))}
         </ul>

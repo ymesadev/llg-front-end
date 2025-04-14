@@ -18,7 +18,7 @@
   right: 20px;
   padding: 10px 15px;
   background-color: #1a2b49;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 3px #030c1d;
   color: white;
   border: none;
   border-radius: 50px;
@@ -27,6 +27,17 @@
   font-family: "Montserrat", sans-serif;
   height: 2.5rem;
   z-index: 9999;
+  transition: all 0.3 ease;
+}
+
+.chatUs:hover {
+  transform: translateY(-3px);
+  box-shadow: 1px 3px #030c1d;
+}
+
+.chatUs:active {
+  transform: translateY(1px);
+  box-shadow: 0px 0px #4d7ed1;
 }
 .chatbox {
   position: fixed;

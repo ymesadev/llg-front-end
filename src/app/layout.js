@@ -1,8 +1,11 @@
 import "./globals.css";
 import Script from "next/script";
 import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
+import CookieConsent from "./components/CookieConsent/CookieConsent";
+import Popup from "./components/Popup/Popup";
+import Navbar from "./components/Navbar/Navbar";
+import ChatbotPopup from "./components/ChatBot/ChatBot";
 
-import Popup from "./components/Popup/Popup"; // Import Popup component
 
 
 export const metadata = {
@@ -60,7 +63,10 @@ export default function RootLayout({ children }) {
         />
 
         {/* ✅ Google Analytics (GA4 & Ads Pixel) */}
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=AW-722091953" />
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=AW-722091953"
+        />
         <Script
           id="google-analytics"
           strategy="afterInteractive"
@@ -114,7 +120,8 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-      <Popup />
+        <Navbar />
+        <Popup />
         {/* ✅ Google Tag Manager (NoScript Fallback) */}
         <noscript>
           <iframe
@@ -134,14 +141,7 @@ export default function RootLayout({ children }) {
             src="https://www.facebook.com/tr?id=909380096123158&ev=PageView&noscript=1"
           />
         </noscript>
-
-       
-      
-
         {children}
-
-        
-        
       </body>
     </html>
   );

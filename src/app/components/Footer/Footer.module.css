@@ -1,0 +1,172 @@
+.footer {
+  background-color: #1a2b49;
+  color: #ffffff;
+  padding: 4rem 2rem 2rem;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 200px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  margin-bottom: 1rem;
+}
+
+.sectionLink {
+  text-decoration: none;
+}
+
+.sectionLink h1 {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+}
+
+.sectionLink:hover h1 {
+  opacity: 0.8;
+}
+
+.sectionWrapper {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.navLink h2 {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ffffff;
+  opacity: 1;
+  transition: opacity 0.2s ease;
+}
+
+.navLink:hover h2 {
+  opacity: 1;
+}
+
+.arrow {
+  font-size: 0.7rem;
+  margin-left: 0.5rem;
+  transition: transform 0.3s ease;
+  display: inline-block;
+  color: #ffffff;
+  opacity: 0.8;
+}
+
+.arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 90%;
+}
+
+.navList .navList {
+  margin-left: 0rem;
+  margin-top: 0.5rem;
+  display: none;
+}
+
+.navList .navList.expanded {
+  display: block;
+
+  .navItem {
+    margin-bottom: 0.5rem;
+  }
+
+  .navLink {
+    font-size: .8rem;
+  } 
+}
+
+
+
+.navItem {
+  margin-bottom: 0.5rem;
+}
+
+.navLink {
+  color: #ffffff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  line-height: 1.4;
+  display: inline-block;
+}
+
+.navLink:hover {
+  opacity: 1;
+}
+
+.copyright {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 2rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.7;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.copyright p {
+  margin-bottom: 1rem;
+}
+
+.copyright p:last-child {
+  margin-bottom: 0;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .footer {
+    padding: 3rem 1rem 1rem;
+  }
+
+  .grid {
+    gap: 2rem;
+  }
+
+  .column {
+    width: 100%;
+  }
+
+  .sectionHeader {
+    padding: 0.5rem 0;
+  }
+
+  .navList .navList {
+    margin-left: 1.5rem;
+  }
+} 

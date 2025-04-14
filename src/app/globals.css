@@ -1,23 +1,31 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
+* {
+  box-sizing: border-box;
+}
 
-
-strong{font-weight: 500;}
-
-body{
+body {
   margin: 0;
   font-family: "Work Sans", serif;
   font-weight: 300;
   letter-spacing: 2px;
   font-size: 1.1rem;
 }
-section{
+
+body.no-scroll {
+  overflow: hidden;
+  height: 100%;
+}
+
+section {
   padding-left: 2rem;
   padding-right: 2rem;
 }
 
-
-h1,h2,h3{
+h1,
+h2,
+h3 {
   font-family: "Anton", serif;
   font-weight: 400;
   font-style: normal;
@@ -26,17 +34,19 @@ h1,h2,h3{
 }
 .container {
   max-width: 1400px;
-    margin: 0 auto;
-    width: 100%;
+  margin: 0 auto;
+  width: 100%;
 }
-.blueBg{background-color: #1a2b49;}
-
-.fullHeight{
-  height:100vh;
+.blueBg {
+  background-color: #1a2b49;
 }
 
-.yellowText{
-  color:#ffb800;
+.fullHeight {
+  height: 100vh;
+}
+
+.yellowText {
+  color: #ffb800;
 }
 .column-1,
 .column-2a,
@@ -76,14 +86,18 @@ h1,h2,h3{
 .blogContainer {
   max-width: 680px;
   overflow: hidden;
-
 }
 
-.blogContainer h1,.blogContainer h2, .blogContainer h3,.blogContainer h4,.blogContainer h5, .blogContainer h6 {
+.blogContainer h1,
+.blogContainer h2,
+.blogContainer h3,
+.blogContainer h4,
+.blogContainer h5,
+.blogContainer h6 {
   font-family: "Montserrat", serif !important;
 }
 
-.blogContainer p{
+.blogContainer p {
   font-family: Work Sans, serif;
   font-weight: 300;
   letter-spacing: -0.06px;
@@ -95,7 +109,6 @@ h1,h2,h3{
   margin-inline-start: 0px;
   word-break: break-word;
   text-align: justify;
-
 }
 
 /* Responsive Design */
@@ -107,10 +120,11 @@ h1,h2,h3{
   .column-5 {
     grid-template-columns: 1fr; /* Stack columns vertically on small screens */
   }
-  section{
+  section {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
 }
-
+.widget-open-icon {
+  display: none !important;
+}

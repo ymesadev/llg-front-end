@@ -3,9 +3,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Popup.module.css";
-
-import { IoMdChatboxes } from "react-icons/io";
-import { CiMobile3 } from "react-icons/ci";
 import ChatbotPopup from "../ChatBot/ChatBot";
 import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
 
