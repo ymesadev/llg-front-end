@@ -105,17 +105,21 @@ export default function Footer() {
             <ul className={styles.navList}>
               {navLinks.map((section) => (
                 <li key={section.id} className={styles.navItem}>
-                  <Link href={section.URL || '#'} className={styles.navLink}>
-                    {section.label}
-                  </Link>
+                  <div className={styles.sectionWrapper} onClick={() => toggleSection(section.id)}>
+                    <Link href={section.URL || '#'} className={styles.navLink}>
+                      <h2>{section.label}</h2>
+                    </Link>
+                    {section.pages && section.pages.length > 0 && (
+                      <span className={`${styles.arrow} ${expandedSections[section.id] ? styles.expanded : ''}`}>
+                        ▼
+                      </span>
+                    )}
+                  </div>
                   {section.pages && section.pages.length > 0 && (
                     <ul className={`${styles.navList} ${expandedSections[section.id] ? styles.expanded : ''}`}>
                       {section.pages.map((page) => (
                         <li key={page.id} className={styles.navItem}>
-                          <Link
-                            href={constructUrl(page)}
-                            className={styles.navLink}
-                          >
+                          <Link href={constructUrl(page)} className={styles.navLink}>
                             {page.submenu_title || page.Title}
                           </Link>
                         </li>
