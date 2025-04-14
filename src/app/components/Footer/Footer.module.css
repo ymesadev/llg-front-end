@@ -60,7 +60,7 @@
 .navLink h2 {
   margin: 0;
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 400;
   color: #ffffff;
   opacity: 0.8;
@@ -92,14 +92,24 @@
 }
 
 .navList .navList {
-  margin-left: 1rem;
+  margin-left: 0rem;
   margin-top: 0.5rem;
   display: none;
 }
 
 .navList .navList.expanded {
   display: block;
+
+  .navItem {
+    margin-bottom: 0.5rem;
+  }
+
+  .navLink {
+    font-size: .8rem;
+  } 
 }
+
+
 
 .navItem {
   margin-bottom: 0.5rem;
@@ -109,7 +119,7 @@
   color: #ffffff;
   text-decoration: none;
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 400;
   opacity: 0.8;
   transition: opacity 0.2s ease;
