@@ -21,7 +21,7 @@ export async function generateStaticParams() {
 
   try {
     const resPages = await fetch(
-      `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent`,
+      `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent_page`,
       { next: { revalidate: 60 } }
     );
     const resAttorneys = await fetch(
@@ -59,8 +59,14 @@ export async function generateStaticParams() {
 
     const pages = dataPages.data.map((page) => {
       let fullSlug = page.Slug;
-      if (page.parent) {
-        fullSlug = `${page.parent.url}/${page.Slug}`;
+      if (page.parent_page?.URL) {
+        // Clean up URLs by removing leading/trailing slashes
+        const parentUrl = page.parent_page.URL.replace(/^\/+|\/+$/g, '');
+        const pageSlug = page.Slug.replace(/^\/+|\/+$/g, '');
+        fullSlug = `${parentUrl}/${pageSlug}`;
+      } else {
+        // Clean up single slug
+        fullSlug = fullSlug.replace(/^\/+|\/+$/g, '');
       }
       return { slug: fullSlug.split("/") };
     });
@@ -167,7 +173,9 @@ export default async function Page({ params }) {
       slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
-      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent][URL][$eq]=/${parentSlug}&populate=*`;
+      // Clean up parent slug before using in API call
+      const cleanParentSlug = parentSlug.replace(/^\/+|\/+$/g, '');
+      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent_page][URL][$eq]=/${cleanParentSlug}&populate=*`;
     } else {
       apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate=*`;
     }

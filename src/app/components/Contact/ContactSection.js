@@ -12,8 +12,8 @@ import contactAnimation from "../../../../public/lottie/contact.json";
 
 import { Instagram, Facebook, Linkedin, Phone } from "lucide-react"; // Icons from lucide-react
 
-// ✅ Import the Footer component (adjust the path if needed)
-import Footer from "../Footer";
+// Import the Footer component from its new location
+import Footer from "../Footer/Footer";
 
 const ContactSection = () => {
   return (
