@@ -5,82 +5,158 @@ import Link from 'next/link';
 import styles from './Footer.module.css';
 
 export default function Footer() {
-  const [navLinks, setNavLinks] = useState([]);
-  const [currentYear, setCurrentYear] = useState("");
   const [isClient, setIsClient] = useState(false);
+  const [navLinks, setNavLinks] = useState([]);
+  const [expandedSections, setExpandedSections] = useState({});
+  const currentYear = new Date().getFullYear();
 
-  // Set isClient to true when component mounts
   useEffect(() => {
     setIsClient(true);
-    setCurrentYear(new Date().getFullYear().toString());
   }, []);
 
-  // Fetch navigation links from Strapi with populated pages and their details
   useEffect(() => {
     const fetchNavLinks = async () => {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate[pages][populate]=*&populate=parent`
+          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate[pages][populate]=*&populate=pages`
         );
-        if (!response.ok) throw new Error("Failed to fetch navigation links");
-
+        if (!response.ok) throw new Error("Failed to fetch navigation");
         const data = await response.json();
-        console.log('Navigation Data:', data); // For debugging
-        const sortedNav = data.data.sort((a, b) => a.Order - b.Order);
+
+        // Sort navigation items by Order
+        const sortedNav = data.data.sort((a, b) => {
+          return (a.Order || 0) - (b.Order || 0);
+        });
+
+        // Initialize expanded state for all sections
+        const initialExpandedState = {};
+        sortedNav.forEach(section => {
+          initialExpandedState[section.id] = false;
+        });
+        setExpandedSections(initialExpandedState);
+        
         setNavLinks(sortedNav);
       } catch (error) {
-        console.error("❌ Error fetching navigation:", error);
+        console.error("Error fetching navigation:", error);
       }
     };
 
     fetchNavLinks();
   }, []);
 
-  // Helper function to construct proper URL based on page data
   const constructUrl = (page) => {
     if (!page) return '/';
 
-    // If page has a full_slug, use it
-    if (page.full_slug) {
-      return `/${page.full_slug.replace(/^\/+|\/+$/g, '')}`;
-    }
+    // Get the parent URL and page slug, removing any leading/trailing slashes
+    const parentUrl = (page.parent_page?.URL || '').replace(/^\/+|\/+$/g, '');
+    const pageSlug = (page.Slug || '').replace(/^\/+|\/+$/g, '');
 
-    // If page has a parent, construct URL with parent's URL
-    if (page.parent?.URL) {
-      const parentUrl = page.parent.URL.replace(/^\/+|\/+$/g, '');
-      const pageSlug = page.Slug.replace(/^\/+|\/+$/g, '');
+    if (parentUrl && pageSlug) {
       return `/${parentUrl}/${pageSlug}`;
     }
 
-    // Otherwise, just use the page's slug
-    return `/${page.Slug.replace(/^\/+|\/+$/g, '')}`;
+    return pageSlug ? `/${pageSlug}` : '/';
+  };
+
+  const toggleSection = (sectionId) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [sectionId]: !prev[sectionId]
+    }));
   };
 
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.grid}>
-          {/* Navigation Columns */}
-          {navLinks.map((section) => (
-            <div key={section.id} className={styles.column}>
-              <h3>{section.label}</h3>
-              <ul className={styles.navList}>
-                {section.pages?.map((page) => (
-                  <li key={page.id} className={styles.navItem}>
-                    <Link
-                      href={constructUrl(page)}
-                      className={styles.navLink}
-                    >
-                      {page.submenu_title || page.Title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+          {/* Legal Column */}
+          <div className={styles.column}>
+            <div className={styles.sectionHeader}>
+              <Link href="#" className={styles.sectionLink}>
+                <h1>Legal</h1>
+              </Link>
             </div>
-          ))}
+            <ul className={styles.navList}>
+              <li className={styles.navItem}>
+                <Link href="/ada-compliance" className={styles.navLink}>
+                  Ada Compliance
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/terms-of-use-agreement" className={styles.navLink}>
+                  Terms of Use Agreement
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/privacy-policy" className={styles.navLink}>
+                  Privacy
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Practice Areas Column - Dynamic Content */}
+          <div className={styles.column}>
+            <div className={styles.sectionHeader}>
+              <Link href="#" className={styles.sectionLink}>
+                <h1>Practice Areas</h1>
+              </Link>
+            </div>
+            <ul className={styles.navList}>
+              {navLinks && navLinks.length > 0 && navLinks.map((section) => (
+                section && section.display_footer && (
+                  <li key={section.id} className={styles.navItem}>
+                    <div className={styles.sectionWrapper} onClick={() => toggleSection(section.id)}>
+                      <Link href={section.URL || '#'} className={styles.navLink}>
+                        <h2>{section?.label || ''}</h2>
+                      </Link>
+                      {section.pages && section.pages.length > 0 && (
+                        <span className={`${styles.arrow} ${expandedSections[section.id] ? styles.expanded : ''}`}>
+                          ▼
+                        </span>
+                      )}
+                    </div>
+                    {section.pages && section.pages.length > 0 && (
+                      <ul className={`${styles.navList} ${expandedSections[section.id] ? styles.expanded : ''}`}>
+                        {section.pages.map((page) => (
+                          page && (
+                            <li key={page.id} className={styles.navItem}>
+                              <Link href={constructUrl(page)} className={styles.navLink}>
+                                {page?.submenu_title || page?.Title || ''}
+                              </Link>
+                            </li>
+                          )
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                )
+              ))}
+            </ul>
+          </div>
+
+          {/* Resources Column */}
+          <div className={styles.column}>
+            <div className={styles.sectionHeader}>
+              <Link href="#" className={styles.sectionLink}>
+                <h1>Resources</h1>
+              </Link>
+            </div>
+            <ul className={styles.navList}>
+              <li className={styles.navItem}>
+                <Link href="/resources" className={styles.navLink}>
+                  Blog
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/job-id-00001" className={styles.navLink}>
+                  Careers
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        {/* Copyright section */}
         <div className={styles.copyright}>
           <p>Copyright © {isClient ? currentYear : ''} Louis Law Group</p>
           <p>
