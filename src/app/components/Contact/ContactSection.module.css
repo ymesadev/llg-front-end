@@ -4,7 +4,12 @@
   gap: 2rem;
   align-items: center;
 }
-
+.yellowBg{
+  background-color: #ffb800;
+    color: #1a2b49;
+    padding-left: 15px;
+    padding-right: 15px;
+}
 .leftColumn {
   padding: 1rem;
 }
@@ -12,7 +17,7 @@
 .title {
   margin-bottom: 1rem;
   font-weight: 500;
-  font-size: 4.5rem;
+  font-size: 3.5rem;
   text-transform: uppercase;
   color: #f4f4f4;
 }
@@ -87,6 +92,7 @@
 .icon {
   stroke: #ffb800;
   padding-right: 20px;
+  width: 50px;
 }
 
 .phone {

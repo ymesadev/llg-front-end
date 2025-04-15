@@ -23,7 +23,7 @@ const ContactSection = () => {
           <div className="column-2a">
             {/* Left Section */}
             <div className={styles.leftColumn}>
-              <h2 className={styles.title}>Let's get in touch</h2>
+              <h2 className={styles.title}>Let's get <span className={styles.yellowBg}>in touch</span></h2>
               <p className={styles.description}>
                 We like to simplify our intake process. From submitting your
                 claim to finalizing your case, our streamlined approach ensures
