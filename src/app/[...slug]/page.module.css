@@ -5,7 +5,7 @@
 .verticalCenter {
   display: flex;
   align-items: center; /* vertical centering */
-  /* Optionally center horizontally too:
+  /* Optionally center horizontall too:
        justify-content: center; 
     */
 }
