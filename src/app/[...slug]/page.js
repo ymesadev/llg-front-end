@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
+import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
 
 // 1) Allow new slugs at runtime (fallback):
 export const dynamicParams = true;
@@ -458,9 +459,10 @@ export default async function Page({ params }) {
                       {page.Sections.subtitle}
                     </h3>
                   )}
-                  {page.Sections.body.map((block, idx) => (
-                    <p key={idx}>{block.children?.[0]?.text || ""}</p>
-                  ))}
+                  {renderContentBlocks(
+                    processSectionsContent(page.Sections).body,
+                    styles
+                  )}
                 </div>
               </section>
             )}
