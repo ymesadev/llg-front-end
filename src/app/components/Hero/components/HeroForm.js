@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
+import ReCAPTCHA from 'react-google-recaptcha';
 import styles from "./HeroForm.module.css";
 
 export default function FreeCaseEvaluationPage() {
@@ -22,6 +23,8 @@ export default function FreeCaseEvaluationPage() {
   const [isEmailFocused, setIsEmailFocused] = useState(false);
 
   const [formStatus, setFormStatus] = useState("idle");
+  const [captchaValue, setCaptchaValue] = useState(null);
+  const recaptchaRef = useRef(null);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -31,9 +34,18 @@ export default function FreeCaseEvaluationPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleCaptchaChange = (value) => {
+    setCaptchaValue(value);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus("submitting");
+
+    if (!captchaValue) {
+      alert('Please verify that you are not a robot');
+      return;
+    }
 
     const payload = {
       name: formData.name,
@@ -43,42 +55,44 @@ export default function FreeCaseEvaluationPage() {
       caseType: formData.caseType,
       description: formData.description,
       consent: formData.consent ? "Yes" : "No",
+      recaptchaToken: captchaValue
     };
 
     const ghlEndpoint =
       "https://services.leadconnectorhq.com/hooks/OpuRBif1UwDh1UMMiJ7o/webhook-trigger/52c60449-a7a0-42ca-b25a-6b1b93ed4f66";
 
-    fetch(ghlEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "your-authorization-key",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        console.log("SUCCESS!", data);
-        setFormStatus("success");
-        setFormData({
-          name: "",
-          phone: "",
-          zipcode: "",
-          email: "",
-          caseType: "",
-          description: "",
-          consent: false,
-        });
-      })
-      .catch((err) => {
-        console.error("FAILED...", err);
-        setFormStatus("error");
+    try {
+      const response = await fetch(ghlEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "your-authorization-key",
+        },
+        body: JSON.stringify(payload),
       });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      console.log("SUCCESS!", data);
+      setFormStatus("success");
+      setFormData({
+        name: "",
+        phone: "",
+        zipcode: "",
+        email: "",
+        caseType: "",
+        description: "",
+        consent: false,
+      });
+      recaptchaRef.current.reset();
+      setCaptchaValue(null);
+    } catch (err) {
+      console.error("FAILED...", err);
+      setFormStatus("error");
+    }
   };
 
   if (formStatus === "success") {
@@ -221,6 +235,15 @@ export default function FreeCaseEvaluationPage() {
           I hereby expressly consent to receive automated communications
           including calls, texts, emails, and/or prerecorded messages.
         </label>
+      </div>
+
+      {/* reCAPTCHA */}
+      <div className={styles.recaptchaContainer}>
+        <ReCAPTCHA
+          ref={recaptchaRef}
+          sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+          onChange={handleCaptchaChange}
+        />
       </div>
 
       {/* Submission Button */}
