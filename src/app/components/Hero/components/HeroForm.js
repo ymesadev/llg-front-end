@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
 import styles from "./HeroForm.module.css";
 
@@ -45,6 +45,12 @@ export default function FreeCaseEvaluationPage() {
       consent: formData.consent ? "Yes" : "No",
     };
 
+    // Log the form data being submitted
+    console.log('Form Data being submitted:', {
+      formData: payload,
+      timestamp: new Date().toISOString(),
+    });
+
     const ghlEndpoint =
       "https://services.leadconnectorhq.com/hooks/OpuRBif1UwDh1UMMiJ7o/webhook-trigger/52c60449-a7a0-42ca-b25a-6b1b93ed4f66";
 
@@ -57,13 +63,25 @@ export default function FreeCaseEvaluationPage() {
       body: JSON.stringify(payload),
     })
       .then((response) => {
+        // Log the raw response
+        console.log('Raw API Response:', {
+          status: response.status,
+          statusText: response.statusText,
+          headers: Object.fromEntries(response.headers.entries()),
+        });
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
         return response.json();
       })
       .then((data) => {
-        console.log("SUCCESS!", data);
+        // Log successful response data
+        console.log('API Success Response:', {
+          data,
+          timestamp: new Date().toISOString(),
+        });
+
         setFormStatus("success");
         setFormData({
           name: "",
@@ -76,10 +94,31 @@ export default function FreeCaseEvaluationPage() {
         });
       })
       .catch((err) => {
-        console.error("FAILED...", err);
+        // Log detailed error information
+        console.error('API Error:', {
+          error: err.message,
+          stack: err.stack,
+          timestamp: new Date().toISOString(),
+        });
         setFormStatus("error");
       });
   };
+
+  // Log form status changes
+  useEffect(() => {
+    console.log('Form Status Changed:', {
+      status: formStatus,
+      timestamp: new Date().toISOString(),
+    });
+  }, [formStatus]);
+
+  // Log form data changes
+  useEffect(() => {
+    console.log('Form Data Updated:', {
+      currentData: formData,
+      timestamp: new Date().toISOString(),
+    });
+  }, [formData]);
 
   if (formStatus === "success") {
     return (
