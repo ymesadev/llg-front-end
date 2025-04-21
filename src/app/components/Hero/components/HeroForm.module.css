@@ -213,3 +213,16 @@
     justify-self: center;
   }
 }
+
+.recaptchaContainer {
+  margin: 1rem 0;
+  display: flex;
+  justify-content: left;
+}
+
+@media (max-width: 768px) {
+  .recaptchaContainer {
+    transform: scale(0.9);
+    transform-origin: center;
+  }
+}
