@@ -37,7 +37,7 @@
 
 .Descriptionsection {
   padding: 40px 0;
-  min-height: 500px;
+
   background-color: #f8f9fa;
 }
 
@@ -290,7 +290,5 @@
     width: 100%;
   }
 
-  .mainContent {
-    height: 500px;
-  }
+ 
 }
