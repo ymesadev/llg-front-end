@@ -69,32 +69,6 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={styles.container}>
         <div className={styles.grid}>
-          {/* Legal Column */}
-          <div className={styles.column}>
-            <div className={styles.sectionHeader}>
-              <Link href="#" className={styles.sectionLink}>
-                <h1>Legal</h1>
-              </Link>
-            </div>
-            <ul className={styles.navList}>
-              <li className={styles.navItem}>
-                <Link href="/ada-compliance" className={styles.navLink}>
-                  Ada Compliance
-                </Link>
-              </li>
-              <li className={styles.navItem}>
-                <Link href="/terms-of-use-agreement" className={styles.navLink}>
-                  Terms of Use Agreement
-                </Link>
-              </li>
-              <li className={styles.navItem}>
-                <Link href="/privacy-policy" className={styles.navLink}>
-                  Privacy
-                </Link>
-              </li>
-            </ul>
-          </div>
-
           {/* Practice Areas Column - Dynamic Content */}
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
@@ -132,27 +106,6 @@ export default function Footer() {
                   </li>
                 )
               ))}
-            </ul>
-          </div>
-
-          {/* Resources Column */}
-          <div className={styles.column}>
-            <div className={styles.sectionHeader}>
-              <Link href="#" className={styles.sectionLink}>
-                <h1>Resources</h1>
-              </Link>
-            </div>
-            <ul className={styles.navList}>
-              <li className={styles.navItem}>
-                <Link href="/resources" className={styles.navLink}>
-                  Blog
-                </Link>
-              </li>
-              <li className={styles.navItem}>
-                <Link href="/job-id-00001" className={styles.navLink}>
-                  Careers
-                </Link>
-              </li>
             </ul>
           </div>
         </div>

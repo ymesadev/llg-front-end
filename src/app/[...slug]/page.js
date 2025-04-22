@@ -110,7 +110,48 @@ export default async function Page({ params }) {
     { next: { revalidate: 60 } }
   );
   const navData = await navRes.json();
-  const sidebarLinks = navData.data || [];
+  const sidebarLinks = [
+    ...navData.data,
+    {
+      id: 'legal-section',
+      label: 'Legal',
+      display_footer: true,
+      pages: [
+        {
+          id: 'ada-compliance',
+          Title: 'ADA Compliance',
+          Slug: 'ada-compliance'
+        },
+        {
+          id: 'terms-of-use',
+          Title: 'Terms of Use Agreement',
+          Slug: 'terms-of-use-agreement'
+        },
+        {
+          id: 'privacy',
+          Title: 'Privacy',
+          Slug: 'privacy-policy'
+        }
+      ]
+    },
+    {
+      id: 'resources-section',
+      label: 'Resources',
+      display_footer: true,
+      pages: [
+        {
+          id: 'blog',
+          Title: 'Blog',
+          Slug: 'resources'
+        },
+        {
+          id: 'careers',
+          Title: 'Careers',
+          Slug: 'job-id-00001'
+        }
+      ]
+    }
+  ];
 
   let apiUrl;
   let isAttorneyPage = false;
