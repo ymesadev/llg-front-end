@@ -1,5 +1,14 @@
+
+
 .darkBg {
   background-color: #1a2b49;
+}
+
+.Descriptionsection h2,.Descriptionsection h3{
+  color: #1a2b49;
+  font-family: 'Montserrat', serif ;
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .verticalCenter {
@@ -35,7 +44,7 @@
 .contentContainer {
   display: flex;
   gap: 40px;
-  height: 500px;
+  
 }
 
 .mainContent {
@@ -71,6 +80,9 @@
 .scrollableContent::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+.scrollableContent{
+  padding: 1rem;
+}
 
 .sidebar {
   width: 300px;
@@ -105,9 +117,10 @@
 
 .DescriptionTitle {
   text-transform: uppercase;
-  font-size: 2.5rem;
+  font-size: 2.5rem !important;
   max-width: 1024px;
   color: #1a2b49;
+  font-family: Anton, serif !important;
 }
 
 .Descriptionsubtitle {
@@ -268,6 +281,9 @@
   .contentContainer {
     flex-direction: column;
     height: auto;
+  }
+  .scrollableContent{
+    padding: 1rem;
   }
 
   .sidebar {
