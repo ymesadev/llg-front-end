@@ -1,115 +1,19 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
 import styles from './Footer.module.css';
 
 export default function Footer() {
   const [isClient, setIsClient] = useState(false);
-  const [navLinks, setNavLinks] = useState([]);
-  const [expandedSections, setExpandedSections] = useState({});
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  useEffect(() => {
-    const fetchNavLinks = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/navigations?populate[pages][populate]=*&populate=pages`
-        );
-        if (!response.ok) throw new Error("Failed to fetch navigation");
-        const data = await response.json();
-
-        // Sort navigation items by Order
-        const sortedNav = data.data.sort((a, b) => {
-          return (a.Order || 0) - (b.Order || 0);
-        });
-
-        // Initialize expanded state for all sections
-        const initialExpandedState = {};
-        sortedNav.forEach(section => {
-          initialExpandedState[section.id] = false;
-        });
-        setExpandedSections(initialExpandedState);
-        
-        setNavLinks(sortedNav);
-      } catch (error) {
-        console.error("Error fetching navigation:", error);
-      }
-    };
-
-    fetchNavLinks();
-  }, []);
-
-  const constructUrl = (page) => {
-    if (!page) return '/';
-
-    // Get the parent URL and page slug, removing any leading/trailing slashes
-    const parentUrl = (page.parent_page?.URL || '').replace(/^\/+|\/+$/g, '');
-    const pageSlug = (page.Slug || '').replace(/^\/+|\/+$/g, '');
-
-    if (parentUrl && pageSlug) {
-      return `/${parentUrl}/${pageSlug}`;
-    }
-
-    return pageSlug ? `/${pageSlug}` : '/';
-  };
-
-  const toggleSection = (sectionId) => {
-    setExpandedSections(prev => ({
-      ...prev,
-      [sectionId]: !prev[sectionId]
-    }));
-  };
-
   return (
     <footer className={styles.footer}>
       <div className={styles.container}>
-        <div className={styles.grid}>
-          {/* Practice Areas Column - Dynamic Content */}
-          <div className={styles.column}>
-            <div className={styles.sectionHeader}>
-              <Link href="#" className={styles.sectionLink}>
-                <h1>Practice Areas</h1>
-              </Link>
-            </div>
-            <ul className={styles.navList}>
-              {navLinks && navLinks.length > 0 && navLinks.map((section) => (
-                section && section.display_footer && (
-                  <li key={section.id} className={styles.navItem}>
-                    <div className={styles.sectionWrapper} onClick={() => toggleSection(section.id)}>
-                      <Link href={section.URL || '#'} className={styles.navLink}>
-                        <h2>{section?.label || ''}</h2>
-                      </Link>
-                      {section.pages && section.pages.length > 0 && (
-                        <span className={`${styles.arrow} ${expandedSections[section.id] ? styles.expanded : ''}`}>
-                          ▼
-                        </span>
-                      )}
-                    </div>
-                    {section.pages && section.pages.length > 0 && (
-                      <ul className={`${styles.navList} ${expandedSections[section.id] ? styles.expanded : ''}`}>
-                        {section.pages.map((page) => (
-                          page && (
-                            <li key={page.id} className={styles.navItem}>
-                              <Link href={constructUrl(page)} className={styles.navLink}>
-                                {page?.submenu_title || page?.Title || ''}
-                              </Link>
-                            </li>
-                          )
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                )
-              ))}
-            </ul>
-          </div>
-        </div>
-
         <div className={styles.copyright}>
           <p>Copyright © {isClient ? currentYear : ''} Louis Law Group</p>
           <p>
