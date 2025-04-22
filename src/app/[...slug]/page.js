@@ -10,6 +10,7 @@ import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
+import Sidebar from "../components/Sidebar/Sidebar";
 
 // 1) Allow new slugs at runtime (fallback):
 export const dynamicParams = true;
@@ -474,31 +475,7 @@ export default async function Page({ params }) {
                     )}
                   </div>
                   <aside className={styles.sidebar}>
-                    <div className={styles.sidebarContent}>
-                      {sidebarLinks.map((section) => (
-                        section && section.display_footer && (
-                          <div key={section.id}>
-                            <h2>{section?.label || ''}</h2>
-                            {section.pages && section.pages.length > 0 && (
-                              <ul className={styles.sidebarList}>
-                                {section.pages.map((page) => (
-                                  page && (
-                                    <li key={page.id}>
-                                      <Link 
-                                        href={page.parent_page?.URL ? `${page.parent_page.URL}/${page.Slug}` : `/${page.Slug}`}
-                                        className={styles.sidebarLink}
-                                      >
-                                        {page?.submenu_title || page?.Title || ''}
-                                      </Link>
-                                    </li>
-                                  )
-                                ))}
-                              </ul>
-                            )}
-                          </div>
-                        )
-                      ))}
-                    </div>
+                    <Sidebar links={sidebarLinks} />
                   </aside>
                 </div>
               </section>

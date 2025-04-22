@@ -5,6 +5,24 @@
   top: 20px;
   align-self: flex-start;
   margin-top: 4px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #0066cc rgba(0, 0, 0, 0.1);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background-color: #0066cc;
+  border-radius: 3px;
 }
 
 .sidebarContent {
@@ -12,6 +30,7 @@
   padding: 25px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: fit-content;
 }
 
 .sidebarSection {
@@ -28,21 +47,46 @@
   padding: 0;
   cursor: pointer;
   text-align: left;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 5px;
+}
+
+.sectionHeader:hover {
+  opacity: 0.8;
 }
 
 .sectionHeader h2 {
   font-size: 1.2rem;
   color: #1a2b49;
-  margin-bottom: 15px;
+  margin: 0;
   font-weight: 600;
   border-left: 4px solid #0066cc;
   padding-left: 15px;
+  transition: all 0.2s ease;
+  flex-grow: 1;
+}
+
+.sectionHeader:hover h2 {
+  border-left-color: #004999;
+  color: #0066cc;
 }
 
 .arrow {
   font-size: 12px;
   color: #1a2b49;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease-in-out;
+  margin-left: 8px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sectionHeader:hover .arrow {
+  color: #0066cc;
 }
 
 .arrow.expanded {
@@ -52,14 +96,22 @@
 .sidebarList {
   list-style: none;
   padding: 0;
-  margin: 0 0 25px 0;
+  margin: 0;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-out;
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  transform: translateY(-10px);
+  padding-left: 19px;
+  visibility: hidden;
 }
 
 .sidebarList.expanded {
   max-height: 1000px;
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+  margin-bottom: 25px;
 }
 
 .sidebarList li {
