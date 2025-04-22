@@ -448,21 +448,39 @@ export default async function Page({ params }) {
             page.Sections.body &&
             page.Sections.body.length > 0 && (
               <section className={styles.Descriptionsection}>
-                <div className="container">
-                  {page.Sections.title && (
-                    <h2 className={styles.DescriptionTitle}>
-                      {page.Sections.title}
-                    </h2>
-                  )}
-                  {page.Sections.subtitle && (
-                    <h3 className={styles.Descriptionsubtitle}>
-                      {page.Sections.subtitle}
-                    </h3>
-                  )}
-                  {renderContentBlocks(
-                    processSectionsContent(page.Sections).body,
-                    styles
-                  )}
+                <div className={`container ${styles.contentContainer}`}>
+                  <div className={styles.mainContent}>
+                    {page.Sections.title && (
+                      <h2 className={styles.DescriptionTitle}>
+                        {page.Sections.title}
+                      </h2>
+                    )}
+                    {page.Sections.subtitle && (
+                      <h3 className={styles.Descriptionsubtitle}>
+                        {page.Sections.subtitle}
+                      </h3>
+                    )}
+                    {renderContentBlocks(
+                      processSectionsContent(page.Sections).body,
+                      styles
+                    )}
+                  </div>
+                  <aside className={styles.sidebar}>
+                    <div className={styles.sidebarContent}>
+                      <h2>Business Litigation</h2>
+                      <ul className={styles.sidebarList}>
+                        <li><Link href="/class-action-faqs">Class Action FAQs</Link></li>
+                        <li><Link href="/filing-a-lawsuit">Filing A Lawsuit</Link></li>
+                        <li><Link href="/fire-and-burn-injury-faqs">Fire and Burn Injury FAQs</Link></li>
+                        <li><Link href="/general-questions">General Questions</Link></li>
+                        <li><Link href="/insurance-disputes-faqs">Insurance Disputes FAQs</Link></li>
+                        <li><Link href="/mass-tort-faqs">Mass Tort FAQs</Link></li>
+                        <li><Link href="/medical-malpractice-faqs">Medical Malpractice FAQs</Link></li>
+                        <li><Link href="/mesothelioma-faqs">Mesothelioma FAQs</Link></li>
+                        <li><Link href="/nursing-home-abuse-faqs">Nursing Home Abuse FAQs</Link></li>
+                      </ul>
+                    </div>
+                  </aside>
                 </div>
               </section>
             )}
