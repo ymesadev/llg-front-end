@@ -447,17 +447,17 @@ export default async function Page({ params }) {
           <section className={styles.Descriptionsection}>
             <div className={`container ${styles.contentContainer}`}>
               <div className={styles.mainContent}>
-                {page.Sections.title && (
-                  <h2 className={styles.DescriptionTitle}>
-                    {page.Sections.title}
-                  </h2>
-                )}
-                {page.Sections.subtitle && (
-                  <h3 className={styles.Descriptionsubtitle}>
-                    {page.Sections.subtitle}
-                  </h3>
-                )}
                 <div className={styles.scrollableContent}>
+                  {page.Sections.title && (
+                    <h2 className={styles.DescriptionTitle}>
+                      {page.Sections.title}
+                    </h2>
+                  )}
+                  {page.Sections.subtitle && (
+                    <h3 className={styles.Descriptionsubtitle}>
+                      {page.Sections.subtitle}
+                    </h3>
+                  )}
                   {renderContentBlocks(processSectionsContent(page.Sections).body, styles)}
                 </div>
               </div>

@@ -28,7 +28,6 @@
 
 .Descriptionsection {
   padding: 40px 0;
-  min-height: 700px;
   background-color: #f8f9fa;
 }
 
@@ -36,13 +35,14 @@
   display: flex;
   gap: 40px;
   height: 700px;
+  max-height: 700px;
 }
 
 .mainContent {
   flex: 1;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .scrollableContent {
@@ -108,16 +108,19 @@
   font-size: 2.5rem;
   max-width: 1024px;
   color: #1a2b49;
+  margin-bottom: 1rem;
 }
 
 .Descriptionsubtitle {
   font-family: Work Sans, serif;
+  margin-bottom: 2rem;
 }
 
 .Descriptionsection p {
   max-width: 1024px;
   font-size: 1.1rem;
   color: #1a2b49;
+  margin-bottom: 1rem;
 }
 
 .intro {
@@ -267,7 +270,8 @@
 @media (max-width: 768px) {
   .contentContainer {
     flex-direction: column;
-    height: auto;
+    height: 500px;
+    max-height: 500px;
   }
 
   .sidebar {
@@ -275,6 +279,10 @@
   }
 
   .mainContent {
-    height: 500px;
+    height: 100%;
+  }
+
+  .DescriptionTitle {
+    font-size: 2rem;
   }
 }
