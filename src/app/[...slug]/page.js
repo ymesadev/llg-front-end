@@ -101,8 +101,16 @@ export async function generateStaticParams() {
 export default async function Page({ params }) {
   const slugArray = params.slug || [];
   const slug = slugArray.join("/");
-
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+
+  // Fetch navigation links for sidebar
+  const navRes = await fetch(
+    `${strapiURL}/api/navigations?populate[pages][populate]=*&populate=pages`,
+    { next: { revalidate: 60 } }
+  );
+  const navData = await navRes.json();
+  const sidebarLinks = navData.data || [];
+
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
@@ -467,18 +475,29 @@ export default async function Page({ params }) {
                   </div>
                   <aside className={styles.sidebar}>
                     <div className={styles.sidebarContent}>
-                      <h2>Business Litigation</h2>
-                      <ul className={styles.sidebarList}>
-                        <li><Link href="/class-action-faqs">Class Action FAQs</Link></li>
-                        <li><Link href="/filing-a-lawsuit">Filing A Lawsuit</Link></li>
-                        <li><Link href="/fire-and-burn-injury-faqs">Fire and Burn Injury FAQs</Link></li>
-                        <li><Link href="/general-questions">General Questions</Link></li>
-                        <li><Link href="/insurance-disputes-faqs">Insurance Disputes FAQs</Link></li>
-                        <li><Link href="/mass-tort-faqs">Mass Tort FAQs</Link></li>
-                        <li><Link href="/medical-malpractice-faqs">Medical Malpractice FAQs</Link></li>
-                        <li><Link href="/mesothelioma-faqs">Mesothelioma FAQs</Link></li>
-                        <li><Link href="/nursing-home-abuse-faqs">Nursing Home Abuse FAQs</Link></li>
-                      </ul>
+                      {sidebarLinks.map((section) => (
+                        section && section.display_footer && (
+                          <div key={section.id}>
+                            <h2>{section?.label || ''}</h2>
+                            {section.pages && section.pages.length > 0 && (
+                              <ul className={styles.sidebarList}>
+                                {section.pages.map((page) => (
+                                  page && (
+                                    <li key={page.id}>
+                                      <Link 
+                                        href={page.parent_page?.URL ? `${page.parent_page.URL}/${page.Slug}` : `/${page.Slug}`}
+                                        className={styles.sidebarLink}
+                                      >
+                                        {page?.submenu_title || page?.Title || ''}
+                                      </Link>
+                                    </li>
+                                  )
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        )
+                      ))}
                     </div>
                   </aside>
                 </div>

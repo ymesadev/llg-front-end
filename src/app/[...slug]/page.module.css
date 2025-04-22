@@ -212,7 +212,7 @@
   position: sticky;
   top: 20px;
   align-self: flex-start;
-  margin-top: 4px; /* Align with the title */
+  margin-top: 4px;
 }
 
 .sidebarContent {
@@ -223,9 +223,10 @@
 }
 
 .sidebarContent h2 {
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   color: #1a2b49;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
+  font-weight: 600;
   border-left: 4px solid #0066cc;
   padding-left: 15px;
 }
@@ -233,11 +234,11 @@
 .sidebarList {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 25px 0;
 }
 
 .sidebarList li {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .sidebarList li:last-child {
@@ -247,15 +248,17 @@
 .sidebarList a {
   color: #1a2b49;
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.4;
   display: block;
-  padding: 8px 0;
+  padding: 6px 0;
   transition: color 0.2s ease;
+  opacity: 0.85;
 }
 
 .sidebarList a:hover {
   color: #0066cc;
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
