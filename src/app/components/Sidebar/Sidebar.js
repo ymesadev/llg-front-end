@@ -75,7 +75,7 @@ export default function Sidebar({ links }) {
                 <ul className={`${styles.sidebarList} ${expandedSectionId === section.id ? styles.expanded : ''}`}>
                   {section.pages.map((page) => (
                     page && (
-                      <li key={page.id}>
+                      <li key={page.id} className={styles.sidebarItem}>
                         <Link 
                           href={constructUrl(page)}
                           className={styles.sidebarLink}

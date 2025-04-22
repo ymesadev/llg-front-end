@@ -13,6 +13,10 @@ body {
   font-size: 1.1rem;
 }
 
+ul{    list-style-type: circle;
+  padding-inline-start: 20px;
+  letter-spacing: 0px;}
+
 body.no-scroll {
   overflow: hidden;
   height: 100%;
