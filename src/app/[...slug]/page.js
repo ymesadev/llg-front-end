@@ -444,28 +444,25 @@ export default async function Page({ params }) {
             </section>
           )}
 
-          {page.Sections &&
-            page.Sections.body &&
-            page.Sections.body.length > 0 && (
-              <section className={styles.Descriptionsection}>
-                <div className="container">
-                  {page.Sections.title && (
-                    <h2 className={styles.DescriptionTitle}>
-                      {page.Sections.title}
-                    </h2>
-                  )}
-                  {page.Sections.subtitle && (
-                    <h3 className={styles.Descriptionsubtitle}>
-                      {page.Sections.subtitle}
-                    </h3>
-                  )}
-                  {renderContentBlocks(
-                    processSectionsContent(page.Sections).body,
-                    styles
-                  )}
+          <section className={styles.Descriptionsection}>
+            <div className={`container ${styles.contentContainer}`}>
+              <div className={styles.mainContent}>
+                {page.Sections.title && (
+                  <h2 className={styles.DescriptionTitle}>
+                    {page.Sections.title}
+                  </h2>
+                )}
+                {page.Sections.subtitle && (
+                  <h3 className={styles.Descriptionsubtitle}>
+                    {page.Sections.subtitle}
+                  </h3>
+                )}
+                <div className={styles.scrollableContent}>
+                  {renderContentBlocks(processSectionsContent(page.Sections).body, styles)}
                 </div>
-              </section>
-            )}
+              </div>
+            </div>
+          </section>
 
           {Array.isArray(page.Services) && page.Services.length > 0 && (
             <ServicesCarousel services={page.Services} />
