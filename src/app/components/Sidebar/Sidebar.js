@@ -63,17 +63,14 @@ export default function Sidebar({ links }) {
                   )}
                 </Link>
               ) : (
-                <button 
-                  className={styles.sectionHeader}
-                  onClick={(e) => handleClick(e, section.id)}
-                >
+                <div className={styles.sectionHeader}>
                   <h2>{section?.label || ''}</h2>
                   {section.pages && section.pages.length > 0 && !isStaticSection(section) && (
                     <span className={`${styles.arrow} ${expandedSectionId === section.id ? styles.expanded : ''}`}>
                       ▼
                     </span>
                   )}
-                </button>
+                </div>
               )}
               {section.pages && section.pages.length > 0 && (
                 <ul className={`${styles.sidebarList} ${isStaticSection(section) || expandedSectionId === section.id ? styles.expanded : ''}`}>
