@@ -13,7 +13,7 @@ export default function Sidebar({ links }) {
   };
 
   const handleClick = (e, sectionId, href) => {
-    // Only toggle if there are pages
+    // Only toggle if there are pages and not Legal or Resources sections
     if (e.target.closest(`.${styles.arrow}`)) {
       e.preventDefault();
       toggleSection(sectionId);
@@ -39,6 +39,10 @@ export default function Sidebar({ links }) {
     return null;
   };
 
+  const isStaticSection = (section) => {
+    return section?.label === 'Legal' || section?.label === 'Resources';
+  };
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sidebarContent}>
@@ -52,7 +56,7 @@ export default function Sidebar({ links }) {
                   onClick={(e) => handleClick(e, section.id, constructUrl(section))}
                 >
                   <h2>{section?.label || ''}</h2>
-                  {section.pages && section.pages.length > 0 && (
+                  {section.pages && section.pages.length > 0 && !isStaticSection(section) && (
                     <span className={`${styles.arrow} ${expandedSectionId === section.id ? styles.expanded : ''}`}>
                       ▼
                     </span>
@@ -64,7 +68,7 @@ export default function Sidebar({ links }) {
                   onClick={(e) => handleClick(e, section.id)}
                 >
                   <h2>{section?.label || ''}</h2>
-                  {section.pages && section.pages.length > 0 && (
+                  {section.pages && section.pages.length > 0 && !isStaticSection(section) && (
                     <span className={`${styles.arrow} ${expandedSectionId === section.id ? styles.expanded : ''}`}>
                       ▼
                     </span>
@@ -72,7 +76,7 @@ export default function Sidebar({ links }) {
                 </button>
               )}
               {section.pages && section.pages.length > 0 && (
-                <ul className={`${styles.sidebarList} ${expandedSectionId === section.id ? styles.expanded : ''}`}>
+                <ul className={`${styles.sidebarList} ${isStaticSection(section) || expandedSectionId === section.id ? styles.expanded : ''}`}>
                   {section.pages.map((page) => (
                     page && (
                       <li key={page.id} className={styles.sidebarItem}>
