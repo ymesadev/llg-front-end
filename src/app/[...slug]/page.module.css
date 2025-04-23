@@ -35,16 +35,16 @@
 }
 
 .Descriptionsection {
-  padding: 40px 0;
-
+  padding: 2rem 0;
   background-color: #f8f9fa;
+  margin-bottom: 0;
 }
 
 .contentContainer {
   display: flex;
   gap: 40px;
   position: relative;
-  min-height: 100vh;
+  min-height: auto;
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
@@ -55,6 +55,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
+  margin-bottom: 2rem;
 }
 
 .scrollableContent {
@@ -470,19 +471,27 @@
   .contentContainer {
     flex-direction: column;
     height: auto;
-    min-height: auto;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    padding: 1rem;
+    margin-bottom: 0;
   }
 
-  .scrollableContent{
-    padding: 1rem;
+  .mainContent {
+    margin-bottom: 1rem;
+  }
+
+  .Descriptionsection {
+    padding: 1.5rem 0;
+    margin-bottom: 0;
+  }
+
+  .scrollableContent {
+    padding: 0 1rem;
+    margin-bottom: 0;
   }
 
   .sidebar {
     width: 100%;
-    position: relative;
-    height: auto;
+    margin-bottom: 1rem;
   }
 
   .sidebarContent {
