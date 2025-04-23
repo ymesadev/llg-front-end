@@ -517,6 +517,20 @@ export default async function Page({ params }) {
                   </div>
                   <aside className={styles.sidebar}>
                     <Sidebar links={sidebarLinks} />
+                    <div className={styles.howItWorks}>
+                      <h2 className={styles.howTitle}>How it Works</h2>
+                      <h3 className={styles.howSubtitle}>
+                        No Win,<span className={styles.noFee}> No Fee</span>
+                      </h3>
+                      <Link href="/free-case-evaluation" className={styles.howButton}>
+                        Free Case Evaluation
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+                          </g>
+                        </svg>
+                      </Link>
+                    </div>
                   </aside>
                 </div>
               </section>
