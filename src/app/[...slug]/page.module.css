@@ -1,6 +1,9 @@
 .darkBg {
   background-color: #1a2b49;
-  padding: 60px 0;
+}
+
+.fullHeight{
+  min-height: 100vh;
 }
 
 .Descriptionsection > h2,.Descriptionsection > h3{
@@ -35,7 +38,7 @@
 }
 
 .Descriptionsection {
-  padding: 2rem 0;
+  padding: 2rem 2rem;
   background-color: #f8f9fa;
   margin-bottom: 0;
 }
@@ -45,8 +48,7 @@
   gap: 40px;
   position: relative;
   min-height: auto;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding: 1.5rem;
 }
 
 .mainContent {
@@ -269,236 +271,213 @@
   font-family: Montserrat, serif !important;
 }
 
-@media screen and (max-width: 980px) {
-  .verticalCenter {
-    padding-top: 6rem;
-    padding-bottom: 3rem;
-    min-height: auto;
-  }
-
-  .title {
-    font-size: 2.5rem;
-    margin-bottom: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .subtitle {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    padding: 0 1rem;
-  }
-
-  .intro {
-    font-size: 1rem;
-    padding: 0 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .evaluationTitle {
-    padding: 0 1rem;
-  }
-
+/* Tablet and small desktop */
+@media screen and (max-width: 1024px) {
   .contentContainer {
     flex-direction: column;
-    padding: 1rem;
+    padding: 1.5rem;
+    gap: 24px;
   }
 
-  .mainContent {
-    padding: 0;
+  .sidebar {
+    width: 100%;
+    margin-bottom: 1.5rem;
+  }
+
+  .sidebarContent {
+    position: static;
+    margin: 0;
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .DescriptionTitle {
     font-size: 2rem !important;
     margin-bottom: 1.5rem;
-    padding: 0;
-  }
-
-  .Descriptionsubtitle {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
   }
 
   .Descriptionsection {
-    padding: 2rem 0;
-  }
-
-  .Descriptionsection p {
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    padding: 0;
-  }
-
-  .sidebar {
-    width: 100%;
-    margin-top: 2rem;
-  }
-
-  .sidebarContent {
-    position: static;
-    margin: 0;
-    border-radius: 0;
     padding: 1.5rem;
   }
 
-  /* Blog post mobile styles */
-  .blogPost {
-    padding-top: 6rem;
-    padding-bottom: 2rem;
+  .verticalCenter {
+    padding-top: 5rem;
+    padding-bottom: 2.5rem;
   }
 
-  .blogPost .container {
-    padding: 0 1rem;
-  }
-
-  .blogTitle {
-    font-size: 2rem;
+  .title {
+    font-size: 2.25rem;
     margin-bottom: 1rem;
   }
 
-  .blogContent {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  /* Attorney page mobile styles */
-  .attorneyHero {
-    padding-top: 4rem;
-    padding-bottom: 2rem;
-  }
-
-  .teamImage {
-    max-width: 100% !important;
+  .subtitle {
+    font-size: 1.125rem;
     margin-bottom: 1rem;
-  }
-
-  .attorneyTitle {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .attorneyBio {
-    padding: 2rem 1rem;
-  }
-
-  /* Job page mobile styles */
-  .jobHero {
-    padding-top: 6rem;
-    padding-bottom: 2rem;
-  }
-
-  .jobTitle {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .jobText {
-    padding: 0 1rem;
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  /* FAQ page mobile styles */
-  .faqHero {
-    padding-top: 6rem;
-    padding-bottom: 2rem;
-  }
-
-  .faqTitle {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    padding: 0 1rem;
-  }
-
-  .faqContent {
-    padding: 2rem 1rem;
-  }
-
-  /* Container adjustments */
-  .container {
-    padding: 0 1rem;
-  }
-
-  /* How it Works section mobile adjustments */
-  .howItWorks {
-    margin: 2rem 0 0;
-    padding: 2rem 1rem 0;
   }
 
   .howTitle {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 1.75rem;
+    text-align: center;
   }
 
   .howSubtitle {
     font-size: 2rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .noFee {
-    padding: 8px 16px;
+    margin-bottom: 1.25rem;
+    justify-content: center;
   }
 
   .howButton {
-    margin-top: 1rem;
+    padding: 0.75rem 1.5rem;
+    margin: 0 auto;
+    display: block;
+    max-width: 400px;
+  }
+
+  .blogPost, .attorneyHero, .jobHero, .faqHero {
+    padding-top: 5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .container {
+    max-width: 90%;
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  /* Form elements in sidebar */
+  .sidebarContent input,
+  .sidebarContent textarea,
+  .sidebarContent select,
+  .sidebarContent button {
+    width: 100%;
+    max-width: 100%;
   }
 }
 
-/* Additional tablet breakpoint */
-@media screen and (min-width: 769px) and (max-width: 1024px) {
+/* Large screens */
+@media screen and (min-width: 1025px) {
   .contentContainer {
     padding: 2rem;
+    gap: 32px;
   }
 
   .sidebar {
-    width: 280px;
+    width: 300px;
   }
 
-  .DescriptionTitle {
-    font-size: 2.25rem !important;
-  }
-}
-
-@media screen and (min-width: 980px) {
-  .fullHeight {
-    height: 100vh;
+  .container {
+    max-width: 95%;
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+/* Specific adjustments for 980px width */
+@media screen and (max-width: 980px) {
   .contentContainer {
     flex-direction: column;
-    height: auto;
     padding: 1rem;
-    margin-bottom: 0;
   }
 
   .mainContent {
-    margin-bottom: 1rem;
-  }
-
-  .Descriptionsection {
-    padding: 1.5rem 0;
-    margin-bottom: 0;
-  }
-
-  .scrollableContent {
-    padding: 0 1rem;
-    margin-bottom: 0;
+    margin-bottom: 1.5rem;
+    width: 100%;
   }
 
   .sidebar {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
   }
 
   .sidebarContent {
     position: static;
     margin: 0;
-    border-radius: 0;
+    border-radius: 8px;
     padding: 1.5rem;
+    width: 100%;
+  }
+
+  .howItWorks {
+    margin: 1.5rem 0 0;
+    padding: 1.5rem 1rem 0;
+    text-align: center;
+  }
+
+  .howTitle {
+    font-size: 1.75rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .howSubtitle {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
+  .howDescription {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 600px;
+  }
+
+  .howButton {
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin: 0 auto;
+    max-width: 400px;
+  }
+
+  .container {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .scrollableContent {
+    padding: 0;
+  }
+
+  .Descriptionsection {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Update the sidebar content form elements to be full width */
+@media screen and (max-width: 980px) {
+  .sidebarContent input,
+  .sidebarContent textarea,
+  .sidebarContent select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .sidebarContent button {
+    width: 100%;
+  }
+}
+
+/* Height-specific adjustments */
+@media screen and (max-height: 930px) {
+  .verticalCenter {
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+  }
+
+  .contentContainer {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .Descriptionsection {
+    padding: 1.5rem 1rem;
+  }
+
+  .howItWorks {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
   }
 }
 
