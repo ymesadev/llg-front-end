@@ -1,11 +1,11 @@
 .sidebar {
   width: 280px;
   flex-shrink: 0;
-  position: sticky;
+  position: relative;
   top: 20px;
   align-self: flex-start;
   margin-top: 4px;
-  max-height: calc(100vh - 40px);
+  max-height: 500px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #0066cc rgba(0, 0, 0, 0.1);

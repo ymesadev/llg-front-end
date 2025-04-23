@@ -43,7 +43,10 @@
 .contentContainer {
   display: flex;
   gap: 40px;
-  
+  position: relative;
+  min-height: 100vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .mainContent {
@@ -51,6 +54,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .scrollableContent {
@@ -86,15 +90,18 @@
 .sidebar {
   width: 300px;
   flex-shrink: 0;
+  position: relative;
+  height: fit-content;
 }
 
 .sidebarContent {
   position: sticky;
-  top: 20px;
+  top: 100px;
   background: white;
   padding: 24px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 .sidebarContent h3 {
@@ -463,16 +470,27 @@
   .contentContainer {
     flex-direction: column;
     height: auto;
+    min-height: auto;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
+
   .scrollableContent{
     padding: 1rem;
   }
 
   .sidebar {
     width: 100%;
+    position: relative;
+    height: auto;
   }
 
- 
+  .sidebarContent {
+    position: static;
+    margin: 0;
+    border-radius: 0;
+    padding: 1.5rem;
+  }
 }
 
 .howItWorks {
@@ -526,19 +544,21 @@
 .howButton {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background-color: #1a2b49;
-  color: #ffffff;
-  text-decoration: none;
-  padding: 16px 32px;
-  border-radius: 50px;
-  font-family: 'Anton', sans-serif;
-  font-size: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-  transition: background-color 0.3s ease;
+  font-family: Work Sans, serif;
+  font-size: 1.0rem;
+  letter-spacing: 2px;
   width: 100%;
   justify-content: center;
+  text-decoration: none;
+  color: #f4f4f4;
+  background-color: #1a2b49;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  transition: background-color .3s;
+  padding: .8rem .8rem;
 }
 
 .howButton:hover {
@@ -546,9 +566,10 @@
 }
 
 .howButton svg {
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
   stroke-width: 1.5;
+  color: #f4f4f4;
 }
 
 @media (max-width: 768px) {
