@@ -113,36 +113,33 @@ export default async function InsuranceCompanyPage({ params }) {
         </div>
       </section>
 
-      {/* Overview Section */}
+      {/* Overview and Common Issues Section */}
       <section className={styles.lightBg}>
-        <div className={`container ${styles.contentContainer}`}>
-          <div className={styles.mainContent}>
-            <div className={styles.scrollableContent}>
-              <h2 className={styles.DescriptionTitle}>Overview</h2>
-              <ReactMarkdown>{company.overview?.body}</ReactMarkdown>
+        <div className="container">
+          <div className="column-2a">
+            <div className={styles.mainContent}>
+              <div className={styles.scrollableContent}>
+                <div className={styles.help}>
+                  <ReactMarkdown>{company.overview?.body || ""}</ReactMarkdown>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Common Issues Section */}
-      <section className={styles.darkBg}>
-        <div className={`container ${styles.contentContainer}`}>
-          <div className={styles.mainContent}>
-            <div className={styles.scrollableContent}>
-              <h2 className={styles.DescriptionTitle}>Common Issues</h2>
-              {company.common_issues?.title?.map((block, index) => (
-                <div key={index} className={styles.issue}>
-                  <ReactMarkdown>{block.children?.[0]?.text || ""}</ReactMarkdown>
-                </div>
-              ))}
-              {company.common_issues?.description?.map((block, index) => (
-                <div key={index} className={styles.issue}>
-                  {block.children?.map((item, itemIndex) => (
-                    <ReactMarkdown key={itemIndex}>{item.children?.[0]?.text || ""}</ReactMarkdown>
-                  ))}
-                </div>
-              ))}
+            <div className={`${styles.mainContent} ${styles.darkContent}`}>
+              <div className={styles.scrollableContent}>
+                {company.common_issues?.title?.map((block, index) => (
+                  <div key={index} className={styles.issue}>
+                    <h2 className={styles.issueTitle}>{block.children?.[0]?.text || ""}</h2>
+                    <ul className={styles.issuesList}>
+                      {company.common_issues?.description?.[0]?.children?.map((item, itemIndex) => (
+                        <li key={itemIndex} className={styles.issueItem}>
+                          {item.children?.[0]?.text || ""}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>

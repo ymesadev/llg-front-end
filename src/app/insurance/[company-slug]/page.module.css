@@ -7,7 +7,7 @@
 .lightBg {
   background-color: white;
   color: var(--primary-dark);
-  padding: 4rem 2rem;
+  padding: 4rem 4rem;
 }
 
 .fullHeight {
@@ -53,7 +53,7 @@
   font-size: 1.2rem;
   line-height: 1.6;
   margin-bottom: 1rem;
-  color: #ece7e7;
+  color: #ece7e7; 
 }
 
 .evaluationText {
