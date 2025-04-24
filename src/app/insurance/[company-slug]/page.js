@@ -8,53 +8,68 @@ import ReactMarkdown from "react-markdown";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../../utils/contentFormatter";
 import { notFound } from 'next/navigation';
 
-export const dynamicParams = true;
-export const revalidate = 60;
+// Force static generation
+export const dynamic = 'force-static';
+export const dynamicParams = false;
+export const revalidate = false;
 
 export async function generateStaticParams() {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+  console.log('Starting generateStaticParams for insurance companies');
+  console.log('Strapi URL:', strapiURL);
+
+  if (!strapiURL) {
+    console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
+    return [];
+  }
 
   try {
-    // Add proper headers and cache configuration
     const res = await fetch(
-      `${strapiURL}/api/insurance-companies?fields[0]=slug&pagination[pageSize]=100`,
+      `${strapiURL}/api/insurance-companies`,
       {
+        method: 'GET',
         headers: {
-          'Cache-Control': 'no-cache',
-          'Pragma': 'no-cache'
-        },
-        next: { 
-          revalidate: 60 
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
         }
       }
     );
 
     if (!res.ok) {
-      console.error('Failed to fetch insurance companies:', await res.text());
-      return [];
+      const errorText = await res.text();
+      console.error('Failed to fetch insurance companies:', errorText);
+      throw new Error(`Failed to fetch: ${res.status} ${errorText}`);
     }
 
     const data = await res.json();
+    console.log('Fetched insurance companies data:', JSON.stringify(data, null, 2));
 
-    // Validate data structure
     if (!data?.data || !Array.isArray(data.data)) {
       console.error('Invalid data structure received:', data);
       return [];
     }
 
-    // Map and filter out any invalid entries
     const params = data.data
-      .filter(company => company?.attributes?.slug)
-      .map(company => ({
-        'company-slug': company.attributes.slug
-      }));
+      .filter(company => {
+        if (!company?.attributes?.slug) {
+          console.warn('Company missing slug:', company);
+          return false;
+        }
+        return true;
+      })
+      .map(company => {
+        console.log('Generating params for company:', company.attributes.slug);
+        return {
+          'company-slug': company.attributes.slug
+        };
+      });
 
-    console.log('Generated params for insurance companies:', params);
+    console.log('Generated static params:', params);
     return params;
 
   } catch (error) {
-    console.error('Error generating static params:', error);
-    return [];
+    console.error('Error in generateStaticParams:', error);
+    throw error; // Let the build fail if we can't generate the pages
   }
 }
 
@@ -62,24 +77,33 @@ export default async function InsuranceCompanyPage({ params }) {
   const slug = params['company-slug'];
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   
+  if (!strapiURL) {
+    console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
+    return notFound();
+  }
+
+  console.log(`Rendering insurance company page for slug: ${slug}`);
+  
   try {
-    const apiUrl = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=*`;
+    const apiUrl = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=deep`;
+    console.log('Fetching from URL:', apiUrl);
+
     const res = await fetch(apiUrl, { 
+      method: 'GET',
       headers: {
-        'Cache-Control': 'no-cache',
-        'Pragma': 'no-cache'
-      },
-      next: { 
-        revalidate: 60 
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       }
     });
 
     if (!res.ok) {
-      console.error(`Failed to fetch insurance company with slug ${slug}:`, await res.text());
+      const errorText = await res.text();
+      console.error(`Failed to fetch insurance company with slug ${slug}:`, errorText);
       return notFound();
     }
 
     const data = await res.json();
+    console.log(`Data received for ${slug}:`, JSON.stringify(data, null, 2));
     
     if (!data?.data?.[0]) {
       console.error(`No data found for insurance company with slug ${slug}`);
@@ -87,6 +111,7 @@ export default async function InsuranceCompanyPage({ params }) {
     }
 
     const company = data.data[0];
+    console.log(`Rendering company page for: ${company.attributes?.name || slug}`);
 
     return (
       <Layout>
@@ -219,6 +244,6 @@ export default async function InsuranceCompanyPage({ params }) {
     );
   } catch (error) {
     console.error(`Error rendering insurance company page for slug ${slug}:`, error);
-    return notFound();
+    throw error; // Let the build fail if we can't render the page
   }
 } 
