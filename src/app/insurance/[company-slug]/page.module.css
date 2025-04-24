@@ -1,0 +1,279 @@
+.darkBg {
+  background-color: var(--primary-dark);
+  color: white;
+  padding: 4rem 0;
+}
+
+.fullHeight {
+  min-height: 100vh;
+}
+
+.verticalCenter {
+  display: flex;
+  align-items: center;
+}
+
+.leftColumn {
+  flex: 1;
+  padding-right: 2rem;
+}
+
+.rightColumn {
+  flex: 1;
+  padding-left: 2rem;
+}
+
+.title {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--accent-color);
+}
+
+.intro {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.evaluationText {
+  background-color: var(--accent-color);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.evaluationTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+}
+
+.free {
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+.Descriptionsection {
+  padding: 4rem 0;
+  background-color: white;
+}
+
+.contentContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.mainContent {
+  width: 100%;
+}
+
+.scrollableContent {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.DescriptionTitle {
+  font-size: 2.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.Descriptionsubtitle {
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  margin-bottom: 1.5rem;
+}
+
+.issue {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.help {
+  margin-bottom: 1.5rem;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.resultCard {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.amount {
+  font-size: 2rem;
+  color: var(--accent-color);
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.testimonialsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.testimonialCard {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+}
+
+.quote {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+.author {
+  font-weight: 600;
+  color: var(--primary-dark);
+}
+
+.error {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.error h1 {
+  font-size: 2.5rem;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+}
+
+.error p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.helpList {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.helpList li {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.helpList li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent-color);
+  font-weight: bold;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+  }
+
+  .intro {
+    font-size: 1.1rem;
+  }
+
+  .DescriptionTitle {
+    font-size: 2rem;
+  }
+
+  .Descriptionsubtitle {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .column-2a {
+    flex-direction: column;
+  }
+
+  .leftColumn,
+  .rightColumn {
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .evaluationTitle {
+    font-size: 1.2rem;
+  }
+
+  .contentContainer {
+    padding: 0 1rem;
+  }
+
+  .resultsGrid,
+  .testimonialsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .subtitle {
+    font-size: 1.1rem;
+  }
+
+  .intro {
+    font-size: 1rem;
+  }
+
+  .DescriptionTitle {
+    font-size: 1.8rem;
+  }
+
+  .Descriptionsubtitle {
+    font-size: 1.1rem;
+  }
+
+  .amount {
+    font-size: 1.5rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .quote {
+    font-size: 1.1rem;
+  }
+} 
