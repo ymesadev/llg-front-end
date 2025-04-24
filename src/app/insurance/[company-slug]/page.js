@@ -86,14 +86,14 @@ export default async function InsuranceCompanyPage({ params }) {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className={`${styles.darkBg} ${styles.fullHeight} ${styles.verticalCenter}`}>
+      <section className={`${styles.darkBg} ${styles.fullHeight}`}>
         <div className="container">
           <div className="column-2a">
             <div className={styles.leftColumn}>
               {company.hero?.subtitle && (
                 <h3 className={styles.subtitle}>{company.hero.subtitle}</h3>
               )}
-              <h1 className={styles.title}>{company.hero?.title}</h1>
+              <h1 className={`${styles.title} ${styles.free}`}>{company.hero?.title}</h1>
               {Array.isArray(company.hero?.intro) &&
                 company.hero.intro.map((block, index) => (
                   <p key={index} className={styles.intro}>
@@ -103,9 +103,9 @@ export default async function InsuranceCompanyPage({ params }) {
             </div>
             <div className={styles.rightColumn}>
               <div className={styles.evaluationText}>
-                <p className={styles.evaluationTitle}>
+                <span className={styles.evaluationTitle}>
                   Get a <span className={styles.free}>FREE</span> case evaluation today.
-                </p>
+                </span>
               </div>
               <HeroForm />
             </div>
@@ -114,7 +114,7 @@ export default async function InsuranceCompanyPage({ params }) {
       </section>
 
       {/* Overview Section */}
-      <section className={styles.Descriptionsection}>
+      <section className={styles.lightBg}>
         <div className={`container ${styles.contentContainer}`}>
           <div className={styles.mainContent}>
             <div className={styles.scrollableContent}>
@@ -126,7 +126,7 @@ export default async function InsuranceCompanyPage({ params }) {
       </section>
 
       {/* Common Issues Section */}
-      <section className={styles.Descriptionsection}>
+      <section className={styles.darkBg}>
         <div className={`container ${styles.contentContainer}`}>
           <div className={styles.mainContent}>
             <div className={styles.scrollableContent}>
@@ -149,7 +149,7 @@ export default async function InsuranceCompanyPage({ params }) {
       </section>
 
       {/* How We Help Section */}
-      <section className={styles.Descriptionsection}>
+      <section className={styles.lightBg}>
         <div className={`container ${styles.contentContainer}`}>
           <div className={styles.mainContent}>
             <div className={styles.scrollableContent}>
@@ -176,7 +176,7 @@ export default async function InsuranceCompanyPage({ params }) {
       </section>
 
       {/* Case Results Section */}
-      <section className={styles.Descriptionsection}>
+      <section className={styles.darkBg}>
         <div className={`container ${styles.contentContainer}`}>
           <div className={styles.mainContent}>
             <div className={styles.scrollableContent}>
@@ -197,7 +197,7 @@ export default async function InsuranceCompanyPage({ params }) {
       </section>
 
       {/* Testimonials Section */}
-      <section className={styles.Descriptionsection}>
+      <section className={styles.lightBg}>
         <div className={`container ${styles.contentContainer}`}>
           <div className={styles.mainContent}>
             <div className={styles.scrollableContent}>

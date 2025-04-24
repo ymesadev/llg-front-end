@@ -11,7 +11,7 @@ import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
 
-// 1) Allow new slugs at runtime (fallback):
+// 1) Allow new slugs at runtimeGet a FREE case evaluation today. (fallback):
 export const dynamicParams = true;
 
 // 2) Keep revalidate if you want ISR for existing pages
