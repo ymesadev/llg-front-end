@@ -139,34 +139,27 @@ export default async function InsuranceCompanyPage({ params }) {
                     </ul>
                   </div>
                 ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* How We Help Section */}
-      <section className={styles.lightBg}>
-        <div className={`container ${styles.contentContainer}`}>
-          <div className={styles.mainContent}>
-            <div className={styles.scrollableContent}>
-              <h2 className={styles.DescriptionTitle}>{company.how_we_help?.title}</h2>
-              <h3 className={styles.Descriptionsubtitle}>{company.how_we_help?.subtitle}</h3>
-              {company.how_we_help?.body?.map((block, index) => (
-                <div key={index} className={styles.help}>
-                  {block.type === 'paragraph' ? (
-                    <ReactMarkdown>{block.children?.[0]?.text || ""}</ReactMarkdown>
-                  ) : block.type === 'list' ? (
-                    <ul className={styles.helpList}>
-                      {block.children?.map((item, itemIndex) => (
-                        <li key={itemIndex}>
-                          <ReactMarkdown>{item.children?.[0]?.text || ""}</ReactMarkdown>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
+                <div className={styles.helpSection}>
+                  <h2 className={styles.issueTitle}>{company.how_we_help?.title}</h2>
+                  <h3 className={styles.helpSubtitle}>{company.how_we_help?.subtitle}</h3>
+                  {company.how_we_help?.body?.map((block, index) => (
+                    <div key={index} className={styles.help}>
+                      {block.type === 'paragraph' ? (
+                        <p>{block.children?.[0]?.text || ""}</p>
+                      ) : block.type === 'list' ? (
+                        <ul className={styles.helpList}>
+                          {block.children?.map((item, itemIndex) => (
+                            <li key={itemIndex} className={styles.helpItem}>
+                              {item.children?.[0]?.text || ""}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </div>
@@ -177,7 +170,7 @@ export default async function InsuranceCompanyPage({ params }) {
         <div className={`container ${styles.contentContainer}`}>
           <div className={styles.mainContent}>
             <div className={styles.scrollableContent}>
-              <h2 className={styles.DescriptionTitle}>Our Results</h2>
+              <h2 className={styles.DescriptionTitle}>Our <span className={styles.free}>RESULTS</span></h2>
               <div className={styles.resultsGrid}>
                 {company.case_results?.map((result, index) => (
                   <div key={index} className={styles.resultCard}>

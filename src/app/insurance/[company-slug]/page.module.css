@@ -1,7 +1,7 @@
 .darkBg {
   background-color: var(--primary-dark);
   
-  padding: 4rem 0;
+  padding: 4rem 4rem;
 }
 
 .lightBg {
@@ -102,7 +102,7 @@
 
 .Descriptionsubtitle {
   font-size: 1.5rem;
-  color: var(--accent-color);
+  color: #ece7e7; 
   margin-bottom: 1.5rem;
 }
 
@@ -130,6 +130,7 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+  color: #ece7e7; 
 }
 
 .resultCard {
@@ -137,6 +138,7 @@
   padding: 2rem;
   border-radius: 8px;
   text-align: center;
+  color: #ece7e7; 
 }
 
 .darkBg .resultCard {
@@ -149,7 +151,7 @@
 
 .amount {
   font-size: 2rem;
-  color: var(--accent-color);
+  color: #ece7e7; 
   margin-bottom: 1rem;
   font-weight: 700;
 }
@@ -157,6 +159,7 @@
 .description {
   font-size: 1.1rem;
   line-height: 1.6;
+  color: #ece7e7; 
 }
 
 .testimonialsGrid {
@@ -228,7 +231,7 @@
   content: "•";
   position: absolute;
   left: 0;
-  color: var(--accent-color);
+  color: #ece7e7; 
   font-weight: bold;
 }
 
