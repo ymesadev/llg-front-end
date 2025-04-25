@@ -9,18 +9,24 @@ import { notFound } from 'next/navigation';
 
 // ✅ Configure Static Generation
 export const dynamic = 'force-static';
-export const dynamicParams = true;
-export const revalidate = 60;
+export const dynamicParams = false; // Set to false to only generate pages at build time
+export const revalidate = false; // Disable revalidation for static pages
+
+// ✅ Get Strapi URL
+function getStrapiURL() {
+  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+  if (!strapiURL) {
+    throw new Error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
+  }
+  return strapiURL;
+}
 
 // ✅ Generate Static Paths
 export async function generateStaticParams() {
-  console.log('🔍 Starting generateStaticParams');
+  console.log('🔍 Starting generateStaticParams for insurance companies');
   try {
-    const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    if (!strapiURL) {
-      console.error('❌ NEXT_PUBLIC_STRAPI_API_URL is not defined');
-      return [];
-    }
+    const strapiURL = getStrapiURL();
+    console.log('📡 Using Strapi URL:', strapiURL);
 
     // ✅ Fetch Insurance Companies
     const url = `${strapiURL}/api/insurance-companies?fields[]=slug&pagination[limit]=1000&populate=*`;
@@ -34,7 +40,7 @@ export async function generateStaticParams() {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        next: { revalidate: 60 }
+        cache: 'force-cache' // Force caching during build
       }
     );
 
@@ -54,17 +60,17 @@ export async function generateStaticParams() {
     // ✅ Generate Paths from Companies
     const paths = response.data
       .filter(item => {
-        const hasSlug = !!item?.attributes?.slug;
+        const hasSlug = !!item?.slug;
         if (!hasSlug) {
           console.warn('⚠️ Company missing slug:', item);
         }
         return hasSlug;
       })
       .map(item => ({
-        'company-slug': item.attributes.slug
+        'company-slug': item.slug
       }));
 
-    console.log('✅ Generated paths:', paths);
+    console.log('✅ Generated paths for insurance companies:', paths);
     return paths;
   } catch (error) {
     console.error("❌ Error generating paths:", error);
@@ -81,11 +87,8 @@ async function getCompanyData(slug) {
   }
 
   try {
-    const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-    if (!strapiURL) {
-      console.error('❌ NEXT_PUBLIC_STRAPI_API_URL is not defined');
-      return null;
-    }
+    const strapiURL = getStrapiURL();
+    console.log('📡 Using Strapi URL:', strapiURL);
 
     const url = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=*`;
     console.log('📡 Fetching company data from:', url);
@@ -98,7 +101,7 @@ async function getCompanyData(slug) {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
-        next: { revalidate: 60 }
+        cache: 'force-cache' // Force caching during build
       }
     );
 
