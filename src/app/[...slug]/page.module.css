@@ -1,6 +1,5 @@
 .darkBg {
   background-color: var(--primary-dark);
-  color: var(--text-light);
 }
 
 .lightBg {
@@ -19,15 +18,13 @@
   height: 100%;
   display: flex;
   align-items: center;
-  max-width: 1280px;
-  margin: 0 auto;
   padding: 0 2rem;
 }
 
 .fullHeight > :global(.container) > :global(.column-2a) {
   width: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 3rem;
 }
@@ -51,13 +48,13 @@
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  width: 60%;
+  width: 50%;
 }
 
 .rightColumn {
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 50%;
 }
 
 .subtitle {
