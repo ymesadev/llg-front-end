@@ -156,21 +156,26 @@ export default async function InsuranceCompanyPage({ params }) {
     return (
       <Layout>
         {/* Hero Section */}
-        <section className={`${styles.darkBg} ${styles.fullHeight}`}>
+        <section className={`${styles.darkBg} ${styles.fullHeight} ${styles.verticalCenter}`}>
           <div className="container">
             <div className="column-2a">
               <div className={styles.leftColumn}>
-                <h3 className={styles.subtitle}>{company?.hero?.subtitle || ''}</h3>
-                <h1 className={`${styles.title} ${styles.free}`}>{company?.name || ''}</h1>
-                <p className={styles.intro}>
-                  {company?.hero?.intro?.[0]?.children?.[0]?.text || ''}
-                </p>
+                {company?.hero?.subtitle && (
+                  <h3 className={styles.subtitle}>{company.hero.subtitle}</h3>
+                )}
+                <h1 className={styles.title}>{company?.name || ''}</h1>
+                {Array.isArray(company?.hero?.intro) &&
+                  company.hero.intro.map((block, index) => (
+                    <p key={index} className={styles.intro}>
+                      {block.children?.[0]?.text || ""}
+                    </p>
+                  ))}
               </div>
               <div className={styles.rightColumn}>
                 <div className={styles.evaluationText}>
-                  <span className={styles.evaluationTitle}>
+                  <p className={styles.evaluationTitle}>
                     Get a <span className={styles.free}>FREE</span> case evaluation today.
-                  </span>
+                  </p>
                 </div>
                 <HeroForm />
               </div>
