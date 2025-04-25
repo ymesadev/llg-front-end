@@ -149,7 +149,9 @@ export default async function InsuranceCompanyPage({ params }) {
               <div className={styles.leftColumn}>
                 <h3 className={styles.subtitle}>{company?.hero?.subtitle || ''}</h3>
                 <h1 className={`${styles.title} ${styles.free}`}>{company?.name || ''}</h1>
-                <p className={styles.intro}>{company?.hero?.description || ''}</p>
+                <p className={styles.intro}>
+                  {company?.hero?.intro?.[0]?.children?.[0]?.text || ''}
+                </p>
               </div>
               <div className={styles.rightColumn}>
                 <div className={styles.evaluationText}>
@@ -170,7 +172,7 @@ export default async function InsuranceCompanyPage({ params }) {
               <div className={styles.mainContent}>
                 <div className={styles.scrollableContent}>
                   <div className={styles.help}>
-                    <ReactMarkdown>{company?.overview?.content || ''}</ReactMarkdown>
+                    <ReactMarkdown>{company?.overview?.body || ''}</ReactMarkdown>
                   </div>
                 </div>
               </div>
