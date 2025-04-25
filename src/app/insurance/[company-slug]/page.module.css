@@ -263,6 +263,7 @@
   .fullHeight {
     min-height: auto;
     padding: 4rem 0;
+    margin-top: 4rem;
   }
 
   .fullHeight > :global(.container) > :global(.column-2a) {
@@ -274,6 +275,7 @@
   .rightColumn {
     width: 100%;
     padding: 0;
+    text-align: center;
   }
 
   .title {
@@ -286,6 +288,7 @@
 
   .intro {
     font-size: 1.1rem;
+    margin: 0 auto;
   }
 
   .evaluationTitle {
