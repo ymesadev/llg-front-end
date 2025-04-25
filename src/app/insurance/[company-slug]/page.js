@@ -5,211 +5,252 @@ import Results from "../../components/Results/Results";
 import Steps from "../../components/Steps/Steps";
 import ContactSection from "../../components/Contact/ContactSection";
 import ReactMarkdown from "react-markdown";
-import { renderContentBlocks, processHeroContent, processSectionsContent } from "../../utils/contentFormatter";
+import { notFound } from 'next/navigation';
 
+// ✅ Configure Static Generation
+export const dynamic = 'force-static';
 export const dynamicParams = true;
 export const revalidate = 60;
 
+// ✅ Generate Static Paths
 export async function generateStaticParams() {
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-
+  console.log('🔍 Starting generateStaticParams');
   try {
+    // ✅ Fetch Insurance Companies
+    const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const url = `${strapiURL}/api/insurance-companies?fields[]=slug&pagination[limit]=1000&populate=*`;
+    console.log('📡 Fetching insurance companies from:', url);
+    
     const res = await fetch(
-      `${strapiURL}/api/insurance-companies?fields[]=slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
+      url,
+      { 
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        next: { revalidate: 60 }
+      }
     );
 
-    if (!res.ok) throw new Error("Failed to fetch insurance company slugs");
-    const data = await res.json();
+    if (!res.ok) {
+      console.error('❌ Failed to fetch insurance companies:', res.status, res.statusText);
+      throw new Error(`Failed to fetch: ${res.status}`);
+    }
 
-    // Log the response to see the structure
-    console.log("Strapi Response:", data);
-
-    // Check if data.data exists and has the expected structure
-    if (!data.data || !Array.isArray(data.data)) {
-      console.error("Invalid data structure:", data);
+    const response = await res.json();
+    console.log('📦 Received response:', JSON.stringify(response, null, 2));
+    
+    if (!response?.data || !Array.isArray(response.data)) {
+      console.error('❌ Invalid response structure:', response);
       return [];
     }
 
-    return data.data.map((company) => {
-      // Log each company to see its structure
-      console.log("Company data:", company);
-      
-      // Check if company.attributes exists
-      if (!company.attributes) {
-        console.error("Company missing attributes:", company);
-        return null;
-      }
+    // ✅ Generate Paths from Companies
+    const paths = response.data
+      .filter(item => {
+        const hasSlug = !!item?.attributes?.slug;
+        if (!hasSlug) {
+          console.warn('⚠️ Company missing slug:', item);
+        }
+        return hasSlug;
+      })
+      .map(item => ({
+        'company-slug': item.attributes.slug
+      }));
 
-      return {
-        'company-slug': company.attributes.slug,
-      };
-    }).filter(Boolean); // Remove any null entries
+    console.log('✅ Generated paths:', paths);
+    return paths;
   } catch (error) {
-    console.error("Error in generateStaticParams:", error);
+    console.error("❌ Error generating paths:", error);
     return [];
   }
 }
 
+// ✅ Fetch and Render Page Content
+async function getCompanyData(slug) {
+  console.log('🔍 Starting getCompanyData for slug:', slug);
+  if (!slug) {
+    console.error('❌ No slug provided to getCompanyData');
+    return null;
+  }
+
+  try {
+    const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const url = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=*`;
+    console.log('📡 Fetching company data from:', url);
+    
+    const res = await fetch(
+      url,
+      { 
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        next: { revalidate: 60 }
+      }
+    );
+
+    if (!res.ok) {
+      console.error('❌ Failed to fetch company data:', res.status, res.statusText);
+      throw new Error(`Failed to fetch company data: ${res.status}`);
+    }
+
+    const response = await res.json();
+    console.log('📦 Received company data:', JSON.stringify(response, null, 2));
+    
+    if (!response?.data?.[0]) {
+      console.error('❌ Invalid company data structure:', response);
+      return null;
+    }
+
+    console.log('✅ Successfully retrieved company data');
+    return response.data[0];
+  } catch (error) {
+    console.error("❌ Error fetching company data:", error);
+    return null;
+  }
+}
+
 export default async function InsuranceCompanyPage({ params }) {
-  const slug = params['company-slug'];
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  const apiUrl = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=*`;
+  console.log('🔍 Starting InsuranceCompanyPage with params:', params);
+  try {
+    // ✅ Get Company Data
+    console.log('⏳ Awaiting params resolution');
+    const resolvedParams = await Promise.resolve(params);
+    console.log('✅ Resolved params:', resolvedParams);
+    
+    const slug = resolvedParams?.['company-slug'];
+    console.log('📝 Extracted slug:', slug);
+    
+    if (!slug) {
+      console.error('❌ No slug provided in params');
+      return notFound();
+    }
 
-  const res = await fetch(apiUrl, { next: { revalidate: 60 } });
+    console.log('📡 Fetching data for slug:', slug);
+    const company = await getCompanyData(slug);
+    console.log('📦 Received company data:', company ? 'Data found' : 'No data');
+    
+    if (!company) {
+      console.error('❌ No company data found for slug:', slug);
+      return notFound();
+    }
 
-  if (!res.ok) {
+    console.log('✅ Successfully extracted company data');
+
     return (
       <Layout>
-        <div className={styles.error}>
-          <h1>404 - Insurance Company Profile Not Found</h1>
-          <p>The insurance company profile you are looking for does not exist.</p>
-        </div>
-      </Layout>
-    );
-  }
-
-  const data = await res.json();
-  if (!data.data || data.data.length === 0) {
-    return (
-      <Layout>
-        <div className={styles.error}>
-          <h1>404 - Insurance Company Profile Not Found</h1>
-          <p>The insurance company profile you are looking for does not exist.</p>
-        </div>
-      </Layout>
-    );
-  }
-
-  const company = data.data[0];
-
-  return (
-    <Layout>
-      {/* Hero Section */}
-      <section className={`${styles.darkBg} ${styles.fullHeight}`}>
-        <div className="container">
-          <div className="column-2a">
-            <div className={styles.leftColumn}>
-              {company.hero?.subtitle && (
-                <h3 className={styles.subtitle}>{company.hero.subtitle}</h3>
-              )}
-              <h1 className={`${styles.title} ${styles.free}`}>{company.hero?.title}</h1>
-              {Array.isArray(company.hero?.intro) &&
-                company.hero.intro.map((block, index) => (
-                  <p key={index} className={styles.intro}>
-                    {block.children?.[0]?.text || ""}
-                  </p>
-                ))}
-            </div>
-            <div className={styles.rightColumn}>
-              <div className={styles.evaluationText}>
-                <span className={styles.evaluationTitle}>
-                  Get a <span className={styles.free}>FREE</span> case evaluation today.
-                </span>
+        {/* Hero Section */}
+        <section className={`${styles.darkBg} ${styles.fullHeight}`}>
+          <div className="container">
+            <div className="column-2a">
+              <div className={styles.leftColumn}>
+                <h3 className={styles.subtitle}>{company?.hero?.subtitle || ''}</h3>
+                <h1 className={`${styles.title} ${styles.free}`}>{company?.name || ''}</h1>
+                <p className={styles.intro}>{company?.hero?.description || ''}</p>
               </div>
-              <HeroForm />
+              <div className={styles.rightColumn}>
+                <div className={styles.evaluationText}>
+                  <span className={styles.evaluationTitle}>
+                    Get a <span className={styles.free}>FREE</span> case evaluation today.
+                  </span>
+                </div>
+                <HeroForm />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Overview and Common Issues Section */}
-      <section className={styles.lightBg}>
-        <div className="container">
-          <div className="column-2a">
-            <div className={styles.mainContent}>
-              <div className={styles.scrollableContent}>
-                <div className={styles.help}>
-                  <ReactMarkdown>{company.overview?.body || ""}</ReactMarkdown>
+        {/* Overview Section */}
+        <section className={styles.lightBg}>
+          <div className="container">
+            <div className="column-2a">
+              <div className={styles.mainContent}>
+                <div className={styles.scrollableContent}>
+                  <div className={styles.help}>
+                    <ReactMarkdown>{company?.overview?.content || ''}</ReactMarkdown>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className={`${styles.mainContent} ${styles.darkContent}`}>
-              <div className={styles.scrollableContent}>
-                {company.common_issues?.title?.map((block, index) => (
-                  <div key={index} className={styles.issue}>
-                    <h2 className={styles.issueTitle}>{block.children?.[0]?.text || ""}</h2>
-                    <ul className={styles.issuesList}>
-                      {company.common_issues?.description?.[0]?.children?.map((item, itemIndex) => (
-                        <li key={itemIndex} className={styles.issueItem}>
-                          {item.children?.[0]?.text || ""}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-
-                <div className={styles.helpSection}>
-                  <h2 className={styles.issueTitle}>{company.how_we_help?.title}</h2>
-                  <h3 className={styles.helpSubtitle}>{company.how_we_help?.subtitle}</h3>
-                  {company.how_we_help?.body?.map((block, index) => (
-                    <div key={index} className={styles.help}>
-                      {block.type === 'paragraph' ? (
-                        <p>{block.children?.[0]?.text || ""}</p>
-                      ) : block.type === 'list' ? (
-                        <ul className={styles.helpList}>
-                          {block.children?.map((item, itemIndex) => (
-                            <li key={itemIndex} className={styles.helpItem}>
-                              {item.children?.[0]?.text || ""}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
+              <div className={`${styles.mainContent} ${styles.darkContent}`}>
+                <div className={styles.scrollableContent}>
+                  {company?.common_issues && (
+                    <div className={styles.issue}>
+                      <h2 className={styles.issueTitle}>Common Issues</h2>
+                      <ReactMarkdown>{company.common_issues.content}</ReactMarkdown>
                     </div>
-                  ))}
+                  )}
+
+                  {company?.how_we_help && (
+                    <div className={styles.helpSection}>
+                      <h2 className={styles.issueTitle}>How We Help</h2>
+                      <ReactMarkdown>{company.how_we_help.content}</ReactMarkdown>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Case Results Section */}
-      <section className={styles.darkBg}>
-        <div className={`container ${styles.contentContainer}`}>
-          <div className={styles.mainContent}>
-            <div className={styles.scrollableContent}>
-              <h2 className={styles.DescriptionTitle}>Our <span className={styles.free}>RESULTS</span></h2>
-              <div className={styles.resultsGrid}>
-                {company.case_results?.map((result, index) => (
-                  <div key={index} className={styles.resultCard}>
-                    <h3 className={styles.amount}>
-                      {result.amount.startsWith('$') ? result.amount : `$${result.amount}`}
-                    </h3>
-                    <p className={styles.description}>{result.description}</p>
+        {/* Case Results Section */}
+        {company?.case_results?.length > 0 && (
+          <section className={styles.darkBg}>
+            <div className={`container ${styles.contentContainer}`}>
+              <div className={styles.mainContent}>
+                <div className={styles.scrollableContent}>
+                  <h2 className={styles.DescriptionTitle}>Our <span className={styles.free}>RESULTS</span></h2>
+                  <div className={styles.resultsGrid}>
+                    {company.case_results.map((result, index) => (
+                      <div key={index} className={styles.resultCard}>
+                        <h3 className={styles.amount}>
+                          {result?.amount?.startsWith('$') ? 
+                            result.amount : 
+                            `$${result.amount}`}
+                        </h3>
+                        <p className={styles.description}>{result?.description}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* Testimonials Section */}
-      <section className={styles.lightBg}>
-        <div className={`container ${styles.contentContainer}`}>
-          <div className={styles.mainContent}>
-            <div className={styles.scrollableContent}>
-              <h2 className={styles.DescriptionTitle}>Client Testimonials</h2>
-              <div className={styles.testimonialsGrid}>
-                {company.testimonials?.map((testimonial, index) => (
-                  <div key={index} className={styles.testimonialCard}>
-                    <blockquote className={styles.quote}>
-                      {testimonial.body}
-                    </blockquote>
-                    <cite className={styles.author}>{testimonial.title}</cite>
+        {/* Testimonials Section */}
+        {company?.testimonials?.length > 0 && (
+          <section className={styles.lightBg}>
+            <div className={`container ${styles.contentContainer}`}>
+              <div className={styles.mainContent}>
+                <div className={styles.scrollableContent}>
+                  <h2 className={styles.DescriptionTitle}>Client Testimonials</h2>
+                  <div className={styles.testimonialsGrid}>
+                    {company.testimonials.map((testimonial, index) => (
+                      <div key={index} className={styles.testimonialCard}>
+                        <blockquote className={styles.quote}>
+                          {testimonial?.body}
+                        </blockquote>
+                        <cite className={styles.author}>{testimonial?.title}</cite>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        )}
 
-      <Results />
-      <Steps />
-      <ContactSection />
-    </Layout>
-  );
+        <Results />
+        <Steps />
+        <ContactSection />
+      </Layout>
+    );
+  } catch (error) {
+    console.error('❌ Error rendering insurance company page:', error);
+    return notFound();
+  }
 } 
