@@ -259,9 +259,25 @@
 }
 
 /* Responsive Styles */
-@media (max-width: 1024px) {
+@media screen and (max-width: 980px) {
+  .fullHeight {
+    min-height: auto;
+    padding: 4rem 0;
+  }
+
+  .fullHeight > :global(.container) > :global(.column-2a) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .leftColumn,
+  .rightColumn {
+    width: 100%;
+    padding: 0;
+  }
+
   .title {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .subtitle {
@@ -272,36 +288,30 @@
     font-size: 1.1rem;
   }
 
-  .DescriptionTitle {
-    font-size: 2rem;
-  }
-
-  .Descriptionsubtitle {
+  .evaluationTitle {
     font-size: 1.2rem;
   }
 }
 
+@media screen and (min-width: 980px) {
+  .fullHeight {
+    min-height: 100vh;
+    padding: 0;
+  }
+}
+
 @media (max-width: 768px) {
-  .column-2a {
+  .contentContainer {
     flex-direction: column;
   }
 
-  .leftColumn,
-  .rightColumn {
+  .scrollableContent {
     padding: 0;
-    margin-bottom: 2rem;
   }
 
-  .title {
-    font-size: 2rem;
-  }
-
-  .evaluationTitle {
-    font-size: 1.2rem;
-  }
-
-  .contentContainer {
-    padding: 0 1rem;
+  .sidebar {
+    width: 100%;
+    margin-top: 2rem;
   }
 
   .resultsGrid,
