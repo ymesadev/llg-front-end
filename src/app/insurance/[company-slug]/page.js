@@ -13,6 +13,7 @@ export const dynamic = 'force-static';
 export const dynamicParams = false;
 export const revalidate = false;
 
+// ✅ Generate Static Paths
 export async function generateStaticParams() {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   console.log('Starting generateStaticParams for insurance companies');
@@ -24,6 +25,11 @@ export async function generateStaticParams() {
   }
 
   try {
+    // ✅ Fetch Insurance Companies
+    const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const url = `${strapiURL}/api/insurance-companies?fields[]=slug&pagination[limit]=1000&populate=*`;
+    console.log('📡 Fetching insurance companies from:', url);
+    
     const res = await fetch(
       `${strapiURL}/api/insurance-companies`,
       {
@@ -70,6 +76,52 @@ export async function generateStaticParams() {
   } catch (error) {
     console.error('Error in generateStaticParams:', error);
     throw error; // Let the build fail if we can't generate the pages
+  }
+}
+
+// ✅ Fetch and Render Page Content
+async function getCompanyData(slug) {
+  console.log('🔍 Starting getCompanyData for slug:', slug);
+  if (!slug) {
+    console.error('❌ No slug provided to getCompanyData');
+    return null;
+  }
+
+  try {
+    const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    const url = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=*`;
+    console.log('📡 Fetching company data from:', url);
+    
+    const res = await fetch(
+      url,
+      { 
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        next: { revalidate: 60 }
+      }
+    );
+
+    if (!res.ok) {
+      console.error('❌ Failed to fetch company data:', res.status, res.statusText);
+      throw new Error(`Failed to fetch company data: ${res.status}`);
+    }
+
+    const response = await res.json();
+    console.log('📦 Received company data:', JSON.stringify(response, null, 2));
+    
+    if (!response?.data?.[0]) {
+      console.error('❌ Invalid company data structure:', response);
+      return null;
+    }
+
+    console.log('✅ Successfully retrieved company data');
+    return response.data[0];
+  } catch (error) {
+    console.error("❌ Error fetching company data:", error);
+    return null;
   }
 }
 
@@ -209,7 +261,21 @@ export default async function InsuranceCompanyPage({ params }) {
                       </h3>
                       <p className={styles.description}>{result.description}</p>
                     </div>
-                  ))}
+                  )}
+
+                  {company?.how_we_help && (
+                    <div className={styles.helpSection}>
+                      <h2 className={styles.issueTitle}>{company.how_we_help.title}</h2>
+                      <h3 className={styles.helpSubtitle}>{company.how_we_help.subtitle}</h3>
+                      <ReactMarkdown>
+                        {`${company.how_we_help.body?.[0]?.children?.[0]?.text || ''}\n\n${
+                          company.how_we_help.body?.[1]?.children?.map(item => 
+                            `- ${item.children?.[0]?.text}`
+                          ).join('\n') || ''
+                        }`}
+                      </ReactMarkdown>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
