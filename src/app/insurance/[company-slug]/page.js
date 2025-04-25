@@ -181,15 +181,28 @@ export default async function InsuranceCompanyPage({ params }) {
                 <div className={styles.scrollableContent}>
                   {company?.common_issues && (
                     <div className={styles.issue}>
-                      <h2 className={styles.issueTitle}>Common Issues</h2>
-                      <ReactMarkdown>{company.common_issues.content}</ReactMarkdown>
+                      <h2 className={styles.issueTitle}>
+                        {company.common_issues.title?.[0]?.children?.[0]?.text || 'Common Issues'}
+                      </h2>
+                      <ReactMarkdown>
+                        {company.common_issues.description?.[0]?.children?.map(item => 
+                          `- ${item.children?.[0]?.text}`
+                        ).join('\n')}
+                      </ReactMarkdown>
                     </div>
                   )}
 
                   {company?.how_we_help && (
                     <div className={styles.helpSection}>
-                      <h2 className={styles.issueTitle}>How We Help</h2>
-                      <ReactMarkdown>{company.how_we_help.content}</ReactMarkdown>
+                      <h2 className={styles.issueTitle}>{company.how_we_help.title}</h2>
+                      <h3 className={styles.helpSubtitle}>{company.how_we_help.subtitle}</h3>
+                      <ReactMarkdown>
+                        {`${company.how_we_help.body?.[0]?.children?.[0]?.text || ''}\n\n${
+                          company.how_we_help.body?.[1]?.children?.map(item => 
+                            `- ${item.children?.[0]?.text}`
+                          ).join('\n') || ''
+                        }`}
+                      </ReactMarkdown>
                     </div>
                   )}
                 </div>
