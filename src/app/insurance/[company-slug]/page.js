@@ -5,77 +5,70 @@ import Results from "../../components/Results/Results";
 import Steps from "../../components/Steps/Steps";
 import ContactSection from "../../components/Contact/ContactSection";
 import ReactMarkdown from "react-markdown";
-import { renderContentBlocks, processHeroContent, processSectionsContent } from "../../utils/contentFormatter";
 import { notFound } from 'next/navigation';
 
-// Force static generation
+// ✅ Configure Static Generation
 export const dynamic = 'force-static';
-export const dynamicParams = false;
-export const revalidate = false;
+export const dynamicParams = true;
+export const revalidate = 60;
 
 // ✅ Generate Static Paths
 export async function generateStaticParams() {
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  console.log('Starting generateStaticParams for insurance companies');
-  console.log('Strapi URL:', strapiURL);
-
-  if (!strapiURL) {
-    console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
-    return [];
-  }
-
+  console.log('🔍 Starting generateStaticParams');
   try {
-    // ✅ Fetch Insurance Companies
     const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    if (!strapiURL) {
+      console.error('❌ NEXT_PUBLIC_STRAPI_API_URL is not defined');
+      return [];
+    }
+
+    // ✅ Fetch Insurance Companies
     const url = `${strapiURL}/api/insurance-companies?fields[]=slug&pagination[limit]=1000&populate=*`;
     console.log('📡 Fetching insurance companies from:', url);
     
     const res = await fetch(
-      `${strapiURL}/api/insurance-companies`,
-      {
+      url,
+      { 
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-        }
+        },
+        next: { revalidate: 60 }
       }
     );
 
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Failed to fetch insurance companies:', errorText);
-      throw new Error(`Failed to fetch: ${res.status} ${errorText}`);
+      console.error('❌ Failed to fetch insurance companies:', res.status, res.statusText);
+      throw new Error(`Failed to fetch: ${res.status}`);
     }
 
-    const data = await res.json();
-    console.log('Fetched insurance companies data:', JSON.stringify(data, null, 2));
-
-    if (!data?.data || !Array.isArray(data.data)) {
-      console.error('Invalid data structure received:', data);
+    const response = await res.json();
+    console.log('📦 Received response:', JSON.stringify(response, null, 2));
+    
+    if (!response?.data || !Array.isArray(response.data)) {
+      console.error('❌ Invalid response structure:', response);
       return [];
     }
 
-    const params = data.data
-      .filter(company => {
-        if (!company?.attributes?.slug) {
-          console.warn('Company missing slug:', company);
-          return false;
+    // ✅ Generate Paths from Companies
+    const paths = response.data
+      .filter(item => {
+        const hasSlug = !!item?.attributes?.slug;
+        if (!hasSlug) {
+          console.warn('⚠️ Company missing slug:', item);
         }
-        return true;
+        return hasSlug;
       })
-      .map(company => {
-        console.log('Generating params for company:', company.attributes.slug);
-        return {
-          'company-slug': company.attributes.slug
-        };
-      });
+      .map(item => ({
+        'company-slug': item.attributes.slug
+      }));
 
-    console.log('Generated static params:', params);
-    return params;
-
+    console.log('✅ Generated paths:', paths);
+    return paths;
   } catch (error) {
-    console.error('Error in generateStaticParams:', error);
-    throw error; // Let the build fail if we can't generate the pages
+    console.error("❌ Error generating paths:", error);
+    return [];
   }
 }
 
@@ -89,6 +82,11 @@ async function getCompanyData(slug) {
 
   try {
     const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+    if (!strapiURL) {
+      console.error('❌ NEXT_PUBLIC_STRAPI_API_URL is not defined');
+      return null;
+    }
+
     const url = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=*`;
     console.log('📡 Fetching company data from:', url);
     
@@ -126,44 +124,31 @@ async function getCompanyData(slug) {
 }
 
 export default async function InsuranceCompanyPage({ params }) {
-  const slug = params['company-slug'];
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  
-  if (!strapiURL) {
-    console.error('NEXT_PUBLIC_STRAPI_API_URL is not defined');
-    return notFound();
-  }
-
-  console.log(`Rendering insurance company page for slug: ${slug}`);
-  
+  console.log('🔍 Starting InsuranceCompanyPage with params:', params);
   try {
-    const apiUrl = `${strapiURL}/api/insurance-companies?filters[slug][$eq]=${slug}&populate=deep`;
-    console.log('Fetching from URL:', apiUrl);
-
-    const res = await fetch(apiUrl, { 
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      }
-    });
-
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error(`Failed to fetch insurance company with slug ${slug}:`, errorText);
-      return notFound();
-    }
-
-    const data = await res.json();
-    console.log(`Data received for ${slug}:`, JSON.stringify(data, null, 2));
+    // ✅ Get Company Data
+    console.log('⏳ Awaiting params resolution');
+    const resolvedParams = await Promise.resolve(params);
+    console.log('✅ Resolved params:', resolvedParams);
     
-    if (!data?.data?.[0]) {
-      console.error(`No data found for insurance company with slug ${slug}`);
+    const slug = resolvedParams?.['company-slug'];
+    console.log('📝 Extracted slug:', slug);
+    
+    if (!slug) {
+      console.error('❌ No slug provided in params');
       return notFound();
     }
 
-    const company = data.data[0];
-    console.log(`Rendering company page for: ${company.attributes?.name || slug}`);
+    console.log('📡 Fetching data for slug:', slug);
+    const company = await getCompanyData(slug);
+    console.log('📦 Received company data:', company ? 'Data found' : 'No data');
+    
+    if (!company) {
+      console.error('❌ No company data found for slug:', slug);
+      return notFound();
+    }
+
+    console.log('✅ Successfully extracted company data');
 
     return (
       <Layout>
@@ -172,16 +157,11 @@ export default async function InsuranceCompanyPage({ params }) {
           <div className="container">
             <div className="column-2a">
               <div className={styles.leftColumn}>
-                {company.hero?.subtitle && (
-                  <h3 className={styles.subtitle}>{company.hero.subtitle}</h3>
-                )}
-                <h1 className={`${styles.title} ${styles.free}`}>{company.hero?.title}</h1>
-                {Array.isArray(company.hero?.intro) &&
-                  company.hero.intro.map((block, index) => (
-                    <p key={index} className={styles.intro}>
-                      {block.children?.[0]?.text || ""}
-                    </p>
-                  ))}
+                <h3 className={styles.subtitle}>{company?.hero?.subtitle || ''}</h3>
+                <h1 className={`${styles.title} ${styles.free}`}>{company?.name || ''}</h1>
+                <p className={styles.intro}>
+                  {company?.hero?.intro?.[0]?.children?.[0]?.text || ''}
+                </p>
               </div>
               <div className={styles.rightColumn}>
                 <div className={styles.evaluationText}>
@@ -195,71 +175,30 @@ export default async function InsuranceCompanyPage({ params }) {
           </div>
         </section>
 
-        {/* Overview and Common Issues Section */}
+        {/* Overview Section */}
         <section className={styles.lightBg}>
           <div className="container">
             <div className="column-2a">
               <div className={styles.mainContent}>
                 <div className={styles.scrollableContent}>
                   <div className={styles.help}>
-                    <ReactMarkdown>{company.overview?.body || ""}</ReactMarkdown>
+                    <ReactMarkdown>{company?.overview?.body || ''}</ReactMarkdown>
                   </div>
                 </div>
               </div>
 
               <div className={`${styles.mainContent} ${styles.darkContent}`}>
                 <div className={styles.scrollableContent}>
-                  {company.common_issues?.title?.map((block, index) => (
-                    <div key={index} className={styles.issue}>
-                      <h2 className={styles.issueTitle}>{block.children?.[0]?.text || ""}</h2>
-                      <ul className={styles.issuesList}>
-                        {company.common_issues?.description?.[0]?.children?.map((item, itemIndex) => (
-                          <li key={itemIndex} className={styles.issueItem}>
-                            {item.children?.[0]?.text || ""}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-
-                  <div className={styles.helpSection}>
-                    <h2 className={styles.issueTitle}>{company.how_we_help?.title}</h2>
-                    <h3 className={styles.helpSubtitle}>{company.how_we_help?.subtitle}</h3>
-                    {company.how_we_help?.body?.map((block, index) => (
-                      <div key={index} className={styles.help}>
-                        {block.type === 'paragraph' ? (
-                          <p>{block.children?.[0]?.text || ""}</p>
-                        ) : block.type === 'list' ? (
-                          <ul className={styles.helpList}>
-                            {block.children?.map((item, itemIndex) => (
-                              <li key={itemIndex} className={styles.helpItem}>
-                                {item.children?.[0]?.text || ""}
-                              </li>
-                            ))}
-                          </ul>
-                        ) : null}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Case Results Section */}
-        <section className={styles.darkBg}>
-          <div className={`container ${styles.contentContainer}`}>
-            <div className={styles.mainContent}>
-              <div className={styles.scrollableContent}>
-                <h2 className={styles.DescriptionTitle}>Our <span className={styles.free}>RESULTS</span></h2>
-                <div className={styles.resultsGrid}>
-                  {company.case_results?.map((result, index) => (
-                    <div key={index} className={styles.resultCard}>
-                      <h3 className={styles.amount}>
-                        {result.amount.startsWith('$') ? result.amount : `$${result.amount}`}
-                      </h3>
-                      <p className={styles.description}>{result.description}</p>
+                  {company?.common_issues && (
+                    <div className={styles.issue}>
+                      <h2 className={styles.issueTitle}>
+                        {company.common_issues.title?.[0]?.children?.[0]?.text || 'Common Issues'}
+                      </h2>
+                      <ReactMarkdown>
+                        {company.common_issues.description?.[0]?.children?.map(item => 
+                          `- ${item.children?.[0]?.text}`
+                        ).join('\n')}
+                      </ReactMarkdown>
                     </div>
                   )}
 
@@ -282,26 +221,51 @@ export default async function InsuranceCompanyPage({ params }) {
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section className={styles.lightBg}>
-          <div className={`container ${styles.contentContainer}`}>
-            <div className={styles.mainContent}>
-              <div className={styles.scrollableContent}>
-                <h2 className={styles.DescriptionTitle}>Client Testimonials</h2>
-                <div className={styles.testimonialsGrid}>
-                  {company.testimonials?.map((testimonial, index) => (
-                    <div key={index} className={styles.testimonialCard}>
-                      <blockquote className={styles.quote}>
-                        {testimonial.body}
-                      </blockquote>
-                      <cite className={styles.author}>{testimonial.title}</cite>
-                    </div>
-                  ))}
+        {/* Case Results Section */}
+        {company?.case_results?.length > 0 && (
+          <section className={styles.darkBg}>
+            <div className={`container ${styles.contentContainer}`}>
+              <div className={styles.mainContent}>
+                <div className={styles.scrollableContent}>
+                  <h2 className={styles.DescriptionTitle}>Our <span className={styles.free}>RESULTS</span></h2>
+                  <div className={styles.resultsGrid}>
+                    {company.case_results.map((result, index) => (
+                      <div key={index} className={styles.resultCard}>
+                        <h3 className={styles.amount}>
+                          {result.amount.startsWith('$') ? result.amount : `$${result.amount}`}
+                        </h3>
+                        <p className={styles.description}>{result.description}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
+
+        {/* Testimonials Section */}
+        {company?.testimonials?.length > 0 && (
+          <section className={styles.lightBg}>
+            <div className={`container ${styles.contentContainer}`}>
+              <div className={styles.mainContent}>
+                <div className={styles.scrollableContent}>
+                  <h2 className={styles.DescriptionTitle}>Client Testimonials</h2>
+                  <div className={styles.testimonialsGrid}>
+                    {company.testimonials.map((testimonial, index) => (
+                      <div key={index} className={styles.testimonialCard}>
+                        <blockquote className={styles.quote}>
+                          {testimonial.body}
+                        </blockquote>
+                        <cite className={styles.author}>{testimonial.title}</cite>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
         <Results />
         <Steps />
@@ -309,7 +273,7 @@ export default async function InsuranceCompanyPage({ params }) {
       </Layout>
     );
   } catch (error) {
-    console.error(`Error rendering insurance company page for slug ${slug}:`, error);
-    throw error; // Let the build fail if we can't render the page
+    console.error('❌ Error rendering insurance company page:', error);
+    return notFound();
   }
 } 
