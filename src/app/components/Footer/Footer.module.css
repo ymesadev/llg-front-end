@@ -176,22 +176,85 @@
 /* Responsive styles */
 @media (max-width: 768px) {
   .footer {
-    padding: 3rem 1rem 1rem;
+    padding: 4rem 2rem;
+    text-align: center;
   }
 
   .grid {
     gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .column {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .sectionHeader {
     padding: 0.5rem 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .sectionLink {
+    width: 100%;
+    text-align: center;
+  }
+
+  .sectionLink h1 {
+    text-align: center;
+    width: 100%;
+  }
+
+  .navList {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navItem {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .navLink {
+    width: 100%;
+    text-align: center;
+  }
+
+  .navLink h2 {
+    text-align: center;
+    width: 100%;
+  }
+
+  .sectionWrapper {
+    width: 100%;
+    justify-content: center;
   }
 
   .navList .navList {
-    margin-left: 1.5rem;
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
+  }
+
+  .navList .navList.expanded {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .copyright {
+    text-align: center;
+  }
+
+  .copyright p {
+    text-align: center;
   }
 } 

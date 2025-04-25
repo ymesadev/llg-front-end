@@ -294,6 +294,91 @@
   .evaluationTitle {
     font-size: 1.2rem;
   }
+
+  /* Footer Mobile Styles */
+  :global(.footer) {
+    text-align: center !important;
+  }
+
+  :global(.footer .grid) {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center !important;
+  }
+
+  :global(.footer .column) {
+    width: 100%;
+    text-align: center !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  :global(.footer .sectionHeader) {
+    text-align: center !important;
+    width: 100%;
+  }
+
+  :global(.footer .sectionHeader h1),
+  :global(.footer .sectionHeader h2) {
+    text-align: center !important;
+    width: 100%;
+  }
+
+  :global(.footer .navList) {
+    text-align: center !important;
+    padding: 0;
+    list-style: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  :global(.footer .navItem) {
+    text-align: center !important;
+    margin: 0.5rem 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  :global(.footer .navLink) {
+    text-align: center !important;
+    display: inline-block;
+    width: 100%;
+  }
+
+  :global(.footer .navLink h2) {
+    text-align: center !important;
+    width: 100%;
+  }
+
+  :global(.footer .copyright) {
+    text-align: center !important;
+    margin-top: 2rem;
+    width: 100%;
+  }
+
+  :global(.footer .copyright p) {
+    text-align: center !important;
+    margin: 0.5rem 0;
+    width: 100%;
+  }
+
+  :global(.footer .sectionWrapper) {
+    text-align: center !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  :global(.footer .arrow) {
+    text-align: center !important;
+  }
 }
 
 @media screen and (min-width: 980px) {

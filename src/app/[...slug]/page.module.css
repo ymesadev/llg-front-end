@@ -11,6 +11,7 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
+  margin-top: 0rem;
 }
 
 .fullHeight > :global(.container) {
@@ -292,8 +293,9 @@
 @media screen and (max-width: 980px) {
   .fullHeight {
     min-height: auto;
-    padding-top: 5rem;
+    padding-top: 4rem;
     padding-bottom: 2rem;
+    margin-top: 4rem;
   }
   
   .fullHeight > :global(.container) > :global(.column-2a) {
