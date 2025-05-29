@@ -1,9 +1,13 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import { FaCheckCircle, FaTimesCircle, FaSpinner } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import styles from "./HeroForm.module.css";
 
 export default function FreeCaseEvaluationPage() {
+  const router = useRouter();
+
   // Form data
   const [formData, setFormData] = useState({
     name: "",
@@ -21,8 +25,10 @@ export default function FreeCaseEvaluationPage() {
   const [isZipcodeFocused, setIsZipcodeFocused] = useState(false);
   const [isEmailFocused, setIsEmailFocused] = useState(false);
 
+  // Form status: "idle" | "submitting" | "success" | "error"
   const [formStatus, setFormStatus] = useState("idle");
 
+  // ← no type annotations here
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -31,7 +37,7 @@ export default function FreeCaseEvaluationPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormStatus("submitting");
 
@@ -45,93 +51,86 @@ export default function FreeCaseEvaluationPage() {
       consent: formData.consent ? "Yes" : "No",
     };
 
-    // Log the form data being submitted
-    console.log('Form Data being submitted:', {
-      formData: payload,
+    console.log("Form Data being submitted:", {
+      payload,
       timestamp: new Date().toISOString(),
     });
 
-    const ghlEndpoint =
-      "https://services.leadconnectorhq.com/hooks/OpuRBif1UwDh1UMMiJ7o/webhook-trigger/52c60449-a7a0-42ca-b25a-6b1b93ed4f66";
-
-    fetch(ghlEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "your-authorization-key",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((response) => {
-        // Log the raw response
-        console.log('Raw API Response:', {
-          status: response.status,
-          statusText: response.statusText,
-          headers: Object.fromEntries(response.headers.entries()),
-        });
-
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+    try {
+      const response = await fetch(
+        "https://services.leadconnectorhq.com/hooks/OpuRBif1UwDh1UMMiJ7o/webhook-trigger/52c60449-a7a0-42ca-b25a-6b1b93ed4f66",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "your-authorization-key",
+          },
+          body: JSON.stringify(payload),
         }
-        return response.json();
-      })
-      .then((data) => {
-        // Log successful response data
-        console.log('API Success Response:', {
-          data,
-          timestamp: new Date().toISOString(),
-        });
+      );
 
-        setFormStatus("success");
-        setFormData({
-          name: "",
-          phone: "",
-          zipcode: "",
-          email: "",
-          caseType: "",
-          description: "",
-          consent: false,
-        });
-      })
-      .catch((err) => {
-        // Log detailed error information
-        console.error('API Error:', {
-          error: err.message,
-          stack: err.stack,
-          timestamp: new Date().toISOString(),
-        });
-        setFormStatus("error");
+      console.log("Raw API Response:", {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
       });
-  };
 
-  // Log form status changes
-  useEffect(() => {
-    console.log('Form Status Changed:', {
-      status: formStatus,
-      timestamp: new Date().toISOString(),
-    });
-  }, [formStatus]);
+      if (!response.ok) {
+        throw new Error(`Network response was not ok (status ${response.status})`);
+      }
+
+      const data = await response.json();
+      console.log("API Success Response:", {
+        data,
+        timestamp: new Date().toISOString(),
+      });
+
+      setFormStatus("success");
+      // reset form if you like—user will be redirected immediately
+      setFormData({
+        name: "",
+        phone: "",
+        zipcode: "",
+        email: "",
+        caseType: "",
+        description: "",
+        consent: false,
+      });
+    } catch (err) {
+      console.error("API Error:", {
+        error: err.message,
+        stack: err.stack,
+        timestamp: new Date().toISOString(),
+      });
+      setFormStatus("error");
+    }
+  };
 
   // Log form data changes
   useEffect(() => {
-    console.log('Form Data Updated:', {
+    console.log("Form Data Updated:", {
       currentData: formData,
       timestamp: new Date().toISOString(),
     });
   }, [formData]);
 
-  if (formStatus === "success") {
-    return (
-      <div className={styles.successContainer}>
-        <FaCheckCircle className={styles.successIcon} />
-        <p className={styles.successMessage}>
-          Thank you! Your form has been submitted successfully.
-        </p>
-      </div>
-    );
-  }
+  // Log form status changes
+  useEffect(() => {
+    console.log("Form Status Changed:", {
+      status: formStatus,
+      timestamp: new Date().toISOString(),
+    });
+  }, [formStatus]);
 
-  if (formStatus === "error")
+  // Redirect on success
+  useEffect(() => {
+    if (formStatus === "success") {
+      router.push("https://www.louislawgroup.com/thank-you");
+    }
+  }, [formStatus, router]);
+
+  // — error state —
+  if (formStatus === "error") {
     return (
       <div className={styles.errorContainer}>
         <FaTimesCircle className={styles.errorIcon} />
@@ -140,16 +139,19 @@ export default function FreeCaseEvaluationPage() {
         </p>
       </div>
     );
+  }
 
+  // — submitting state —
   if (formStatus === "submitting") {
     return (
       <div className={styles.spinnerContainer}>
-        <div className={styles.spinner}></div>
+        <FaSpinner className={styles.spinner} />
         <p>Submitting...</p>
       </div>
     );
   }
 
+  // — default (idle) state: show form —
   return (
     <form onSubmit={handleSubmit} className={styles.heroForm}>
       <div className={styles.grid}>
@@ -166,8 +168,9 @@ export default function FreeCaseEvaluationPage() {
             onBlur={() => setIsNameFocused(false)}
             required
           />
-          <label> Name </label>
+          <label>Name</label>
         </div>
+
         {/* Email */}
         <div className={styles.inputContainer}>
           <input
@@ -183,6 +186,7 @@ export default function FreeCaseEvaluationPage() {
           />
           <label>Email</label>
         </div>
+
         {/* Phone */}
         <div className={styles.inputContainer}>
           <input
@@ -196,7 +200,7 @@ export default function FreeCaseEvaluationPage() {
             onBlur={() => setIsPhoneFocused(false)}
             required
           />
-          <label> Phone </label>
+          <label>Phone</label>
         </div>
 
         {/* Zipcode */}
@@ -212,9 +216,10 @@ export default function FreeCaseEvaluationPage() {
             onBlur={() => setIsZipcodeFocused(false)}
             required
           />
-          <label> Zip Code </label>
+          <label>Zip Code</label>
         </div>
       </div>
+
       {/* Case Type */}
       <div className={styles.inputContainer}>
         <select
@@ -235,12 +240,12 @@ export default function FreeCaseEvaluationPage() {
 
       {/* Description */}
       <div className={styles.message}>
-        <label> Message </label>
+        <label>Message</label>
         <textarea
           name="description"
           placeholder="Tell us more about your case"
           className={styles.textarea}
-          rows="4"
+          rows={4}
           value={formData.description}
           onChange={handleInputChange}
           required
