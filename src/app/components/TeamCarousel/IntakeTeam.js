@@ -6,12 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 // Team Members Data
 const teamMembers = [
-  {
-    name: "Jennifer Dougherty",
-    photo: "/images/jennifer-dougherty.jpg",
-    description: "Senior Intake Specialist",
-    link: "/jennifer-dougherty",
-  },
+
   {
     name: "Diana “Dee” Vergara",
     photo: "/images/dee-vergara.jpg",
