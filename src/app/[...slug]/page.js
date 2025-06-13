@@ -30,7 +30,7 @@ export async function generateStaticParams() {
       { next: { revalidate: 60 } }
     );
     const resArticles = await fetch(
-      `${strapiURL}/api/articles?fields[]=slug&pagination[limit]=1000`,
+      `${strapiURL}/api/articles?fields[]=slug&pagination[limit]=22000`,
       { next: { revalidate: 60 } }
     );
     const resJobs = await fetch(
