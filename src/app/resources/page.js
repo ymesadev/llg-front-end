@@ -1,4 +1,4 @@
-// app/resources/page.tsx  (or wherever your ResourcesPage lives)
+// src/app/resources/page.js
 
 import Layout from "../components/Layout/Layout";
 import styles from "./resources.module.css";
@@ -7,77 +7,85 @@ import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
 import Contact from "../components/Contact/ContactSection";
 
-export const revalidate = 60; // ISR: Refresh every 60 seconds
+export const revalidate = 60; // ISR: refresh every 60 seconds
 
-// ─── HELPER: build [1,2,…,9,10,11,…,101,102] ───────────────────────────────
-function getPaginationRange({
-  totalPages,
-  currentPage,
-  siblingCount = 1,
-  boundaryCount = 2,
-}: {
-  totalPages: number;
-  currentPage: number;
-  siblingCount?: number;
-  boundaryCount?: number;
-}): (number | '...')[] {
-  const range = (start: number, end: number) =>
-    Array.from({ length: end - start + 1 }, (_, i) => start + i);
+// ─── Pagination helper: [1, 2, …, 9, 10, 11, …, 101, 102] ──────────────────
+function getPaginationRange({ totalPages, currentPage, siblingCount = 1, boundaryCount = 2 }) {
+  // create a range of numbers from start to end
+  function range(start, end) {
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  }
 
+  // how many page numbers we’d show if no dots
   const totalNumbers = boundaryCount * 2 + siblingCount * 2 + 3;
   if (totalPages <= totalNumbers) {
     return range(1, totalPages);
   }
 
-  const result: (number | '...')[] = [];
+  const pages = [];
   const startPages = range(1, boundaryCount);
   const endPages = range(totalPages - boundaryCount + 1, totalPages);
 
   const siblingsStart = Math.max(currentPage - siblingCount, boundaryCount + 2);
   const siblingsEnd   = Math.min(currentPage + siblingCount, totalPages - boundaryCount - 1);
 
-  result.push(...startPages);
+  // first boundary pages
+  pages.push(...startPages);
 
+  // leading dots
   if (siblingsStart > boundaryCount + 2) {
-    result.push('...');
+    pages.push("...");
   } else if (siblingsStart === boundaryCount + 2) {
-    result.push(boundaryCount + 1);
+    pages.push(boundaryCount + 1);
   }
 
-  result.push(...range(siblingsStart, siblingsEnd));
+  // sibling pages
+  pages.push(...range(siblingsStart, siblingsEnd));
 
+  // trailing dots
   if (siblingsEnd < totalPages - boundaryCount - 1) {
-    result.push('...');
+    pages.push("...");
   } else if (siblingsEnd === totalPages - boundaryCount - 1) {
-    result.push(totalPages - boundaryCount);
+    pages.push(totalPages - boundaryCount);
   }
 
-  result.push(...endPages);
+  // last boundary pages
+  pages.push(...endPages);
 
-  return result;
+  return pages;
 }
 
-// ─── DATA FETCHING ────────────────────────────────────────────────────────────
-export async function getBlogPosts(page = 1) {
+// ─── Data fetching for one page of blog posts ───────────────────────────────
+async function getBlogPosts(page = 1) {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  const apiUrl = `${strapiURL}/api/articles?populate=cover&fields[]=title&fields[]=slug&fields[]=description&sort[0]=createdAt:desc&pagination[page]=${page}&pagination[pageSize]=20`;
+  const apiUrl = 
+    `${strapiURL}/api/articles?` +
+    `populate=cover&` +
+    `fields[]=title&fields[]=slug&fields[]=description&` +
+    `sort[0]=createdAt:desc&` +
+    `pagination[page]=${page}&pagination[pageSize]=20`;
+
   try {
     const res = await fetch(apiUrl, { next: { revalidate: 60 } });
-    if (!res.ok) throw new Error("Failed to fetch blog posts");
-    const data = await res.json();
-    return { posts: data.data, meta: data.meta };
-  } catch (error) {
-    console.error("❌ Error fetching blog posts:", error);
+    if (!res.ok) {
+      console.error("Failed to fetch blog posts:", res.status, res.statusText);
+      return { posts: [], meta: null };
+    }
+    const json = await res.json();
+    return { posts: json.data, meta: json.meta };
+  } catch (err) {
+    console.error("Error fetching blog posts:", err);
     return { posts: [], meta: null };
   }
 }
 
-// ─── PAGE COMPONENT ──────────────────────────────────────────────────────────
+// ─── Page component ─────────────────────────────────────────────────────────
 export default async function ResourcesPage({ searchParams }) {
-  const currentPage = searchParams?.page ? parseInt(searchParams.page) : 1;
+  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
   const { posts, meta } = await getBlogPosts(currentPage);
   const totalPages = meta?.pagination?.pageCount || 1;
-  const paginationRange = getPaginationRange({
+
+  const paginationItems = getPaginationRange({
     totalPages,
     currentPage,
     siblingCount: 1,
@@ -93,11 +101,7 @@ export default async function ResourcesPage({ searchParams }) {
 
           <div className={styles.grid}>
             {posts.map((post) => (
-              <Link
-                key={post.id}
-                href={`/${post.slug}`}
-                className={styles.postCard}
-              >
+              <Link key={post.id} href={`/${post.slug}`} className={styles.postCard}>
                 {post.cover && (
                   <img
                     src={`https://login.louislawgroup.com${post.cover.url}`}
@@ -115,7 +119,7 @@ export default async function ResourcesPage({ searchParams }) {
 
           {totalPages > 1 && (
             <nav className={styles.pagination}>
-              {/* Previous */}
+              {/* Previous link */}
               {currentPage > 1 && (
                 <Link
                   href={`/resources?page=${currentPage - 1}`}
@@ -125,9 +129,9 @@ export default async function ResourcesPage({ searchParams }) {
                 </Link>
               )}
 
-              {/* Page Buttons / Ellipses */}
-              {paginationRange.map((item, idx) =>
-                item === '...' ? (
+              {/* Page numbers with ellipses */}
+              {paginationItems.map((item, idx) =>
+                item === "..." ? (
                   <span key={idx} className={styles.paginationDots}>…</span>
                 ) : (
                   <Link
@@ -142,7 +146,7 @@ export default async function ResourcesPage({ searchParams }) {
                 )
               )}
 
-              {/* Next */}
+              {/* Next link */}
               {currentPage < totalPages && (
                 <Link
                   href={`/resources?page=${currentPage + 1}`}
@@ -155,6 +159,7 @@ export default async function ResourcesPage({ searchParams }) {
           )}
         </div>
       </section>
+
       <Results />
       <Steps />
       <Contact />
