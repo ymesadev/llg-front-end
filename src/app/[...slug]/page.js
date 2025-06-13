@@ -117,7 +117,7 @@ export default async function Page({ params }) {
       }
     );
     const articleRes = await fetch(
-      `${strapiURL}/api/articles?fields[]=slug&pagination[pageSize]=2000`,
+      `${strapiURL}/api/articles?fields[]=slug&pagination[pageSize]=22000`,
       { next: { revalidate: 60 } }
     );
     const jobRes = await fetch(
