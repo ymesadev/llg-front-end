@@ -25,7 +25,6 @@ const teamMembers = [
   { name: "Kellei Johnson", photo: "/images/kellei-johnson.jpg", description: "Inverness, FL", link: "/kellei-johnson" },
   { name: "Monica Abay", photo: "/images/Monica-Abay.jpg", description: "Homestead, FL",link: "/monica-abay" },
   { name: "Cora Travis", photo: "/images/cora-travis.jpg", description: "Jupiter, FL",link: "/cora-travis" },
-  { name: "Daphney Souriac", photo: "/images/daphney-souriac.jpg", description: "Miami, FL" },
   { name: "Jeanmar Negron", photo: "/images/jeanmar-negron.jpg", description: "Orlando, FL" ,link: "/jeanmar-negron"},
   
   { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL",link: "/diana-vergara" },
