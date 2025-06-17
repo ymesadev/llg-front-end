@@ -48,7 +48,7 @@ export default function Team() {
             When navigating the complex world of insurance claims in Florida, having a seasoned insurance claims lawyer by your side can make all the difference. At Louis Law Group, our team of dedicated attorneys specializes in insurance litigation, offering you the legal expertise needed to maximize your insurance claim.
           </p>
 
-          {/* Team Grid */}
+          {/* Team Grid push */}
           <div className="column-4">
             {teamMembers.map((member, index) => (
               <div key={index} className={styles.teamCard}>
