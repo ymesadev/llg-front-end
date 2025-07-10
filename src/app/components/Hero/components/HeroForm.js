@@ -220,7 +220,7 @@ export default function FreeCaseEvaluationPage() {
         </div>
       </div>
 
-      {/* Case Type */}
+      {/* Case Type*/}
       <div className={styles.inputContainer}>
         <select
           name="caseType"
