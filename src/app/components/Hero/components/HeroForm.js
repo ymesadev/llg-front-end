@@ -235,6 +235,7 @@ export default function FreeCaseEvaluationPage() {
           <option value="Property Damage">Property Damage</option>
           <option value="Personal Injury">Personal Injury</option>
           <option value="SSDI">SSDI</option>
+          <option value="Employment Law">Employment Law</option>
         </select>
       </div>
 
