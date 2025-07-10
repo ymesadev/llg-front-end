@@ -14,88 +14,11 @@ import { renderContentBlocks, processHeroContent, processSectionsContent } from 
 // 1) Allow new slugs at runtime (fallback):
 export const dynamicParams = true;
 
+// Disable static prerendering: fetch data at request time
+export const dynamic = 'force-dynamic';
+
 // 2) Keep revalidate if you want ISR for existing pages
 export const revalidate = 60; // Revalidate existing pages every 60s
-
-export async function generateStaticParams() {
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-
-  try {
-    const resPages = await fetch(
-      `${strapiURL}/api/pages?fields[]=Slug&pagination[limit]=1000&populate=parent_page`,
-      { next: { revalidate: 60 } }
-    );
-    const resAttorneys = await fetch(
-      `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
-    const resArticles = await fetch(
-      `${strapiURL}/api/articles?fields[]=slug&pagination[limit]=22000`,
-      { next: { revalidate: 60 } }
-    );
-    const resJobs = await fetch(
-      `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
-    const resFaqs = await fetch(
-      `${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
-
-    if (
-      !resPages.ok ||
-      !resAttorneys.ok ||
-      !resArticles.ok ||
-      !resJobs.ok ||
-      !resFaqs.ok
-    ) {
-      throw new Error("Failed to fetch slugs");
-    }
-
-    const dataPages = await resPages.json();
-    const dataAttorneys = await resAttorneys.json();
-    const dataArticles = await resArticles.json();
-    const dataJobs = await resJobs.json();
-    const dataFaqs = await resFaqs.json();
-
-    const pages = dataPages.data.map((page) => {
-  let fullSlug = page.Slug;
-  if (page.parent_page?.URL) {
-    // Clean up URLs by removing leading/trailing slashes
-    const parentUrl = (page.parent_page.URL ?? '').replace(/^\/+|\/+$/g, '');
-    const pageSlug = (page.Slug ?? '').replace(/^\/+|\/+$/g, '');
-    fullSlug = `${parentUrl}/${pageSlug}`;
-  } else {
-    // Clean up single slug
-    fullSlug = (fullSlug ?? '').replace(/^\/+|\/+$/g, '');
-  }
-  return { slug: fullSlug.split('/') };
-});
-
-    const attorneys = dataAttorneys.data.map((attorney) => ({
-      slug: [attorney.Slug],
-    }));
-
-    const articles = dataArticles.data.map((article) => ({
-      slug: [article.slug],
-    }));
-
-    const jobs = dataJobs.data.map((job) => ({
-      slug: [job.Slug],
-    }));
-
-    const faqs = dataFaqs.data.map((faq) => {
-      const faqSlug =
-        faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug;
-      return { slug: [faqSlug] };
-    });
-
-    return [...pages, ...attorneys, ...articles, ...jobs, ...faqs];
-  } catch (error) {
-    console.error("Error in generateStaticParams:", error);
-    return [];
-  }
-}
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
@@ -112,9 +35,7 @@ export default async function Page({ params }) {
   try {
     const attorneyRes = await fetch(
       `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
-      {
-        next: { revalidate: 60 },
-      }
+      { next: { revalidate: 60 } }
     );
     const articleRes = await fetch(
       `${strapiURL}/api/articles?fields[]=slug&pagination[pageSize]=22000`,
@@ -122,15 +43,11 @@ export default async function Page({ params }) {
     );
     const jobRes = await fetch(
       `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
-      {
-        next: { revalidate: 60 },
-      }
+      { next: { revalidate: 60 } }
     );
     const faqsRes = await fetch(
       `${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`,
-      {
-        next: { revalidate: 60 },
-      }
+      { next: { revalidate: 60 } }
     );
 
     const attorneyData = await attorneyRes.json();
@@ -174,15 +91,16 @@ export default async function Page({ params }) {
       slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
-  // Clean up parent slug before using in API call
-  const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
-  apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}` +
-           `&filters[parent_page][URL][$eq]=/${cleanParentSlug}&populate=*`;
-} else {
-  apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate=*`;
-}
+      // Clean up parent slug before using in API call
+      const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
+      apiUrl =
+        `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}` +
+        `&filters[parent_page][URL][$eq]=/${cleanParentSlug}&populate=*`;
+    } else {
+      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate=*`;
+    }
   }
-  
+
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
 
   // Fetch the data
