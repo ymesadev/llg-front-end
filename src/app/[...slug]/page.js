@@ -59,18 +59,18 @@ export async function generateStaticParams() {
     const dataFaqs = await resFaqs.json();
 
     const pages = dataPages.data.map((page) => {
-      let fullSlug = page.Slug;
-      if (page.parent_page?.URL) {
-        // Clean up URLs by removing leading/trailing slashes
-        const parentUrl = (page.parent_page?.URL ?? '').replace(/^\/+|\/+$/g, '');
-        const pageSlug = (page.Slug ?? '').replace(/^\/+|\/+$/g, '');
-        fullSlug = `${parentUrl}/${pageSlug}`;
-      } else {
-        // Clean up single slug
-        fullSlug = (fullSlug ?? '').replace(/^\/+|\/+$/g, '');
-      }
-      return { slug: fullSlug.split("/") };
-    });
+  let fullSlug = page.Slug;
+  if (page.parent_page?.URL) {
+    // Clean up URLs by removing leading/trailing slashes
+    const parentUrl = (page.parent_page.URL ?? '').replace(/^\/+|\/+$/g, '');
+    const pageSlug = (page.Slug ?? '').replace(/^\/+|\/+$/g, '');
+    fullSlug = `${parentUrl}/${pageSlug}`;
+  } else {
+    // Clean up single slug
+    fullSlug = (fullSlug ?? '').replace(/^\/+|\/+$/g, '');
+  }
+  return { slug: fullSlug.split('/') };
+});
 
     const attorneys = dataAttorneys.data.map((attorney) => ({
       slug: [attorney.Slug],
@@ -174,14 +174,15 @@ export default async function Page({ params }) {
       slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
-      // Clean up parent slug before using in AP call
-      const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
-      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&filters[parent_page][URL][$eq]=/${cleanParentSlug}&populate=*`;
-    } else {
-      apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate=*`;
-    }
+  // Clean up parent slug before using in API call
+  const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
+  apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}` +
+           `&filters[parent_page][URL][$eq]=/${cleanParentSlug}&populate=*`;
+} else {
+  apiUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate=*`;
+}
   }
-
+  
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
 
   // Fetch the data
