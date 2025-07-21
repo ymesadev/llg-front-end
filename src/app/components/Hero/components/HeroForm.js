@@ -254,19 +254,24 @@ export default function FreeCaseEvaluationPage() {
       </div>
 
       {/* Consent Checkbox */}
-      <div className={styles.checkboxContainer}>
-        <input
-          type="checkbox"
-          name="consent"
-          checked={formData.consent}
-          onChange={handleInputChange}
-          required
-        />
-        <label>
-          I hereby expressly consent to receive automated communications
-          including calls, texts, emails, and/or prerecorded messages.
-        </label>
-      </div>
+<div className={styles.checkboxContainer}>
+  <input
+    type="checkbox"
+    name="consent"
+    checked={formData.consent}
+    onChange={handleInputChange}
+    required
+  />
+  <label>
+    By submitting this form, you consent to receive case updates, appointment reminders, and important legal notifications from Louis Law Group at the number provided. Msg &amp; data rates may apply. Message frequency may vary depending on your case status. You can unsubscribe at any time by replying STOP or clicking the unsubscribe link. Reply HELP for assistance. Your phone number will not be shared with third parties. Read our{' '}
+    <a href="https://www.louislawgroup.com/privacy-policy" target="_blank" rel="noopener noreferrer">
+      Privacy Policy
+    </a>{' '}and{' '}
+    <a href="https://www.louislawgroup.com/terms-of-use-agreement" target="_blank" rel="noopener noreferrer">
+      Terms of Use Agreement
+    </a>{' '}for more information.
+  </label>
+</div>
 
       {/* Submission Button */}
       <button type="submit" className={styles.submitButton}>
