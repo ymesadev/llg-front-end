@@ -221,7 +221,7 @@ export default async function Page({ params }) {
               </div>
               {page.cover && (
                 <img
-                  src={`https://dev.llgai.app${page.cover.url}`}
+                  src={`https://login.louislawgroup.com${page.cover.url}`}
                   alt={page.title}
                   className={styles.blogImage}
                 />
@@ -236,7 +236,7 @@ export default async function Page({ params }) {
                     );
                   }
                   if (block.__component === "shared.media" && block.file?.url) {
-                    const imageUrl = `https://dev.llgai.app${block.file.url}`;
+                    const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
                     return (
                       <div key={index} className={styles.blogImageContainer}>
                         <img

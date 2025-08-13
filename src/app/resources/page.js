@@ -104,7 +104,7 @@ export default async function ResourcesPage({ searchParams }) {
               <Link key={post.id} href={`/${post.slug}`} className={styles.postCard}>
                 {post.cover && (
                   <img
-                    src={`https://dev.llgai.app${post.cover.url}`}
+                    src={`https://login.louislawgroup.com${post.cover.url}`}
                     alt={post.title}
                     className={styles.postImage}
                   />

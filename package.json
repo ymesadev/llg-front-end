@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "develop": "next dev --turbopack",
     "build": "next build",
+    "postbuild": "dotenv -e .env.local -- next-sitemap",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen:sitemap": "dotenv -e .env.local -- next-sitemap"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
@@ -22,5 +25,11 @@
     "react-google-recaptcha": "^3.1.0",
     "react-icons": "^5.4.0",
     "react-markdown": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "24.2.1",
+    "dotenv-cli": "^7.4.4",
+    "next-sitemap": "^4.2.3",
+    "typescript": "5.9.2"
   }
 }
