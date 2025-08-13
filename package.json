@@ -2,7 +2,9 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "develop": "next dev --turbopack",
-    "build": "next build && next-sitemap",
+    "prebuild": "next-sitemap",
+    "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "gen:sitemap": "next-sitemap"
@@ -26,6 +28,5 @@
   "devDependencies": {
     "@types/node": "24.2.1",
     "typescript": "5.9.2"
-    
   }
 }
