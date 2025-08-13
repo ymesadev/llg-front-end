@@ -91,7 +91,7 @@ export default async function Page({ params }) {
       slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
 
     if (parentSlug) {
-      // Clean up parent slug before using in API call
+      // Clean up parent slug before using in API 
       const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
       apiUrl =
         `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}` +
