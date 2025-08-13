@@ -6,10 +6,10 @@
     "dev": "next dev --turbopack",
     "develop": "next dev --turbopack",
     "build": "next build",
-    "postbuild": "dotenv -e .env.local -- next-sitemap",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
-    "gen:sitemap": "dotenv -e .env.local -- next-sitemap"
+    "gen:sitemap": "next-sitemap"
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
