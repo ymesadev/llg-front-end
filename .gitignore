@@ -6,3 +6,7 @@
 public/*
 !public/sitemap*.xml
 !public/robots.txt
+
+# allow dynamic sitemap route
+!src/app/sitemap.xml/
+!src/app/sitemap.xml/route.js
