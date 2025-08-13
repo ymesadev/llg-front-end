@@ -122,7 +122,7 @@ h3 {
   .column-3,
   .column-4,
   .column-5 {
-    grid-template-columns: 1fr; /* Stack columns vertically on small screens */
+    grid-template-columns: 1fr; 
   }
   section {
     padding-left: 1rem;
