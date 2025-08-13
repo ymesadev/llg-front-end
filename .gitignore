@@ -1,2 +1,8 @@
 *
 !.env.local
+
+# allow sitemaps in public
+!public/
+public/*
+!public/sitemap*.xml
+!public/robots.txt
