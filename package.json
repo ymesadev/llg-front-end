@@ -4,7 +4,6 @@
     "develop": "next dev --turbopack",
     "prebuild": "next-sitemap",
     "build": "next build",
-    "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "gen:sitemap": "next-sitemap"
