@@ -119,7 +119,7 @@ export default async function ResourcesPage({ searchParams }) {
 
           {totalPages > 1 && (
             <nav className={styles.pagination}>
-              {/* Previous link */}
+              {/* Previous lnk */}
               {currentPage > 1 && (
                 <Link
                   href={`/resources?page=${currentPage - 1}`}
