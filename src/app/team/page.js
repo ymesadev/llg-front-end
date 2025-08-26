@@ -12,12 +12,15 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 const teamMembers = [
   { name: "Pierre Louis, Esq", photo: "/images/pierre-louis-new.jpg", description: "Miami, FL", link: "/pierre-a-louis-esq" },
   { name: "Bibin Mannattuparampil, Esq", photo: "/images/Bibin-Mannattuparampil-Esq-LLG.jpg", description: "Miami, FL", link: "/bibin-mannattuparampil" },
-  { name: "Citra Joseph, Esq", photo: "/images/citra-joseph.jpg", description: "Miami, FL", link: "/citra-joseph-esq" },
+  { name: "In Memoriam: Citra Joseph, Esq.", photo: "/images/citra-joseph.jpg", description: "Miami, FL", link: "/citra-joseph-esq" },
   { name: "Cathleen Rodriguez, Esq", photo: "/images/Cathleen-V-Rodriguez-Esq-LLG.jpg", description: "Miami, FL", link: "/cathleen-rodriguez-esq" },
   { name: "Benaejah Simmonds, Esq", photo: "/images/Benaejah-Simmonds-Esq-LLG.jpg", description: "Miami, FL", link: "/benaejah-simmonds-esq" },
   { name: "Melissa Romero, Esq", photo: "/images/Melissa-Romero-Esq.jpg", description: "West Palm Beach, FL", link: "/melissa-romero-esq" },
   { name: "Magdaline Mintz, Esq", photo: "/images/Magdaline-Mintz-Esq-LLG.jpg", description: "Atlanta, GA" },
   { name: "Emily Walsh, Esq", photo: "/images/emily-walsh.jpg", description: "Miami, Fl", link:"/emily-walsh-esq" },
+  { name: "Thomas Singer, Esq", photo: "/images/thomas-singer.jpg", description: "Miami, Fl", link:"/thomas-singer-esq" },
+  { name: "Cameron Hancock, Esq", photo: "/images/cameron-hancock.jpg", description: "Miami, Fl", link:"/cameron-hancock-esq" },
+  { name: "Brett Conger, Esq", photo: "/images/brett-conger.jpg", description: "Miami, Fl", link:"/brett-conger-esq" },
   { name: "Marie Fabre", photo: "/images/marie-fabre.jpg", description: "Miami, FL",link: "/marie-fabre" },
   { name: "Olena Perez", photo: "/images/olena-perez.jpg", description: "Tallahassee, FL", link: "/olena-perez" },
   { name: "Matthew Mobley", photo: "/images/matthew-mobley.jpg", description: "Miami, FL", link: "/matthew-mobley"},
@@ -28,9 +31,9 @@ const teamMembers = [
   { name: "Monica Abay", photo: "/images/Monica-Abay.jpg", description: "Homestead, FL",link: "/monica-abay" },
   { name: "Cora Travis", photo: "/images/cora-travis.jpg", description: "Jupiter, FL",link: "/cora-travis" },
   { name: "Jeanmar Negron", photo: "/images/jeanmar-negron.jpg", description: "Orlando, FL" ,link: "/jeanmar-negron"},
-  
-  { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL",link: "/diana-vergara" },
- 
+   { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL",link: "/diana-vergara" },
+    { name: "Erica Brown", photo: "/images/erica-brown.jpg", description: "Atlanta, GA",link: "/erica-brown" },
+
 
   
   
