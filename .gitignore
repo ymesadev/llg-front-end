@@ -4,6 +4,9 @@
 # allow sitemaps in public
 !public/
 public/*
+!public/images/
+
+!public/images/**
 !public/sitemap*.xml
 !public/robots.txt
 
