@@ -200,6 +200,7 @@
   width: 100%;
 }
 
+
 .blogImage {
   max-width: 640px;
   margin-top: 1rem;
@@ -231,6 +232,22 @@
   font-weight: bold;
   transition: background-color 0.3s;
 }
+
+.grayButton{
+  text-decoration: none;
+  color: #1a2b49;
+  background-color: #f4f4f4;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
 .container {
   max-width: 800px;
   margin: auto;
@@ -244,6 +261,8 @@
 .faqContent h3 {
   font-family: Montserrat, serif !important;
 }
+
+
 
 @media screen and (max-width: 980px) {
   .verticalCenter {

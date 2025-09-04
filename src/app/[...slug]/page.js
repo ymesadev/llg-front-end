@@ -348,6 +348,20 @@ export default async function Page({ params }) {
                           {block.children?.[0]?.text || ""}
                         </p>
                       ))}
+
+                    <a href="/free-case-evaluation" className={styles.grayButton}>
+                      See if you qualify
+                      <svg width={25} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g
+                          fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+          </g>
+        </svg>
+                    </a>
                   </div>
                   <div className={styles.rightColumn}>
                     <div className={styles.evaluationText}>
@@ -378,6 +392,19 @@ export default async function Page({ params }) {
                     </h3>
                   )}
                   {page.Sections && renderContentBlocks(processSectionsContent(page.Sections).body, styles)}
+                  <a href="/free-case-evaluation" className={styles.blueButton}>
+                      See if you qualify
+                      <svg width={25} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                        <g
+                          fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+          </g>
+        </svg>
+                    </a>
                 </div>
               </div>
             </div>
