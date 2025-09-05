@@ -10,6 +10,7 @@ import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
+import Sidebar from "../components/Sidebar/Sidebar";
 
 // 1) Allow new slugs at runtime (fallback):
 export const dynamicParams = true;
@@ -24,8 +25,57 @@ export const revalidate = 60; // Revalidate existing pages every 60s
 export default async function Page({ params }) {
   const slugArray = params.slug || [];
   const slug = slugArray.join("/");
-
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+
+  // Fetch navigation links for sidebar
+  const navRes = await fetch(
+    `${strapiURL}/api/navigations?populate[pages][populate]=*&populate=pages`,
+    { next: { revalidate: 60 } }
+  );
+  const navData = await navRes.json();
+  const sidebarLinks = [
+    ...navData.data,
+    {
+      id: 'legal-section',
+      label: 'Legal',
+      display_footer: true,
+      pages: [
+        {
+          id: 'ada-compliance',
+          Title: 'ADA Compliance',
+          Slug: 'ada-compliance'
+        },
+        {
+          id: 'terms-of-use',
+          Title: 'Terms of Use Agreement',
+          Slug: 'terms-of-use-agreement'
+        },
+        {
+          id: 'privacy',
+          Title: 'Privacy',
+          Slug: 'privacy-policy'
+        }
+      ]
+    },
+    {
+      id: 'resources-section',
+      label: 'Resources',
+      display_footer: true,
+      pages: [
+        {
+          id: 'blog',
+          Title: 'Blog',
+          Slug: 'resources'
+        },
+        {
+          id: 'careers',
+          Title: 'Careers',
+          Slug: 'job-id-00001'
+        }
+      ]
+    }
+  ];
+
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
@@ -363,25 +413,47 @@ export default async function Page({ params }) {
             </section>
           )}
 
-          <section className={styles.Descriptionsection}>
-            <div className={`container ${styles.contentContainer}`}>
-              <div className={styles.mainContent}>
-                <div className={styles.scrollableContent}>
-                  {page.Sections?.title && (
-                    <h2 className={styles.DescriptionTitle}>
-                      {page.Sections.title}
-                    </h2>
-                  )}
-                  {page.Sections?.subtitle && (
-                    <h3 className={styles.Descriptionsubtitle}>
-                      {page.Sections.subtitle}
-                    </h3>
-                  )}
-                  {page.Sections && renderContentBlocks(processSectionsContent(page.Sections).body, styles)}
+          {page.Sections &&
+            page.Sections.body &&
+            page.Sections.body.length > 0 && (
+              <section className={styles.Descriptionsection}>
+                <div className={`container ${styles.contentContainer}`}>
+                  <div className={styles.mainContent}>
+                    {page.Sections.title && (
+                      <h2 className={styles.DescriptionTitle}>
+                        {page.Sections.title}
+                      </h2>
+                    )}
+                    {page.Sections.subtitle && (
+                      <h3 className={styles.Descriptionsubtitle}>
+                        {page.Sections.subtitle}
+                      </h3>
+                    )}
+                    {renderContentBlocks(
+                      processSectionsContent(page.Sections).body,
+                      styles
+                    )}
+                  </div>
+                  <aside className={styles.sidebar}>
+                    <Sidebar links={sidebarLinks} />
+                    <div className={styles.howItWorks}>
+                      <h2 className={styles.howTitle}>How it Works</h2>
+                      <h3 className={styles.howSubtitle}>
+                        No Win,<span className={styles.noFee}> No Fee</span>
+                      </h3>
+                      <Link href="/free-case-evaluation" className={styles.howButton}>
+                        Free Case Evaluation
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                          <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+                          </g>
+                        </svg>
+                      </Link>
+                    </div>
+                  </aside>
                 </div>
-              </div>
-            </div>
-          </section>
+              </section>
+            )}
 
           {Array.isArray(page.Services) && page.Services.length > 0 && (
             <ServicesCarousel services={page.Services} />
