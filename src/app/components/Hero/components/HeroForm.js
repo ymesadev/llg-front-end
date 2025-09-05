@@ -15,6 +15,7 @@ export default function FreeCaseEvaluationPage() {
     zipcode: "",
     email: "",
     caseType: "",
+    filedCarrier: "",
     description: "",
     consent: false,
   });
@@ -39,6 +40,13 @@ export default function FreeCaseEvaluationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Special case: Warranty Law + American Home Shield → redirect to retainer page
+    if (formData.caseType === "Warranty Law" && formData.filedCarrier === "American Home Shield") {
+      router.push("https://app.louislawgroup.com/american-home-shield-retainer");
+      return;
+    }
+
     setFormStatus("submitting");
 
     const payload = {
@@ -49,6 +57,7 @@ export default function FreeCaseEvaluationPage() {
       caseType: formData.caseType,
       description: formData.description,
       consent: formData.consent ? "Yes" : "No",
+      filedCarrier: formData.filedCarrier || null,
     };
 
     console.log("Form Data being submitted:", {
@@ -93,6 +102,7 @@ export default function FreeCaseEvaluationPage() {
         zipcode: "",
         email: "",
         caseType: "",
+        filedCarrier: "",
         description: "",
         consent: false,
       });
@@ -236,9 +246,28 @@ export default function FreeCaseEvaluationPage() {
           <option value="Personal Injury">Personal Injury</option>
           <option value="SSDI">SSDI</option>
           <option value="Employment Law">Employment Law</option>
-            <option value="Employment Law">Warranty</option>
+          <option value="Warranty Law">Warranty Law</option>
         </select>
       </div>
+
+      {/* Filed Carrier (conditional for Warranty Law) */}
+      {formData.caseType === "Warranty Law" && (
+        <div className={styles.inputContainer}>
+          <select
+            name="filedCarrier"
+            value={formData.filedCarrier}
+            onChange={handleInputChange}
+            className={formData.filedCarrier === "" ? styles.placeholder : ""}
+            required
+          >
+            <option value="" disabled>
+              Select Carrier
+            </option>
+            <option value="American Home Shield">American Home Shield</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      )}
 
       {/* Description */}
       <div className={styles.message}>
