@@ -132,3 +132,24 @@ h3 {
 .widget-open-icon {
   display: none !important;
 }
+
+:root {
+  /* Primary Colors */
+  --primary-dark: #1a2b49;
+  --primary-dark-rgb: 26, 43, 73;
+  --primary-dark-hover: #16223a;
+  --primary-accent: #ffb800;
+  --primary-accent-hover: #e0a700;
+  
+  /* Text Colors */
+  --text-light: #ece7e7;
+  --text-dark: #1a2b49;
+  
+  /* Background Colors */
+  --bg-light: #f8f9fa;
+  --bg-overlay: rgba(26, 43, 73, 0.9);
+  
+  /* UI Colors */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --border-color: rgba(26, 43, 73, 0.1);
+}
