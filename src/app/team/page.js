@@ -19,7 +19,6 @@ const teamMembers = [
   { name: "Magdaline Mintz, Esq", photo: "/images/Magdaline-Mintz-Esq-LLG.jpg", description: "Atlanta, GA" },
   { name: "Emily Walsh, Esq", photo: "/images/emily-walsh.jpg", description: "Miami, Fl", link:"/emily-walsh-esq" },
   { name: "Thomas Singer, Esq", photo: "/images/thomas-singer.jpg", description: "Miami, Fl", link:"/thomas-singer-esq" },
-  { name: "Cameron Hancock, Esq", photo: "/images/cameron-hancock.jpg", description: "Miami, Fl", link:"/cameron-hancock-esq" },
   { name: "Brett Conger, Esq", photo: "/images/brett-conger.jpg", description: "Miami, Fl", link:"/brett-conger-esq" },
   { name: "Marie Fabre", photo: "/images/marie-fabre.jpg", description: "Miami, FL",link: "/marie-fabre" },
   { name: "Olena Perez", photo: "/images/olena-perez.jpg", description: "Tallahassee, FL", link: "/olena-perez" },
