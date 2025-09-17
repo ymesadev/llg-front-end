@@ -672,7 +672,10 @@ export default async function Page({ params }) {
                   <div className={styles.rightColumn}>
                     {(() => {
                       const mediaObj = resolveFeaturedImage(page);
-                      if (!mediaObj?.url) return null;
+                      // If the right-side featured image is missing, show the Hero form instead
+                      if (!mediaObj?.url) {
+                        return <HeroForm />;
+                      }
                       const base = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
                       const src = mediaObj.url.startsWith("http") ? mediaObj.url : `${base}${mediaObj.url}`;
                       return (
