@@ -6,10 +6,14 @@ import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
 import Contact from "../components/Contact/ContactSection";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
+import Script from "next/script";
 
 // 1) Allow new slugs at runtime (fallback):
 export const dynamicParams = true;
@@ -19,6 +23,80 @@ export const dynamic = 'force-dynamic';
 
 // 2) Keep revalidate if you want ISR for existing pages
 export const revalidate = 60; // Revalidate existing pages every 60s
+
+// Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
+const sanitizeSchema = {
+  ...defaultSchema,
+  tagNames: [...(defaultSchema.tagNames || []), "a"],
+  attributes: {
+    ...(defaultSchema.attributes || {}),
+    a: [
+      ...(defaultSchema.attributes?.a || []),
+      "href",
+      "target",
+      "rel",
+      "className",
+    ],
+    p: [...(defaultSchema.attributes?.p || []), "className"],
+  },
+};
+
+// Server-side HTML rewrite to force blueButton class on the CTA link inside raw HTML strings (robust, with debug logging and SSR marker)
+function injectBlueButtonClass(html) {
+  if (typeof html !== 'string' || !html) return html;
+  const URL = 'https://forms.louislawgroup.com/s/cmfkzvlq6001e684en1k5e2iy';
+  const HREF_ESC = URL.replace(/\//g, '\\/');
+  const HREF_RE = new RegExp(`(<a\\b[^>]*href=["']${HREF_ESC}["'][^>]*)(>)`, 'gi');
+  const HAS_URL = new RegExp(`href=["']${HREF_ESC}["']`, 'i').test(html);
+  const BEFORE_SNIPPET = HAS_URL ? (html.match(new RegExp(`.{0,80}href=["']${HREF_ESC}["'][^>]*>`, 'i'))?.[0] || '') : '';
+  if (HAS_URL) {
+    console.log('⚙️ [injectBlueButtonClass] BEFORE anchor snippet:', BEFORE_SNIPPET);
+  } else {
+    console.log('⚙️ [injectBlueButtonClass] No CTA URL found in this block.');
+  }
+
+  // 1) Strip any existing class attr (even empty) on matching <a ...>
+  html = html.replace(
+    new RegExp(`(<a\\b[^>]*href=["']${HREF_ESC}["'][^>]*?)\\sclass=(?:"[^"]*"|'[^']*'|[^\\s>]+)`, 'gi'),
+    '$1'
+  );
+  // 2) Ensure class="blueButton"
+  html = html.replace(
+    new RegExp(`(<a\\b[^>]*href=["']${HREF_ESC}["'])(?![^>]*\\sclass=)`, 'gi'),
+    '$1 class="blueButton"'
+  );
+  // 3) Ensure target/rel
+  html = html.replace(
+    new RegExp(`(<a\\b[^>]*href=["']${HREF_ESC}["'])(?![^>]*\\starget=)`, 'gi'),
+    '$1 target="_blank"'
+  );
+  html = html.replace(
+    new RegExp(`(<a\\b[^>]*href=["']${HREF_ESC}["'])(?![^>]*\\srel=)`, 'gi'),
+    '$1 rel="noopener noreferrer"'
+  );
+  // 4) Normalize class=""
+  html = html.replace(
+    new RegExp(`(<a\\b[^>]*href=["']${HREF_ESC}["'][^>]*\\sclass=)("")`, 'gi'),
+    '$1"blueButton"'
+  );
+  // 5) As a final guard, inject before closing >
+  html = html.replace(HREF_RE, (m, pre, close) => {
+    if (!/class=/i.test(pre)) pre += ' class="blueButton"';
+    if (!/target=/i.test(pre)) pre += ' target="_blank"';
+    if (!/rel=/i.test(pre)) pre += ' rel="noopener noreferrer"';
+    // add a debug marker
+    if (!/data-bluebutton-ssr=/i.test(pre)) pre += ' data-bluebutton-ssr="1"';
+    return pre + close;
+  });
+
+  const AFTER_HAS_CLASS = new RegExp(`href=["']${HREF_ESC}["'][^>]*class=["'][^"']*blueButton`, 'i').test(html);
+  const AFTER_SNIPPET = new RegExp(`.{0,120}href=["']${HREF_ESC}["'][^>]*>`, 'i').exec(html)?.[0] || '';
+  if (HAS_URL) {
+    console.log('⚙️ [injectBlueButtonClass] AFTER anchor snippet:', AFTER_SNIPPET);
+    console.log('⚙️ [injectBlueButtonClass] Class applied?', AFTER_HAS_CLASS);
+  }
+  return html;
+}
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
@@ -31,6 +109,8 @@ export default async function Page({ params }) {
   let isArticlePage = false;
   let isJobPage = false;
   let isFaqsPage = false;
+  // --- SERVER-SIDE branch log ---
+  console.log('🧭 Page type flags (server):', { slug, isAttorneyPage, isArticlePage, isJobPage, isFaqsPage });
 
   try {
     const attorneyRes = await fetch(
@@ -80,7 +160,9 @@ export default async function Page({ params }) {
   if (isAttorneyPage) {
     apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&populate=Image.Image`;
   } else if (isArticlePage) {
-    apiUrl = `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&populate=blocks.file&populate=cover`;
+    // TEMP: populate everything to guarantee repeatable Button shows; we'll narrow after confirming apiId
+    const base = `${strapiURL}/api/articles?filters[slug][$eq]=${slug}`;
+    apiUrl = base + `&populate=*`;
   } else if (isJobPage) {
     apiUrl = `${strapiURL}/api/jobs?filters[Slug][$eq]=${slug}&populate=block`;
   } else if (isFaqsPage) {
@@ -209,6 +291,43 @@ export default async function Page({ params }) {
     return null;
   };
 
+  // Collect repeatable buttons from Article (supports common key variants, robust for Strapi v4)
+  const getArticleButtons = (p) => {
+    const unwrap = (obj) => (obj && obj.attributes ? obj.attributes : obj);
+    const pickArray = (val) => {
+      if (!val) return null;
+      // handle relation shape { data: [...] }
+      if (Array.isArray(val?.data)) return val.data;
+      return Array.isArray(val) ? val : null;
+    };
+    const candidates = [
+      pickArray(p?.buttons),
+      pickArray(p?.Buttons),
+      pickArray(p?.button),
+      pickArray(p?.Button),
+      // attributes wrapper (Strapi v4 default)
+      pickArray(p?.attributes?.buttons),
+      pickArray(p?.attributes?.Buttons),
+      pickArray(p?.attributes?.button),
+      pickArray(p?.attributes?.Button),
+    ].filter(Boolean);
+
+    const out = [];
+    for (const arr of candidates) {
+      for (const btn of arr) {
+        const b = unwrap(btn) || {};
+        // normalize fields
+        let label = b.label ?? b.text ?? b.title ?? b.Text ?? 'See if you qualify';
+        let href  = b.href  ?? b.url  ?? b.URL  ?? '';
+        let target = b.target || (href && href.startsWith('http') ? '_blank' : '_self');
+        if (!href) continue;
+        if (!href.startsWith('http') && !href.startsWith('/')) href = '/' + href;
+        out.push({ label, href, target });
+      }
+    }
+    return out;
+  };
+
   // Heuristic resolver for a Button component on Page content-type
   const resolveHeroButton = (p) => {
     const pickFirst = (x) => (Array.isArray(x) ? x[0] : x);
@@ -254,6 +373,34 @@ export default async function Page({ params }) {
       if (n && typeof n.href === "string" && n.href.length > 0) return n;
     }
     return null;
+  };
+
+  // Tiny renderer for a row of buttons (Article repeatable buttons)
+  const ArticleButtonsRow = ({ buttons }) => {
+    if (!Array.isArray(buttons) || buttons.length === 0) return null;
+    const RowIcon = () => (
+      <svg width={25} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
+          <path d="m3.5 20.5 17-17M9.5 3.5h11v11"></path>
+        </g>
+      </svg>
+    );
+    const rowStyle = { margin: "16px 0", display: "flex", gap: "12px", flexWrap: "wrap" };
+    return (
+      <div style={rowStyle}>
+        {buttons.map((b, i) =>
+          (b.href || '').startsWith('http') ? (
+            <a key={i} href={b.href} target={b.target} rel={b.target === '_blank' ? 'noopener noreferrer' : undefined} className={`${styles?.blueButton ?? ''} blueButton`.trim()}>
+              {b.label} <RowIcon />
+            </a>
+          ) : (
+            <Link key={i} href={b.href || '/'} className={`${styles?.blueButton ?? ''} blueButton`.trim()}>
+              {b.label} <RowIcon />
+            </Link>
+          )
+        )}
+      </div>
+    );
   };
 
   // Generic scan: find first array/object under Hero that looks like a button { Text/label/title, url/href }
@@ -336,6 +483,14 @@ export default async function Page({ params }) {
 
   // Debug: log keys so we can see what's coming from Strapi in server logs
   console.log("🔎 Page keys:", Object.keys(page || {}));
+  if (typeof window !== 'undefined') {
+    try {
+      console.log('🧪 Article page keys (client):', Object.keys(page || {}));
+      if (page && page.attributes) {
+        console.log('🧪 Article page.attributes keys (client):', Object.keys(page.attributes || {}));
+      }
+    } catch {}
+  }
   if (page?.Hero) console.log("🔎 Hero keys:", Object.keys(page.Hero));
   const __dbgBtn = resolveHeroButton(page);
   console.log("🔎 Resolved Button:", __dbgBtn);
@@ -390,6 +545,24 @@ export default async function Page({ params }) {
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
+              <Script id="debug-article-buttons-present" strategy="afterInteractive"
+                dangerouslySetInnerHTML={{
+                  __html: `
+                    (function(){
+                      try {
+                        var p = window.__LLG_ARTICLE_PAGE = ${JSON.stringify({ title: page.title })};
+                        console.log('🧪 Article page (title only):', p);
+                      } catch(e){}
+                    })();
+                  `,
+                }}
+              />
+              {/* Article repeatable buttons (below title) */}
+              {(() => {
+                const _btns = getArticleButtons(page);
+                if (typeof window !== 'undefined') { try { console.log('🧪 Buttons resolved (top):', _btns); } catch(e){} }
+                return <ArticleButtonsRow buttons={_btns} />;
+              })()}
               <p className={styles.blogDate}>
                 <FaRegCalendarAlt className={styles.icon} />{" "}
                 {new Date(page.createdAt).toLocaleDateString()} |{" "}
@@ -429,7 +602,7 @@ export default async function Page({ params }) {
               </div>
               {page.cover && (
                 <img
-                  src={`https://login.louislawgroup.com${page.cover.url}`}
+                  src={`https://login.louislawgroup.com/${page.cover.url}`}
                   alt={page.title}
                   className={styles.blogImage}
                 />
@@ -438,13 +611,18 @@ export default async function Page({ params }) {
                 {page.blocks.map((block, index) => {
                   if (block.__component === "shared.rich-text") {
                     return (
-                      <div key={index} className={styles.blogText}>
-                        <ReactMarkdown>{block.body}</ReactMarkdown>
+                      <div key={index} className={styles.blogText} id={`cta-article-${index}`} data-cta-block-index={index}>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                        >
+                          {block.body}
+                        </ReactMarkdown>
                       </div>
                     );
                   }
                   if (block.__component === "shared.media" && block.file?.url) {
-                    const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
+                    const imageUrl = `https://login.louislawgroup.com/${block.file.url}`;
                     return (
                       <div key={index} className={styles.blogImageContainer}>
                         <img
@@ -458,6 +636,12 @@ export default async function Page({ params }) {
                   return null;
                 })}
               </div>
+              {/* Article repeatable buttons (end of article) */}
+              {(() => {
+                const _btns = getArticleButtons(page);
+                if (typeof window !== 'undefined') { try { console.log('🧪 Buttons resolved (bottom):', _btns); } catch(e){} }
+                return <ArticleButtonsRow buttons={_btns} />;
+              })()}
             </div>
           </section>
           <Steps />
@@ -472,7 +656,7 @@ export default async function Page({ params }) {
                   <img
                     src={
                       page.Image?.Image?.url
-                        ? `https://login.louislawgroup.com${page.Image.Image.url}`
+                        ? `https://login.louislawgroup.com/${page.Image.Image.url}`
                         : "/placeholder.jpg"
                     }
                     alt={page.Image?.Alt || "Attorney"}
@@ -524,15 +708,20 @@ export default async function Page({ params }) {
                 page.blocks.map((block, index) => {
                   if (block.__component === "shared.rich-text") {
                     return (
-                      <div key={index} className={styles.faqText}>
-                        <ReactMarkdown>{block.body}</ReactMarkdown>
+                      <div key={index} className={styles.faqText} id={`cta-faq-${index}`} data-cta-block-index={index}>
+                        <ReactMarkdown
+                          remarkPlugins={[remarkGfm]}
+                          rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                        >
+                          {block.body}
+                        </ReactMarkdown>
                       </div>
                     );
                   }
                   return null;
                 })}
             </div>
-          </section>
+          </section>xw
           <Results />
           <Steps />
           <Contact />
@@ -676,7 +865,7 @@ export default async function Page({ params }) {
                       if (!mediaObj?.url) {
                         return <HeroForm />;
                       }
-                      const base = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
+                      const base = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com/";
                       const src = mediaObj.url.startsWith("http") ? mediaObj.url : `${base}${mediaObj.url}`;
                       return (
                         <img
@@ -756,6 +945,47 @@ export default async function Page({ params }) {
           <Contact />
         </>
       )}
+      {/* GLOBAL CTA FIXER + LOGGER (client-side, all pages) */}
+      <Script id="global-cta-fixer" strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function () {
+              try {
+                var sel = 'a[href*="forms.louislawgroup.com/s/"]';
+                function apply(root) {
+                  var scope = root || document;
+                  var list = Array.prototype.slice.call(scope.querySelectorAll(sel));
+                  console.log('🌐 [GLOBAL CTA FIXER] Found anchors:', list.length, 'scope:', root ? '#'+(root.id||'root') : 'document');
+                  list.forEach(function(a){
+                    var before = a.outerHTML;
+                    if (!a.classList.contains('blueButton')) a.classList.add('blueButton');
+                    a.setAttribute('target','_blank');
+                    a.setAttribute('rel','noopener noreferrer');
+                    console.log('🌐 [GLOBAL CTA FIXER] Updated:', { before: before, after: a.outerHTML });
+                  });
+                }
+                // Initial pass
+                apply();
+                // Observe future changes (client navigations, hydration updates)
+                var mo = new MutationObserver(function(muts){
+                  muts.forEach(function(m){
+                    if (m.addedNodes) {
+                      m.addedNodes.forEach(function(n){
+                        if (n && n.nodeType === 1) {
+                          apply(n);
+                        }
+                      });
+                    }
+                  });
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+              } catch (e) {
+                console.warn('🌐 [GLOBAL CTA FIXER] Error', e);
+              }
+            })();
+          `,
+        }}
+      />
     </Layout>
   );
 }
