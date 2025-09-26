@@ -13,6 +13,7 @@ import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
+import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 
 // 1) Allow new slugs at runtime (fallback):
@@ -39,6 +40,21 @@ const sanitizeSchema = {
     ],
     p: [...(defaultSchema.attributes?.p || []), "className"],
   },
+};
+
+// react-markdown v9+: use a single urlTransform instead of transformImageUri/transformLinkUri
+const mdUrlTransform = (url, key, node) => {
+  try {
+    // If this is an <img>, normalize the src via safeMediaUrl
+    const tag = (node && (node.tagName || (node.type === 'element' ? node.tagName : ''))) || '';
+    if (key === 'src' || tag === 'img') {
+      return safeMediaUrl(url);
+    }
+    // Otherwise (links etc.), leave as-is
+    return url;
+  } catch {
+    return url;
+  }
 };
 
 // Server-side HTML rewrite to force blueButton class on the CTA link inside raw HTML strings (robust, with debug logging and SSR marker)
@@ -100,10 +116,12 @@ function injectBlueButtonClass(html) {
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
-  const slugArray = params.slug || [];
+  // Next 15+: params may be a promise; awaiting a plain object is safe too
+  const { slug: maybeSlug = [] } = await params;
+  const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
   const slug = slugArray.join("/");
 
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
@@ -112,73 +130,58 @@ export default async function Page({ params }) {
   // --- SERVER-SIDE branch log ---
   console.log('🧭 Page type flags (server):', { slug, isAttorneyPage, isArticlePage, isJobPage, isFaqsPage });
 
+  // ✅ Fast + accurate: check this exact slug per content type (no giant lists)
   try {
-    const attorneyRes = await fetch(
-      `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
-    const articleRes = await fetch(
-      `${strapiURL}/api/articles?fields[]=slug&pagination[pageSize]=22000`,
-      { next: { revalidate: 60 } }
-    );
-    const jobRes = await fetch(
-      `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
-    const faqsRes = await fetch(
-      `${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
+    const encSlug = encodeURIComponent(slug);
 
-    const attorneyData = await attorneyRes.json();
-    const articleData = await articleRes.json();
-    const jobData = await jobRes.json();
-    const faqsData = await faqsRes.json();
+    const [articleCheckRes, attorneyCheckRes, jobCheckRes, faqsCheckRes] = await Promise.allSettled([
+      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
+    ]);
 
-    // Now define the slug arrays
-    const attorneySlugs = attorneyData.data.map((attorney) => attorney.Slug);
-    const articleSlugs = articleData.data.map((article) => article.slug);
-    const jobSlugs = jobData.data.map((job) => job.Slug);
-    const faqsSlugs = faqsData.data.map((faq) =>
-      faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug
-    );
+    const getOkJson = async (s) => (s.status === 'fulfilled' && s.value.ok) ? s.value.json() : null;
 
-    // Decide which type of page it is
-    if (attorneySlugs.includes(slug)) {
-      isAttorneyPage = true;
-    } else if (articleSlugs.includes(slug)) {
-      isArticlePage = true;
-    } else if (jobSlugs.includes(slug)) {
-      isJobPage = true;
-    } else if (faqsSlugs.includes(slug)) {
-      isFaqsPage = true;
-    }
+    const [articleCheck, attorneyCheck, jobCheck, faqsCheck] = await Promise.all([
+      getOkJson(articleCheckRes),
+      getOkJson(attorneyCheckRes),
+      getOkJson(jobCheckRes),
+      getOkJson(faqsCheckRes),
+    ]);
+
+    isArticlePage  = !!(articleCheck?.data?.length);
+    isAttorneyPage = !isArticlePage && !!(attorneyCheck?.data?.length);
+    isJobPage      = !isArticlePage && !isAttorneyPage && !!(jobCheck?.data?.length);
+    isFaqsPage     = !isArticlePage && !isAttorneyPage && !isJobPage && !!(faqsCheck?.data?.length);
   } catch (error) {
-    console.error("Error fetching slugs:", error);
+    console.error("Error detecting page type:", error);
   }
 
   if (isAttorneyPage) {
-    apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&populate=Image.Image`;
+    apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${encodeURIComponent(slug)}&populate=Image.Image`;
   } else if (isArticlePage) {
     // TEMP: populate everything to guarantee repeatable Button shows; we'll narrow after confirming apiId
-    const base = `${strapiURL}/api/articles?filters[slug][$eq]=${slug}`;
+    const base = `${strapiURL}/api/articles?filters[slug][$eq]=${encodeURIComponent(slug)}`;
     apiUrl = base + `&populate=*`;
   } else if (isJobPage) {
-    apiUrl = `${strapiURL}/api/jobs?filters[Slug][$eq]=${slug}&populate=block`;
+    apiUrl = `${strapiURL}/api/jobs?filters[Slug][$eq]=${encodeURIComponent(slug)}&populate=block`;
   } else if (isFaqsPage) {
-    apiUrl = `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${slug}&populate=*`;
+    apiUrl = `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
   } else {
     const childSlug = slugArray[slugArray.length - 1];
     const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
     const buildBase = (withParent) => {
+      const encChild = encodeURIComponent(childSlug || '');
       if (withParent) {
         const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
+        const encParent = encodeURIComponent(cleanParentSlug);
         return (
-          `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}` +
-          `&filters[parent_page][URL][$eq]=/${cleanParentSlug}`
+          `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}` +
+          `&filters[parent_page][URL][$eq]=/${encParent}`
         );
       }
-      return `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}`;
+      return `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}`;
     };
     const base = buildBase(!!parentSlug);
     // Stable single request: broad populate + newest first
@@ -223,12 +226,17 @@ export default async function Page({ params }) {
       console.log('🧭 Pages response IDs (sorted desc):', (data?.data || []).map(it => it?.id));
     } catch {}
   }
-  // Prefer a page that actually contains a Hero Button if multiple are returned
-  let page = null;
+  // Prefer a page that actually contains a Hero Button if multiple are returned (check attributes on v4 wrapper)
+  let entity = null;
   if (data && Array.isArray(data.data) && data.data.length > 0) {
-    const hasBtn = (p) => !!(Array.isArray(p?.Hero?.Button) && p.Hero.Button.length) || !!(Array.isArray(p?.Hero?.button) && p.Hero.button.length);
-    page = data.data.find(hasBtn) || data.data[0];
+    const hasBtn = (p) =>
+      !!(Array.isArray(p?.attributes?.Hero?.Button) && p.attributes.Hero.Button.length) ||
+      !!(Array.isArray(p?.attributes?.Hero?.button) && p.attributes.Hero.button.length);
+    entity = data.data.find(hasBtn) || data.data[0];
   }
+  const __unwrap = (obj) => (obj && obj.attributes ? obj.attributes : obj);
+  const page = __unwrap(entity);
+
   if (!page) {
     return (
       <Layout>
@@ -250,15 +258,17 @@ export default async function Page({ params }) {
     const m = unwrap(media);
     if (!m) return null;
     // Direct url
-    if (m.url) return m.url;
+    if (m.url) return safeMediaUrl(m.url);
     // v4 relation: { data: { attributes: { url } } }
-    if (m.data?.attributes?.url) return m.data.attributes.url;
+    if (m.data?.attributes?.url) return safeMediaUrl(m.data.attributes.url);
     // Array forms
-    if (Array.isArray(m) && m[0]?.url) return m[0].url;
+    if (Array.isArray(m) && m[0]?.url) return safeMediaUrl(m[0].url);
     if (Array.isArray(m) && m[0]?.data?.attributes?.url)
-      return m[0].data.attributes.url;
+      return safeMediaUrl(m[0].data.attributes.url);
     return null;
   };
+
+  // use shared safeMediaUrl helper from src/lib/media.js
 
   // Helper: detect media URLs so we don't accidentally use them as button hrefs
   const isMediaUrl = (u) =>
@@ -388,17 +398,18 @@ export default async function Page({ params }) {
     const rowStyle = { margin: "16px 0", display: "flex", gap: "12px", flexWrap: "wrap" };
     return (
       <div style={rowStyle}>
-        {buttons.map((b, i) =>
-          (b.href || '').startsWith('http') ? (
-            <a key={i} href={b.href} target={b.target} rel={b.target === '_blank' ? 'noopener noreferrer' : undefined} className={`${styles?.blueButton ?? ''} blueButton`.trim()}>
+        {buttons.map((b, i) => {
+          const stableKey = b.href || b.label || `article-btn-${i}`;
+          return (b.href || '').startsWith('http') ? (
+            <a key={stableKey} href={b.href} target={b.target} rel={b.target === '_blank' ? 'noopener noreferrer' : undefined} className={`${styles?.blueButton ?? ''} blueButton`.trim()}>
               {b.label} <RowIcon />
             </a>
           ) : (
-            <Link key={i} href={b.href || '/'} className={`${styles?.blueButton ?? ''} blueButton`.trim()}>
+            <Link key={stableKey} href={b.href || '/'} className={`${styles?.blueButton ?? ''} blueButton`.trim()}>
               {b.label} <RowIcon />
             </Link>
-          )
-        )}
+          );
+        })}
       </div>
     );
   };
@@ -526,9 +537,9 @@ export default async function Page({ params }) {
               {page.block.map((block, index) => {
                 if (block.__component === "shared.description") {
                   return (
-                    <div key={index} className={styles.jobText}>
+                    <div key={`job-${index}`} className={styles.jobText}>
                       {block.Description.map((desc, j) => (
-                        <p key={j}>{desc.children?.[0]?.text || ""}</p>
+                        <p key={`job-${index}-p-${j}`}>{desc.children?.[0]?.text || ""}</p>
                       ))}
                     </div>
                   );
@@ -567,7 +578,7 @@ export default async function Page({ params }) {
                 <FaRegCalendarAlt className={styles.icon} />{" "}
                 {new Date(page.createdAt).toLocaleDateString()} |{" "}
                 <FaRegClock className={styles.icon} />{" "}
-                {Math.ceil(page.blocks.length * 0.5)} min read
+                {Math.ceil(((Array.isArray(page.blocks) ? page.blocks.length : 0) * 0.5))} min read
               </p>
               <div className={styles.socialShare}>
                 <a
@@ -600,9 +611,9 @@ export default async function Page({ params }) {
                   <FaLinkedin className={styles.socialIcon} />
                 </a>
               </div>
-              {page.cover && (
+              {page.cover?.url && (
                 <img
-                  src={`https://login.louislawgroup.com/${page.cover.url}`}
+                  src={safeMediaUrl(page.cover.url)}
                   alt={page.title}
                   className={styles.blogImage}
                 />
@@ -611,10 +622,11 @@ export default async function Page({ params }) {
                 {page.blocks.map((block, index) => {
                   if (block.__component === "shared.rich-text") {
                     return (
-                      <div key={index} className={styles.blogText} id={`cta-article-${index}`} data-cta-block-index={index}>
+                      <div key={`rich-${index}`} className={styles.blogText} id={`cta-article-${index}`} data-cta-block-index={index}>
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
                           rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                          urlTransform={mdUrlTransform}
                         >
                           {block.body}
                         </ReactMarkdown>
@@ -622,9 +634,9 @@ export default async function Page({ params }) {
                     );
                   }
                   if (block.__component === "shared.media" && block.file?.url) {
-                    const imageUrl = `https://login.louislawgroup.com/${block.file.url}`;
+                    const imageUrl = safeMediaUrl(block.file.url);
                     return (
-                      <div key={index} className={styles.blogImageContainer}>
+                      <div key={`media-${index}`} className={styles.blogImageContainer}>
                         <img
                           src={imageUrl}
                           alt={block.file.alternativeText || "Blog Image"}
@@ -656,7 +668,7 @@ export default async function Page({ params }) {
                   <img
                     src={
                       page.Image?.Image?.url
-                        ? `https://login.louislawgroup.com/${page.Image.Image.url}`
+                        ? safeMediaUrl(page.Image.Image.url)
                         : "/placeholder.jpg"
                     }
                     alt={page.Image?.Alt || "Attorney"}
@@ -676,7 +688,7 @@ export default async function Page({ params }) {
                 <h2 className="bioHeading">Bio.</h2>
                 {Array.isArray(page.Description) &&
                   page.Description.map((block, idx) => (
-                    <p key={idx} className={styles.attorneyBioText}>
+                    <p key={`attorney-desc-${idx}`} className={styles.attorneyBioText}>
                       {block.children?.[0]?.text || ""}
                     </p>
                   ))}
@@ -708,10 +720,11 @@ export default async function Page({ params }) {
                 page.blocks.map((block, index) => {
                   if (block.__component === "shared.rich-text") {
                     return (
-                      <div key={index} className={styles.faqText} id={`cta-faq-${index}`} data-cta-block-index={index}>
+                      <div key={`faq-${index}`} className={styles.faqText} id={`cta-faq-${index}`} data-cta-block-index={index}>
                         <ReactMarkdown
                           remarkPlugins={[remarkGfm]}
                           rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                          urlTransform={mdUrlTransform}
                         >
                           {block.body}
                         </ReactMarkdown>
@@ -721,7 +734,7 @@ export default async function Page({ params }) {
                   return null;
                 })}
             </div>
-          </section>xw
+          </section>
           <Results />
           <Steps />
           <Contact />
@@ -741,7 +754,7 @@ export default async function Page({ params }) {
                     <h1 className={styles.title}>{page.Hero.title}</h1>
                     {Array.isArray(page.Hero.intro) &&
                       page.Hero.intro.map((block, index) => (
-                        <p key={index} className={styles.intro}>
+                        <p key={`intro-${index}`} className={styles.intro}>
                           {block.children?.[0]?.text || ""}
                         </p>
                       ))}
@@ -754,7 +767,7 @@ export default async function Page({ params }) {
                               window.__LLG_PAGE_DEBUG = {
                                 heroKeys: ${JSON.stringify(Object.keys(page?.Hero || {}))},
                                 hero: ${JSON.stringify(page?.Hero || {})},
-                                pageId: ${JSON.stringify(page?.id || null)},
+                                pageId: ${JSON.stringify(typeof entity !== 'undefined' && entity ? entity.id : null)},
                                 rootButton: ${JSON.stringify(page?.Button || null)},
                                 rootbutton: ${JSON.stringify(page?.button || null)},
                                 flatFields: ${JSON.stringify({
@@ -865,8 +878,7 @@ export default async function Page({ params }) {
                       if (!mediaObj?.url) {
                         return <HeroForm />;
                       }
-                      const base = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com/";
-                      const src = mediaObj.url.startsWith("http") ? mediaObj.url : `${base}${mediaObj.url}`;
+                      const src = safeMediaUrl(mediaObj.url);
                       return (
                         <img
                           src={src}
