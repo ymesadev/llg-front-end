@@ -13,3 +13,8 @@ public/*
 # allow dynamic sitemap route
 !src/app/sitemap.xml/
 !src/app/sitemap.xml/route.js
+
+# allow helper libs
+!src/lib/
+!src/lib/media.js
+!src/app/sitemap.xml/chunked-helpers.js
