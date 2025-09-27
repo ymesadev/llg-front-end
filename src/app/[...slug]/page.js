@@ -16,14 +16,9 @@ import { renderContentBlocks, processHeroContent, processSectionsContent } from 
 import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 
-// 1) Allow new slugs at runtime (fallback):
-export const dynamicParams = true;
-
 // Disable static prerendering: fetch data at request time
 export const dynamic = 'force-dynamic';
-
-// 2) Keep revalidate if you want ISR for existing pages
-export const revalidate = 60; // Revalidate existing pages every 60s
+export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
 
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
@@ -116,8 +111,8 @@ function injectBlueButtonClass(html) {
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
-  // Next 15+: params may be a promise; awaiting a plain object is safe too
-  const { slug: maybeSlug = [] } = await params;
+  // Access params synchronously during build-time config collection
+  const { slug: maybeSlug = [] } = params || {};
   const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
   const slug = slugArray.join("/");
 

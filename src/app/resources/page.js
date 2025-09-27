@@ -144,7 +144,7 @@ export default async function ResourcesPage({ searchParams }) {
               {/* Page numbers with ellipses */}
               {paginationItems.map((item, idx) =>
                 item === "..." ? (
-                  <span key={`ellipsis-${idx}`} className={styles.paginationDots}>…</span>
+                  <span key={idx} className={styles.paginationDots}>…</span>
                 ) : (
                   <Link
                     key={item}

@@ -1,40 +1,27 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import Layout from "../../components/Layout/Layout";
 import styles from "./page.module.css";
 
-export const revalidate = 60; // ISR: Revalidate every 60 seconds
+const STRAPI_BASE = process.env.NEXT_PUBLIC_STRAPI_API_URL || 'https://login.louislawgroup.com';
+const makeAbs = (u) => {
+  if (!u || typeof u !== 'string') return '';
+  if (u.includes('..')) return '';
+  if (/^https?:\/\//i.test(u)) return u;
+  const rel = u.startsWith('/') ? u : `/${u}`;
+  return `${STRAPI_BASE}${rel}`;
+};
 
-// ✅ **Generate Static Paths for All Attorneys**
-export async function generateStaticParams() {
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-
-  try {
-    const res = await fetch(`${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
-      cache: "no-store",
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch team page slugs");
-
-    const data = await res.json();
-
-    return data.data.map((page) => ({
-      slug: page.Slug, // Generate paths for each attorney slug
-    }));
-  } catch (error) {
-    console.error("Error in generateStaticParams:", error);
-    return [];
-  }
-}
-
-// ✅ **Fetch and Render Attorney Page**
 export default async function TeamPage({ params }) {
-  const slug = params.slug;
-  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
-  const apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&populate=*`;
+  const slug = (params && params.slug) || '';
+  const apiUrl = `${STRAPI_BASE}/api/team-pages?filters[Slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
 
   console.log("Fetching attorney page for slug:", slug, "API:", apiUrl);
 
   // Fetch the page content from Strapi
-  const res = await fetch(apiUrl, { cache: "no-store" });
+  const res = await fetch(apiUrl, { cache: 'no-store' });
 
   if (!res.ok) {
     return (
@@ -48,7 +35,10 @@ export default async function TeamPage({ params }) {
   }
 
   const data = await res.json();
-  if (data.data.length === 0) {
+  const entity = Array.isArray(data?.data) && data.data[0] ? data.data[0] : null;
+  const page = entity ? (entity.attributes || entity) : null;
+
+  if (!page) {
     return (
       <Layout>
         <div className={styles.error}>
@@ -59,8 +49,6 @@ export default async function TeamPage({ params }) {
     );
   }
 
-  const page = data.data[0];
-
   return (
     <Layout>
       <section className={styles.teamPage}>
@@ -68,13 +56,35 @@ export default async function TeamPage({ params }) {
           <div className="column-2a">
             {/* ✅ Left Column: Attorney Image */}
             <div>
-              <img src={page.Image.url} alt={page.Image.alt || page.Title} className={styles.teamImage} />
+              {(() => {
+                // Try common Strapi v4 shapes
+                const imgUrl =
+                  page?.Image?.data?.attributes?.url ||
+                  page?.Image?.Image?.url ||
+                  page?.Image?.url ||
+                  null;
+                const altText =
+                  page?.Image?.data?.attributes?.alternativeText ||
+                  page?.Image?.alt ||
+                  page?.Title ||
+                  page?.title ||
+                  'Attorney';
+                return imgUrl ? (
+                  <img src={makeAbs(imgUrl)} alt={altText} className={styles.teamImage} />
+                ) : null;
+              })()}
             </div>
 
             {/* ✅ Right Column: Attorney Details */}
             <div>
-              <h1 className={styles.title}>{page.Title}</h1>
-              <p className={styles.description}>{page.Description}</p>
+              <h1 className={styles.title}>{page.Title || page.title}</h1>
+              <p className={styles.description}>
+                {typeof page.Description === 'string'
+                  ? page.Description
+                  : Array.isArray(page.Description)
+                  ? page.Description.map((b) => b?.children?.[0]?.text || '').join('\n')
+                  : page.description || ''}
+              </p>
             </div>
           </div>
         </div>
