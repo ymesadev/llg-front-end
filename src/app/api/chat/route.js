@@ -47,9 +47,9 @@ export async function POST(request) {
       try {
         console.log(`Attempt ${attempt}/3: POSTing to N8N webhook...`);
         
-        // Create AbortController for timeout
+        // Create AbortController for timeout (Vercel has 10s timeout for hobby plan, 60s for pro)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
+        const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 second timeout (within Vercel limits)
         
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
@@ -81,7 +81,7 @@ export async function POST(request) {
       } catch (error) {
         lastError = error;
         if (error.name === 'AbortError') {
-          console.warn(`Attempt ${attempt} timed out after 2 minutes`);
+          console.warn(`Attempt ${attempt} timed out after 50 seconds`);
         } else {
           console.warn(`Attempt ${attempt} failed with error:`, error.message);
         }
@@ -94,6 +94,12 @@ export async function POST(request) {
 
     if (!response || !response.ok) {
       console.error(`N8N webhook failed after 3 attempts: ${lastError.message}`);
+      
+      // If it's a timeout and N8N is taking too long, provide a helpful message
+      if (lastError.name === 'AbortError') {
+        throw new Error('The AI system is taking longer than expected to respond. Please try again in a moment or contact us at (833) 657-4812 for immediate assistance.');
+      }
+      
       throw lastError;
     }
 
