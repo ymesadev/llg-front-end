@@ -3,13 +3,13 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Popup.module.css";
-import ChatbotPopup from "../ChatBot/ChatBot";
+// import ChatbotPopup from "../ChatBot/ChatBot";
 import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
 
 const Popup = () => {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  // const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     const hasAgreed = localStorage.getItem("agreedToTerms");
@@ -40,7 +40,7 @@ const Popup = () => {
   const handleMessageUs = () => {
     sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
-    setIsChatOpen(true);
+    // Chat is now handled by AIChatBot in layout.js
   };
 
   return (
@@ -109,8 +109,9 @@ const Popup = () => {
         <p>Text Us</p>
         <TextUsPopup className={styles.textUsIcon} />
       </a>
+      {/* <ChatbotPopup open={isChatOpen} /> */}
 
-      <ChatbotPopup open={isChatOpen} />
+      {/* AIChatBot is now handled in layout.js */}
     </>
   );
 };

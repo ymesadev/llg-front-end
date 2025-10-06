@@ -4,7 +4,8 @@ import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
 import CookieConsent from "./components/CookieConsent/CookieConsent";
 import Popup from "./components/Popup/Popup";
 import Navbar from "./components/Navbar/Navbar";
-import ChatbotPopup from "./components/ChatBot/ChatBot";
+// import ChatbotPopup from "./components/ChatBot/ChatBot";
+import AIChatBot from "./components/AIChatBot/AIChatBot";
 
 
 
@@ -126,6 +127,8 @@ export default function RootLayout({ children }) {
           />
         </noscript>
         {children}
+        <AIChatBot />
+        <CookieConsent />
       </body>
     </html>
   );
