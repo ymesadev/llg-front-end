@@ -46,6 +46,11 @@ export async function POST(request) {
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
         console.log(`Attempt ${attempt}/3: POSTing to N8N webhook...`);
+        
+        // Create AbortController for timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
+        
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
           headers: {
@@ -57,7 +62,10 @@ export async function POST(request) {
             'Referer': 'https://louislawgroup.com',
           },
           body: JSON.stringify(payload),
+          signal: controller.signal,
         });
+        
+        clearTimeout(timeoutId);
 
         if (response.ok) {
           break; // Success, exit retry loop
@@ -72,7 +80,11 @@ export async function POST(request) {
         }
       } catch (error) {
         lastError = error;
-        console.warn(`Attempt ${attempt} failed with error:`, error.message);
+        if (error.name === 'AbortError') {
+          console.warn(`Attempt ${attempt} timed out after 2 minutes`);
+        } else {
+          console.warn(`Attempt ${attempt} failed with error:`, error.message);
+        }
         
         if (attempt < 3) {
           await new Promise(resolve => setTimeout(resolve, attempt * 1000));
