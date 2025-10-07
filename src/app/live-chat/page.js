@@ -262,40 +262,33 @@ const LiveChatPage = () => {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.container}>
-
-        {/* Status Bar */}
-        <div className={styles.statusBar}>
-          <div className={styles.statusInfo}>
-            <div className={styles.statusTitle}>AI Assistant</div>
+        {/* Header with AI Assistant status */}
+        <div className={styles.header}>
+          <div className={styles.headerInfo}>
+            <div className={styles.title}>AI Assistant</div>
             <div className={styles.statusContainer}>
               <div className={styles.onlineStatus}></div>
-              <span>Online</span>
+              <p>Online</p>
             </div>
           </div>
-          <div className={styles.statusActions}>
+          <div className={styles.headerActions}>
             {messages.length > 1 && (
               <button
                 onClick={clearChatHistory}
-                className={styles.statusButton}
+                className={styles.clearButton}
                 aria-label="Clear chat history"
                 title="Clear chat history"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="3,6 5,6 21,6"></polyline>
-                  <path d="m19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
-                </svg>
+                🗑️
               </button>
             )}
             <button
               onClick={goBack}
-              className={styles.statusButton}
+              className={styles.closeButton}
               aria-label="Go back"
               title="Go back"
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="m12 19-7-7 7-7"></path>
-                <path d="M19 12H5"></path>
-              </svg>
+              ←
             </button>
           </div>
         </div>

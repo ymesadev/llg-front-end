@@ -4,8 +4,9 @@ import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
 import CookieConsent from "./components/CookieConsent/CookieConsent";
 import ConditionalPopup from "./components/ConditionalPopup/ConditionalPopup";
 import ConditionalNavbar from "./components/ConditionalNavbar/ConditionalNavbar";
+import ConditionalFooter from "./components/ConditionalFooter/ConditionalFooter";
 // import ChatbotPopup from "./components/ChatBot/ChatBot";
-import ConditionalLiveChatButton from "./components/ConditionalLiveChatButton/ConditionalLiveChatButton";
+import AIChatBot from "./components/AIChatBot/AIChatBot";
 
 
 
@@ -127,7 +128,8 @@ export default function RootLayout({ children }) {
           />
         </noscript>
         {children}
-        <ConditionalLiveChatButton />
+        <ConditionalFooter />
+        <AIChatBot />
         <CookieConsent />
       </body>
     </html>

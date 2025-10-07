@@ -6,11 +6,7 @@ import Navbar from "../Navbar/Navbar";
 const ConditionalNavbar = () => {
   const pathname = usePathname();
   
-  // Hide navbar on live-chat page
-  if (pathname === "/live-chat") {
-    return null;
-  }
-  
+  // Show Navbar on all pages including live-chat
   return <Navbar />;
 };
 

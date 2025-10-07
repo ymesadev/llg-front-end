@@ -24,6 +24,7 @@ const AIChatBot = () => {
     }
     setUserId(storedUserId);
 
+
     // Load chat history
     const savedMessages = localStorage.getItem(`chatbot_messages_${storedUserId}`);
     if (savedMessages) {
@@ -110,6 +111,15 @@ const AIChatBot = () => {
     setInputMessage("");
     setIsLoading(true);
 
+    // Track message sent for marketing
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'message_sent', {
+        event_category: 'Chat',
+        event_label: 'User Message',
+        value: 1
+      });
+    }
+
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -138,6 +148,15 @@ const AIChatBot = () => {
         // Set conversation ID if this is the first message
         if (!conversationId) {
           setConversationId(data.conversationId);
+        }
+
+        // Track bot response for marketing
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('event', 'message_received', {
+            event_category: 'Chat',
+            event_label: 'Bot Response',
+            value: 1
+          });
         }
       } else {
         throw new Error(data.error || "Failed to get response");
@@ -173,6 +192,15 @@ const AIChatBot = () => {
 
   const toggleChat = () => {
     setIsOpen(!isOpen);
+    
+    // Track chat button click for marketing
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'chat_button_click', {
+        event_category: 'Chat',
+        event_label: 'Modal Button',
+        value: 1
+      });
+    }
   };
 
   const quickReplies = [
