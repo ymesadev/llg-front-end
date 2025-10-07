@@ -2,10 +2,10 @@ import "./globals.css";
 import Script from "next/script";
 import TrovoTracking from "./components/TrovoTracking"; // Ensure correct path
 import CookieConsent from "./components/CookieConsent/CookieConsent";
-import Popup from "./components/Popup/Popup";
-import Navbar from "./components/Navbar/Navbar";
+import ConditionalPopup from "./components/ConditionalPopup/ConditionalPopup";
+import ConditionalNavbar from "./components/ConditionalNavbar/ConditionalNavbar";
 // import ChatbotPopup from "./components/ChatBot/ChatBot";
-import AIChatBot from "./components/AIChatBot/AIChatBot";
+import ConditionalLiveChatButton from "./components/ConditionalLiveChatButton/ConditionalLiveChatButton";
 
 
 
@@ -105,8 +105,8 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <Navbar />
-        <Popup />
+        <ConditionalNavbar />
+        <ConditionalPopup />
         {/* ✅ Google Tag Manager (NoScript Fallback) */}
         <noscript>
           <iframe
@@ -127,7 +127,7 @@ export default function RootLayout({ children }) {
           />
         </noscript>
         {children}
-        <AIChatBot />
+        <ConditionalLiveChatButton />
         <CookieConsent />
       </body>
     </html>

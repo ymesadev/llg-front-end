@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Popup.module.css";
@@ -9,7 +10,7 @@ import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
 const Popup = () => {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
-  // const [isChatOpen, setIsChatOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const hasAgreed = localStorage.getItem("agreedToTerms");
@@ -40,7 +41,18 @@ const Popup = () => {
   const handleMessageUs = () => {
     sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
-    // Chat is now handled by AIChatBot in layout.js
+    
+    // Track popup chat button click for marketing
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'live_chat_button_click', {
+        event_category: 'Live Chat',
+        event_label: 'Popup Button',
+        value: 1
+      });
+    }
+    
+    // Navigate to live chat page
+    router.push('/live-chat');
   };
 
   return (
