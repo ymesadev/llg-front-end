@@ -346,9 +346,6 @@ const AIChatBot = () => {
                 <span></span>
                 <span></span>
               </div>
-              <div className={styles.loadingText}>
-                AI is thinking... This may take up to 90 seconds
-              </div>
             </div>
           )}
           
