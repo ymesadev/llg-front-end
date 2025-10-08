@@ -103,13 +103,82 @@ export async function POST(request) {
       throw lastError;
     }
 
-    const data = await response.json();
+    // Additional check to ensure response is valid
+    if (!response) {
+      console.error('No response received from N8N');
+      throw new Error('No response received from AI system');
+    }
+
+    // Log the raw response for debugging
+    let responseText;
+    try {
+      responseText = await response.text();
+      console.log('Raw response from N8N:', responseText);
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      console.log('Response length:', responseText.length);
+    } catch (textError) {
+      console.error('Failed to read response text:', textError);
+      throw new Error('Failed to read response from N8N');
+    }
+
+    // Check if response is empty
+    if (!responseText || responseText.trim() === '') {
+      console.error('N8N returned empty response');
+      return NextResponse.json({
+        success: true,
+        response: 'I received your message but couldn\'t generate a response. Please try again.',
+        conversationId: payload.conversationId,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    let data;
+    let responseMessage;
+    let responseConversationId = payload.conversationId;
+
+    try {
+      data = JSON.parse(responseText);
+      console.log('Parsed JSON data:', data);
+      
+      // Extract response message from various possible fields
+      responseMessage = data.response || data.message || data.text || data.content || data.answer || data.reply;
+      
+      // Extract conversation ID if provided
+      if (data.conversationId) {
+        responseConversationId = data.conversationId;
+      }
+      
+      // If no message found in JSON, use the raw response
+      if (!responseMessage) {
+        console.warn('No message field found in JSON response, using raw response');
+        responseMessage = responseText;
+      }
+      
+    } catch (jsonError) {
+      console.error('Failed to parse N8N response as JSON:', jsonError);
+      console.error('Raw response was:', responseText);
+      console.error('Response length:', responseText.length);
+      console.error('First 200 chars:', responseText.substring(0, 200));
+      
+      // If it's not JSON, treat the entire response as the message
+      responseMessage = responseText;
+    }
+
+    // Ensure we have a valid response message
+    if (!responseMessage || responseMessage.trim() === '') {
+      console.warn('No valid response message found, using fallback');
+      responseMessage = 'I received your message but couldn\'t generate a response. Please try again.';
+    }
+
+    console.log('Final response message:', responseMessage);
+    console.log('Final conversation ID:', responseConversationId);
 
     // Return the response from n8n
     return NextResponse.json({
       success: true,
-      response: data.response || data.message || 'I received your message but couldn\'t generate a response.',
-      conversationId: payload.conversationId,
+      response: responseMessage,
+      conversationId: responseConversationId,
       timestamp: new Date().toISOString()
     });
 
