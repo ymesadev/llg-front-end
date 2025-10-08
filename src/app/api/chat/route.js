@@ -45,11 +45,13 @@ export async function POST(request) {
     
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
+        const startTime = Date.now();
         console.log(`Attempt ${attempt}/3: POSTing to N8N webhook...`);
+        console.log(`Start time: ${new Date().toISOString()}`);
         
         // Create AbortController for timeout (Vercel has 10s timeout for hobby plan, 60s for pro)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 second timeout (wait for N8N)
+        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout (wait for N8N)
         
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
@@ -66,8 +68,14 @@ export async function POST(request) {
         });
         
         clearTimeout(timeoutId);
+        
+        const endTime = Date.now();
+        const duration = (endTime - startTime) / 1000;
+        console.log(`N8N response received in ${duration} seconds`);
+        console.log(`End time: ${new Date().toISOString()}`);
 
         if (response.ok) {
+          console.log(`N8N responded successfully on attempt ${attempt}`);
           break; // Success, exit retry loop
         }
         
@@ -81,7 +89,7 @@ export async function POST(request) {
       } catch (error) {
         lastError = error;
         if (error.name === 'AbortError') {
-          console.warn(`Attempt ${attempt} timed out after 50 seconds`);
+          console.warn(`Attempt ${attempt} timed out after 2 minutes`);
         } else {
           console.warn(`Attempt ${attempt} failed with error:`, error.message);
         }
@@ -113,10 +121,14 @@ export async function POST(request) {
     let responseText;
     try {
       responseText = await response.text();
+      console.log('=== N8N RESPONSE DEBUG ===');
       console.log('Raw response from N8N:', responseText);
       console.log('Response status:', response.status);
       console.log('Response headers:', Object.fromEntries(response.headers.entries()));
       console.log('Response length:', responseText.length);
+      console.log('Response type:', typeof responseText);
+      console.log('Is empty?', !responseText || responseText.trim() === '');
+      console.log('========================');
     } catch (textError) {
       console.error('Failed to read response text:', textError);
       throw new Error('Failed to read response from N8N');
@@ -139,10 +151,16 @@ export async function POST(request) {
 
     try {
       data = JSON.parse(responseText);
+      console.log('=== JSON PARSING DEBUG ===');
       console.log('Parsed JSON data:', data);
+      console.log('Data type:', typeof data);
+      console.log('Data keys:', Object.keys(data || {}));
       
       // Extract response message from various possible fields
       responseMessage = data.response || data.message || data.text || data.content || data.answer || data.reply;
+      console.log('Extracted responseMessage:', responseMessage);
+      console.log('ResponseMessage type:', typeof responseMessage);
+      console.log('ResponseMessage empty?', !responseMessage || responseMessage.trim() === '');
       
       // Extract conversation ID if provided
       if (data.conversationId) {
@@ -154,6 +172,7 @@ export async function POST(request) {
         console.warn('No message field found in JSON response, using raw response');
         responseMessage = responseText;
       }
+      console.log('========================');
       
     } catch (jsonError) {
       console.error('Failed to parse N8N response as JSON:', jsonError);
@@ -168,6 +187,9 @@ export async function POST(request) {
     // Ensure we have a valid response message
     if (!responseMessage || responseMessage.trim() === '') {
       console.warn('No valid response message found, using fallback');
+      console.warn('Response message was:', responseMessage);
+      console.warn('Parsed data was:', data);
+      console.warn('Raw response was:', responseText);
       responseMessage = 'I received your message but couldn\'t generate a response. Please try again.';
     }
 
@@ -186,7 +208,8 @@ export async function POST(request) {
     console.error('Chat API error:', error);
     
     // Handle specific timeout errors
-    if (error.message.includes('timeout') || error.message.includes('AbortError')) {
+    if (error.message.includes('timeout') || error.message.includes('AbortError') || error.message.includes('FUNCTION_INVOCATION_TIMEOUT')) {
+      console.error('Function timeout detected:', error.message);
       return NextResponse.json(
         { 
           success: false,
