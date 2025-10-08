@@ -24,9 +24,13 @@ const LiveChatPage = () => {
     }
     setUserId(storedUserId);
 
+    // Check for welcome message update version
+    const welcomeMessageVersion = localStorage.getItem('chatbot_welcome_version');
+    const currentVersion = '2.0'; // Updated version for new welcome message
+
     // Load chat history
     const savedMessages = localStorage.getItem(`chatbot_messages_${storedUserId}`);
-    if (savedMessages) {
+    if (savedMessages && welcomeMessageVersion === currentVersion) {
       try {
         const parsedMessages = JSON.parse(savedMessages);
         // Convert timestamp strings back to Date objects
@@ -41,22 +45,24 @@ const LiveChatPage = () => {
         setMessages([
           {
             id: 1,
-            text: "Hello! I'm your AI assistant. How can I help you today?",
+            text: "Hello, how can I assist you with your case",
             sender: "bot",
             timestamp: new Date(),
           },
         ]);
       }
     } else {
-      // First time user - show welcome message
+      // Force update welcome message for all users
       setMessages([
         {
           id: 1,
-          text: "Hello! I'm your AI assistant. How can I help you today?",
+          text: "Hello, how can I assist you with your case",
           sender: "bot",
           timestamp: new Date(),
         },
       ]);
+      // Set the new version
+      localStorage.setItem('chatbot_welcome_version', currentVersion);
     }
 
     // Load conversation ID
@@ -102,8 +108,21 @@ const LiveChatPage = () => {
 
   // Auto-scroll to bottom when new messages arrive
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      const messagesContainer = messagesEndRef.current.parentElement;
+      if (messagesContainer) {
+        // Check if it has the messages styling (overflow-y: auto)
+        const computedStyle = window.getComputedStyle(messagesContainer);
+        if (computedStyle.overflowY === 'auto' || computedStyle.overflowY === 'scroll') {
+          // Use requestAnimationFrame to ensure DOM is updated
+          requestAnimationFrame(() => {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          });
+        }
+      }
+    }
   };
+
 
   useEffect(() => {
     scrollToBottom();
@@ -224,7 +243,7 @@ const LiveChatPage = () => {
     if (window.confirm('Are you sure you want to clear your chat history? This action cannot be undone.')) {
       const welcomeMessage = {
         id: 1,
-        text: "Hello! I'm your AI assistant. How can I help you today?",
+        text: "Hello, how can I assist you with your case",
         sender: "bot",
         timestamp: new Date(),
       };

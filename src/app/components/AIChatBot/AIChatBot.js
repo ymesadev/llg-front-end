@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { ChatUsPopup } from "../../../../public/icons";
 import styles from "./AIChatBot.module.css";
 
 const AIChatBot = () => {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -24,10 +26,13 @@ const AIChatBot = () => {
     }
     setUserId(storedUserId);
 
+    // Check for welcome message update version
+    const welcomeMessageVersion = localStorage.getItem('chatbot_welcome_version');
+    const currentVersion = '2.0'; // Updated version for new welcome message
 
     // Load chat history
     const savedMessages = localStorage.getItem(`chatbot_messages_${storedUserId}`);
-    if (savedMessages) {
+    if (savedMessages && welcomeMessageVersion === currentVersion) {
       try {
         const parsedMessages = JSON.parse(savedMessages);
         // Convert timestamp strings back to Date objects
@@ -42,22 +47,24 @@ const AIChatBot = () => {
         setMessages([
           {
             id: 1,
-            text: "Hello! I'm your AI assistant. How can I help you today?",
+            text: "Hello, how can I assist you with your case",
             sender: "bot",
             timestamp: new Date(),
           },
         ]);
       }
     } else {
-      // First time user - show welcome message
+      // Force update welcome message for all users
       setMessages([
         {
           id: 1,
-          text: "Hello! I'm your AI assistant. How can I help you today?",
+          text: "Hello, how can I assist you with your case",
           sender: "bot",
           timestamp: new Date(),
         },
       ]);
+      // Set the new version
+      localStorage.setItem('chatbot_welcome_version', currentVersion);
     }
 
     // Load conversation ID
@@ -218,7 +225,7 @@ const AIChatBot = () => {
     if (window.confirm('Are you sure you want to clear your chat history? This action cannot be undone.')) {
       const welcomeMessage = {
         id: 1,
-        text: "Hello! I'm your AI assistant. How can I help you today?",
+        text: "Hello, how can I assist you with your case",
         sender: "bot",
         timestamp: new Date(),
       };
@@ -233,6 +240,11 @@ const AIChatBot = () => {
       }
     }
   };
+
+  // Hide AIChatBot on live-chat page
+  if (pathname === "/live-chat") {
+    return null;
+  }
 
   return (
     <div className={styles.container}>

@@ -1,6 +1,6 @@
 .pageContainer {
-  min-height: calc(100vh - 160px); /* Account for navbar and footer */
-  background: linear-gradient(135deg, #173a77 0%, #1a2b49 100%);
+  /* min-height: calc(100vh - 160px); */
+  /* background: linear-gradient(135deg, #173a77 0%, #1a2b49 100%); */
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -12,8 +12,8 @@
 .container {
   width: 100%;
   max-width: 1000px;
-  height: 600px; /* Reduced height to ensure footer is visible */
-  max-height: calc(100vh - 200px); /* Responsive height */
+  height: 600px;
+  max-height: calc(100vh - 200px);
   background: white;
   border-radius: 20px;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
@@ -397,7 +397,7 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .pageContainer {
-    padding: 1rem;
+    padding: 0.5rem;
     padding-bottom: 3rem;
     margin-top: 60px;
     min-height: calc(100vh - 140px);
@@ -405,8 +405,8 @@
 
   .container {
     width: 100%;
-    height: 450px;
-    max-height: calc(100vh - 180px);
+    /* height: calc(100vh - 160px); */
+    max-height: none;
     max-width: none;
     border-radius: 15px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
@@ -435,14 +435,14 @@
 
 @media (max-width: 480px) {
   .pageContainer {
-    padding: 0.5rem;
+    padding: 0.25rem;
     padding-bottom: 2rem;
     margin-top: 60px;
   }
 
   .container {
-    height: 400px;
-    max-height: calc(100vh - 160px);
+    height: calc(100vh - 140px);
+    max-height: none;
     border-radius: 10px;
   }
 
