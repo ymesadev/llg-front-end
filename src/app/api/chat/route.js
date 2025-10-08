@@ -49,7 +49,7 @@ export async function POST(request) {
         
         // Create AbortController for timeout (Vercel has 10s timeout for hobby plan, 60s for pro)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 second timeout (safe for Vercel)
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout (safe for Vercel)
         
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
@@ -81,7 +81,7 @@ export async function POST(request) {
       } catch (error) {
         lastError = error;
         if (error.name === 'AbortError') {
-          console.warn(`Attempt ${attempt} timed out after 12 seconds`);
+          console.warn(`Attempt ${attempt} timed out after 8 seconds`);
         } else {
           console.warn(`Attempt ${attempt} failed with error:`, error.message);
         }

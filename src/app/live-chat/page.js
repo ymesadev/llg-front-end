@@ -168,9 +168,9 @@ const LiveChatPage = () => {
     }
 
     try {
-      // Create AbortController for timeout (20 seconds to allow for API processing time)
+      // Create AbortController for timeout (15 seconds to allow for API processing time)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
       
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -193,12 +193,13 @@ const LiveChatPage = () => {
       } catch (jsonError) {
         console.error('Failed to parse response as JSON:', jsonError);
         console.error('Response status:', response.status);
-        console.error('Response text:', await response.text());
         
         // Handle non-JSON responses (like HTML error pages)
         if (response.status >= 500) {
           throw new Error('Server error occurred. Please try again in a moment.');
         } else if (response.status === 408) {
+          throw new Error('Request timed out. The AI system is taking longer than expected. Please try again.');
+        } else if (response.status === 504) {
           throw new Error('Request timed out. The AI system is taking longer than expected. Please try again.');
         } else {
           throw new Error('Unexpected response format. Please try again.');
