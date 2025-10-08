@@ -38,6 +38,7 @@ export async function POST(request) {
     // Log the payload being sent to N8N
     console.log('Payload being sent to N8N:', JSON.stringify(payload, null, 2));
     console.log('POSTing to N8N webhook URL:', n8nWebhookUrl);
+    console.log('Request headers:', Object.fromEntries(request.headers.entries()));
 
     // Send request to n8n webhook with retry logic
     let response;
@@ -108,26 +109,32 @@ export async function POST(request) {
     try {
       const responseText = await response.text();
       console.log('Raw N8N response:', responseText);
+      console.log('N8N response status:', response.status);
+      console.log('N8N response headers:', Object.fromEntries(response.headers.entries()));
       
       if (!responseText || responseText.trim() === '') {
         console.log('N8N returned empty response');
         data = { response: "I received your message but couldn't generate a response at this time. Please try again or contact us at (833) 657-4812 for immediate assistance." };
       } else {
         data = JSON.parse(responseText);
+        console.log('Parsed N8N data:', data);
       }
     } catch (parseError) {
       console.error('Error parsing N8N response:', parseError);
-      console.log('Raw response that failed to parse:', await response.text());
+      console.log('Raw response that failed to parse:', responseText);
       data = { response: "I received your message but encountered an issue processing it. Please try again or contact us at (833) 657-4812 for immediate assistance." };
     }
 
     // Return the response from n8n
-    return NextResponse.json({
+    const finalResponse = {
       success: true,
       response: data.response || data.message || 'I received your message but couldn\'t generate a response.',
       conversationId: payload.conversationId,
       timestamp: new Date().toISOString()
-    });
+    };
+    
+    console.log('Final API response:', JSON.stringify(finalResponse, null, 2));
+    return NextResponse.json(finalResponse);
 
   } catch (error) {
     console.error('Chat API error:', error);
