@@ -166,14 +166,41 @@ const AIChatBot = () => {
           });
         }
       } else {
-        throw new Error(data.error || "Failed to get response");
+        // Handle different types of errors from the API
+        let errorText = data.error || "Failed to get response";
+        
+        // If it's a timeout error, show a more specific message
+        if (data.errorType === 'AbortError' || response.status === 408) {
+          errorText = "The AI is taking longer than expected to respond. Please wait a moment or try again.";
+        } else if (response.status === 503) {
+          errorText = "Our AI system is temporarily unavailable. Please try again in a moment.";
+        } else if (response.status === 422) {
+          errorText = "There was an issue processing your message. Please try again.";
+        }
+        
+        const errorMessage = {
+          id: Date.now() + 1,
+          text: errorText,
+          sender: "bot",
+          timestamp: new Date(),
+          isError: true,
+        };
+
+        setMessages(prev => [...prev, errorMessage]);
       }
     } catch (error) {
       console.error("Error sending message:", error);
       
+      // Handle network errors or other issues
+      let errorText = "Sorry, I'm having trouble connecting right now. Please try again in a moment.";
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        errorText = "Network connection issue. Please check your internet connection and try again.";
+      }
+      
       const errorMessage = {
         id: Date.now() + 1,
-        text: "Sorry, I'm having trouble connecting right now. Please try again in a moment.",
+        text: errorText,
         sender: "bot",
         timestamp: new Date(),
         isError: true,
@@ -318,6 +345,9 @@ const AIChatBot = () => {
                 <span></span>
                 <span></span>
                 <span></span>
+              </div>
+              <div className={styles.loadingText}>
+                AI is thinking... This may take up to 90 seconds
               </div>
             </div>
           )}
