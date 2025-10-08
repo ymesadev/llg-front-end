@@ -11,6 +11,7 @@ const LiveChatPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [showLongProcessingMessage, setShowLongProcessingMessage] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -148,6 +149,14 @@ const LiveChatPage = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputMessage("");
     setIsLoading(true);
+    setShowLongProcessingMessage(false);
+    
+    // Show long processing message after 15 seconds
+    const longProcessingTimer = setTimeout(() => {
+      if (isLoading) {
+        setShowLongProcessingMessage(true);
+      }
+    }, 15000);
 
     // Track message sent for marketing
     if (typeof window !== 'undefined' && window.gtag) {
@@ -159,6 +168,10 @@ const LiveChatPage = () => {
     }
 
     try {
+      // Create AbortController for timeout (60 seconds to allow for API processing time)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+      
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -169,7 +182,10 @@ const LiveChatPage = () => {
           conversationId: conversationId,
           userId: userId,
         }),
+        signal: controller.signal,
       });
+      
+      clearTimeout(timeoutId);
 
       const data = await response.json();
 
@@ -202,9 +218,20 @@ const LiveChatPage = () => {
     } catch (error) {
       console.error("Error sending message:", error);
       
+      let errorText = "Sorry, I'm having trouble connecting right now. Please try again in a moment.";
+      
+      // Provide more specific error messages
+      if (error.name === 'AbortError') {
+        errorText = "The AI system is taking longer than expected to respond. Please try again in a moment or contact us at (833) 657-4812 for immediate assistance.";
+      } else if (error.message.includes('Failed to fetch')) {
+        errorText = "Unable to connect to our servers. Please check your internet connection and try again.";
+      } else if (error.message.includes('timeout')) {
+        errorText = "Request timed out. The AI system is processing your message - please wait a moment and try again.";
+      }
+      
       const errorMessage = {
         id: Date.now() + 1,
-        text: "Sorry, I'm having trouble connecting right now. Please try again in a moment.",
+        text: errorText,
         sender: "bot",
         timestamp: new Date(),
         isError: true,
@@ -212,7 +239,9 @@ const LiveChatPage = () => {
 
       setMessages(prev => [...prev, errorMessage]);
     } finally {
+      clearTimeout(longProcessingTimer);
       setIsLoading(false);
+      setShowLongProcessingMessage(false);
     }
   };
 
@@ -338,6 +367,16 @@ const LiveChatPage = () => {
                 <span></span>
                 <span></span>
                 <span></span>
+              </div>
+            </div>
+          )}
+          
+          {/* Long processing message */}
+          {showLongProcessingMessage && (
+            <div className={`${styles.message} ${styles.botMessage}`}>
+              <div className={styles.longProcessingMessage}>
+                <p>🤖 The AI is taking a bit longer to process your request...</p>
+                <p>This is normal for complex queries. Please wait while we generate the best response for you.</p>
               </div>
             </div>
           )}

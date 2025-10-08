@@ -309,6 +309,33 @@
   }
 }
 
+.longProcessingMessage {
+  padding: 0.75rem 1rem;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 1.25rem;
+  border-bottom-left-radius: 0.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  animation: messageSlideIn 0.3s ease-out;
+}
+
+.longProcessingMessage p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  color: #92400e;
+}
+
+.longProcessingMessage p:first-child {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.longProcessingMessage p:last-child {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
 .suggestions {
   display: flex;
   gap: 0.5rem;
