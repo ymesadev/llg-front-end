@@ -120,12 +120,25 @@ const AIChatBot = () => {
     setIsLoading(true);
     setShowLongProcessingMessage(false);
     
-    // Show long processing message after 15 seconds
+    // Show long processing message after 10 seconds
     const longProcessingTimer = setTimeout(() => {
       if (isLoading) {
         setShowLongProcessingMessage(true);
       }
-    }, 15000);
+    }, 10000);
+    
+    // Show additional patience message after 30 seconds
+    const patienceTimer = setTimeout(() => {
+      if (isLoading) {
+        setMessages(prev => [...prev, {
+          id: Date.now() + 2,
+          text: "⏳ The AI is still working on your request... This may take up to 2 minutes for complex queries. Please keep waiting.",
+          sender: "bot",
+          timestamp: new Date(),
+          isPatience: true,
+        }]);
+      }
+    }, 30000);
 
     // Track message sent for marketing
     if (typeof window !== 'undefined' && window.gtag) {
@@ -137,9 +150,9 @@ const AIChatBot = () => {
     }
 
     try {
-      // Create AbortController for timeout (15 seconds to allow for API processing time)
+      // Create AbortController for timeout (2 minutes to wait for N8N response)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
       
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -226,6 +239,7 @@ const AIChatBot = () => {
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       clearTimeout(longProcessingTimer);
+      clearTimeout(patienceTimer);
       setIsLoading(false);
       setShowLongProcessingMessage(false);
     }
