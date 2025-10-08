@@ -49,7 +49,7 @@ export async function POST(request) {
         
         // Create AbortController for timeout (Vercel has 10s timeout for hobby plan, 60s for pro)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 second timeout (within Vercel limits)
+        const timeoutId = setTimeout(() => controller.abort(), 12000); // 12 second timeout (safe for Vercel)
         
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
@@ -75,19 +75,19 @@ export async function POST(request) {
         console.warn(`Attempt ${attempt} failed with status ${response.status}`);
         
         if (attempt < 3) {
-          // Wait before retry (exponential backoff)
-          await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+          // Wait before retry (shorter backoff for faster retries)
+          await new Promise(resolve => setTimeout(resolve, 500 * attempt));
         }
       } catch (error) {
         lastError = error;
         if (error.name === 'AbortError') {
-          console.warn(`Attempt ${attempt} timed out after 50 seconds`);
+          console.warn(`Attempt ${attempt} timed out after 12 seconds`);
         } else {
           console.warn(`Attempt ${attempt} failed with error:`, error.message);
         }
         
         if (attempt < 3) {
-          await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+          await new Promise(resolve => setTimeout(resolve, 500 * attempt));
         }
       }
     }
@@ -185,8 +185,21 @@ export async function POST(request) {
   } catch (error) {
     console.error('Chat API error:', error);
     
+    // Handle specific timeout errors
+    if (error.message.includes('timeout') || error.message.includes('AbortError')) {
+      return NextResponse.json(
+        { 
+          success: false,
+          error: 'The AI system is taking longer than expected to respond. Please try again in a moment or contact us at (833) 657-4812 for immediate assistance.',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        },
+        { status: 408 } // Request Timeout
+      );
+    }
+    
     return NextResponse.json(
       { 
+        success: false,
         error: 'Failed to process chat message',
         details: process.env.NODE_ENV === 'development' ? error.message : undefined
       },
