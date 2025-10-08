@@ -38,7 +38,6 @@ export async function POST(request) {
     // Log the payload being sent to N8N
     console.log('Payload being sent to N8N:', JSON.stringify(payload, null, 2));
     console.log('POSTing to N8N webhook URL:', n8nWebhookUrl);
-    console.error('🚀 CHAT API CALLED - Starting N8N request');
 
     // Send request to n8n webhook with retry logic
     let response;
@@ -50,9 +49,9 @@ export async function POST(request) {
         console.log(`Attempt ${attempt}/3: POSTing to N8N webhook...`);
         console.log(`Start time: ${new Date().toISOString()}`);
         
-        // Create AbortController for timeout (Vercel Pro has 60s timeout)
+        // Create AbortController for timeout (Vercel has 10s timeout for hobby plan, 60s for pro)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 second timeout (safe for Vercel Pro)
+        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout (wait for N8N)
         
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
@@ -77,7 +76,6 @@ export async function POST(request) {
 
         if (response.ok) {
           console.log(`N8N responded successfully on attempt ${attempt}`);
-          console.error(`✅ N8N SUCCESS - Response received in ${duration} seconds`);
           break; // Success, exit retry loop
         }
         
@@ -91,7 +89,7 @@ export async function POST(request) {
       } catch (error) {
         lastError = error;
         if (error.name === 'AbortError') {
-          console.warn(`Attempt ${attempt} timed out after 50 seconds`);
+          console.warn(`Attempt ${attempt} timed out after 2 minutes`);
         } else {
           console.warn(`Attempt ${attempt} failed with error:`, error.message);
         }
@@ -138,10 +136,7 @@ export async function POST(request) {
 
     // Check if response is empty
     if (!responseText || responseText.trim() === '') {
-      console.error('❌ N8N RETURNED EMPTY RESPONSE');
-      console.error('Response status was:', response.status);
-      console.error('Response headers:', Object.fromEntries(response.headers.entries()));
-      console.error('This means N8N workflow is not returning a response body');
+      console.error('N8N returned empty response');
       return NextResponse.json({
         success: true,
         response: 'I received your message but couldn\'t generate a response. Please try again.',
@@ -191,10 +186,10 @@ export async function POST(request) {
 
     // Ensure we have a valid response message
     if (!responseMessage || responseMessage.trim() === '') {
-      console.error('❌ FALLBACK TRIGGERED - No valid response message found');
-      console.error('Response message was:', responseMessage);
-      console.error('Parsed data was:', data);
-      console.error('Raw response was:', responseText);
+      console.warn('No valid response message found, using fallback');
+      console.warn('Response message was:', responseMessage);
+      console.warn('Parsed data was:', data);
+      console.warn('Raw response was:', responseText);
       responseMessage = 'I received your message but couldn\'t generate a response. Please try again.';
     }
 
@@ -217,12 +212,11 @@ export async function POST(request) {
       console.error('Function timeout detected:', error.message);
       return NextResponse.json(
         { 
-          success: true,
-          response: 'The AI system is processing your request but it\'s taking longer than usual. This is normal for complex queries. Please wait a moment and try again, or contact us at (833) 657-4812 for immediate assistance.',
-          conversationId: payload?.conversationId || 'timeout',
-          timestamp: new Date().toISOString()
+          success: false,
+          error: 'The AI system is taking longer than expected to respond. Please try again in a moment or contact us at (833) 657-4812 for immediate assistance.',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
         },
-        { status: 200 } // Return success with helpful message
+        { status: 408 } // Request Timeout
       );
     }
     
