@@ -11,7 +11,6 @@ const LiveChatPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [userId, setUserId] = useState(null);
-  const [showLongProcessingMessage, setShowLongProcessingMessage] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -149,27 +148,6 @@ const LiveChatPage = () => {
     setMessages(prev => [...prev, userMessage]);
     setInputMessage("");
     setIsLoading(true);
-    setShowLongProcessingMessage(false);
-    
-    // Show long processing message after 10 seconds
-    const longProcessingTimer = setTimeout(() => {
-      if (isLoading) {
-        setShowLongProcessingMessage(true);
-      }
-    }, 10000);
-    
-    // Show additional patience message after 30 seconds
-    const patienceTimer = setTimeout(() => {
-      if (isLoading) {
-        setMessages(prev => [...prev, {
-          id: Date.now() + 2,
-          text: "⏳ The AI is still working on your request... This may take up to 2 minutes for complex queries. Please keep waiting.",
-          sender: "bot",
-          timestamp: new Date(),
-          isPatience: true,
-        }]);
-      }
-    }, 30000);
 
     // Track message sent for marketing
     if (typeof window !== 'undefined' && window.gtag) {
@@ -181,10 +159,6 @@ const LiveChatPage = () => {
     }
 
     try {
-      // Create AbortController for timeout (2 minutes to wait for N8N response)
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
-      
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -195,29 +169,9 @@ const LiveChatPage = () => {
           conversationId: conversationId,
           userId: userId,
         }),
-        signal: controller.signal,
       });
-      
-      clearTimeout(timeoutId);
 
-      let data;
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        console.error('Failed to parse response as JSON:', jsonError);
-        console.error('Response status:', response.status);
-        
-        // Handle non-JSON responses (like HTML error pages)
-        if (response.status >= 500) {
-          throw new Error('Server error occurred. Please try again in a moment.');
-        } else if (response.status === 408) {
-          throw new Error('Request timed out. The AI system is taking longer than expected. Please try again.');
-        } else if (response.status === 504) {
-          throw new Error('Request timed out. The AI system is taking longer than expected. Please try again.');
-        } else {
-          throw new Error('Unexpected response format. Please try again.');
-        }
-      }
+      const data = await response.json();
 
       if (data.success) {
         const botMessage = {
@@ -248,20 +202,9 @@ const LiveChatPage = () => {
     } catch (error) {
       console.error("Error sending message:", error);
       
-      let errorText = "Sorry, I'm having trouble connecting right now. Please try again in a moment.";
-      
-      // Provide more specific error messages
-      if (error.name === 'AbortError') {
-        errorText = "The AI system is taking longer than expected to respond. Please try again in a moment or contact us at (833) 657-4812 for immediate assistance.";
-      } else if (error.message.includes('Failed to fetch')) {
-        errorText = "Unable to connect to our servers. Please check your internet connection and try again.";
-      } else if (error.message.includes('timeout')) {
-        errorText = "Request timed out. The AI system is processing your message - please wait a moment and try again.";
-      }
-      
       const errorMessage = {
         id: Date.now() + 1,
-        text: errorText,
+        text: "Sorry, I'm having trouble connecting right now. Please try again in a moment.",
         sender: "bot",
         timestamp: new Date(),
         isError: true,
@@ -269,10 +212,7 @@ const LiveChatPage = () => {
 
       setMessages(prev => [...prev, errorMessage]);
     } finally {
-      clearTimeout(longProcessingTimer);
-      clearTimeout(patienceTimer);
       setIsLoading(false);
-      setShowLongProcessingMessage(false);
     }
   };
 
@@ -398,16 +338,6 @@ const LiveChatPage = () => {
                 <span></span>
                 <span></span>
                 <span></span>
-              </div>
-            </div>
-          )}
-          
-          {/* Long processing message */}
-          {showLongProcessingMessage && (
-            <div className={`${styles.message} ${styles.botMessage}`}>
-              <div className={styles.longProcessingMessage}>
-                <p>🤖 The AI is taking a bit longer to process your request...</p>
-                <p>This is normal for complex queries. Please wait while we generate the best response for you.</p>
               </div>
             </div>
           )}

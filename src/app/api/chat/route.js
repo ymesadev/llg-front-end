@@ -45,13 +45,11 @@ export async function POST(request) {
     
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
-        const startTime = Date.now();
         console.log(`Attempt ${attempt}/3: POSTing to N8N webhook...`);
-        console.log(`Start time: ${new Date().toISOString()}`);
         
         // Create AbortController for timeout (Vercel has 10s timeout for hobby plan, 60s for pro)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout (wait for N8N)
+        const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 second timeout (within Vercel limits)
         
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
@@ -68,14 +66,8 @@ export async function POST(request) {
         });
         
         clearTimeout(timeoutId);
-        
-        const endTime = Date.now();
-        const duration = (endTime - startTime) / 1000;
-        console.log(`N8N response received in ${duration} seconds`);
-        console.log(`End time: ${new Date().toISOString()}`);
 
         if (response.ok) {
-          console.log(`N8N responded successfully on attempt ${attempt}`);
           break; // Success, exit retry loop
         }
         
@@ -83,19 +75,19 @@ export async function POST(request) {
         console.warn(`Attempt ${attempt} failed with status ${response.status}`);
         
         if (attempt < 3) {
-          // Wait before retry (shorter backoff for faster retries)
-          await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+          // Wait before retry (exponential backoff)
+          await new Promise(resolve => setTimeout(resolve, attempt * 1000));
         }
       } catch (error) {
         lastError = error;
         if (error.name === 'AbortError') {
-          console.warn(`Attempt ${attempt} timed out after 2 minutes`);
+          console.warn(`Attempt ${attempt} timed out after 50 seconds`);
         } else {
           console.warn(`Attempt ${attempt} failed with error:`, error.message);
         }
         
         if (attempt < 3) {
-          await new Promise(resolve => setTimeout(resolve, 500 * attempt));
+          await new Promise(resolve => setTimeout(resolve, attempt * 1000));
         }
       }
     }
@@ -111,118 +103,21 @@ export async function POST(request) {
       throw lastError;
     }
 
-    // Additional check to ensure response is valid
-    if (!response) {
-      console.error('No response received from N8N');
-      throw new Error('No response received from AI system');
-    }
-
-    // Log the raw response for debugging
-    let responseText;
-    try {
-      responseText = await response.text();
-      console.log('=== N8N RESPONSE DEBUG ===');
-      console.log('Raw response from N8N:', responseText);
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-      console.log('Response length:', responseText.length);
-      console.log('Response type:', typeof responseText);
-      console.log('Is empty?', !responseText || responseText.trim() === '');
-      console.log('========================');
-    } catch (textError) {
-      console.error('Failed to read response text:', textError);
-      throw new Error('Failed to read response from N8N');
-    }
-
-    // Check if response is empty
-    if (!responseText || responseText.trim() === '') {
-      console.error('N8N returned empty response');
-      return NextResponse.json({
-        success: true,
-        response: 'I received your message but couldn\'t generate a response. Please try again.',
-        conversationId: payload.conversationId,
-        timestamp: new Date().toISOString()
-      });
-    }
-
-    let data;
-    let responseMessage;
-    let responseConversationId = payload.conversationId;
-
-    try {
-      data = JSON.parse(responseText);
-      console.log('=== JSON PARSING DEBUG ===');
-      console.log('Parsed JSON data:', data);
-      console.log('Data type:', typeof data);
-      console.log('Data keys:', Object.keys(data || {}));
-      
-      // Extract response message from various possible fields
-      responseMessage = data.response || data.message || data.text || data.content || data.answer || data.reply;
-      console.log('Extracted responseMessage:', responseMessage);
-      console.log('ResponseMessage type:', typeof responseMessage);
-      console.log('ResponseMessage empty?', !responseMessage || responseMessage.trim() === '');
-      
-      // Extract conversation ID if provided
-      if (data.conversationId) {
-        responseConversationId = data.conversationId;
-      }
-      
-      // If no message found in JSON, use the raw response
-      if (!responseMessage) {
-        console.warn('No message field found in JSON response, using raw response');
-        responseMessage = responseText;
-      }
-      console.log('========================');
-      
-    } catch (jsonError) {
-      console.error('Failed to parse N8N response as JSON:', jsonError);
-      console.error('Raw response was:', responseText);
-      console.error('Response length:', responseText.length);
-      console.error('First 200 chars:', responseText.substring(0, 200));
-      
-      // If it's not JSON, treat the entire response as the message
-      responseMessage = responseText;
-    }
-
-    // Ensure we have a valid response message
-    if (!responseMessage || responseMessage.trim() === '') {
-      console.warn('No valid response message found, using fallback');
-      console.warn('Response message was:', responseMessage);
-      console.warn('Parsed data was:', data);
-      console.warn('Raw response was:', responseText);
-      responseMessage = 'I received your message but couldn\'t generate a response. Please try again.';
-    }
-
-    console.log('Final response message:', responseMessage);
-    console.log('Final conversation ID:', responseConversationId);
+    const data = await response.json();
 
     // Return the response from n8n
     return NextResponse.json({
       success: true,
-      response: responseMessage,
-      conversationId: responseConversationId,
+      response: data.response || data.message || 'I received your message but couldn\'t generate a response.',
+      conversationId: payload.conversationId,
       timestamp: new Date().toISOString()
     });
 
   } catch (error) {
     console.error('Chat API error:', error);
     
-    // Handle specific timeout errors
-    if (error.message.includes('timeout') || error.message.includes('AbortError') || error.message.includes('FUNCTION_INVOCATION_TIMEOUT')) {
-      console.error('Function timeout detected:', error.message);
-      return NextResponse.json(
-        { 
-          success: false,
-          error: 'The AI system is taking longer than expected to respond. Please try again in a moment or contact us at (833) 657-4812 for immediate assistance.',
-          details: process.env.NODE_ENV === 'development' ? error.message : undefined
-        },
-        { status: 408 } // Request Timeout
-      );
-    }
-    
     return NextResponse.json(
       { 
-        success: false,
         error: 'Failed to process chat message',
         details: process.env.NODE_ENV === 'development' ? error.message : undefined
       },
