@@ -181,9 +181,9 @@ const LiveChatPage = () => {
     }
 
     try {
-      // Create AbortController for timeout (2 minutes to wait for N8N response)
+      // Create AbortController for timeout (70 seconds to wait for N8N processing)
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout
+      const timeoutId = setTimeout(() => controller.abort(), 70000); // 70 second timeout
       
       const response = await fetch("/api/chat", {
         method: "POST",

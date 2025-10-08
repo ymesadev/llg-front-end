@@ -50,9 +50,9 @@ export async function POST(request) {
         console.log(`Attempt ${attempt}/3: POSTing to N8N webhook...`);
         console.log(`Start time: ${new Date().toISOString()}`);
         
-        // Create AbortController for timeout (Vercel has 10s timeout for hobby plan, 60s for pro)
+        // Create AbortController for timeout (Vercel Pro has 60s timeout)
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 120000); // 2 minute timeout (wait for N8N)
+        const timeoutId = setTimeout(() => controller.abort(), 50000); // 50 second timeout (safe for Vercel Pro)
         
         response = await fetch(n8nWebhookUrl, {
           method: 'POST',
@@ -91,7 +91,7 @@ export async function POST(request) {
       } catch (error) {
         lastError = error;
         if (error.name === 'AbortError') {
-          console.warn(`Attempt ${attempt} timed out after 2 minutes`);
+          console.warn(`Attempt ${attempt} timed out after 50 seconds`);
         } else {
           console.warn(`Attempt ${attempt} failed with error:`, error.message);
         }
@@ -217,11 +217,12 @@ export async function POST(request) {
       console.error('Function timeout detected:', error.message);
       return NextResponse.json(
         { 
-          success: false,
-          error: 'The AI system is taking longer than expected to respond. Please try again in a moment or contact us at (833) 657-4812 for immediate assistance.',
-          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+          success: true,
+          response: 'The AI system is processing your request but it\'s taking longer than usual. This is normal for complex queries. Please wait a moment and try again, or contact us at (833) 657-4812 for immediate assistance.',
+          conversationId: payload?.conversationId || 'timeout',
+          timestamp: new Date().toISOString()
         },
-        { status: 408 } // Request Timeout
+        { status: 200 } // Return success with helpful message
       );
     }
     
