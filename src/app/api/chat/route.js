@@ -38,6 +38,7 @@ export async function POST(request) {
     // Log the payload being sent to N8N
     console.log('Payload being sent to N8N:', JSON.stringify(payload, null, 2));
     console.log('POSTing to N8N webhook URL:', n8nWebhookUrl);
+    console.error('🚀 CHAT API CALLED - Starting N8N request');
 
     // Send request to n8n webhook with retry logic
     let response;
@@ -76,6 +77,7 @@ export async function POST(request) {
 
         if (response.ok) {
           console.log(`N8N responded successfully on attempt ${attempt}`);
+          console.error(`✅ N8N SUCCESS - Response received in ${duration} seconds`);
           break; // Success, exit retry loop
         }
         
@@ -136,7 +138,10 @@ export async function POST(request) {
 
     // Check if response is empty
     if (!responseText || responseText.trim() === '') {
-      console.error('N8N returned empty response');
+      console.error('❌ N8N RETURNED EMPTY RESPONSE');
+      console.error('Response status was:', response.status);
+      console.error('Response headers:', Object.fromEntries(response.headers.entries()));
+      console.error('This means N8N workflow is not returning a response body');
       return NextResponse.json({
         success: true,
         response: 'I received your message but couldn\'t generate a response. Please try again.',
@@ -186,10 +191,10 @@ export async function POST(request) {
 
     // Ensure we have a valid response message
     if (!responseMessage || responseMessage.trim() === '') {
-      console.warn('No valid response message found, using fallback');
-      console.warn('Response message was:', responseMessage);
-      console.warn('Parsed data was:', data);
-      console.warn('Raw response was:', responseText);
+      console.error('❌ FALLBACK TRIGGERED - No valid response message found');
+      console.error('Response message was:', responseMessage);
+      console.error('Parsed data was:', data);
+      console.error('Raw response was:', responseText);
       responseMessage = 'I received your message but couldn\'t generate a response. Please try again.';
     }
 
