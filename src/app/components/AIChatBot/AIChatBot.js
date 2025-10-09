@@ -15,6 +15,7 @@ const AIChatBot = () => {
   const [userId, setUserId] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   // Generate unique user ID and load chat history
   useEffect(() => {
@@ -102,6 +103,34 @@ const AIChatBot = () => {
     if (isOpen && inputRef.current) {
       inputRef.current.focus();
     }
+  }, [isOpen]);
+
+  // Prevent scroll propagation to parent document
+  useEffect(() => {
+    const messagesContainer = messagesContainerRef.current;
+    if (!messagesContainer) return;
+
+    const handleScroll = (e) => {
+      e.stopPropagation();
+    };
+
+    const handleWheel = (e) => {
+      e.stopPropagation();
+    };
+
+    const handleTouchMove = (e) => {
+      e.stopPropagation();
+    };
+
+    messagesContainer.addEventListener('scroll', handleScroll, { passive: true });
+    messagesContainer.addEventListener('wheel', handleWheel, { passive: true });
+    messagesContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+
+    return () => {
+      messagesContainer.removeEventListener('scroll', handleScroll);
+      messagesContainer.removeEventListener('wheel', handleWheel);
+      messagesContainer.removeEventListener('touchmove', handleTouchMove);
+    };
   }, [isOpen]);
 
   const sendMessage = async (messageText) => {
@@ -320,7 +349,7 @@ const AIChatBot = () => {
         </div>
 
         {/* Messages */}
-        <div className={styles.messages}>
+        <div ref={messagesContainerRef} className={styles.messages}>
           {messages.map((message) => (
             <div
               key={message.id}
