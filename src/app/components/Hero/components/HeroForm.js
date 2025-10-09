@@ -67,12 +67,11 @@ export default function FreeCaseEvaluationPage() {
 
     try {
       const response = await fetch(
-        "https://services.leadconnectorhq.com/hooks/OpuRBif1UwDh1UMMiJ7o/webhook-trigger/52c60449-a7a0-42ca-b25a-6b1b93ed4f66",
+        "https://dev-n8n.louislawgroup.com/webhook/forms",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "your-authorization-key",
           },
           body: JSON.stringify(payload),
         }
