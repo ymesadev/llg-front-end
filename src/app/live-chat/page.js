@@ -174,9 +174,37 @@ const LiveChatPage = () => {
       const data = await response.json();
 
       if (data.success) {
+        // Normalize the bot text so UI always shows plain text
+        let botText = '';
+        try {
+          if (typeof data?.response === 'string') {
+            const raw = data.response.trim();
+            const noEq = raw.startsWith('=') ? raw.slice(1) : raw;
+            try {
+              const parsed = JSON.parse(noEq);
+              botText = typeof parsed?.response === 'string' ? parsed.response : noEq;
+            } catch {
+              botText = noEq; // not JSON, use as-is
+            }
+          } else if (typeof data === 'string') {
+            const raw = data.trim();
+            const noEq = raw.startsWith('=') ? raw.slice(1) : raw;
+            try {
+              const parsed = JSON.parse(noEq);
+              botText = parsed?.response ?? noEq;
+            } catch {
+              botText = noEq;
+            }
+          } else {
+            botText = data?.response ?? data?.message ?? data?.output ?? '';
+          }
+        } catch {
+          botText = data?.response ?? '';
+        }
+
         const botMessage = {
           id: Date.now() + 1,
-          text: data.response,
+          text: botText,
           sender: "bot",
           timestamp: new Date(),
         };
