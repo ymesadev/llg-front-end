@@ -106,23 +106,42 @@ export async function POST(request) {
 
     // Handle response parsing more safely
     let data;
+    let responseText = '';
     try {
-      const responseText = await response.text();
+      responseText = await response.text();
       console.log('Raw N8N response:', responseText);
       console.log('N8N response status:', response.status);
       console.log('N8N response headers:', Object.fromEntries(response.headers.entries()));
-      
-      if (!responseText || responseText.trim() === '') {
-        console.log('N8N returned empty response');
-        data = { response: "I received your message but couldn't generate a response at this time. Please try again or contact us at (833) 657-4812 for immediate assistance." };
+
+      const contentType = response.headers.get('content-type') || '';
+
+      if (contentType.includes('application/json')) {
+        // Trust but verify JSON content-type
+        try {
+          data = JSON.parse(responseText);
+        } catch (e) {
+          console.warn('Content-Type said JSON but parse failed; falling back to text payload');
+          data = { response: responseText };
+        }
       } else {
-        data = JSON.parse(responseText);
-        console.log('Parsed N8N data:', data);
+        // Try to parse as JSON; if it fails, return as plain text
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          data = { response: responseText };
+        }
+      }
+
+      if (typeof data !== 'object' || data === null) {
+        data = { response: String(responseText || '') };
       }
     } catch (parseError) {
       console.error('Error parsing N8N response:', parseError);
       console.log('Raw response that failed to parse:', responseText);
-      data = { response: "I received your message but encountered an issue processing it. Please try again or contact us at (833) 657-4812 for immediate assistance." };
+      data = {
+        response:
+          "I received your message but encountered an issue processing it. Please try again or contact us at (833) 657-4812 for immediate assistance.",
+      };
     }
 
     // Return the response from n8n
@@ -134,7 +153,12 @@ export async function POST(request) {
     };
     
     console.log('Final API response:', JSON.stringify(finalResponse, null, 2));
-    return NextResponse.json(finalResponse);
+    return NextResponse.json(finalResponse, {
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Vary': 'Origin',
+      },
+    });
 
   } catch (error) {
     console.error('Chat API error:', error);
@@ -160,7 +184,13 @@ export async function POST(request) {
         errorType: error.name || 'UnknownError',
         details: process.env.NODE_ENV === 'development' ? error.message : undefined
       },
-      { status: statusCode }
+      { 
+        status: statusCode,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Vary': 'Origin',
+        }
+      }
     );
   }
 }
