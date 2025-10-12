@@ -5,6 +5,31 @@ import { usePathname } from "next/navigation";
 import { ChatUsPopup } from "../../../../public/icons";
 import styles from "./AIChatBot.module.css";
 
+// Normalize any legacy saved message text that might contain JSON blobs or a leading "="
+function normalizeMessageText(text) {
+  try {
+    if (typeof text !== 'string') return text;
+    const trimmed = text.trim();
+    const noEq = trimmed.startsWith('=') ? trimmed.slice(1) : trimmed;
+    // If it's a JSON blob like {"response":"...","conversationId":"..."}
+    if (noEq.startsWith('{') && noEq.endsWith('}')) {
+      try {
+        const parsed = JSON.parse(noEq);
+        const inner =
+          (typeof parsed?.response === 'string' && parsed.response) ||
+          (typeof parsed?.message === 'string' && parsed.message) ||
+          (typeof parsed?.output === 'string' && parsed.output);
+        if (inner) return inner;
+      } catch {
+        // fall through to return noEq
+      }
+    }
+    return noEq;
+  } catch {
+    return text;
+  }
+}
+
 const AIChatBot = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -36,19 +61,24 @@ const AIChatBot = () => {
     if (savedMessages && welcomeMessageVersion === currentVersion) {
       try {
         const parsedMessages = JSON.parse(savedMessages);
-        // Convert timestamp strings back to Date objects
+        // Convert timestamp strings back to Date objects and normalize text
         const messagesWithDates = parsedMessages.map(message => ({
           ...message,
+          text: normalizeMessageText(message.text),
           timestamp: new Date(message.timestamp)
         }));
         setMessages(messagesWithDates);
+        // Overwrite any legacy/badly formatted texts in localStorage
+        try {
+          localStorage.setItem(`chatbot_messages_${storedUserId}`, JSON.stringify(messagesWithDates));
+        } catch {}
       } catch (error) {
         console.error('Error loading chat history:', error);
         // If there's an error, start with welcome message
         setMessages([
           {
             id: 1,
-            text: "Hello, how can I assist you with your case",
+            text: normalizeMessageText("Hello, how can I assist you with your case"),
             sender: "bot",
             timestamp: new Date(),
           },
@@ -59,7 +89,7 @@ const AIChatBot = () => {
       setMessages([
         {
           id: 1,
-          text: "Hello, how can I assist you with your case",
+          text: normalizeMessageText("Hello, how can I assist you with your case"),
           sender: "bot",
           timestamp: new Date(),
         },
@@ -385,7 +415,10 @@ const AIChatBot = () => {
                 message.sender === "user" ? styles.userMessage : styles.botMessage
               } ${message.isError ? styles.errorMessage : ""}`}
             >
-              <div className={styles.messageText}>{message.text}</div>
+              <div
+                className={styles.messageText}
+                dangerouslySetInnerHTML={{ __html: message.text }}
+              ></div>
               <div className={styles.messageTime}>
                 {message?.timestamp ? new Date(message.timestamp)?.toLocaleTimeString([], {
                   hour: "2-digit",

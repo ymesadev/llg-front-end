@@ -115,26 +115,51 @@ export async function POST(request) {
 
       const contentType = response.headers.get('content-type') || '';
 
-      if (contentType.includes('application/json')) {
+      // Normalize leading '=' which sometimes appears from upstream integrations
+      const raw = (responseText || '').trim();
+      const cleanRaw = raw.startsWith('=') ? raw.slice(1) : raw;
+
+      // First attempt: try to parse the raw body as JSON regardless of content-type
+      let parsed = null;
+      try {
+        parsed = JSON.parse(cleanRaw);
+      } catch {}
+
+      if (parsed && typeof parsed === 'object') {
+        data = parsed;
+      } else if (contentType.includes('application/json')) {
         // Trust but verify JSON content-type
         try {
-          data = JSON.parse(responseText);
+          data = JSON.parse(cleanRaw);
         } catch (e) {
           console.warn('Content-Type said JSON but parse failed; falling back to text payload');
-          data = { response: responseText };
+          data = { response: cleanRaw };
         }
       } else {
-        // Try to parse as JSON; if it fails, return as plain text
-        try {
-          data = JSON.parse(responseText);
-        } catch {
-          data = { response: responseText };
+        // Not JSON content-type: treat as text
+        data = { response: cleanRaw };
+      }
+
+      // If the top-level is { response: "<json-string>" }, try to parse that inner string
+      if (data && typeof data.response === 'string') {
+        const innerRaw = data.response.trim().startsWith('=') ? data.response.trim().slice(1) : data.response.trim();
+        if (innerRaw.startsWith('{') && innerRaw.endsWith('}')) {
+          try {
+            const innerParsed = JSON.parse(innerRaw);
+            if (innerParsed && typeof innerParsed === 'object') {
+              data = innerParsed;
+            }
+          } catch {
+            // keep original data.response as text
+          }
         }
       }
 
+      // Ensure we always have an object
       if (typeof data !== 'object' || data === null) {
-        data = { response: String(responseText || '') };
+        data = { response: String(cleanRaw || '') };
       }
+
     } catch (parseError) {
       console.error('Error parsing N8N response:', parseError);
       console.log('Raw response that failed to parse:', responseText);
@@ -144,10 +169,16 @@ export async function POST(request) {
       };
     }
 
-    // Return the response from n8n
+    function hyperlinkURLs(text) {
+      if (typeof text !== 'string') return text;
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const withLinks = text.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+      return withLinks.replace(/\n/g, '<br/>');
+    }
+
     const finalResponse = {
       success: true,
-      response: data.response || data.message || 'I received your message but couldn\'t generate a response.',
+      response: hyperlinkURLs(data.response || data.message || 'I received your message but couldn\'t generate a response.'),
       conversationId: payload.conversationId,
       timestamp: new Date().toISOString()
     };
