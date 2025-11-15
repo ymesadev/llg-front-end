@@ -12,8 +12,7 @@ import contactAnimation from "../../../../public/lottie/contact.json";
 
 import { Instagram, Facebook, Linkedin, Phone } from "lucide-react"; // Icons from lucide-react
 
-// Import the Footer component from its new location
-import Footer from "../Footer/Footer";
+// Footer is now handled in layout.js
 
 const ContactSection = () => {
   return (
@@ -74,7 +73,7 @@ const ContactSection = () => {
 
               {/* Address */}
               <div className={styles.address}>
-                <p>290 NW 165th Street, Suite M-500, Miami, FL 33169</p>
+                <p>12 S.E. 7th Street, Suite 805, Fort Lauderdale, FL 33301</p>
               </div>
             </div>
 
@@ -86,8 +85,7 @@ const ContactSection = () => {
         </div>
       </section>
 
-      {/* ✅ Insert the Footer below your section */}
-      <Footer />
+      {/* Footer is now handled in layout.js */}
     </>
   );
 };
