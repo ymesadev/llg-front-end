@@ -379,7 +379,7 @@ const AIChatBot = () => {
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.headerInfo}>
-            <div className={styles.title}>AI Assistant</div>
+            <div className={styles.title}>Live Chat</div>
             <div className={styles.statusContainer}>
               <div className={styles.onlineStatus}></div>
               <p>Online</p>
