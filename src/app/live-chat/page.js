@@ -336,10 +336,10 @@ const LiveChatPage = () => {
   return (
     <div className={styles.pageContainer}>
       <div className={styles.container}>
-        {/* Header with AI Assistant status */}
+        {/* Header with Live Chat status */}
         <div className={styles.header}>
           <div className={styles.headerInfo}>
-            <div className={styles.title}>AI Assistant</div>
+            <div className={styles.title}>Live Chat</div>
             <div className={styles.statusContainer}>
               <div className={styles.onlineStatus}></div>
               <p>Online</p>
