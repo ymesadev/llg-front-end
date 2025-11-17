@@ -1,4 +1,3 @@
-import { dynamic } from 'next';
 export const dynamic = 'force-dynamic';
 
 import { collectUrlsRange, toUrlsetXml, getEndpointCounts } from '../sitemap.xml/chunked-helpers';
