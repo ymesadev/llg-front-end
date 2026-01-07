@@ -113,11 +113,18 @@ function injectBlueButtonClass(html) {
 export default async function Page({ params }) {
   // In Next.js 15, params is a Promise and must be awaited
   const resolvedParams = await params;
-  const { slug: maybeSlug = [] } = resolvedParams || {};
-  const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
-  const slug = slugArray.join("/");
+  
+  // Handle catch-all route params - slug is always an array in [...slug]
+  const slugArray = resolvedParams?.slug || [];
+  const slug = Array.isArray(slugArray) ? slugArray.join("/") : slugArray;
+
+  // Debug logging for production troubleshooting
+  console.log('🔍 [Page] Resolved params:', { resolvedParams, slug, slugArray, paramsType: typeof resolvedParams });
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
+  
+  // Log environment check (without exposing full URL)
+  console.log('🔍 [Page] Strapi URL configured:', !!process.env.NEXT_PUBLIC_STRAPI_API_URL);
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
