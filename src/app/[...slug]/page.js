@@ -377,12 +377,22 @@ export default async function Page({ params }) {
   });
   
   // If no data found and this is a pages query, try alternative field names (slug vs Slug)
-  if ((!data || !Array.isArray(data.data) || data.data.length === 0) && 
+  const shouldTryFallback = (!data || !Array.isArray(data.data) || data.data.length === 0) && 
       apiUrl.includes('/api/pages') && 
-      !isAttorneyPage && !isArticlePage && !isJobPage && !isFaqsPage) {
-    
+      !isAttorneyPage && !isArticlePage && !isJobPage && !isFaqsPage;
+  
+  console.log('\n🔍 FALLBACK CHECK:');
+  console.log('  Should try fallback:', shouldTryFallback);
+  console.log('  Has data:', !!data);
+  console.log('  Data is array:', Array.isArray(data?.data));
+  console.log('  Data length:', data?.data?.length || 0);
+  console.log('  Is pages query:', apiUrl.includes('/api/pages'));
+  console.log('  Page type flags:', { isAttorneyPage, isArticlePage, isJobPage, isFaqsPage });
+  
+  if (shouldTryFallback) {
     console.log('\n⚠️  NO DATA FOUND - TRYING FALLBACK STRATEGIES:');
     console.log('  Initial query returned:', data?.data?.length || 0, 'results');
+    console.log('  Full response structure:', JSON.stringify(data, null, 2).substring(0, 300));
     const normalizedFullSlug = slug.replace(/^\/+|\/+$/g, '').trim();
     const encSlug = encodeURIComponent(normalizedFullSlug);
     
@@ -438,6 +448,26 @@ export default async function Page({ params }) {
       {
         name: 'lowercase slug without sort',
         url: `${strapiURL}/api/pages?filters[slug][$eq]=${encSlug}&populate=*`
+      },
+      // Strategy 11: Try with $i contains (case-insensitive contains) - some Strapi versions support this
+      {
+        name: 'Slug field with case-insensitive contains',
+        url: `${strapiURL}/api/pages?filters[Slug][$containsi]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
+      },
+      // Strategy 12: Try lowercase slug with case-insensitive contains
+      {
+        name: 'lowercase slug with case-insensitive contains',
+        url: `${strapiURL}/api/pages?filters[slug][$containsi]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
+      },
+      // Strategy 13: Try with $startsWith (in case slug is part of a longer path)
+      {
+        name: 'Slug field with startsWith',
+        url: `${strapiURL}/api/pages?filters[Slug][$startsWith]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
+      },
+      // Strategy 14: Try lowercase slug with startsWith
+      {
+        name: 'lowercase slug with startsWith',
+        url: `${strapiURL}/api/pages?filters[slug][$startsWith]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
       }
     ];
     
@@ -478,6 +508,13 @@ export default async function Page({ params }) {
       } catch (fallbackError) {
         console.error(`     ❌ Error: ${fallbackError.message}`);
       }
+    }
+    
+    // Log final fallback result
+    if (data && Array.isArray(data.data) && data.data.length > 0) {
+      console.log('\n✅ FALLBACK SUCCEEDED - Found data using fallback strategy');
+    } else {
+      console.log('\n❌ ALL FALLBACK STRATEGIES FAILED - No data found with any strategy');
     }
   }
   
