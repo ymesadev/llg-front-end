@@ -219,6 +219,7 @@ export default async function Page({ params }) {
 
   if (!res || !res.ok) {
     console.error('❌ API response not OK:', res?.status, res?.statusText, 'for slug:', slug);
+    console.error('❌ Response headers:', res?.headers ? Object.fromEntries(res.headers.entries()) : 'no headers');
     return (
       <Layout>
         <div className={styles.error}>
@@ -229,8 +230,19 @@ export default async function Page({ params }) {
     );
   }
 
+  console.log('✅ API response OK:', res.status, res.statusText);
   const data = await res.json();
+  console.log('📦 API response data structure:', {
+    hasData: !!data,
+    hasDataArray: !!data?.data,
+    dataArrayLength: Array.isArray(data?.data) ? data.data.length : 'not an array',
+    dataKeys: data ? Object.keys(data) : 'no data',
+    firstItemId: Array.isArray(data?.data) && data.data.length > 0 ? data.data[0]?.id : 'no items'
+  });
+  
   if (!data || !Array.isArray(data.data) || data.data.length === 0) {
+    console.error('❌ No data found for slug:', slug);
+    console.error('❌ Data structure:', JSON.stringify(data, null, 2));
     return (
       <Layout>
         <div className={styles.error}>
