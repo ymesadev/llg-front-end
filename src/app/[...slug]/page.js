@@ -17,6 +17,7 @@ import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 
 // Disable static prerendering: fetch data at request time
+export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 export const dynamicParams = true; // Allow dynamic params that weren't generated at build time
 export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
@@ -115,11 +116,29 @@ function injectBlueButtonClass(html) {
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
-  // In Next.js 15, params is a Promise and must be awaited
-  const resolvedParams = await params;
+  // Log initial params for debugging
+  console.log('🔍 [Page] Raw params received:', JSON.stringify(params));
+  console.log('🔍 [Page] Params type:', typeof params, 'is Promise:', params instanceof Promise);
+  
+  // In Next.js 15, params might be a Promise and must be awaited
+  let resolvedParams;
+  try {
+    if (params instanceof Promise) {
+      resolvedParams = await params;
+    } else {
+      resolvedParams = params;
+    }
+    console.log('🔍 [Page] Resolved params:', JSON.stringify(resolvedParams));
+  } catch (error) {
+    console.error('❌ [Page] Error resolving params:', error);
+    resolvedParams = params || {};
+  }
+  
   const { slug: maybeSlug = [] } = resolvedParams || {};
   const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
   const slug = slugArray.join("/");
+  
+  console.log('🔍 [Page] Final slug:', slug, 'from array:', slugArray);
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
   let apiUrl;
