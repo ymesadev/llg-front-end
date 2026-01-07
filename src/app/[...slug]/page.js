@@ -19,13 +19,6 @@ import Script from "next/script";
 // Disable static prerendering: fetch data at request time
 export const dynamic = 'force-dynamic';
 export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
-export const runtime = 'nodejs'; // Ensure Node.js runtime for server-side rendering
-export const dynamicParams = true; // Allow dynamic params that aren't generated statically
-
-// Prevent build-time route generation for catch-all routes
-export async function generateStaticParams() {
-  return []; // Return empty array to force all routes to be dynamic
-}
 
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
@@ -123,64 +116,24 @@ export default async function Page({ params }) {
   const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
   const slug = slugArray.join("/");
 
-  // ============================================
-  // 📋 REQUEST INITIALIZATION
-  // ============================================
-  console.log('\n' + '='.repeat(60));
-  console.log('🚀 PAGE REQUEST STARTED');
-  console.log('='.repeat(60));
-  console.log('📍 Slug:', slug);
-  console.log('📍 Slug Array:', JSON.stringify(slugArray));
-  console.log('📍 Slug Array Length:', slugArray.length);
-
-  // Get Strapi URL from environment variable
-  // Note: For server components, NEXT_PUBLIC_* vars are available but consider using server-only vars for production
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
-  
-  // Log environment info for debugging (only in server logs)
-  console.log('\n🔧 ENVIRONMENT CONFIGURATION:');
-  if (!process.env.NEXT_PUBLIC_STRAPI_API_URL) {
-    console.warn('  ⚠️  NEXT_PUBLIC_STRAPI_API_URL is NOT SET');
-    console.warn('  ⚠️  Using fallback URL:', strapiURL);
-  } else {
-    console.log('  ✅ NEXT_PUBLIC_STRAPI_API_URL is set');
-    console.log('  ✅ Strapi URL:', strapiURL);
-  }
-  console.log('  📦 Environment:', process.env.NODE_ENV);
-  console.log('  🌍 Vercel Environment:', process.env.VERCEL_ENV || 'N/A');
-  
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
   let isJobPage = false;
   let isFaqsPage = false;
-  
-  console.log('\n🔍 PAGE TYPE DETECTION:');
-  console.log('  Initial state:', { isAttorneyPage, isArticlePage, isJobPage, isFaqsPage });
+  // --- SERVER-SIDE branch log ---
+  console.log('🧭 Page type flags (server):', { slug, isAttorneyPage, isArticlePage, isJobPage, isFaqsPage });
 
   // ✅ Fast + accurate: check this exact slug per content type (no giant lists)
   try {
     const encSlug = encodeURIComponent(slug);
-    console.log('  🔄 Checking content types for slug:', slug);
-    console.log('  🔄 Encoded slug:', encSlug);
-
-    const checkUrls = {
-      articles: `${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`,
-      attorneys: `${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`,
-      jobs: `${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`,
-      faqs: `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`
-    };
-
-    console.log('  📡 Fetching from:');
-    Object.entries(checkUrls).forEach(([type, url]) => {
-      console.log(`    - ${type}: ${url}`);
-    });
 
     const [articleCheckRes, attorneyCheckRes, jobCheckRes, faqsCheckRes] = await Promise.allSettled([
-      fetch(checkUrls.articles, { next: { revalidate: 60 } }),
-      fetch(checkUrls.attorneys, { next: { revalidate: 60 } }),
-      fetch(checkUrls.jobs, { next: { revalidate: 60 } }),
-      fetch(checkUrls.faqs, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
     ]);
 
     const getOkJson = async (s) => (s.status === 'fulfilled' && s.value.ok) ? s.value.json() : null;
@@ -192,358 +145,75 @@ export default async function Page({ params }) {
       getOkJson(faqsCheckRes),
     ]);
 
-    // Log results
-    console.log('  📊 Content type check results:');
-    console.log('    Articles:', articleCheck?.data?.length || 0, 'found');
-    console.log('    Attorneys:', attorneyCheck?.data?.length || 0, 'found');
-    console.log('    Jobs:', jobCheck?.data?.length || 0, 'found');
-    console.log('    FAQs:', faqsCheck?.data?.length || 0, 'found');
-
     isArticlePage  = !!(articleCheck?.data?.length);
     isAttorneyPage = !isArticlePage && !!(attorneyCheck?.data?.length);
     isJobPage      = !isArticlePage && !isAttorneyPage && !!(jobCheck?.data?.length);
     isFaqsPage     = !isArticlePage && !isAttorneyPage && !isJobPage && !!(faqsCheck?.data?.length);
-    
-    console.log('  ✅ Final page type:', {
-      isArticlePage,
-      isAttorneyPage,
-      isJobPage,
-      isFaqsPage,
-      isRegularPage: !isArticlePage && !isAttorneyPage && !isJobPage && !isFaqsPage
-    });
   } catch (error) {
-    console.error('\n❌ ERROR DETECTING PAGE TYPE:');
-    console.error('  Error:', error.message);
-    console.error('  Stack:', error.stack);
+    console.error("Error detecting page type:", error);
   }
 
-  console.log('\n🔗 BUILDING API URL:');
-  
   if (isAttorneyPage) {
     apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${encodeURIComponent(slug)}&populate=Image.Image`;
-    console.log('  📌 Page Type: Attorney Page');
-    console.log('  🔗 API URL:', apiUrl);
   } else if (isArticlePage) {
     // TEMP: populate everything to guarantee repeatable Button shows; we'll narrow after confirming apiId
     const base = `${strapiURL}/api/articles?filters[slug][$eq]=${encodeURIComponent(slug)}`;
     apiUrl = base + `&populate=*`;
-    console.log('  📌 Page Type: Article Page');
-    console.log('  🔗 API URL:', apiUrl);
   } else if (isJobPage) {
     apiUrl = `${strapiURL}/api/jobs?filters[Slug][$eq]=${encodeURIComponent(slug)}&populate=block`;
-    console.log('  📌 Page Type: Job Page');
-    console.log('  🔗 API URL:', apiUrl);
   } else if (isFaqsPage) {
     apiUrl = `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
-    console.log('  📌 Page Type: FAQ Page');
-    console.log('  🔗 API URL:', apiUrl);
   } else {
-    console.log('  📌 Page Type: Regular Page');
-    // For pages, handle both single-segment and multi-segment slugs
     const childSlug = slugArray[slugArray.length - 1];
     const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
-    
-    // Normalize slug: remove leading/trailing slashes and ensure consistent format
-    const normalizeSlug = (s) => (s || '').replace(/^\/+|\/+$/g, '').trim();
-    const normalizedChildSlug = normalizeSlug(childSlug);
-    const normalizedFullSlug = normalizeSlug(slug);
-    
-    console.log('  📄 Slug Processing:');
-    console.log('    Original Slug:', slug);
-    console.log('    Normalized Full Slug:', normalizedFullSlug);
-    console.log('    Child Slug:', normalizedChildSlug);
-    console.log('    Parent Slug:', parentSlug || 'N/A');
-    console.log('    Slug Array Length:', slugArray.length);
-    
     const buildBase = (withParent) => {
-      // Try both Slug (uppercase) and slug (lowercase) field names for compatibility
-      const encChild = encodeURIComponent(normalizedChildSlug);
-      const encFull = encodeURIComponent(normalizedFullSlug);
-      
+      const encChild = encodeURIComponent(childSlug || '');
       if (withParent) {
-        const cleanParentSlug = normalizeSlug(parentSlug);
+        const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
         const encParent = encodeURIComponent(cleanParentSlug);
-        // Try with uppercase Slug first, then lowercase slug as fallback
         return (
           `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}` +
           `&filters[parent_page][URL][$eq]=/${encParent}`
         );
       }
-      
-      // For single-segment slugs, try matching the full slug first
-      // Some Strapi setups store the full path in the Slug field
-      if (slugArray.length === 1) {
-        // Try with uppercase Slug field first (this is the primary query)
-        // Fallback strategies will try lowercase if this fails
-        return `${strapiURL}/api/pages?filters[Slug][$eq]=${encFull}`;
-      }
-      
       return `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}`;
     };
     const base = buildBase(!!parentSlug);
     // Stable single request: broad populate + newest first
     apiUrl = `${base}&populate=*&sort=updatedAt:desc`;
-    console.log('  🔗 API URL:', apiUrl);
   }
 
-  console.log('\n📡 FETCHING PAGE DATA:');
-  console.log('  Slug:', slug);
-  console.log('  API URL:', apiUrl);
-  console.log('  Strapi URL:', strapiURL);
+  console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
   // Single fetch (stable)
   let res;
   try {
-    console.log('  ⏳ Sending fetch request...');
-    const startTime = Date.now();
-    res = await fetch(apiUrl, { 
-      next: { revalidate: 60 },
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    const duration = Date.now() - startTime;
-    console.log(`  ⏱️  Fetch completed in ${duration}ms`);
-    console.log('  📊 Response Status:', res?.status, res?.statusText);
-    console.log('  📊 Response OK:', res?.ok);
+    res = await fetch(apiUrl, { next: { revalidate: 60 } });
   } catch (e) {
-    console.error('\n❌ FETCH ERROR:');
-    console.error('  API URL:', apiUrl);
-    console.error('  Error Message:', e.message);
-    console.error('  Error Stack:', e.stack);
-    console.error('='.repeat(60) + '\n');
-    return (
-      <Layout>
-        <div className={styles.error}>
-          <h1>404 - Page Not Found</h1>
-          <p>The page you are looking for does not exist.</p>
-          {process.env.NODE_ENV === 'development' && (
-            <p style={{ color: 'red', fontSize: '12px' }}>
-              Error: {e.message}
-            </p>
-          )}
-        </div>
-      </Layout>
-    );
+    console.error('❌ Fetch failed for', apiUrl, e);
   }
 
   if (!res || !res.ok) {
-    console.error('\n❌ API RESPONSE ERROR:');
-    console.error('  Status:', res?.status || 'No response');
-    console.error('  Status Text:', res?.statusText || 'N/A');
-    console.error('  API URL:', apiUrl);
-    console.error('  Strapi URL:', strapiURL);
-    console.error('  Slug:', slug);
-    
-    // Try to get error details from response (only if res exists)
-    let errorDetails = '';
-    if (res && !res.ok) {
-      try {
-        const errorText = await res.clone().text();
-        errorDetails = errorText.substring(0, 200); // Limit error text length
-        console.error('  Error Response Body:', errorDetails);
-      } catch (e) {
-        // Ignore if we can't read the error
-        console.error('  Could not read error response:', e.message);
-      }
-    }
-    console.error('='.repeat(60) + '\n');
-    
     return (
       <Layout>
         <div className={styles.error}>
           <h1>404 - Page Not Found</h1>
           <p>The page you are looking for does not exist.</p>
-          {(process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview') && (
-            <div style={{ color: 'red', fontSize: '12px', marginTop: '20px' }}>
-              <p><strong>API Error:</strong> {res?.status || 'No response'} {res?.statusText || ''}</p>
-              <p><strong>API URL:</strong> {apiUrl}</p>
-              <p><strong>Strapi URL:</strong> {strapiURL}</p>
-              {errorDetails && <p><strong>Error Details:</strong> {errorDetails}</p>}
-            </div>
-          )}
         </div>
       </Layout>
     );
   }
 
-  console.log('  📥 Parsing response JSON...');
-  let data = await res.json();
-  console.log('  ✅ JSON parsed successfully');
-  console.log('  📊 Data structure:', {
-    hasData: !!data,
-    hasDataArray: !!(data?.data),
-    dataArrayLength: data?.data?.length || 0,
-    dataKeys: data ? Object.keys(data) : []
-  });
-  
-  // If no data found and this is a pages query, try alternative field names (slug vs Slug)
-  const shouldTryFallback = (!data || !Array.isArray(data.data) || data.data.length === 0) && 
-      apiUrl.includes('/api/pages') && 
-      !isAttorneyPage && !isArticlePage && !isJobPage && !isFaqsPage;
-  
-  console.log('\n🔍 FALLBACK CHECK:');
-  console.log('  Should try fallback:', shouldTryFallback);
-  console.log('  Has data:', !!data);
-  console.log('  Data is array:', Array.isArray(data?.data));
-  console.log('  Data length:', data?.data?.length || 0);
-  console.log('  Is pages query:', apiUrl.includes('/api/pages'));
-  console.log('  Page type flags:', { isAttorneyPage, isArticlePage, isJobPage, isFaqsPage });
-  
-  if (shouldTryFallback) {
-    console.log('\n⚠️  NO DATA FOUND - TRYING FALLBACK STRATEGIES:');
-    console.log('  Initial query returned:', data?.data?.length || 0, 'results');
-    console.log('  Full response structure:', JSON.stringify(data, null, 2).substring(0, 300));
-    const normalizedFullSlug = slug.replace(/^\/+|\/+$/g, '').trim();
-    const encSlug = encodeURIComponent(normalizedFullSlug);
-    
-    // Try multiple fallback strategies
-    // Enhanced strategies for problematic routes like property-damage-claims-attorneys
-    const fallbackStrategies = [
-      // Strategy 1: Try lowercase 'slug' field
-      {
-        name: 'lowercase slug field',
-        url: `${strapiURL}/api/pages?filters[slug][$eq]=${encSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 2: Try URL field with leading slash
-      {
-        name: 'URL field with leading slash',
-        url: `${strapiURL}/api/pages?filters[URL][$eq]=/${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 3: Try URL field without leading slash
-      {
-        name: 'URL field without leading slash',
-        url: `${strapiURL}/api/pages?filters[URL][$eq]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 4: Try lowercase url field
-      {
-        name: 'lowercase url field',
-        url: `${strapiURL}/api/pages?filters[url][$eq]=/${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 5: Try lowercase url field without leading slash
-      {
-        name: 'lowercase url field without slash',
-        url: `${strapiURL}/api/pages?filters[url][$eq]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 6: Try with $contains (partial match) - for cases where slug might be stored differently
-      {
-        name: 'Slug field with contains',
-        url: `${strapiURL}/api/pages?filters[Slug][$contains]=${encSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 7: Try lowercase slug with contains
-      {
-        name: 'lowercase slug field with contains',
-        url: `${strapiURL}/api/pages?filters[slug][$contains]=${encSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 8: Try URL field with contains
-      {
-        name: 'URL field with contains',
-        url: `${strapiURL}/api/pages?filters[URL][$contains]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 9: Try Slug field without sort (in case sort causes issues)
-      {
-        name: 'Slug field without sort',
-        url: `${strapiURL}/api/pages?filters[Slug][$eq]=${encSlug}&populate=*`
-      },
-      // Strategy 10: Try lowercase slug without sort
-      {
-        name: 'lowercase slug without sort',
-        url: `${strapiURL}/api/pages?filters[slug][$eq]=${encSlug}&populate=*`
-      },
-      // Strategy 11: Try with $i contains (case-insensitive contains) - some Strapi versions support this
-      {
-        name: 'Slug field with case-insensitive contains',
-        url: `${strapiURL}/api/pages?filters[Slug][$containsi]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 12: Try lowercase slug with case-insensitive contains
-      {
-        name: 'lowercase slug with case-insensitive contains',
-        url: `${strapiURL}/api/pages?filters[slug][$containsi]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 13: Try with $startsWith (in case slug is part of a longer path)
-      {
-        name: 'Slug field with startsWith',
-        url: `${strapiURL}/api/pages?filters[Slug][$startsWith]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      },
-      // Strategy 14: Try lowercase slug with startsWith
-      {
-        name: 'lowercase slug with startsWith',
-        url: `${strapiURL}/api/pages?filters[slug][$startsWith]=${normalizedFullSlug}&populate=*&sort=updatedAt:desc`
-      }
-    ];
-    
-    for (let i = 0; i < fallbackStrategies.length; i++) {
-      const strategy = fallbackStrategies[i];
-      console.log(`\n  🔄 Strategy ${i + 1}/${fallbackStrategies.length}: ${strategy.name}`);
-      console.log(`     URL: ${strategy.url}`);
-      
-      try {
-        const startTime = Date.now();
-        const fallbackRes = await fetch(strategy.url, { 
-          next: { revalidate: 60 },
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const duration = Date.now() - startTime;
-        
-        console.log(`     Status: ${fallbackRes?.status} ${fallbackRes?.statusText}`);
-        console.log(`     Duration: ${duration}ms`);
-        
-        if (fallbackRes && fallbackRes.ok) {
-          const fallbackData = await fallbackRes.json();
-          const resultCount = fallbackData?.data?.length || 0;
-          console.log(`     Results: ${resultCount}`);
-          
-          if (resultCount > 0) {
-            console.log(`  ✅ SUCCESS! Strategy "${strategy.name}" found ${resultCount} result(s)`);
-            // Use the fallback data
-            data = fallbackData;
-            break; // Stop trying other strategies once we find data
-          } else {
-            console.log(`     ⚠️  No data returned`);
-          }
-        } else {
-          console.error(`     ❌ Failed with status: ${fallbackRes?.status}`);
-        }
-      } catch (fallbackError) {
-        console.error(`     ❌ Error: ${fallbackError.message}`);
-      }
-    }
-    
-    // Log final fallback result
-    if (data && Array.isArray(data.data) && data.data.length > 0) {
-      console.log('\n✅ FALLBACK SUCCEEDED - Found data using fallback strategy');
-    } else {
-      console.log('\n❌ ALL FALLBACK STRATEGIES FAILED - No data found with any strategy');
-    }
-  }
-  
+  const data = await res.json();
   if (!data || !Array.isArray(data.data) || data.data.length === 0) {
-    console.error('\n❌ NO PAGE DATA FOUND:');
-    console.error('  Slug:', slug);
-    console.error('  API URL:', apiUrl);
-    console.error('  Response Data:', JSON.stringify(data, null, 2).substring(0, 500));
-    console.error('='.repeat(60) + '\n');
     return (
       <Layout>
         <div className={styles.error}>
           <h1>404 - Page Not Found</h1>
           <p>The page you are looking for does not exist.</p>
-          {(process.env.NODE_ENV === 'development' || process.env.VERCEL_ENV === 'preview') && (
-            <div style={{ color: 'red', fontSize: '12px', marginTop: '20px' }}>
-              <p><strong>Slug:</strong> {slug}</p>
-              <p><strong>API URL:</strong> {apiUrl}</p>
-            </div>
-          )}
         </div>
       </Layout>
     );
   }
-  
-  console.log('\n✅ PAGE DATA FOUND:');
-  console.log('  Results count:', data.data.length);
-  console.log('  Page IDs:', data.data.map(item => item.id).join(', '));
-  console.log('='.repeat(60) + '\n');
 
   // Debug: log which IDs came back client-side (browser only)
   if (typeof window !== 'undefined') {
