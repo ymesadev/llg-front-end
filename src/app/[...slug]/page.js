@@ -18,7 +18,15 @@ import Script from "next/script";
 
 // Disable static prerendering: fetch data at request time
 export const dynamic = 'force-dynamic';
+export const dynamicParams = true; // Allow dynamic params that weren't generated at build time
 export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
+
+// Explicitly prevent static generation of any routes
+export async function generateStaticParams() {
+  // Return empty array to prevent static generation
+  // All routes will be handled dynamically at request time
+  return [];
+}
 
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
