@@ -19,6 +19,13 @@ import Script from "next/script";
 // Disable static prerendering: fetch data at request time
 export const dynamic = 'force-dynamic';
 export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
+export const runtime = 'nodejs'; // Ensure Node.js runtime for server-side rendering
+export const dynamicParams = true; // Allow dynamic params that aren't generated statically
+
+// Prevent build-time route generation for catch-all routes
+export async function generateStaticParams() {
+  return []; // Return empty array to force all routes to be dynamic
+}
 
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
@@ -111,20 +118,12 @@ function injectBlueButtonClass(html) {
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
-  // In Next.js 15, params is a Promise and must be awaited
-  const resolvedParams = await params;
-  
-  // Handle catch-all route params - slug is always an array in [...slug]
-  const slugArray = resolvedParams?.slug || [];
-  const slug = Array.isArray(slugArray) ? slugArray.join("/") : slugArray;
-
-  // Debug logging for production troubleshooting
-  console.log('🔍 [Page] Resolved params:', { resolvedParams, slug, slugArray, paramsType: typeof resolvedParams });
+  // Access params synchronously during build-time config collection
+  const { slug: maybeSlug = [] } = params || {};
+  const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
+  const slug = slugArray.join("/");
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
-  
-  // Log environment check (without exposing full URL)
-  console.log('🔍 [Page] Strapi URL configured:', !!process.env.NEXT_PUBLIC_STRAPI_API_URL);
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
@@ -192,20 +191,47 @@ export default async function Page({ params }) {
   }
 
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
+  console.log("🔍 Strapi URL:", strapiURL);
   // Single fetch (stable)
   let res;
   try {
-    res = await fetch(apiUrl, { next: { revalidate: 60 } });
+    res = await fetch(apiUrl, { 
+      next: { revalidate: 60 },
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   } catch (e) {
     console.error('❌ Fetch failed for', apiUrl, e);
-  }
-
-  if (!res || !res.ok) {
+    console.error('❌ Error details:', e.message, e.stack);
     return (
       <Layout>
         <div className={styles.error}>
           <h1>404 - Page Not Found</h1>
           <p>The page you are looking for does not exist.</p>
+          {process.env.NODE_ENV === 'development' && (
+            <p style={{ color: 'red', fontSize: '12px' }}>
+              Error: {e.message}
+            </p>
+          )}
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!res || !res.ok) {
+    console.error('❌ API response not OK:', res?.status, res?.statusText);
+    console.error('❌ API URL:', apiUrl);
+    return (
+      <Layout>
+        <div className={styles.error}>
+          <h1>404 - Page Not Found</h1>
+          <p>The page you are looking for does not exist.</p>
+          {process.env.NODE_ENV === 'development' && (
+            <p style={{ color: 'red', fontSize: '12px' }}>
+              API Error: {res?.status} {res?.statusText}
+            </p>
+          )}
         </div>
       </Layout>
     );

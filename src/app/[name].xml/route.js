@@ -6,9 +6,7 @@ const PAGE_SIZE = Number(process.env.SITEMAP_PAGE_SIZE || 2000);
 
 export async function GET(request, { params }) {
   try {
-    // In Next.js 15, params is a Promise and must be awaited
-    const resolvedParams = await params;
-    const raw = resolvedParams?.name || '';
+    const raw = params?.name || '';
     // expect filenames like "0-sitemap" or "1-sitemap" (without .xml)
     const match = raw.match(/^(\d+)-sitemap$/);
     if (!match) return new Response('Not Found', { status: 404 });
