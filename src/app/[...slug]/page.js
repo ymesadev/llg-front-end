@@ -111,8 +111,9 @@ function injectBlueButtonClass(html) {
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
-  // Access params synchronously during build-time config collection
-  const { slug: maybeSlug = [] } = params || {};
+  // In Next.js 15, params is a Promise and must be awaited
+  const resolvedParams = await params;
+  const { slug: maybeSlug = [] } = resolvedParams || {};
   const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
   const slug = slugArray.join("/");
 

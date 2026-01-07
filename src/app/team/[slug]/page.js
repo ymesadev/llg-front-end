@@ -15,7 +15,9 @@ const makeAbs = (u) => {
 };
 
 export default async function TeamPage({ params }) {
-  const slug = (params && params.slug) || '';
+  // In Next.js 15, params is a Promise and must be awaited
+  const resolvedParams = await params;
+  const slug = (resolvedParams && resolvedParams.slug) || '';
   const apiUrl = `${STRAPI_BASE}/api/team-pages?filters[Slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
 
   console.log("Fetching attorney page for slug:", slug, "API:", apiUrl);
