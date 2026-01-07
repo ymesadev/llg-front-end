@@ -24,7 +24,7 @@ export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid bui
 
 // Note: We do NOT export generateStaticParams here because that would force SSG mode.
 // With dynamic = 'force-dynamic', the route will be server-rendered on demand.
-
+// https://dev.llgai.app
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
   ...defaultSchema,
