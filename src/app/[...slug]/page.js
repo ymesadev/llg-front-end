@@ -21,12 +21,8 @@ export const dynamic = 'force-dynamic';
 export const dynamicParams = true; // Allow dynamic params that weren't generated at build time
 export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
 
-// Explicitly prevent static generation of any routes
-export async function generateStaticParams() {
-  // Return empty array to prevent static generation
-  // All routes will be handled dynamically at request time
-  return [];
-}
+// Note: We do NOT export generateStaticParams here because that would force SSG mode.
+// With dynamic = 'force-dynamic', the route will be server-rendered on demand.
 
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
