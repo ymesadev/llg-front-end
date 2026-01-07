@@ -115,8 +115,9 @@ function injectBlueButtonClass(html) {
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
-  // Access params synchronously during build-time config collection
-  const { slug: maybeSlug = [] } = params || {};
+  // In Next.js 15, params is a Promise and must be awaited
+  const resolvedParams = await params;
+  const { slug: maybeSlug = [] } = resolvedParams || {};
   const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
   const slug = slugArray.join("/");
 
@@ -134,10 +135,10 @@ export default async function Page({ params }) {
     const encSlug = encodeURIComponent(slug);
 
     const [articleCheckRes, attorneyCheckRes, jobCheckRes, faqsCheckRes] = await Promise.allSettled([
-      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
-      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
-      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
-      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { cache: 'no-store' }),
+      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { cache: 'no-store' }),
+      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { cache: 'no-store' }),
+      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { cache: 'no-store' }),
     ]);
 
     const getOkJson = async (s) => (s.status === 'fulfilled' && s.value.ok) ? s.value.json() : null;
@@ -188,15 +189,17 @@ export default async function Page({ params }) {
   }
 
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
-  // Single fetch (stable)
+  // Single fetch (stable) - using cache: 'no-store' for fully dynamic routes
   let res;
   try {
-    res = await fetch(apiUrl, { next: { revalidate: 60 } });
+    res = await fetch(apiUrl, { cache: 'no-store' });
   } catch (e) {
     console.error('❌ Fetch failed for', apiUrl, e);
+    console.error('❌ Error details:', e.message, e.stack);
   }
 
   if (!res || !res.ok) {
+    console.error('❌ API response not OK:', res?.status, res?.statusText, 'for slug:', slug);
     return (
       <Layout>
         <div className={styles.error}>
