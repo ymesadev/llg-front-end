@@ -56,6 +56,7 @@
   width: 100%;
   max-width: 24rem;
   height: 32rem;
+  max-height: calc(100vh - 4rem);
   background: white;
   border-radius: 1rem;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
@@ -433,6 +434,13 @@
   .chatButton {
     right: 1rem;
     bottom: 1rem;
+    font-size: 0.8125rem;
+    height: 2.25rem;
+    padding: 0 0.875rem;
+  }
+
+  .chatButton p {
+    font-size: 0.875rem;
   }
 
   .chatbox {
@@ -442,10 +450,12 @@
     right: 0;
     width: 100%;
     height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile browsers */
     max-width: 100%;
     border-radius: 0;
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .fadeIn {
@@ -461,23 +471,79 @@
     top: 0;
     z-index: 10;
     padding: 1rem;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    min-height: 3.5rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .statusContainer p {
+    font-size: 0.8125rem;
   }
 
   .messages {
-    height: calc(100vh - 140px);
+    flex: 1;
+    min-height: 0;
     padding: 1rem;
     overscroll-behavior: contain;
     touch-action: pan-y;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .messageText {
+    font-size: 0.875rem;
+    padding: 0.625rem 0.875rem;
+  }
+
+  .messageTime {
+    font-size: 0.6875rem;
   }
 
   .inputContainer {
     position: sticky;
     bottom: 0;
-    padding: 1rem;
+    padding: 0.875rem 1rem;
+    padding-bottom: max(0.875rem, env(safe-area-inset-bottom));
+    background: white;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  .inputWrapper {
+    padding: 0.25rem;
+  }
+
+  .input {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .sendButton {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 
   .suggestions {
-    padding: 0.75rem 1rem;
+    padding: 0.625rem 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .suggestionButton {
+    padding: 0.4375rem 0.625rem;
+    font-size: 0.6875rem;
+  }
+
+  .clearButton,
+  .closeButton {
+    width: 1.875rem;
+    height: 1.875rem;
+    font-size: 1.125rem;
   }
 }
 

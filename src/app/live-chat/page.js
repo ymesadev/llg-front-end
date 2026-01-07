@@ -159,6 +159,19 @@ const LiveChatPage = () => {
     }
 
     try {
+      // Get attribution data from localStorage
+      const attributionData = {
+        page_url: localStorage.getItem('page_url') || null,
+        page_source: localStorage.getItem('page_source') || null,
+        campaign_type: localStorage.getItem('campaign_type') || null,
+        utm_source: localStorage.getItem('utm_source') || null,
+        utm_medium: localStorage.getItem('utm_medium') || null,
+        utm_campaign: localStorage.getItem('utm_campaign') || null,
+        utm_content: localStorage.getItem('utm_content') || null,
+        utm_term: localStorage.getItem('utm_term') || null,
+        referrer: localStorage.getItem('referrer') || null,
+      };
+
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -168,6 +181,7 @@ const LiveChatPage = () => {
           message: messageText.trim(),
           conversationId: conversationId,
           userId: userId,
+          ...attributionData,
         }),
       });
 

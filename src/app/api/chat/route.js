@@ -2,7 +2,21 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const { message, conversationId, userId } = await request.json();
+    const { 
+      message, 
+      conversationId, 
+      userId,
+      // Attribution fields from localStorage
+      page_url,
+      page_source,
+      campaign_type,
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_content,
+      utm_term,
+      referrer
+    } = await request.json();
 
     // Validate input
     if (!message || typeof message !== 'string') {
@@ -22,7 +36,7 @@ export async function POST(request) {
     // N8N webhook URL - configured for Louis Law Group
     const n8nWebhookUrl = 'https://n8n.louislawgroup.com/webhook/chatbot';
 
-    // Prepare payload for n8n
+    // Prepare payload for n8n with attribution data
     const payload = {
       message: message.trim(),
       conversationId: conversationId || `conv_${userId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -32,7 +46,17 @@ export async function POST(request) {
       sessionInfo: {
         userAgent: request.headers.get('user-agent'),
         ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
-      }
+      },
+      // Attribution fields
+      page_url: page_url || null,
+      page_source: page_source || null,
+      campaign_type: campaign_type || null,
+      utm_source: utm_source || null,
+      utm_medium: utm_medium || null,
+      utm_campaign: utm_campaign || null,
+      utm_content: utm_content || null,
+      utm_term: utm_term || null,
+      referrer: referrer || null,
     };
 
     // Log the payload being sent to N8N
