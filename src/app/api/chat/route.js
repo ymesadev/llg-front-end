@@ -34,7 +34,7 @@ export async function POST(request) {
     }
 
     // N8N webhook URL - configured for Louis Law Group
-    const n8nWebhookUrl = 'https://n8n.louislawgroup.com/webhook/chatbot';
+    const n8nWebhookUrl = 'https://dev-n8n.louislawgroup.com/webhook/chatbot';
 
     // Prepare payload for n8n with attribution data
     const payload = {
