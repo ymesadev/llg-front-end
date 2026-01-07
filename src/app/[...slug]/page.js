@@ -141,6 +141,7 @@ export default async function Page({ params }) {
   console.log('🔍 [Page] Final slug:', slug, 'from array:', slugArray);
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
+  console.log('🔍 [Page] Strapi URL:', strapiURL, 'Env var set:', !!process.env.NEXT_PUBLIC_STRAPI_API_URL);
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
@@ -190,19 +191,21 @@ export default async function Page({ params }) {
   } else {
     const childSlug = slugArray[slugArray.length - 1];
     const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
-    const buildBase = (withParent) => {
+    const buildBase = (withParent, useLowercase = false) => {
+      const slugField = useLowercase ? 'slug' : 'Slug';
       const encChild = encodeURIComponent(childSlug || '');
       if (withParent) {
         const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
         const encParent = encodeURIComponent(cleanParentSlug);
         return (
-          `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}` +
+          `${strapiURL}/api/pages?filters[${slugField}][$eq]=${encChild}` +
           `&filters[parent_page][URL][$eq]=/${encParent}`
         );
       }
-      return `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}`;
+      return `${strapiURL}/api/pages?filters[${slugField}][$eq]=${encChild}`;
     };
-    const base = buildBase(!!parentSlug);
+    // Try uppercase first (default), then lowercase if that fails
+    const base = buildBase(!!parentSlug, false);
     // Stable single request: broad populate + newest first
     apiUrl = `${base}&populate=*&sort=updatedAt:desc`;
   }
@@ -210,6 +213,8 @@ export default async function Page({ params }) {
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
   // Single fetch (stable) - using cache: 'no-store' for fully dynamic routes
   let res;
+  let data = null;
+  
   try {
     res = await fetch(apiUrl, { cache: 'no-store' });
   } catch (e) {
@@ -231,7 +236,7 @@ export default async function Page({ params }) {
   }
 
   console.log('✅ API response OK:', res.status, res.statusText);
-  const data = await res.json();
+  data = await res.json();
   console.log('📦 API response data structure:', {
     hasData: !!data,
     hasDataArray: !!data?.data,
@@ -240,9 +245,47 @@ export default async function Page({ params }) {
     firstItemId: Array.isArray(data?.data) && data.data.length > 0 ? data.data[0]?.id : 'no items'
   });
   
+  // If no data found with uppercase Slug, try lowercase slug (for pages only)
+  if ((!data || !Array.isArray(data.data) || data.data.length === 0) && !isAttorneyPage && !isArticlePage && !isJobPage && !isFaqsPage) {
+    console.log('🔄 Trying lowercase slug field for pages...');
+    const childSlug = slugArray[slugArray.length - 1];
+    const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
+    const buildBaseLowercase = (withParent) => {
+      const encChild = encodeURIComponent(childSlug || '');
+      if (withParent) {
+        const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
+        const encParent = encodeURIComponent(cleanParentSlug);
+        return (
+          `${strapiURL}/api/pages?filters[slug][$eq]=${encChild}` +
+          `&filters[parent_page][URL][$eq]=/${encParent}`
+        );
+      }
+      return `${strapiURL}/api/pages?filters[slug][$eq]=${encChild}`;
+    };
+    const fallbackApiUrl = `${buildBaseLowercase(!!parentSlug)}&populate=*&sort=updatedAt:desc`;
+    console.log('🔍 Fallback API URL:', fallbackApiUrl);
+    
+    try {
+      const fallbackRes = await fetch(fallbackApiUrl, { cache: 'no-store' });
+      if (fallbackRes && fallbackRes.ok) {
+        const fallbackData = await fallbackRes.json();
+        console.log('📦 Fallback API response:', {
+          dataArrayLength: Array.isArray(fallbackData?.data) ? fallbackData.data.length : 'not an array',
+        });
+        if (fallbackData && Array.isArray(fallbackData.data) && fallbackData.data.length > 0) {
+          console.log('✅ Found data with lowercase slug field!');
+          data = fallbackData;
+          apiUrl = fallbackApiUrl; // Update for logging
+        }
+      }
+    } catch (e) {
+      console.error('❌ Fallback fetch failed:', e);
+    }
+  }
+  
   if (!data || !Array.isArray(data.data) || data.data.length === 0) {
-    console.error('❌ No data found for slug:', slug);
-    console.error('❌ Data structure:', JSON.stringify(data, null, 2));
+    console.error('❌ No data found for slug:', slug, 'after trying both uppercase and lowercase');
+    console.error('❌ Final data structure:', JSON.stringify(data, null, 2));
     return (
       <Layout>
         <div className={styles.error}>
