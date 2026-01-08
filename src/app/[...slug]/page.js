@@ -17,14 +17,9 @@ import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 
 // Disable static prerendering: fetch data at request time
-export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
-export const dynamicParams = true; // Allow dynamic params that weren't generated at build time
 export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
 
-// Note: We do NOT export generateStaticParams here because that would force SSG mode.
-// With dynamic = 'force-dynamic', the route will be server-rendered on demand.
-// https://dev.llgai.app
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
   ...defaultSchema,
@@ -116,32 +111,12 @@ function injectBlueButtonClass(html) {
 
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
-  // Log initial params for debugging
-  console.log('🔍 [Page] Raw params received:', JSON.stringify(params));
-  console.log('🔍 [Page] Params type:', typeof params, 'is Promise:', params instanceof Promise);
-  
-  // In Next.js 15, params might be a Promise and must be awaited
-  let resolvedParams;
-  try {
-    if (params instanceof Promise) {
-      resolvedParams = await params;
-    } else {
-      resolvedParams = params;
-    }
-    console.log('🔍 [Page] Resolved params:', JSON.stringify(resolvedParams));
-  } catch (error) {
-    console.error('❌ [Page] Error resolving params:', error);
-    resolvedParams = params || {};
-  }
-  
-  const { slug: maybeSlug = [] } = resolvedParams || {};
+  // Access params synchronously during build-time config collection
+  const { slug: maybeSlug = [] } = params || {};
   const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
   const slug = slugArray.join("/");
-  
-  console.log('🔍 [Page] Final slug:', slug, 'from array:', slugArray);
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
-  console.log('🔍 [Page] Strapi URL:', strapiURL, 'Env var set:', !!process.env.NEXT_PUBLIC_STRAPI_API_URL);
   let apiUrl;
   let isAttorneyPage = false;
   let isArticlePage = false;
@@ -155,10 +130,10 @@ export default async function Page({ params }) {
     const encSlug = encodeURIComponent(slug);
 
     const [articleCheckRes, attorneyCheckRes, jobCheckRes, faqsCheckRes] = await Promise.allSettled([
-      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { cache: 'no-store' }),
-      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { cache: 'no-store' }),
-      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { cache: 'no-store' }),
-      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { cache: 'no-store' }),
+      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
     ]);
 
     const getOkJson = async (s) => (s.status === 'fulfilled' && s.value.ok) ? s.value.json() : null;
@@ -191,40 +166,33 @@ export default async function Page({ params }) {
   } else {
     const childSlug = slugArray[slugArray.length - 1];
     const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
-    const buildBase = (withParent, useLowercase = false) => {
-      const slugField = useLowercase ? 'slug' : 'Slug';
+    const buildBase = (withParent) => {
       const encChild = encodeURIComponent(childSlug || '');
       if (withParent) {
         const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
         const encParent = encodeURIComponent(cleanParentSlug);
         return (
-          `${strapiURL}/api/pages?filters[${slugField}][$eq]=${encChild}` +
+          `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}` +
           `&filters[parent_page][URL][$eq]=/${encParent}`
         );
       }
-      return `${strapiURL}/api/pages?filters[${slugField}][$eq]=${encChild}`;
+      return `${strapiURL}/api/pages?filters[Slug][$eq]=${encChild}`;
     };
-    // Try uppercase first (default), then lowercase if that fails
-    const base = buildBase(!!parentSlug, false);
+    const base = buildBase(!!parentSlug);
     // Stable single request: broad populate + newest first
     apiUrl = `${base}&populate=*&sort=updatedAt:desc`;
   }
 
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
-  // Single fetch (stable) - using cache: 'no-store' for fully dynamic routes
+  // Single fetch (stable)
   let res;
-  let data = null;
-  
   try {
-    res = await fetch(apiUrl, { cache: 'no-store' });
+    res = await fetch(apiUrl, { next: { revalidate: 60 } });
   } catch (e) {
     console.error('❌ Fetch failed for', apiUrl, e);
-    console.error('❌ Error details:', e.message, e.stack);
   }
 
   if (!res || !res.ok) {
-    console.error('❌ API response not OK:', res?.status, res?.statusText, 'for slug:', slug);
-    console.error('❌ Response headers:', res?.headers ? Object.fromEntries(res.headers.entries()) : 'no headers');
     return (
       <Layout>
         <div className={styles.error}>
@@ -235,57 +203,8 @@ export default async function Page({ params }) {
     );
   }
 
-  console.log('✅ API response OK:', res.status, res.statusText);
-  data = await res.json();
-  console.log('📦 API response data structure:', {
-    hasData: !!data,
-    hasDataArray: !!data?.data,
-    dataArrayLength: Array.isArray(data?.data) ? data.data.length : 'not an array',
-    dataKeys: data ? Object.keys(data) : 'no data',
-    firstItemId: Array.isArray(data?.data) && data.data.length > 0 ? data.data[0]?.id : 'no items'
-  });
-  
-  // If no data found with uppercase Slug, try lowercase slug (for pages only)
-  if ((!data || !Array.isArray(data.data) || data.data.length === 0) && !isAttorneyPage && !isArticlePage && !isJobPage && !isFaqsPage) {
-    console.log('🔄 Trying lowercase slug field for pages...');
-    const childSlug = slugArray[slugArray.length - 1];
-    const parentSlug = slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
-    const buildBaseLowercase = (withParent) => {
-      const encChild = encodeURIComponent(childSlug || '');
-      if (withParent) {
-        const cleanParentSlug = (parentSlug ?? '').replace(/^\/+|\/+$/g, '');
-        const encParent = encodeURIComponent(cleanParentSlug);
-        return (
-          `${strapiURL}/api/pages?filters[slug][$eq]=${encChild}` +
-          `&filters[parent_page][URL][$eq]=/${encParent}`
-        );
-      }
-      return `${strapiURL}/api/pages?filters[slug][$eq]=${encChild}`;
-    };
-    const fallbackApiUrl = `${buildBaseLowercase(!!parentSlug)}&populate=*&sort=updatedAt:desc`;
-    console.log('🔍 Fallback API URL:', fallbackApiUrl);
-    
-    try {
-      const fallbackRes = await fetch(fallbackApiUrl, { cache: 'no-store' });
-      if (fallbackRes && fallbackRes.ok) {
-        const fallbackData = await fallbackRes.json();
-        console.log('📦 Fallback API response:', {
-          dataArrayLength: Array.isArray(fallbackData?.data) ? fallbackData.data.length : 'not an array',
-        });
-        if (fallbackData && Array.isArray(fallbackData.data) && fallbackData.data.length > 0) {
-          console.log('✅ Found data with lowercase slug field!');
-          data = fallbackData;
-          apiUrl = fallbackApiUrl; // Update for logging
-        }
-      }
-    } catch (e) {
-      console.error('❌ Fallback fetch failed:', e);
-    }
-  }
-  
+  const data = await res.json();
   if (!data || !Array.isArray(data.data) || data.data.length === 0) {
-    console.error('❌ No data found for slug:', slug, 'after trying both uppercase and lowercase');
-    console.error('❌ Final data structure:', JSON.stringify(data, null, 2));
     return (
       <Layout>
         <div className={styles.error}>
