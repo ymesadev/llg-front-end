@@ -88,53 +88,28 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  width: 95%;
+  width: 90%;
 }
 
 .navList .navList {
   margin-left: 0rem;
   margin-top: 0.5rem;
   display: none;
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.3s ease-out;
 }
 
 .navList .navList.expanded {
   display: block;
-  max-height: 250px;
-  overflow-y: auto;
-  padding-right: 10px;
-  /* Styling the scrollbar */
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+
+  .navItem {
+    margin-bottom: 0.5rem;
+  }
+
+  .navLink {
+    font-size: .8rem;
+  } 
 }
 
-.navList .navList.expanded::-webkit-scrollbar {
-  width: 6px;
-}
 
-.navList .navList.expanded::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
-}
-
-.navList .navList.expanded::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 3px;
-}
-
-.navList .navList.expanded::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.navList .navList.expanded .navItem {
-  margin-bottom: 0.5rem;
-}
-
-.navList .navList.expanded .navLink {
-  font-size: .8rem;
-}
 
 .navItem {
   margin-bottom: 0.5rem;
