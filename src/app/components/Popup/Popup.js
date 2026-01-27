@@ -29,6 +29,7 @@ const Popup = () => {
   const agreeToTerms = () => {
     localStorage.setItem("agreedToTerms", "true");
     setIsTermsOpen(false);
+    window.dispatchEvent(new Event("consentUpdated"));
   };
 
   const closeConsultation = () => {
