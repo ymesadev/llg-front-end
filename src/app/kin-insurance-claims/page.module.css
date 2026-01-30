@@ -583,108 +583,178 @@
   box-shadow: 0 0 8px rgba(255, 184, 0, 0.5);
 }
 
-/* ==================== PROCESS SECTION ==================== */
-.processSection {
-  padding: 7rem 2rem;
-  background: var(--white);
-  position: relative;
+/* ==================== STEPS SECTION (Matching Homepage) ==================== */
+.stepsSection {
+  background-color: #f4f4f4;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
 }
 
-.processSection::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gray-200), transparent);
-}
-
-.processGrid {
+.stepsGrid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  margin-top: 4rem;
-  position: relative;
+  align-items: center;
 }
 
-.processGrid::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 10%;
-  right: 10%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--primary), var(--accent));
-  opacity: 0.2;
-  z-index: 0;
+.stepsLeftColumn {
+  padding-right: 2rem;
 }
 
-.processCard {
-  background: var(--white);
-  border-radius: 20px;
-  padding: 2.5rem 1.75rem;
-  text-align: center;
-  position: relative;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(26, 43, 73, 0.06);
-  z-index: 1;
-}
-
-.processCard:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(26, 43, 73, 0.12);
-}
-
-.processNumber {
-  position: absolute;
-  top: -16px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+.stepsTitle {
   color: var(--primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
-  box-shadow: 0 4px 12px rgba(255, 184, 0, 0.4);
+  text-transform: uppercase;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
 
-.processIconWrapper {
-  width: 72px;
-  height: 72px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0.5rem auto 1.5rem;
-  box-shadow: 0 8px 20px rgba(26, 43, 73, 0.15);
+.stepsSubtitle {
+  font-size: 3.5rem;
+  color: var(--primary);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
 }
 
-.stepIcon {
-  width: 32px;
-  height: 32px;
+.noFeeHighlight {
+  background-color: var(--primary);
   color: var(--accent);
+  padding-right: 1.5rem;
 }
 
-.processCard h3 {
+.stepsDescription {
+  color: var(--primary);
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.stepsDescription2 {
+  margin-bottom: 2rem;
+  color: var(--primary);
+  line-height: 1.7;
+}
+
+.stepsButton {
+  text-decoration: none;
+  color: #f4f4f4;
+  background-color: var(--primary);
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.stepsButton:hover {
+  background-color: #16223a;
+}
+
+.stepsButton svg {
+  transition: transform 0.3s ease;
+}
+
+.stepsButton:hover svg {
+  transform: translateX(5px);
+}
+
+.stepsRightColumn {
+  overflow: hidden;
+}
+
+.carouselWrapper {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.carousel {
+  overflow: hidden;
+  width: 100%;
+}
+
+.emblaContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.emblaSlide {
+  flex: 0 0 calc(80% - 1rem);
+  min-width: calc(80% - 1rem);
+  position: relative;
+}
+
+.stepBox {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.lottieAnimation {
+  width: 100px;
+  margin: 0 auto 1rem;
+}
+
+.stepBoxTitle {
   font-family: "Anton", sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   color: var(--primary);
   margin-bottom: 0.75rem;
 }
 
-.processCard p {
+.stepBoxDescription {
   color: var(--gray-600);
   font-size: 0.95rem;
-  line-height: 1.65;
-  font-weight: 300;
+  line-height: 1.6;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  color: var(--primary);
+}
+
+.prevButton {
+  left: 1rem;
+}
+
+.nextButton {
+  right: 1rem;
+}
+
+.navButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.progressBarWrapper {
+  height: 6px;
+  background-color: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  background-color: var(--accent);
+  transition: width 0.3s ease;
 }
 
 /* ==================== ELIGIBILITY SECTION ==================== */
@@ -1072,8 +1142,17 @@
     grid-template-columns: 1fr;
   }
 
-  .processGrid {
-    grid-template-columns: repeat(2, 1fr);
+  .stepsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .stepsLeftColumn {
+    padding-right: 0;
+    text-align: center;
+  }
+
+  .stepsButton {
+    justify-content: center;
   }
 
   .violationContent ul {
@@ -1121,8 +1200,12 @@
     font-size: 2rem;
   }
 
-  .processGrid {
-    grid-template-columns: 1fr;
+  .stepsTitle {
+    font-size: 1.5rem;
+  }
+
+  .stepsSubtitle {
+    font-size: 2.5rem;
   }
 
   .ctaButtons {

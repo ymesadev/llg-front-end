@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import useEmblaCarousel from "embla-carousel-react";
 import {
   Shield,
   Eye,
@@ -22,6 +24,12 @@ import {
 import { FaSpinner, FaTimesCircle } from "react-icons/fa";
 import styles from "./page.module.css";
 
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+
+import step1Animation from "../../../public/lottie/step1.json";
+import step2Animation from "../../../public/lottie/step2.json";
+import step3Animation from "../../../public/lottie/step3.json";
+
 export default function KinPrivacyLanding() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -36,6 +44,20 @@ export default function KinPrivacyLanding() {
   });
   const [formStatus, setFormStatus] = useState("idle");
   const [activeAccordion, setActiveAccordion] = useState(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [progress, setProgress] = useState(0);
+
+  const updateProgress = () => {
+    if (!emblaApi) return;
+    const scrollProgress = emblaApi.scrollProgress();
+    setProgress(scrollProgress * 100);
+  };
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("scroll", updateProgress);
+    updateProgress();
+  }, [emblaApi]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -144,24 +166,22 @@ export default function KinPrivacyLanding() {
 
   const processSteps = [
     {
-      icon: <UserCheck className={styles.stepIcon} />,
+      number: 1,
       title: "Check Eligibility",
-      description: "Answer a few quick questions to see if you qualify for this case"
+      description: "Answer a few quick questions to see if you qualify for this privacy case.",
+      animation: step1Animation
     },
     {
-      icon: <FileText className={styles.stepIcon} />,
+      number: 2,
       title: "Free Case Review",
-      description: "Our privacy attorneys review your information at no cost"
+      description: "Our privacy attorneys review your information and the details of your case at no cost.",
+      animation: step2Animation
     },
     {
-      icon: <Shield className={styles.stepIcon} />,
+      number: 3,
       title: "We Fight For You",
-      description: "We handle everything while you focus on your life"
-    },
-    {
-      icon: <DollarSign className={styles.stepIcon} />,
-      title: "Get Compensated",
-      description: "Receive the compensation you deserve for the privacy violation"
+      description: "We handle everything—negotiations, paperwork, and litigation if needed—while you focus on your life.",
+      animation: step3Animation
     }
   ];
 
@@ -397,26 +417,72 @@ export default function KinPrivacyLanding() {
         </div>
       </section>
 
-      {/* Process Section */}
-      <section className={styles.processSection}>
+      {/* Process Section - Matching Homepage Steps */}
+      <section className={styles.stepsSection}>
         <div className="container">
-          <h2 className={styles.sectionTitleCenter}>
-            How It <span className={styles.highlight}>Works</span>
-          </h2>
-          <p className={styles.sectionSubtitle}>
-            Checking your eligibility is quick, easy, and completely free.
-          </p>
-          <div className={styles.processGrid}>
-            {processSteps.map((step, index) => (
-              <div key={index} className={styles.processCard}>
-                <div className={styles.processNumber}>{index + 1}</div>
-                <div className={styles.processIconWrapper}>
-                  {step.icon}
+          <div className={styles.stepsGrid}>
+            {/* Left Column */}
+            <div className={styles.stepsLeftColumn}>
+              <h2 className={styles.stepsTitle}>How it Works</h2>
+              <h3 className={styles.stepsSubtitle}>No Win,<span className={styles.noFeeHighlight}> No Fee</span></h3>
+              <p className={styles.stepsDescription}>
+                We like to simplify our intake process. From checking your eligibility to securing your case, our streamlined approach ensures a hassle-free experience.
+              </p>
+              <p className={styles.stepsDescription2}>
+                You can expect transparent communication, prompt updates, and a commitment to achieving the best possible outcome for your privacy case.
+              </p>
+              <a href="#check-eligibility" className={styles.stepsButton}>
+                Check Your Eligibility
+                <ArrowRight size={20} />
+              </a>
+            </div>
+
+            {/* Right Column: Slider */}
+            <div className={styles.stepsRightColumn}>
+              <div className={styles.carouselWrapper}>
+                <button
+                  className={`${styles.navButton} ${styles.prevButton}`}
+                  onClick={() => emblaApi && emblaApi.scrollPrev()}
+                >
+                  ‹
+                </button>
+                <div className={styles.carousel} ref={emblaRef}>
+                  <div className={styles.emblaContainer}>
+                    {processSteps.map((step) => (
+                      <div key={step.number} className={styles.emblaSlide}>
+                        <div className={styles.stepBox}>
+                          <Lottie
+                            animationData={step.animation}
+                            loop
+                            className={styles.lottieAnimation}
+                          />
+                          <h4 className={styles.stepBoxTitle}>
+                            Step {step.number}: {step.title}
+                          </h4>
+                          <p className={styles.stepBoxDescription}>
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
+                <button
+                  className={`${styles.navButton} ${styles.nextButton}`}
+                  onClick={() => emblaApi && emblaApi.scrollNext()}
+                >
+                  ›
+                </button>
               </div>
-            ))}
+
+              {/* Progress Bar */}
+              <div className={styles.progressBarWrapper}>
+                <div
+                  className={styles.progressBar}
+                  style={{ width: `${progress}%` }}
+                ></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
