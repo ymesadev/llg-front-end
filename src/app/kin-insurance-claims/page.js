@@ -423,8 +423,8 @@ export default function KinPrivacyLanding() {
           <div className={styles.stepsGrid}>
             {/* Left Column */}
             <div className={styles.stepsLeftColumn}>
-              <h2 className={styles.stepsTitle}>What Happened</h2>
-              <h3 className={styles.stepsSubtitle}>Your Data,<span className={styles.noFeeHighlight}> Tracked</span></h3>
+              <h2 className={styles.stepsTitle}>How It Works</h2>
+              <h3 className={styles.stepsSubtitle}>No Win,<span className={styles.noFeeHighlight}> No Fee</span></h3>
               <p className={styles.stepsDescription}>
                 KIN Insurance may have used hidden tracking software on their website to secretly monitor your online activity—recording every click, scroll, and page you visited.
               </p>
