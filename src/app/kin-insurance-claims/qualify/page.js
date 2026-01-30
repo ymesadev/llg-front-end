@@ -30,7 +30,7 @@ const eligibilityQuestions = [
 
 export default function QualifyPage() {
   const router = useRouter();
-  const [currentStep, setCurrentStep] = useState(0); // 0 = eligibility, 1 = contact
+  const [currentStep, setCurrentStep] = useState(0); // 0 = q1-2, 1 = q3-4, 2 = contact
   const [eligibilityAnswers, setEligibilityAnswers] = useState({});
   const [contactInfo, setContactInfo] = useState({
     usedEmail: "",
@@ -42,7 +42,11 @@ export default function QualifyPage() {
   const [disqualified, setDisqualified] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const allEligibilityAnswered = eligibilityQuestions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const step1Questions = eligibilityQuestions.slice(0, 2);
+  const step2Questions = eligibilityQuestions.slice(2, 4);
+
+  const step1Answered = step1Questions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const step2Answered = step2Questions.every(q => eligibilityAnswers[q.id] !== undefined);
   const allEligibilityYes = eligibilityQuestions.every(q => eligibilityAnswers[q.id] === true);
   const contactComplete = contactInfo.usedEmail && contactInfo.name && contactInfo.phone;
 
@@ -55,24 +59,35 @@ export default function QualifyPage() {
     setContactInfo(prev => ({ ...prev, [name]: value }));
   };
 
-  const goToContact = () => {
-    if (!allEligibilityYes) {
+  const goToNextStep = () => {
+    // Check if any answer is No
+    const currentQuestions = currentStep === 0 ? step1Questions : step2Questions;
+    const hasNo = currentQuestions.some(q => eligibilityAnswers[q.id] === false);
+
+    if (hasNo) {
       setDisqualified(true);
       return;
     }
+
+    // If going from step 1 to contact, check all answers
+    if (currentStep === 1 && !allEligibilityYes) {
+      setDisqualified(true);
+      return;
+    }
+
     setDirection("next");
     setIsAnimating(true);
     setTimeout(() => {
-      setCurrentStep(1);
+      setCurrentStep(currentStep + 1);
       setIsAnimating(false);
     }, 300);
   };
 
-  const goBackToEligibility = () => {
+  const goToPrevStep = () => {
     setDirection("prev");
     setIsAnimating(true);
     setTimeout(() => {
-      setCurrentStep(0);
+      setCurrentStep(currentStep - 1);
       setIsAnimating(false);
     }, 300);
   };
@@ -140,7 +155,7 @@ export default function QualifyPage() {
     <div className={styles.container}>
       {/* Progress bar */}
       <div className={styles.progressBar}>
-        <div className={styles.progressFill} style={{ width: currentStep === 0 ? '50%' : '100%' }} />
+        <div className={styles.progressFill} style={{ width: `${((currentStep + 1) / 3) * 100}%` }} />
       </div>
 
       <div className={styles.layout}>
@@ -156,9 +171,15 @@ export default function QualifyPage() {
               </div>
               <span className={styles.stepLabel}>Eligibility</span>
             </div>
-            <div className={`${styles.stepItem} ${currentStep === 1 ? styles.active : ''}`}>
+            <div className={`${styles.stepItem} ${currentStep === 1 ? styles.active : ''} ${currentStep > 1 ? styles.completed : ''}`}>
               <div className={styles.stepIndicator}>
-                <span>2</span>
+                {currentStep > 1 ? <Check size={14} /> : <span>2</span>}
+              </div>
+              <span className={styles.stepLabel}>Eligibility</span>
+            </div>
+            <div className={`${styles.stepItem} ${currentStep === 2 ? styles.active : ''}`}>
+              <div className={styles.stepIndicator}>
+                <span>3</span>
               </div>
               <span className={styles.stepLabel}>Contact Info</span>
             </div>
@@ -170,16 +191,16 @@ export default function QualifyPage() {
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
 
-              {currentStep === 0 ? (
+              {currentStep === 0 && (
                 <>
                   <div className={styles.stepHeader}>
                     <Shield className={styles.stepIcon} />
                     <h2>Let's Check Your Eligibility</h2>
-                    <p>Please answer all questions below to see if you qualify.</p>
+                    <p>Step 1 of 3 - Answer these questions</p>
                   </div>
 
                   <div className={styles.questionsGrid}>
-                    {eligibilityQuestions.map((q, index) => (
+                    {step1Questions.map((q, index) => (
                       <div key={q.id} className={styles.questionCard}>
                         <p className={styles.questionText}>
                           <span className={styles.questionNumber}>{index + 1}.</span>
@@ -210,15 +231,71 @@ export default function QualifyPage() {
                   <div className={styles.navigation}>
                     <button
                       className={styles.continueButton}
-                      onClick={goToContact}
-                      disabled={!allEligibilityAnswered}
+                      onClick={goToNextStep}
+                      disabled={!step1Answered}
                     >
                       Continue
                       <ArrowRight size={20} />
                     </button>
                   </div>
                 </>
-              ) : (
+              )}
+
+              {currentStep === 1 && (
+                <>
+                  <div className={styles.stepHeader}>
+                    <Shield className={styles.stepIcon} />
+                    <h2>Just a Couple More Questions</h2>
+                    <p>Step 2 of 3 - Almost there!</p>
+                  </div>
+
+                  <div className={styles.questionsGrid}>
+                    {step2Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionCard}>
+                        <p className={styles.questionText}>
+                          <span className={styles.questionNumber}>{index + 3}.</span>
+                          {q.question}
+                        </p>
+                        <div className={styles.yesNoButtons}>
+                          <button
+                            type="button"
+                            className={`${styles.optionButton} ${eligibilityAnswers[q.id] === true ? styles.selectedYes : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={18} />
+                            Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.optionButton} ${eligibilityAnswers[q.id] === false ? styles.selectedNo : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={18} />
+                            No
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className={styles.navigation}>
+                    <button type="button" className={styles.backButton} onClick={goToPrevStep}>
+                      <ArrowLeft size={18} />
+                      Back
+                    </button>
+                    <button
+                      className={styles.continueButton}
+                      onClick={goToNextStep}
+                      disabled={!step2Answered}
+                    >
+                      Continue
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                </>
+              )}
+
+              {currentStep === 2 && (
                 <>
                   <div className={styles.stepHeader}>
                     <div className={styles.successBadge}>
@@ -226,7 +303,7 @@ export default function QualifyPage() {
                       You Qualify!
                     </div>
                     <h2>Almost Done! Enter Your Contact Info</h2>
-                    <p>We'll use this information to process your case.</p>
+                    <p>Step 3 of 3 - We'll use this to process your case.</p>
                   </div>
 
                   <form onSubmit={handleSubmit} className={styles.contactForm}>
@@ -270,7 +347,7 @@ export default function QualifyPage() {
                     </div>
 
                     <div className={styles.navigation}>
-                      <button type="button" className={styles.backButton} onClick={goBackToEligibility}>
+                      <button type="button" className={styles.backButton} onClick={goToPrevStep}>
                         <ArrowLeft size={18} />
                         Back
                       </button>

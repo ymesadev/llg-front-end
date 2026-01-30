@@ -489,17 +489,39 @@ export default function KinPrivacyLanding() {
               </Link>
             </div>
             <div className={styles.eligibilityFormWrapper}>
-              <div className={styles.noFeeCard}>
-                <DollarSign className={styles.noFeeIcon} />
-                <h4>No Upfront Fees</h4>
-                <p>
-                  You pay nothing unless we win your case. Our attorneys work on
-                  a contingency basis—we only get paid if you do.
-                </p>
-                <Link href="/kin-insurance-claims/qualify" className={styles.cardCta}>
-                  Start Your Free Case Review
-                  <ArrowRight size={18} />
-                </Link>
+              <div className={styles.formCard}>
+                <div className={styles.formHeader}>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>Check Your Eligibility</h3>
+                  <p>Free & Confidential</p>
+                </div>
+                <div className={styles.eligibilityForm}>
+                  {eligibilityQuestions.map((q, index) => (
+                    <div key={q.id} className={styles.questionRow}>
+                      <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                      <div className={styles.yesNoGroup}>
+                        <button
+                          type="button"
+                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                          onClick={() => handleEligibilityAnswer(q.id, true)}
+                        >
+                          <Check size={16} /> Yes
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                          onClick={() => handleEligibilityAnswer(q.id, false)}
+                        >
+                          <X size={16} /> No
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  <Link href="/kin-insurance-claims/qualify" className={styles.submitButton}>
+                    Continue
+                    <ArrowRight size={20} />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -539,20 +561,39 @@ export default function KinPrivacyLanding() {
               </Link>
             </div>
             <div className={styles.faqRightColumn}>
-              <div className={styles.faqCtaCard}>
-                <Shield className={styles.faqCtaIcon} />
-                <h4>Ready to Take Action?</h4>
-                <p>
-                  Find out if you qualify for compensation in just a few minutes.
-                  It's free, fast, and confidential.
-                </p>
-                <Link href="/kin-insurance-claims/qualify" className={styles.faqCtaButton}>
-                  Check Your Eligibility
-                  <ArrowRight size={18} />
-                </Link>
-                <p className={styles.faqCtaPhone}>
-                  Or call us at <a href="tel:8336574812">833-657-4812</a>
-                </p>
+              <div className={styles.formCard}>
+                <div className={styles.formHeader}>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>Check Your Eligibility</h3>
+                  <p>Free & Confidential</p>
+                </div>
+                <div className={styles.eligibilityForm}>
+                  {eligibilityQuestions.map((q, index) => (
+                    <div key={q.id} className={styles.questionRow}>
+                      <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                      <div className={styles.yesNoGroup}>
+                        <button
+                          type="button"
+                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                          onClick={() => handleEligibilityAnswer(q.id, true)}
+                        >
+                          <Check size={16} /> Yes
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                          onClick={() => handleEligibilityAnswer(q.id, false)}
+                        >
+                          <X size={16} /> No
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  <Link href="/kin-insurance-claims/qualify" className={styles.submitButton}>
+                    Continue
+                    <ArrowRight size={20} />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
