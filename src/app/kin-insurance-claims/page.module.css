@@ -427,13 +427,13 @@
 
 .issuesGrid {
   display: flex;
-  gap: 0;
+  gap: 1.5rem;
   margin-bottom: 4rem;
 }
 
 .issueCard {
   background: #e8e8e8;
-  padding: 2.5rem 2rem 2.5rem 3rem;
+  padding: 2.5rem 2.5rem 2.5rem 3rem;
   text-align: center;
   position: relative;
   flex: 1;
@@ -441,18 +441,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 50%, calc(100% - 30px) 100%, 0 100%, 30px 50%);
-  margin-left: -30px;
+  clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 0 100%, 25px 50%);
 }
 
 .issueCard:first-child {
-  margin-left: 0;
-  clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 50%, calc(100% - 30px) 100%, 0 100%);
+  clip-path: polygon(0 0, calc(100% - 25px) 0, 100% 50%, calc(100% - 25px) 100%, 0 100%);
 }
 
 .issueCard:last-child {
   background: var(--primary);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 30px 50%);
 }
 
 .issueCard:last-child h3,
@@ -460,17 +457,32 @@
   color: var(--white);
 }
 
+.issueCard:last-child .issueIconWrapper {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.issueCard:last-child .issueIcon {
+  color: var(--accent);
+}
+
 .issueIconWrapper {
-  display: none;
+  width: 56px;
+  height: 56px;
+  background: var(--white);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .issueIcon {
-  display: none;
+  color: var(--primary);
 }
 
 .issueCard h3 {
   font-family: "Anton", sans-serif;
-  font-size: 2rem;
+  font-size: 1.25rem;
   color: var(--primary);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
@@ -478,7 +490,7 @@
 
 .issueCard p {
   color: var(--gray-600);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -1098,19 +1110,12 @@
     gap: 1rem;
   }
 
-  .issueCard {
-    clip-path: none;
-    margin-left: 0;
-    padding: 2rem;
-    border-radius: 8px;
-  }
-
-  .issueCard:first-child {
-    clip-path: none;
-  }
-
+  .issueCard,
+  .issueCard:first-child,
   .issueCard:last-child {
     clip-path: none;
+    padding: 2rem;
+    border-radius: 8px;
   }
 
   .eligibilityGrid {
