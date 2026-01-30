@@ -40,7 +40,6 @@ export default function QualifyPage() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState("next");
   const [disqualified, setDisqualified] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const step1Questions = eligibilityQuestions.slice(0, 2);
   const step2Questions = eligibilityQuestions.slice(2, 4);
@@ -92,33 +91,9 @@ export default function QualifyPage() {
     }, 300);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!contactComplete) return;
-
-    setIsSubmitting(true);
-
-    const payload = {
-      ...eligibilityAnswers,
-      ...contactInfo,
-      email: contactInfo.usedEmail,
-      page_source: "kin_qualify_form",
-      campaign_type: "organic",
-      caseType: "Privacy Violation",
-      company: "KIN Insurance",
-      qualified: true
-    };
-
-    try {
-      await fetch("https://dev-n8n.louislawgroup.com/webhook/forms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-    } catch (err) {
-      console.error("Form submission error:", err);
-    }
-
     router.push("/kin-insurance-claims/sign");
   };
 
@@ -345,9 +320,9 @@ export default function QualifyPage() {
                       <button
                         type="submit"
                         className={styles.submitButton}
-                        disabled={!contactComplete || isSubmitting}
+                        disabled={!contactComplete}
                       >
-                        {isSubmitting ? "Submitting..." : "Submit & Continue"}
+                        Submit & Continue
                         <ArrowRight size={20} />
                       </button>
                     </div>
