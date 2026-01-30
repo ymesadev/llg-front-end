@@ -427,13 +427,14 @@
 
 .issuesGrid {
   display: flex;
-  gap: 0.5rem;
+  gap: 0;
   margin-bottom: 4rem;
+  padding-left: 0;
 }
 
 .issueCard {
   background: var(--white);
-  padding: 2.5rem 3rem 2.5rem 3.5rem;
+  padding: 2rem 2rem 2rem 3rem;
   text-align: center;
   position: relative;
   flex: 1;
@@ -441,18 +442,46 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  clip-path: polygon(35px 0, calc(100% - 35px) 0, 100% 50%, calc(100% - 35px) 100%, 35px 100%, 0 50%);
+  margin-right: 10px;
+  min-height: 200px;
 }
 
-.issueCard:first-child {
-  clip-path: polygon(0 0, calc(100% - 35px) 0, 100% 50%, calc(100% - 35px) 100%, 0 100%);
-  padding-left: 2.5rem;
+.issueCard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-left: 30px solid #ede7e7;
+  border-top: 100px solid transparent;
+  border-bottom: 100px solid transparent;
+}
+
+.issueCard::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  top: 0;
+  border-left: 30px solid var(--white);
+  border-top: 100px solid transparent;
+  border-bottom: 100px solid transparent;
+  z-index: 2;
+}
+
+.issueCard:first-child::before {
+  display: none;
 }
 
 .issueCard:last-child {
   background: var(--primary);
-  clip-path: polygon(35px 0, 100% 0, 100% 100%, 35px 100%, 0 50%);
-  padding-right: 2.5rem;
+  margin-right: 0;
+}
+
+.issueCard:last-child::after {
+  border-left-color: var(--primary);
+}
+
+.issueCard:last-child::before {
+  border-left-color: #ede7e7;
 }
 
 .issueCard:last-child h3,
@@ -471,12 +500,14 @@
 .issueIconWrapper {
   width: 56px;
   height: 56px;
-  background: var(--white);
+  background: var(--gray-100);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 3;
 }
 
 .issueIcon {
@@ -489,6 +520,8 @@
   color: var(--primary);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
+  position: relative;
+  z-index: 3;
 }
 
 .issueCard p {
@@ -496,6 +529,8 @@
   font-size: 0.9rem;
   line-height: 1.5;
   font-weight: 400;
+  position: relative;
+  z-index: 3;
 }
 
 .violationBox {
@@ -1113,12 +1148,18 @@
     gap: 1rem;
   }
 
-  .issueCard,
-  .issueCard:first-child,
-  .issueCard:last-child {
-    clip-path: none;
+  .issueCard {
     padding: 2rem;
     border-radius: 8px;
+    margin-right: 0;
+    min-height: auto;
+  }
+
+  .issueCard::before,
+  .issueCard::after,
+  .issueCard:first-child::before,
+  .issueCard:last-child::after {
+    display: none;
   }
 
   .eligibilityGrid {
