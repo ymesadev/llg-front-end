@@ -161,25 +161,16 @@ export default function QualifyPage() {
       <div className={styles.layout}>
         {/* Sidebar */}
         <aside className={styles.sidebar}>
-          <div className={styles.logo}>
-            <img src="/images/logo.png" alt="Louis Law Group" />
-          </div>
           <nav className={styles.stepNav}>
-            <div className={`${styles.stepItem} ${currentStep === 0 ? styles.active : ''} ${currentStep > 0 ? styles.completed : ''}`}>
+            <div className={`${styles.stepItem} ${currentStep < 2 ? styles.active : ''} ${currentStep >= 2 ? styles.completed : ''}`}>
               <div className={styles.stepIndicator}>
-                {currentStep > 0 ? <Check size={14} /> : <span>1</span>}
-              </div>
-              <span className={styles.stepLabel}>Eligibility</span>
-            </div>
-            <div className={`${styles.stepItem} ${currentStep === 1 ? styles.active : ''} ${currentStep > 1 ? styles.completed : ''}`}>
-              <div className={styles.stepIndicator}>
-                {currentStep > 1 ? <Check size={14} /> : <span>2</span>}
+                {currentStep >= 2 ? <Check size={14} /> : <span>1</span>}
               </div>
               <span className={styles.stepLabel}>Eligibility</span>
             </div>
             <div className={`${styles.stepItem} ${currentStep === 2 ? styles.active : ''}`}>
               <div className={styles.stepIndicator}>
-                <span>3</span>
+                <span>2</span>
               </div>
               <span className={styles.stepLabel}>Contact Info</span>
             </div>

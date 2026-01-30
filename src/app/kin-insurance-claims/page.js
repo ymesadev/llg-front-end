@@ -45,7 +45,7 @@ const eligibilityQuestions = [
 
 export default function KinPrivacyLanding() {
   const router = useRouter();
-  const [formStep, setFormStep] = useState(0); // 0 = eligibility, 1 = contact
+  const [formStep, setFormStep] = useState(0); // 0 = q1-2, 1 = q3-4, 2 = contact
   const [eligibilityAnswers, setEligibilityAnswers] = useState({});
   const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
   const [formStatus, setFormStatus] = useState("idle");
@@ -54,7 +54,10 @@ export default function KinPrivacyLanding() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [progress, setProgress] = useState(0);
 
-  const allEligibilityAnswered = eligibilityQuestions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const step1Questions = eligibilityQuestions.slice(0, 2);
+  const step2Questions = eligibilityQuestions.slice(2, 4);
+  const step1Answered = step1Questions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const step2Answered = step2Questions.every(q => eligibilityAnswers[q.id] !== undefined);
   const allEligibilityYes = eligibilityQuestions.every(q => eligibilityAnswers[q.id] === true);
   const contactComplete = contactInfo.email && contactInfo.name && contactInfo.phone;
 
@@ -79,12 +82,25 @@ export default function KinPrivacyLanding() {
     setContactInfo(prev => ({ ...prev, [name]: value }));
   };
 
-  const goToContact = () => {
-    if (!allEligibilityYes) {
+  const goToNextFormStep = () => {
+    const currentQuestions = formStep === 0 ? step1Questions : step2Questions;
+    const hasNo = currentQuestions.some(q => eligibilityAnswers[q.id] === false);
+
+    if (hasNo) {
       setDisqualified(true);
       return;
     }
-    setFormStep(1);
+
+    if (formStep === 1 && !allEligibilityYes) {
+      setDisqualified(true);
+      return;
+    }
+
+    setFormStep(formStep + 1);
+  };
+
+  const goToPrevFormStep = () => {
+    setFormStep(formStep - 1);
   };
 
   const handleSubmit = async (e) => {
@@ -236,8 +252,8 @@ export default function KinPrivacyLanding() {
               <div className={styles.formCard}>
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
-                  <h3>{formStep === 0 ? "Check Your Eligibility" : "Almost Done!"}</h3>
-                  <p>{formStep === 0 ? "Answer a few quick questions" : "Enter your contact info"}</p>
+                  <h3>{formStep < 2 ? "Check Your Eligibility" : "Almost Done!"}</h3>
+                  <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3 - Enter your contact info"}</p>
                 </div>
 
                 {disqualified ? (
@@ -261,7 +277,7 @@ export default function KinPrivacyLanding() {
                   </div>
                 ) : formStep === 0 ? (
                   <div className={styles.eligibilityForm}>
-                    {eligibilityQuestions.map((q, index) => (
+                    {step1Questions.map((q, index) => (
                       <div key={q.id} className={styles.questionRow}>
                         <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
                         <div className={styles.yesNoGroup}>
@@ -285,12 +301,50 @@ export default function KinPrivacyLanding() {
                     <button
                       type="button"
                       className={styles.submitButton}
-                      onClick={goToContact}
-                      disabled={!allEligibilityAnswered}
+                      onClick={goToNextFormStep}
+                      disabled={!step1Answered}
                     >
                       Continue
                       <ArrowRight size={20} />
                     </button>
+                  </div>
+                ) : formStep === 1 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step2Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 3}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={16} /> Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={16} /> No
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={goToPrevFormStep}>
+                        <ArrowLeft size={16} /> Back
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.submitButton}
+                        onClick={goToNextFormStep}
+                        disabled={!step2Answered}
+                      >
+                        Continue
+                        <ArrowRight size={20} />
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className={styles.contactForm}>
@@ -493,35 +547,96 @@ export default function KinPrivacyLanding() {
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
                   <h3>Check Your Eligibility</h3>
-                  <p>Free & Confidential</p>
+                  <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3"}</p>
                 </div>
-                <div className={styles.eligibilityForm}>
-                  {eligibilityQuestions.map((q, index) => (
-                    <div key={q.id} className={styles.questionRow}>
-                      <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
-                      <div className={styles.yesNoGroup}>
-                        <button
-                          type="button"
-                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
-                          onClick={() => handleEligibilityAnswer(q.id, true)}
-                        >
-                          <Check size={16} /> Yes
-                        </button>
-                        <button
-                          type="button"
-                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
-                          onClick={() => handleEligibilityAnswer(q.id, false)}
-                        >
-                          <X size={16} /> No
-                        </button>
+                {disqualified ? (
+                  <div className={styles.disqualifiedBox}>
+                    <X size={24} className={styles.disqualifiedIcon} />
+                    <p>Based on your answers, you may not qualify for this case.</p>
+                    <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
+                  </div>
+                ) : formStep === 0 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step1Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={16} /> Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={16} /> No
+                          </button>
+                        </div>
                       </div>
+                    ))}
+                    <button
+                      type="button"
+                      className={styles.submitButton}
+                      onClick={goToNextFormStep}
+                      disabled={!step1Answered}
+                    >
+                      Continue
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                ) : formStep === 1 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step2Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 3}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={16} /> Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={16} /> No
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={goToPrevFormStep}>
+                        <ArrowLeft size={16} /> Back
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.submitButton}
+                        onClick={goToNextFormStep}
+                        disabled={!step2Answered}
+                      >
+                        Continue
+                        <ArrowRight size={20} />
+                      </button>
                     </div>
-                  ))}
-                  <Link href="/kin-insurance-claims/qualify" className={styles.submitButton}>
-                    Continue
-                    <ArrowRight size={20} />
-                  </Link>
-                </div>
+                  </div>
+                ) : (
+                  <div className={styles.eligibilityForm}>
+                    <div className={styles.qualifiedBadge}>
+                      <Check size={16} /> You Qualify!
+                    </div>
+                    <Link href="/kin-insurance-claims/qualify" className={styles.submitButton}>
+                      Complete Your Claim
+                      <ArrowRight size={20} />
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -565,35 +680,96 @@ export default function KinPrivacyLanding() {
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
                   <h3>Check Your Eligibility</h3>
-                  <p>Free & Confidential</p>
+                  <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3"}</p>
                 </div>
-                <div className={styles.eligibilityForm}>
-                  {eligibilityQuestions.map((q, index) => (
-                    <div key={q.id} className={styles.questionRow}>
-                      <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
-                      <div className={styles.yesNoGroup}>
-                        <button
-                          type="button"
-                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
-                          onClick={() => handleEligibilityAnswer(q.id, true)}
-                        >
-                          <Check size={16} /> Yes
-                        </button>
-                        <button
-                          type="button"
-                          className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
-                          onClick={() => handleEligibilityAnswer(q.id, false)}
-                        >
-                          <X size={16} /> No
-                        </button>
+                {disqualified ? (
+                  <div className={styles.disqualifiedBox}>
+                    <X size={24} className={styles.disqualifiedIcon} />
+                    <p>Based on your answers, you may not qualify for this case.</p>
+                    <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
+                  </div>
+                ) : formStep === 0 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step1Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={16} /> Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={16} /> No
+                          </button>
+                        </div>
                       </div>
+                    ))}
+                    <button
+                      type="button"
+                      className={styles.submitButton}
+                      onClick={goToNextFormStep}
+                      disabled={!step1Answered}
+                    >
+                      Continue
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                ) : formStep === 1 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step2Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 3}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={16} /> Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={16} /> No
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={goToPrevFormStep}>
+                        <ArrowLeft size={16} /> Back
+                      </button>
+                      <button
+                        type="button"
+                        className={styles.submitButton}
+                        onClick={goToNextFormStep}
+                        disabled={!step2Answered}
+                      >
+                        Continue
+                        <ArrowRight size={20} />
+                      </button>
                     </div>
-                  ))}
-                  <Link href="/kin-insurance-claims/qualify" className={styles.submitButton}>
-                    Continue
-                    <ArrowRight size={20} />
-                  </Link>
-                </div>
+                  </div>
+                ) : (
+                  <div className={styles.eligibilityForm}>
+                    <div className={styles.qualifiedBadge}>
+                      <Check size={16} /> You Qualify!
+                    </div>
+                    <Link href="/kin-insurance-claims/qualify" className={styles.submitButton}>
+                      Complete Your Claim
+                      <ArrowRight size={20} />
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>

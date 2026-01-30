@@ -31,18 +31,9 @@
   width: 280px;
   background: #fff;
   border-right: 1px solid #e8e8e8;
-  padding: 2rem;
+  padding: 6rem 2rem 2rem 2rem;
   display: flex;
   flex-direction: column;
-}
-
-.logo {
-  margin-bottom: 3rem;
-}
-
-.logo img {
-  height: 40px;
-  width: auto;
 }
 
 .stepNav {
