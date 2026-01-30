@@ -167,20 +167,20 @@ export default function KinPrivacyLanding() {
   const processSteps = [
     {
       number: 1,
-      title: "Check Eligibility",
-      description: "Answer a few quick questions to see if you qualify for this privacy case.",
+      title: "Your Data Was Tracked",
+      description: "When you visited KIN Insurance's website, hidden tracking technology may have recorded your clicks, browsing behavior, and personal data without consent.",
       animation: step1Animation
     },
     {
       number: 2,
-      title: "Free Case Review",
-      description: "Our privacy attorneys review your information and the details of your case at no cost.",
+      title: "Privacy Laws Were Violated",
+      description: "This secret tracking may violate federal wiretapping laws, the California Invasion of Privacy Act, and other state privacy statutes.",
       animation: step2Animation
     },
     {
       number: 3,
-      title: "We Fight For You",
-      description: "We handle everything—negotiations, paperwork, and litigation if needed—while you focus on your life.",
+      title: "You May Be Owed Compensation",
+      description: "If you visited their website in the past 24 months, you could be entitled to compensation for this privacy violation.",
       animation: step3Animation
     }
   ];
@@ -423,13 +423,13 @@ export default function KinPrivacyLanding() {
           <div className={styles.stepsGrid}>
             {/* Left Column */}
             <div className={styles.stepsLeftColumn}>
-              <h2 className={styles.stepsTitle}>How it Works</h2>
-              <h3 className={styles.stepsSubtitle}>No Win,<span className={styles.noFeeHighlight}> No Fee</span></h3>
+              <h2 className={styles.stepsTitle}>What Happened</h2>
+              <h3 className={styles.stepsSubtitle}>Your Data,<span className={styles.noFeeHighlight}> Tracked</span></h3>
               <p className={styles.stepsDescription}>
-                We like to simplify our intake process. From checking your eligibility to securing your case, our streamlined approach ensures a hassle-free experience.
+                KIN Insurance may have used hidden tracking software on their website to secretly monitor your online activity—recording every click, scroll, and page you visited.
               </p>
               <p className={styles.stepsDescription2}>
-                You can expect transparent communication, prompt updates, and a commitment to achieving the best possible outcome for your privacy case.
+                This data was potentially shared with third parties without your knowledge or consent, violating your privacy rights under state and federal law.
               </p>
               <a href="#check-eligibility" className={styles.stepsButton}>
                 Check Your Eligibility
