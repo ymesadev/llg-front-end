@@ -1,19 +1,18 @@
-/* KIN Insurance Privacy Violation Landing Page Styles */
+/* KIN Insurance Privacy Violation Landing Page - Professional Design */
 
 .landingPage {
   --primary: #1a2b49;
   --primary-light: #2a3d5f;
+  --primary-dark: #0f1a2e;
   --accent: #ffb800;
   --accent-hover: #e5a500;
   --white: #ffffff;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-600: #4b5563;
-  --gray-800: #1f2937;
-  --success: #10b981;
-  --error: #ef4444;
-  --warning: #f59e0b;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-400: #94a3b8;
+  --gray-600: #475569;
+  --gray-800: #1e293b;
 }
 
 /* ==================== HERO SECTION ==================== */
@@ -29,7 +28,7 @@
 .heroBackground {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  background: linear-gradient(160deg, var(--primary) 0%, var(--primary-dark) 100%);
   z-index: 0;
 }
 
@@ -37,13 +36,13 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 
 .heroOverlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse at 30% 20%, rgba(255, 184, 0, 0.1) 0%, transparent 50%);
+  background: radial-gradient(ellipse at 70% 20%, rgba(255, 184, 0, 0.08) 0%, transparent 50%);
 }
 
 .heroContent {
@@ -53,8 +52,8 @@
 
 .heroGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 5rem;
   align-items: center;
 }
 
@@ -66,21 +65,24 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  padding: 0.5rem 1rem;
+  background: rgba(255, 184, 0, 0.1);
+  border: 1px solid rgba(255, 184, 0, 0.25);
+  padding: 0.6rem 1.25rem;
   border-radius: 50px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #fca5a5;
-  margin-bottom: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   animation: fadeInUp 0.6s ease-out;
 }
 
 .heroTitle {
-  font-size: 3rem;
-  line-height: 1.15;
+  font-size: 3.25rem;
+  line-height: 1.12;
   margin-bottom: 1.5rem;
+  letter-spacing: -0.5px;
   animation: fadeInUp 0.6s ease-out 0.1s both;
 }
 
@@ -90,11 +92,12 @@
 }
 
 .heroSubtitle {
-  font-size: 1.15rem;
-  line-height: 1.7;
-  opacity: 0.9;
-  margin-bottom: 1.5rem;
-  max-width: 540px;
+  font-size: 1.125rem;
+  line-height: 1.75;
+  opacity: 0.85;
+  margin-bottom: 1.75rem;
+  max-width: 520px;
+  font-weight: 300;
   animation: fadeInUp 0.6s ease-out 0.2s both;
 }
 
@@ -102,30 +105,36 @@
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  border-radius: 12px;
-  padding: 1rem 1.25rem;
+  background: rgba(255, 184, 0, 0.1);
+  border-left: 3px solid var(--accent);
+  padding: 1.25rem 1.5rem;
   margin-bottom: 2rem;
   animation: fadeInUp 0.6s ease-out 0.25s both;
 }
 
 .alertIcon {
-  color: var(--warning);
+  color: var(--accent);
   flex-shrink: 0;
   margin-top: 2px;
+  width: 22px;
+  height: 22px;
 }
 
 .alertBox p {
   margin: 0;
   font-size: 1rem;
-  line-height: 1.5;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.alertBox strong {
+  font-weight: 600;
 }
 
 .heroCtas {
   display: flex;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   animation: fadeInUp 0.6s ease-out 0.3s both;
 }
 
@@ -136,42 +145,42 @@
   background: var(--accent);
   color: var(--primary);
   padding: 1rem 2rem;
-  border-radius: 50px;
-  font-weight: 700;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
   text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3);
+  transition: all 0.2s ease;
 }
 
 .primaryCta:hover {
   background: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 184, 0, 0.4);
+  transform: translateY(-1px);
 }
 
 .secondaryCta {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   background: transparent;
   color: var(--white);
-  padding: 1rem 2rem;
-  border-radius: 50px;
-  font-weight: 600;
+  padding: 1rem 1.75rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
   text-decoration: none;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.2s ease;
 }
 
 .secondaryCta:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .trustIndicators {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 2rem;
   animation: fadeInUp 0.6s ease-out 0.4s both;
 }
 
@@ -179,12 +188,15 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.95rem;
-  opacity: 0.9;
+  font-size: 0.9rem;
+  opacity: 0.8;
+  font-weight: 400;
 }
 
 .trustIcon {
-  color: var(--success);
+  color: var(--accent);
+  width: 18px;
+  height: 18px;
 }
 
 /* ==================== FORM CARD ==================== */
@@ -194,45 +206,45 @@
 
 .formCard {
   background: var(--white);
-  border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
 }
 
 .formHeader {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .formLockIcon {
-  width: 40px;
-  height: 40px;
-  color: var(--success);
+  width: 36px;
+  height: 36px;
+  color: var(--primary);
   margin-bottom: 0.75rem;
 }
 
 .formHeader h3 {
   font-family: "Anton", sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.6rem;
   color: var(--primary);
   margin-bottom: 0.5rem;
 }
 
 .formHeader p {
   color: var(--gray-600);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .heroForm {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 
 .formGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.875rem;
 }
 
 .inputGroup {
@@ -243,13 +255,18 @@
 .inputGroup select,
 .inputGroup textarea {
   width: 100%;
-  padding: 1rem;
-  border: 2px solid var(--gray-200);
-  border-radius: 12px;
-  font-size: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 0.95rem;
   font-family: inherit;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   background: var(--white);
+  color: var(--gray-800);
+}
+
+.inputGroup input::placeholder {
+  color: var(--gray-400);
 }
 
 .inputGroup input:focus,
@@ -257,17 +274,18 @@
 .inputGroup textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(26, 43, 73, 0.1);
+  box-shadow: 0 0 0 3px rgba(26, 43, 73, 0.08);
 }
 
 .inputGroup select {
   cursor: pointer;
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1rem center;
+  background-position: right 0.75rem center;
   background-size: 1rem;
-  padding-right: 3rem;
+  padding-right: 2.5rem;
+  color: var(--gray-600);
 }
 
 .inputGroup textarea {
@@ -279,18 +297,20 @@
   display: flex;
   align-items: flex-start;
   gap: 0.75rem;
+  padding-top: 0.25rem;
 }
 
 .checkboxGroup input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  margin-top: 0.15rem;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.1rem;
   cursor: pointer;
   accent-color: var(--primary);
+  flex-shrink: 0;
 }
 
 .checkboxGroup label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--gray-600);
   line-height: 1.5;
 }
@@ -306,28 +326,27 @@
   justify-content: center;
   gap: 0.75rem;
   width: 100%;
-  padding: 1.25rem;
+  padding: 1rem;
   background: var(--primary);
   color: var(--white);
   border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
 }
 
 .submitButton:hover {
   background: var(--primary-light);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(26, 43, 73, 0.3);
 }
 
 .formDisclaimer {
   text-align: center;
-  font-size: 0.8rem;
-  color: var(--gray-600);
-  margin: 0;
+  font-size: 0.75rem;
+  color: var(--gray-400);
+  margin: 0.5rem 0 0 0;
 }
 
 .spinnerContainer,
@@ -341,14 +360,14 @@
 }
 
 .spinner {
-  font-size: 3rem;
+  font-size: 2.5rem;
   color: var(--primary);
   animation: spin 1s linear infinite;
 }
 
 .errorIcon {
-  font-size: 3rem;
-  color: var(--error);
+  font-size: 2.5rem;
+  color: var(--primary);
   margin-bottom: 1rem;
 }
 
@@ -358,9 +377,10 @@
   background: var(--primary);
   color: var(--white);
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.9rem;
 }
 
 /* ==================== PROBLEM SECTION ==================== */
@@ -375,7 +395,7 @@
 }
 
 .sectionTitleCenter {
-  font-size: 2.75rem;
+  font-size: 2.5rem;
   color: var(--primary);
   text-align: center;
   margin-bottom: 1rem;
@@ -387,11 +407,12 @@
 
 .sectionSubtitle {
   text-align: center;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: var(--gray-600);
-  max-width: 600px;
+  max-width: 580px;
   margin: 0 auto;
   line-height: 1.7;
+  font-weight: 300;
 }
 
 .issuesGrid {
@@ -403,24 +424,24 @@
 
 .issueCard {
   background: var(--gray-50);
-  border-radius: 20px;
-  padding: 2rem;
+  border-radius: 12px;
+  padding: 2.5rem 2rem;
   text-align: center;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
+  transition: all 0.25s ease;
+  border: 1px solid var(--gray-100);
 }
 
 .issueCard:hover {
-  transform: translateY(-5px);
-  border-color: var(--error);
-  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(26, 43, 73, 0.08);
+  border-color: var(--gray-200);
 }
 
 .issueIconWrapper {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
-  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  background: var(--primary);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -428,14 +449,14 @@
 }
 
 .issueIcon {
-  width: 32px;
-  height: 32px;
-  color: var(--white);
+  width: 28px;
+  height: 28px;
+  color: var(--accent);
 }
 
 .issueCard h3 {
   font-family: "Anton", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   color: var(--primary);
   margin-bottom: 0.75rem;
 }
@@ -444,26 +465,28 @@
   color: var(--gray-600);
   font-size: 0.95rem;
   line-height: 1.6;
+  font-weight: 300;
 }
 
 .violationBox {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border-radius: 20px;
+  background: var(--primary);
+  border-radius: 12px;
   padding: 3rem;
   color: var(--white);
 }
 
 .violationContent h3 {
   font-family: "Anton", sans-serif;
-  font-size: 1.75rem;
+  font-size: 1.6rem;
   margin-bottom: 1rem;
 }
 
 .violationContent p {
-  font-size: 1.05rem;
+  font-size: 1rem;
   line-height: 1.7;
-  opacity: 0.9;
+  opacity: 0.85;
   margin-bottom: 1.5rem;
+  font-weight: 300;
 }
 
 .violationContent ul {
@@ -479,13 +502,14 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-weight: 400;
 }
 
 .violationContent ul li::before {
   content: '';
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: var(--accent);
   border-radius: 50%;
   flex-shrink: 0;
@@ -500,33 +524,32 @@
 .processGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
   margin-top: 4rem;
 }
 
 .processCard {
   background: var(--white);
-  border-radius: 20px;
-  padding: 2rem;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
   text-align: center;
   position: relative;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
+  transition: all 0.25s ease;
+  border: 1px solid var(--gray-100);
 }
 
 .processCard:hover {
-  transform: translateY(-5px);
-  border-color: var(--accent);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(26, 43, 73, 0.08);
 }
 
 .processNumber {
   position: absolute;
-  top: -15px;
+  top: -12px;
   left: 50%;
   transform: translateX(-50%);
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   background: var(--accent);
   color: var(--primary);
   border-radius: 50%;
@@ -534,37 +557,38 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .processIconWrapper {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  background: var(--primary);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem;
+  margin: 0.5rem auto 1.25rem;
 }
 
 .stepIcon {
-  width: 32px;
-  height: 32px;
-  color: var(--white);
+  width: 26px;
+  height: 26px;
+  color: var(--accent);
 }
 
 .processCard h3 {
   font-family: "Anton", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   color: var(--primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .processCard p {
   color: var(--gray-600);
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  font-weight: 300;
 }
 
 /* ==================== ELIGIBILITY SECTION ==================== */
@@ -581,10 +605,10 @@
 }
 
 .sectionTitle {
-  font-size: 2.75rem;
+  font-size: 2.5rem;
   color: var(--primary);
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
+  margin-bottom: 1.25rem;
+  line-height: 1.15;
 }
 
 .sectionTitle .highlight {
@@ -592,9 +616,10 @@
 }
 
 .eligibilityText {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   color: var(--gray-600);
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
+  font-weight: 300;
 }
 
 .eligibilityList {
@@ -607,57 +632,62 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.75rem 0;
-  font-size: 1.05rem;
+  padding: 0.65rem 0;
+  font-size: 1rem;
   color: var(--gray-800);
 }
 
 .checkIcon {
-  color: var(--success);
+  color: var(--accent);
   flex-shrink: 0;
+  width: 22px;
+  height: 22px;
 }
 
 .eligibilityCta {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
-  background: var(--accent);
-  color: var(--primary);
+  background: var(--primary);
+  color: var(--white);
   padding: 1rem 2rem;
-  border-radius: 50px;
-  font-weight: 700;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .eligibilityCta:hover {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
+  background: var(--primary-light);
 }
 
 .noFeeCard {
-  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
-  border-radius: 20px;
-  padding: 3rem;
+  background: var(--primary);
+  border-radius: 12px;
+  padding: 2.5rem;
   text-align: center;
   color: var(--white);
 }
 
 .noFeeIcon {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 1.5rem;
+  width: 48px;
+  height: 48px;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
 }
 
 .noFeeCard h4 {
   font-family: "Anton", sans-serif;
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .noFeeCard p {
-  opacity: 0.95;
+  opacity: 0.85;
   line-height: 1.6;
+  font-weight: 300;
+  font-size: 0.95rem;
 }
 
 /* ==================== FAQ SECTION ==================== */
@@ -667,16 +697,16 @@
 }
 
 .faqContainer {
-  max-width: 800px;
+  max-width: 720px;
   margin: 3rem auto 0;
 }
 
 .faqItem {
-  border: 2px solid var(--gray-200);
-  border-radius: 12px;
-  margin-bottom: 1rem;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
   background: var(--white);
 }
 
@@ -692,8 +722,8 @@
   padding: 1.25rem 1.5rem;
   background: none;
   border: none;
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 500;
   color: var(--primary);
   cursor: pointer;
   text-align: left;
@@ -701,12 +731,16 @@
 }
 
 .faqChevron {
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  color: var(--gray-400);
 }
 
 .faqItem.active .faqChevron {
   transform: rotate(180deg);
+  color: var(--primary);
 }
 
 .faqAnswer {
@@ -723,38 +757,40 @@
   padding: 0 1.5rem 1.5rem;
   color: var(--gray-600);
   line-height: 1.7;
+  font-weight: 300;
 }
 
 /* ==================== CTA SECTION ==================== */
 .ctaSection {
-  padding: 6rem 2rem;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  padding: 5rem 2rem;
+  background: var(--primary);
 }
 
 .ctaContent {
   text-align: center;
-  max-width: 700px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
 .ctaIcon {
-  width: 60px;
-  height: 60px;
+  width: 48px;
+  height: 48px;
   color: var(--accent);
   margin-bottom: 1.5rem;
 }
 
 .ctaContent h2 {
-  font-size: 2.5rem;
+  font-size: 2.25rem;
   color: var(--white);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 
 .ctaContent p {
-  font-size: 1.15rem;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.7;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
 }
 
 .ctaButtons {
@@ -770,44 +806,43 @@
   gap: 0.75rem;
   background: var(--accent);
   color: var(--primary);
-  padding: 1.25rem 2.5rem;
-  border-radius: 50px;
-  font-weight: 700;
-  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .ctaPrimary:hover {
   background: var(--accent-hover);
-  transform: translateY(-2px);
 }
 
 .ctaSecondary {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   background: transparent;
   color: var(--white);
-  padding: 1.25rem 2.5rem;
-  border-radius: 50px;
-  font-weight: 600;
-  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.95rem;
   text-decoration: none;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  transition: all 0.2s ease;
 }
 
 .ctaSecondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* ==================== ANIMATIONS ==================== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -883,6 +918,10 @@
     grid-template-columns: 1fr;
   }
 
+  .formCard {
+    padding: 1.75rem;
+  }
+
   .sectionTitle,
   .sectionTitleCenter {
     font-size: 2rem;
@@ -913,7 +952,8 @@
   }
 
   .badge {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    padding: 0.5rem 1rem;
   }
 
   .formCard {
@@ -922,6 +962,10 @@
 
   .alertBox {
     flex-direction: column;
-    text-align: center;
+    gap: 0.75rem;
+  }
+
+  .alertIcon {
+    align-self: flex-start;
   }
 }
