@@ -495,7 +495,7 @@ export default function KinPrivacyLanding() {
           <div className={styles.eligibilityGrid}>
             <div className={styles.eligibilityContent}>
               <h2 className={styles.sectionTitle}>
-                Are You <span className={styles.highlight}>Eligible?</span>
+                Are You <span className={styles.highlightBg}>Eligible?</span>
               </h2>
               <p className={styles.eligibilityText}>
                 You may qualify for this privacy case if:
@@ -523,14 +523,80 @@ export default function KinPrivacyLanding() {
                 <ArrowRight size={20} />
               </a>
             </div>
-            <div className={styles.eligibilityImage}>
-              <div className={styles.noFeeCard}>
-                <DollarSign className={styles.noFeeIcon} />
-                <h4>No Upfront Fees</h4>
-                <p>
-                  You pay nothing unless we win your case. Our attorneys work on
-                  a contingency basis—we only get paid if you do.
-                </p>
+            <div className={styles.eligibilityFormWrapper}>
+              <div className={styles.formCard}>
+                <div className={styles.formHeader}>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>Check Your Eligibility</h3>
+                  <p>Free & Confidential Case Review</p>
+                </div>
+                <form onSubmit={handleSubmit} className={styles.heroForm}>
+                  <div className={styles.formGrid}>
+                    <div className={styles.inputGroup}>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Full Name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email Address"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <select
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="" disabled>Select Your State</option>
+                      <option value="FL">Florida</option>
+                      <option value="CA">California</option>
+                      <option value="TX">Texas</option>
+                      <option value="NY">New York</option>
+                      <option value="other">Other State</option>
+                    </select>
+                  </div>
+                  <div className={styles.checkboxGroup}>
+                    <input
+                      type="checkbox"
+                      name="consent"
+                      id="consent2"
+                      checked={formData.consent}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    <label htmlFor="consent2">
+                      I agree to receive communications and understand the{" "}
+                      <Link href="/privacy-policy">Privacy Policy</Link>.
+                    </label>
+                  </div>
+                  <button type="submit" className={styles.submitButton}>
+                    Check My Eligibility
+                    <ArrowRight size={20} />
+                  </button>
+                </form>
               </div>
             </div>
           </div>
@@ -540,27 +606,111 @@ export default function KinPrivacyLanding() {
       {/* FAQ Section */}
       <section className={styles.faqSection}>
         <div className="container">
-          <h2 className={styles.sectionTitleCenter}>
-            Frequently Asked <span className={styles.highlight}>Questions</span>
-          </h2>
-          <div className={styles.faqContainer}>
-            {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className={`${styles.faqItem} ${activeAccordion === index ? styles.active : ''}`}
-              >
-                <button
-                  className={styles.faqQuestion}
-                  onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}
-                >
-                  <span>{faq.question}</span>
-                  <ChevronDown className={styles.faqChevron} />
-                </button>
-                <div className={styles.faqAnswer}>
-                  <p>{faq.answer}</p>
-                </div>
+          <div className={styles.faqGrid}>
+            <div className={styles.faqLeftColumn}>
+              <h2 className={styles.sectionTitle}>
+                Frequently Asked <span className={styles.highlightBg}>Questions</span>
+              </h2>
+              <div className={styles.faqContainer}>
+                {faqs.map((faq, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.faqItem} ${activeAccordion === index ? styles.active : ''}`}
+                  >
+                    <button
+                      className={styles.faqQuestion}
+                      onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}
+                    >
+                      <span>{faq.question}</span>
+                      <ChevronDown className={styles.faqChevron} />
+                    </button>
+                    <div className={styles.faqAnswer}>
+                      <p>{faq.answer}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+              <a href="#check-eligibility" className={styles.eligibilityCta}>
+                Check Your Eligibility Now
+                <ArrowRight size={20} />
+              </a>
+            </div>
+            <div className={styles.faqRightColumn}>
+              <div className={styles.formCard}>
+                <div className={styles.formHeader}>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>Check Your Eligibility</h3>
+                  <p>Free & Confidential Case Review</p>
+                </div>
+                <form onSubmit={handleSubmit} className={styles.heroForm}>
+                  <div className={styles.formGrid}>
+                    <div className={styles.inputGroup}>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Full Name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Email Address"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className={styles.inputGroup}>
+                    <select
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      <option value="" disabled>Select Your State</option>
+                      <option value="FL">Florida</option>
+                      <option value="CA">California</option>
+                      <option value="TX">Texas</option>
+                      <option value="NY">New York</option>
+                      <option value="other">Other State</option>
+                    </select>
+                  </div>
+                  <div className={styles.checkboxGroup}>
+                    <input
+                      type="checkbox"
+                      name="consent"
+                      id="consent3"
+                      checked={formData.consent}
+                      onChange={handleInputChange}
+                      required
+                    />
+                    <label htmlFor="consent3">
+                      I agree to receive communications and understand the{" "}
+                      <Link href="/privacy-policy">Privacy Policy</Link>.
+                    </label>
+                  </div>
+                  <button type="submit" className={styles.submitButton}>
+                    Check My Eligibility
+                    <ArrowRight size={20} />
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
       </section>

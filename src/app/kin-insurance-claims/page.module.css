@@ -93,7 +93,7 @@
 
 .highlightBg {
   background-color: var(--primary);
-  color: var(--white);
+  color: var(--accent);
   padding: 0.1rem 0.75rem;
 }
 
@@ -838,51 +838,12 @@
   box-shadow: 0 8px 25px rgba(255, 184, 0, 0.4);
 }
 
-.noFeeCard {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  border-radius: 24px;
-  padding: 3rem;
-  text-align: center;
-  color: var(--white);
-  position: relative;
-  overflow: hidden;
+.eligibilityFormWrapper {
+  /* Form wrapper for eligibility section */
 }
 
-.noFeeCard::before {
-  content: '';
-  position: absolute;
-  top: -30%;
-  right: -30%;
-  width: 200px;
-  height: 200px;
-  background: radial-gradient(circle, rgba(255, 184, 0, 0.15) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.noFeeIcon {
-  width: 64px;
-  height: 64px;
-  color: var(--accent);
-  margin-bottom: 1.5rem;
-  filter: drop-shadow(0 4px 8px rgba(255, 184, 0, 0.3));
-}
-
-.noFeeCard h4 {
-  font-family: "Anton", sans-serif;
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  position: relative;
-  z-index: 1;
-  text-transform: uppercase;
-}
-
-.noFeeCard p {
-  opacity: 0.9;
-  line-height: 1.7;
-  font-weight: 300;
-  font-size: 1rem;
-  position: relative;
-  z-index: 1;
+.eligibilityFormWrapper .formCard {
+  box-shadow: 0 15px 40px rgba(26, 43, 73, 0.1);
 }
 
 /* ==================== FAQ SECTION ==================== */
@@ -902,9 +863,28 @@
   background: linear-gradient(90deg, transparent, var(--gray-200), transparent);
 }
 
+.faqGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: flex-start;
+}
+
+.faqLeftColumn {
+  text-align: left;
+}
+
+.faqLeftColumn .sectionTitle {
+  margin-bottom: 2rem;
+}
+
+.faqRightColumn {
+  position: sticky;
+  top: 2rem;
+}
+
 .faqContainer {
-  max-width: 800px;
-  margin: 3.5rem auto 0;
+  margin-bottom: 2rem;
 }
 
 .faqItem {
@@ -1141,6 +1121,15 @@
 
   .violationContent ul {
     grid-template-columns: 1fr;
+  }
+
+  .faqGrid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .faqRightColumn {
+    position: static;
   }
 }
 
