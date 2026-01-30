@@ -423,13 +423,13 @@ export default function KinPrivacyLanding() {
           <div className={styles.stepsGrid}>
             {/* Left Column */}
             <div className={styles.stepsLeftColumn}>
-              <h2 className={styles.stepsTitle}>How It Works</h2>
-              <h3 className={styles.stepsSubtitle}>No Win,<span className={styles.noFeeHighlight}> No Fee</span></h3>
+              <h2 className={styles.stepsTitle}>What Happened?</h2>
+              <h3 className={styles.stepsSubtitle}>Your Privacy<span className={styles.noFeeHighlight}> At Risk</span></h3>
               <p className={styles.stepsDescription}>
-                KIN Insurance may have used hidden tracking software on their website to secretly monitor your online activity—recording every click, scroll, and page you visited.
+                When you visited KIN Insurance's website to get a quote, compare coverage options, or purchase a policy, hidden tracking technology may have been secretly monitoring your every move. This software, often called "session replay" or "pixel tracking," records detailed information about your browsing session—including mouse movements, clicks, scrolls, keystrokes, and the pages you viewed.
               </p>
               <p className={styles.stepsDescription2}>
-                This data was potentially shared with third parties without your knowledge or consent, violating your privacy rights under state and federal law.
+                What makes this particularly concerning is that this tracking likely occurred without your knowledge or meaningful consent. The data collected may have been shared with third-party advertising companies, analytics firms, and other organizations—all without you ever being informed. This type of covert surveillance may violate federal wiretapping laws, the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, and other state consumer protection statutes designed to protect your digital privacy.
               </p>
               <a href="#check-eligibility" className={styles.stepsButton}>
                 Check Your Eligibility
