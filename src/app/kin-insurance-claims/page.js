@@ -27,7 +27,6 @@ import {
   Check,
   X
 } from "lucide-react";
-import { FaSpinner, FaTimesCircle } from "react-icons/fa";
 import styles from "./page.module.css";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
@@ -48,7 +47,6 @@ export default function KinPrivacyLanding() {
   const [formStep, setFormStep] = useState(0); // 0 = q1-2, 1 = q3-4, 2 = contact
   const [eligibilityAnswers, setEligibilityAnswers] = useState({});
   const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
-  const [formStatus, setFormStatus] = useState("idle");
   const [disqualified, setDisqualified] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
@@ -103,32 +101,10 @@ export default function KinPrivacyLanding() {
     setFormStep(formStep - 1);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (!contactComplete) return;
-    setFormStatus("submitting");
-
-    const payload = {
-      ...eligibilityAnswers,
-      ...contactInfo,
-      caseType: "Privacy Violation",
-      company: "KIN Insurance",
-      page_source: "kin_privacy_landing",
-      campaign_type: "organic",
-      qualified: true
-    };
-
-    try {
-      await fetch("https://dev-n8n.louislawgroup.com/webhook/forms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      router.push("/kin-insurance-claims/sign");
-    } catch (err) {
-      console.error("Form submission error:", err);
-      setFormStatus("error");
-    }
+    router.push("/kin-insurance-claims/sign");
   };
 
   const faqs = [
@@ -261,19 +237,6 @@ export default function KinPrivacyLanding() {
                     <X size={24} className={styles.disqualifiedIcon} />
                     <p>Based on your answers, you may not qualify for this case.</p>
                     <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
-                  </div>
-                ) : formStatus === "error" ? (
-                  <div className={styles.errorContainer}>
-                    <FaTimesCircle className={styles.errorIcon} />
-                    <p>Something went wrong. Please try again.</p>
-                    <button onClick={() => setFormStatus("idle")} className={styles.retryButton}>
-                      Try Again
-                    </button>
-                  </div>
-                ) : formStatus === "submitting" ? (
-                  <div className={styles.spinnerContainer}>
-                    <FaSpinner className={styles.spinner} />
-                    <p>Submitting...</p>
                   </div>
                 ) : formStep === 0 ? (
                   <div className={styles.eligibilityForm}>
