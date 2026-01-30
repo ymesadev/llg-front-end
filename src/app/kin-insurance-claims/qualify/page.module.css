@@ -122,13 +122,14 @@
 .main {
   flex: 1;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem;
+  padding: 3rem 2rem;
+  overflow-y: auto;
 }
 
 .questionContainer {
-  max-width: 600px;
+  max-width: 700px;
   width: 100%;
 }
 
@@ -181,106 +182,171 @@
   }
 }
 
-.questionNumber {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  margin-bottom: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+/* Step Header */
+.stepHeader {
+  margin-bottom: 2rem;
 }
 
-.question {
+.stepIcon {
+  width: 48px;
+  height: 48px;
+  color: #1a2b49;
+  margin-bottom: 1rem;
+}
+
+.stepHeader h2 {
   font-size: 1.75rem;
   color: #1a2b49;
-  font-weight: 600;
-  line-height: 1.4;
-  margin-bottom: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
-.subtext {
-  font-size: 1rem;
+.stepHeader p {
   color: #64748b;
+  font-size: 1rem;
+}
+
+.successBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #1a2b49, #2a3d5f);
+  color: #ffb800;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Questions Grid */
+.questionsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
   margin-bottom: 2rem;
+}
+
+.questionCard {
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.questionCard:hover {
+  border-color: #d0d0d0;
+}
+
+.questionText {
+  font-size: 1rem;
+  color: #1a2b49;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+}
+
+.questionNumber {
+  font-weight: 700;
+  margin-right: 0.5rem;
+  color: #ffb800;
 }
 
 /* Yes/No Buttons */
 .yesNoButtons {
   display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 0.75rem;
 }
 
 .optionButton {
   flex: 1;
-  padding: 1.25rem 2rem;
+  padding: 0.875rem 1.5rem;
   border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  border-radius: 8px;
   background: #fff;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #1a2b49;
+  color: #64748b;
   cursor: pointer;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .optionButton:hover {
   border-color: #1a2b49;
-  background: #f8f9fa;
+  color: #1a2b49;
 }
 
-.optionButton.selected {
+.optionButton.selectedYes {
   border-color: #1a2b49;
   background: #1a2b49;
   color: #fff;
 }
 
-.optionButton svg {
-  transition: transform 0.2s ease;
+.optionButton.selectedNo {
+  border-color: #dc2626;
+  background: #fef2f2;
+  color: #dc2626;
 }
 
-.optionButton:hover svg {
-  transform: scale(1.1);
-}
-
-/* Input Form */
-.inputForm {
-  margin-top: 2rem;
+/* Contact Form */
+.contactForm {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-.textInput {
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a2b49;
+}
+
+.inputGroup input {
   width: 100%;
-  padding: 1.25rem 1.5rem;
+  padding: 1rem 1.25rem;
   border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  font-size: 1.1rem;
+  border-radius: 10px;
+  font-size: 1rem;
   color: #1a2b49;
   transition: all 0.2s ease;
   background: #fff;
 }
 
-.textInput:focus {
+.inputGroup input:focus {
   outline: none;
   border-color: #1a2b49;
   box-shadow: 0 0 0 4px rgba(26, 43, 73, 0.1);
 }
 
-.textInput::placeholder {
+.inputGroup input::placeholder {
   color: #94a3b8;
 }
 
-.continueButton {
+/* Navigation */
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.continueButton,
+.submitButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  padding: 1.15rem 2.5rem;
+  padding: 1rem 2.5rem;
   background: #1a2b49;
   color: #fff;
   border: none;
@@ -289,43 +355,37 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  align-self: flex-start;
 }
 
-.continueButton:hover:not(:disabled) {
+.continueButton:hover:not(:disabled),
+.submitButton:hover:not(:disabled) {
   background: #2a3d5f;
   transform: translateY(-2px);
 }
 
-.continueButton:disabled {
+.continueButton:disabled,
+.submitButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* Navigation */
-.navigation {
-  margin-top: 3rem;
-  display: flex;
-  align-items: center;
 }
 
 .backButton {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 1rem 1.5rem;
   background: transparent;
-  border: none;
+  border: 2px solid #e0e0e0;
   color: #64748b;
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  border-radius: 8px;
+  border-radius: 50px;
 }
 
 .backButton:hover {
-  background: #f1f5f9;
+  border-color: #1a2b49;
   color: #1a2b49;
 }
 
@@ -431,15 +491,26 @@
     padding: 2rem 1.5rem;
   }
 
-  .question {
+  .stepHeader h2 {
     font-size: 1.4rem;
   }
 
   .yesNoButtons {
-    flex-direction: column;
+    flex-direction: row;
   }
 
   .optionButton {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .navigation {
+    flex-direction: column;
+  }
+
+  .backButton,
+  .continueButton,
+  .submitButton {
     width: 100%;
   }
 }

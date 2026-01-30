@@ -12,6 +12,7 @@ import {
   CheckCircle,
   Phone,
   ArrowRight,
+  ArrowLeft,
   AlertTriangle,
   UserCheck,
   FileText,
@@ -22,7 +23,9 @@ import {
   Share2,
   ScanEye,
   ServerCrash,
-  Send
+  Send,
+  Check,
+  X
 } from "lucide-react";
 import { FaSpinner, FaTimesCircle } from "react-icons/fa";
 import styles from "./page.module.css";
@@ -33,22 +36,27 @@ import step1Animation from "../../../public/lottie/step1.json";
 import step2Animation from "../../../public/lottie/step2.json";
 import step3Animation from "../../../public/lottie/step3.json";
 
+const eligibilityQuestions = [
+  { id: "age", question: "Are you 18 years of age or older?" },
+  { id: "visited", question: "Did you visit Kin Insurance's website within the last 2 years?" },
+  { id: "florida", question: "Were you located in Florida when you visited?" },
+  { id: "submitted", question: "Did you request a quote or submit personal information?" }
+];
+
 export default function KinPrivacyLanding() {
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-    zipcode: "",
-    state: "",
-    visitedWebsite: "",
-    timeframe: "",
-    consent: false,
-  });
+  const [formStep, setFormStep] = useState(0); // 0 = eligibility, 1 = contact
+  const [eligibilityAnswers, setEligibilityAnswers] = useState({});
+  const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
   const [formStatus, setFormStatus] = useState("idle");
+  const [disqualified, setDisqualified] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState(null);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [progress, setProgress] = useState(0);
+
+  const allEligibilityAnswered = eligibilityQuestions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const allEligibilityYes = eligibilityQuestions.every(q => eligibilityAnswers[q.id] === true);
+  const contactComplete = contactInfo.email && contactInfo.name && contactInfo.phone;
 
   const updateProgress = () => {
     if (!emblaApi) return;
@@ -62,69 +70,50 @@ export default function KinPrivacyLanding() {
     updateProgress();
   }, [emblaApi]);
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  const handleEligibilityAnswer = (questionId, answer) => {
+    setEligibilityAnswers(prev => ({ ...prev, [questionId]: answer }));
+  };
+
+  const handleContactChange = (e) => {
+    const { name, value } = e.target;
+    setContactInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const goToContact = () => {
+    if (!allEligibilityYes) {
+      setDisqualified(true);
+      return;
+    }
+    setFormStep(1);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!contactComplete) return;
     setFormStatus("submitting");
 
     const payload = {
-      name: formData.name,
-      phone: formData.phone,
-      email: formData.email,
-      zipcode: formData.zipcode,
-      state: formData.state,
+      ...eligibilityAnswers,
+      ...contactInfo,
       caseType: "Privacy Violation",
       company: "KIN Insurance",
-      visitedWebsite: formData.visitedWebsite,
-      timeframe: formData.timeframe,
-      consent: formData.consent ? "Yes" : "No",
       page_source: "kin_privacy_landing",
       campaign_type: "organic",
+      qualified: true
     };
 
     try {
-      const response = await fetch(
-        "https://dev-n8n.louislawgroup.com/webhook/forms",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Network response was not ok (status ${response.status})`);
-      }
-
-      setFormStatus("success");
-      setFormData({
-        name: "",
-        phone: "",
-        email: "",
-        zipcode: "",
-        state: "",
-        visitedWebsite: "",
-        timeframe: "",
-        consent: false,
+      await fetch("https://dev-n8n.louislawgroup.com/webhook/forms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       });
+      router.push("/kin-insurance-claims/sign");
     } catch (err) {
       console.error("Form submission error:", err);
       setFormStatus("error");
     }
   };
-
-  useEffect(() => {
-    if (formStatus === "success") {
-      router.push("https://www.louislawgroup.com/thank-you");
-    }
-  }, [formStatus, router]);
 
   const faqs = [
     {
@@ -247,10 +236,17 @@ export default function KinPrivacyLanding() {
               <div className={styles.formCard}>
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
-                  <h3>Check Your Eligibility</h3>
-                  <p>Free & Confidential Case Review</p>
+                  <h3>{formStep === 0 ? "Check Your Eligibility" : "Almost Done!"}</h3>
+                  <p>{formStep === 0 ? "Answer a few quick questions" : "Enter your contact info"}</p>
                 </div>
-                {formStatus === "error" ? (
+
+                {disqualified ? (
+                  <div className={styles.disqualifiedBox}>
+                    <X size={24} className={styles.disqualifiedIcon} />
+                    <p>Based on your answers, you may not qualify for this case.</p>
+                    <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
+                  </div>
+                ) : formStatus === "error" ? (
                   <div className={styles.errorContainer}>
                     <FaTimesCircle className={styles.errorIcon} />
                     <p>Something went wrong. Please try again.</p>
@@ -261,116 +257,85 @@ export default function KinPrivacyLanding() {
                 ) : formStatus === "submitting" ? (
                   <div className={styles.spinnerContainer}>
                     <FaSpinner className={styles.spinner} />
-                    <p>Checking your eligibility...</p>
+                    <p>Submitting...</p>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className={styles.heroForm}>
-                    <div className={styles.formGrid}>
-                      <div className={styles.inputGroup}>
-                        <input
-                          type="text"
-                          name="name"
-                          placeholder="Full Name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required
-                        />
+                ) : formStep === 0 ? (
+                  <div className={styles.eligibilityForm}>
+                    {eligibilityQuestions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={16} /> Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={16} /> No
+                          </button>
+                        </div>
                       </div>
-                      <div className={styles.inputGroup}>
-                        <input
-                          type="tel"
-                          name="phone"
-                          placeholder="Phone Number"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                      <div className={styles.inputGroup}>
-                        <input
-                          type="email"
-                          name="email"
-                          placeholder="Email Address"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                      <div className={styles.inputGroup}>
-                        <input
-                          type="text"
-                          name="zipcode"
-                          placeholder="Zip Code"
-                          value={formData.zipcode}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className={styles.inputGroup}>
-                      <select
-                        name="state"
-                        value={formData.state}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="" disabled>Select Your State</option>
-                        <option value="FL">Florida</option>
-                        <option value="CA">California</option>
-                        <option value="TX">Texas</option>
-                        <option value="NY">New York</option>
-                        <option value="other">Other State</option>
-                      </select>
-                    </div>
-                    <div className={styles.inputGroup}>
-                      <select
-                        name="visitedWebsite"
-                        value={formData.visitedWebsite}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="" disabled>Did you visit KIN Insurance's website?</option>
-                        <option value="yes">Yes, I visited their website</option>
-                        <option value="yes-quote">Yes, I got a quote online</option>
-                        <option value="yes-purchased">Yes, I purchased a policy online</option>
-                        <option value="not-sure">I'm not sure</option>
-                      </select>
-                    </div>
-                    <div className={styles.inputGroup}>
-                      <select
-                        name="timeframe"
-                        value={formData.timeframe}
-                        onChange={handleInputChange}
-                        required
-                      >
-                        <option value="" disabled>When did you visit their website?</option>
-                        <option value="6-months">Within the last 6 months</option>
-                        <option value="1-year">Within the last year</option>
-                        <option value="2-years">Within the last 2 years</option>
-                        <option value="longer">More than 2 years ago</option>
-                      </select>
-                    </div>
-                    <div className={styles.checkboxGroup}>
-                      <input
-                        type="checkbox"
-                        name="consent"
-                        id="consent"
-                        checked={formData.consent}
-                        onChange={handleInputChange}
-                        required
-                      />
-                      <label htmlFor="consent">
-                        I agree to receive communications and understand the{" "}
-                        <Link href="/privacy-policy">Privacy Policy</Link>.
-                      </label>
-                    </div>
-                    <button type="submit" className={styles.submitButton}>
-                      Check My Eligibility
+                    ))}
+                    <button
+                      type="button"
+                      className={styles.submitButton}
+                      onClick={goToContact}
+                      disabled={!allEligibilityAnswered}
+                    >
+                      Continue
                       <ArrowRight size={20} />
                     </button>
-                    <p className={styles.formDisclaimer}>
-                      Your information is secure and confidential.
-                    </p>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className={styles.contactForm}>
+                    <div className={styles.qualifiedBadge}>
+                      <Check size={16} /> You Qualify!
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input
+                        type="email"
+                        name="email"
+                        placeholder="Email used with Kin Insurance"
+                        value={contactInfo.email}
+                        onChange={handleContactChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="Full Name"
+                        value={contactInfo.name}
+                        onChange={handleContactChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input
+                        type="tel"
+                        name="phone"
+                        placeholder="Phone Number"
+                        value={contactInfo.phone}
+                        onChange={handleContactChange}
+                        required
+                      />
+                    </div>
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={() => setFormStep(0)}>
+                        <ArrowLeft size={16} /> Back
+                      </button>
+                      <button type="submit" className={styles.submitButton} disabled={!contactComplete}>
+                        Submit
+                        <ArrowRight size={20} />
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>

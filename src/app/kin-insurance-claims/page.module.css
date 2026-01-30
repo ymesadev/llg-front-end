@@ -356,6 +356,139 @@
   text-align: center;
 }
 
+/* Two-Step Form Styles */
+.eligibilityForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.questionRow {
+  background: var(--gray-50);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.questionLabel {
+  font-size: 0.9rem;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.yesNoGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.yesNoBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--white);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.yesNoBtn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.yesNoBtn.yesSelected {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+}
+
+.yesNoBtn.noSelected {
+  background: #fef2f2;
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.qualifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: var(--accent);
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  align-self: flex-start;
+}
+
+.formButtons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backBtn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.disqualifiedBox {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.disqualifiedIcon {
+  color: #dc2626;
+  margin-bottom: 1rem;
+}
+
+.disqualifiedBox p {
+  color: var(--gray-600);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.callLink {
+  display: inline-block;
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.callLink:hover {
+  text-decoration: underline;
+}
+
 .spinner {
   font-size: 2.5rem;
   color: var(--primary);

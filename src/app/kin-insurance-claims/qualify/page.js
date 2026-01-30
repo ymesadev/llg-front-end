@@ -1,141 +1,92 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ArrowLeft, Check, X } from "lucide-react";
+import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
 
-const questions = [
+const eligibilityQuestions = [
   {
     id: "age",
     question: "Are you 18 years of age or older?",
-    type: "yesno",
-    required: true,
-    disqualifyOn: "no"
+    required: true
   },
   {
     id: "visited",
     question: "Did you visit or interact with Kin Insurance's website (Kin.com) within the last 2 years?",
-    type: "yesno",
-    required: true,
-    disqualifyOn: "no"
+    required: true
   },
   {
     id: "florida",
     question: "Were you located in Florida at the time you visited or interacted with Kin Insurance's website?",
-    type: "yesno",
-    required: true,
-    disqualifyOn: "no"
+    required: true
   },
   {
     id: "submitted",
     question: "Did you request a quote, create an account, or submit personal information through Kin Insurance's website?",
-    type: "yesno",
-    required: true,
-    disqualifyOn: "no"
-  },
-  {
-    id: "usedEmail",
-    question: "What email address did you use when interacting with Kin Insurance?",
-    subtext: "This helps us verify your claim",
-    type: "email",
-    placeholder: "your@email.com",
-    required: true
-  },
-  {
-    id: "name",
-    question: "What's your full name?",
-    subtext: "We'll use this for your case file",
-    type: "text",
-    placeholder: "Full Name",
-    required: true
-  },
-  {
-    id: "phone",
-    question: "What's the best phone number to reach you?",
-    subtext: "We'll only call regarding your case",
-    type: "tel",
-    placeholder: "(555) 555-5555",
     required: true
   }
 ];
 
-const steps = [
-  { id: "eligibility", label: "Eligibility", questions: [0, 1, 2, 3] },
-  { id: "contact", label: "Contact Info", questions: [4, 5, 6] }
-];
-
 export default function QualifyPage() {
   const router = useRouter();
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState({});
+  const [currentStep, setCurrentStep] = useState(0); // 0 = eligibility, 1 = contact
+  const [eligibilityAnswers, setEligibilityAnswers] = useState({});
+  const [contactInfo, setContactInfo] = useState({
+    usedEmail: "",
+    name: "",
+    phone: ""
+  });
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState("next");
   const [disqualified, setDisqualified] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const question = questions[currentQuestion];
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
+  const allEligibilityAnswered = eligibilityQuestions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const allEligibilityYes = eligibilityQuestions.every(q => eligibilityAnswers[q.id] === true);
+  const contactComplete = contactInfo.usedEmail && contactInfo.name && contactInfo.phone;
 
-  const getCurrentStep = () => {
-    for (let i = 0; i < steps.length; i++) {
-      if (steps[i].questions.includes(currentQuestion)) {
-        return i;
-      }
-    }
-    return 0;
+  const handleEligibilityAnswer = (questionId, answer) => {
+    setEligibilityAnswers(prev => ({ ...prev, [questionId]: answer }));
   };
 
-  const handleAnswer = (answer) => {
-    // Check for disqualification
-    if (question.disqualifyOn && answer === question.disqualifyOn) {
+  const handleContactChange = (e) => {
+    const { name, value } = e.target;
+    setContactInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const goToContact = () => {
+    if (!allEligibilityYes) {
       setDisqualified(true);
       return;
     }
-
-    setAnswers({ ...answers, [question.id]: answer });
-    goToNext();
+    setDirection("next");
+    setIsAnimating(true);
+    setTimeout(() => {
+      setCurrentStep(1);
+      setIsAnimating(false);
+    }, 300);
   };
 
-  const handleInputSubmit = (e) => {
+  const goBackToEligibility = () => {
+    setDirection("prev");
+    setIsAnimating(true);
+    setTimeout(() => {
+      setCurrentStep(0);
+      setIsAnimating(false);
+    }, 300);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!inputValue.trim()) return;
+    if (!contactComplete) return;
 
-    setAnswers({ ...answers, [question.id]: inputValue });
-    setInputValue("");
-    goToNext();
-  };
+    setIsSubmitting(true);
 
-  const goToNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setDirection("next");
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentQuestion(currentQuestion + 1);
-        setIsAnimating(false);
-      }, 300);
-    } else {
-      // All questions answered, submit and redirect
-      submitAndRedirect();
-    }
-  };
-
-  const goToPrevious = () => {
-    if (currentQuestion > 0) {
-      setDirection("prev");
-      setIsAnimating(true);
-      setTimeout(() => {
-        setCurrentQuestion(currentQuestion - 1);
-        setInputValue(answers[questions[currentQuestion - 1].id] || "");
-        setIsAnimating(false);
-      }, 300);
-    }
-  };
-
-  const submitAndRedirect = async () => {
-    // Submit data to webhook
     const payload = {
-      ...answers,
+      ...eligibilityAnswers,
+      ...contactInfo,
+      email: contactInfo.usedEmail,
       page_source: "kin_qualify_form",
       campaign_type: "organic",
       caseType: "Privacy Violation",
@@ -153,16 +104,8 @@ export default function QualifyPage() {
       console.error("Form submission error:", err);
     }
 
-    // Redirect to sign page
     router.push("/kin-insurance-claims/sign");
   };
-
-  useEffect(() => {
-    // Pre-fill input if going back
-    if (question.type !== "yesno" && answers[question.id]) {
-      setInputValue(answers[question.id]);
-    }
-  }, [currentQuestion]);
 
   if (disqualified) {
     return (
@@ -197,7 +140,7 @@ export default function QualifyPage() {
     <div className={styles.container}>
       {/* Progress bar */}
       <div className={styles.progressBar}>
-        <div className={styles.progressFill} style={{ width: `${progress}%` }} />
+        <div className={styles.progressFill} style={{ width: currentStep === 0 ? '50%' : '100%' }} />
       </div>
 
       <div className={styles.layout}>
@@ -207,17 +150,18 @@ export default function QualifyPage() {
             <img src="/images/logo.png" alt="Louis Law Group" />
           </div>
           <nav className={styles.stepNav}>
-            {steps.map((step, index) => (
-              <div
-                key={step.id}
-                className={`${styles.stepItem} ${getCurrentStep() === index ? styles.active : ''} ${getCurrentStep() > index ? styles.completed : ''}`}
-              >
-                <div className={styles.stepIndicator}>
-                  {getCurrentStep() > index ? <Check size={14} /> : <span>{index + 1}</span>}
-                </div>
-                <span className={styles.stepLabel}>{step.label}</span>
+            <div className={`${styles.stepItem} ${currentStep === 0 ? styles.active : ''} ${currentStep > 0 ? styles.completed : ''}`}>
+              <div className={styles.stepIndicator}>
+                {currentStep > 0 ? <Check size={14} /> : <span>1</span>}
               </div>
-            ))}
+              <span className={styles.stepLabel}>Eligibility</span>
+            </div>
+            <div className={`${styles.stepItem} ${currentStep === 1 ? styles.active : ''}`}>
+              <div className={styles.stepIndicator}>
+                <span>2</span>
+              </div>
+              <span className={styles.stepLabel}>Contact Info</span>
+            </div>
           </nav>
         </aside>
 
@@ -226,57 +170,121 @@ export default function QualifyPage() {
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
 
-              <p className={styles.questionNumber}>Question {currentQuestion + 1} of {questions.length}</p>
-              <h2 className={styles.question}>{question.question}</h2>
-              {question.subtext && <p className={styles.subtext}>{question.subtext}</p>}
+              {currentStep === 0 ? (
+                <>
+                  <div className={styles.stepHeader}>
+                    <Shield className={styles.stepIcon} />
+                    <h2>Let's Check Your Eligibility</h2>
+                    <p>Please answer all questions below to see if you qualify.</p>
+                  </div>
 
-              {question.type === "yesno" ? (
-                <div className={styles.yesNoButtons}>
-                  <button
-                    className={`${styles.optionButton} ${answers[question.id] === "yes" ? styles.selected : ""}`}
-                    onClick={() => handleAnswer("yes")}
-                  >
-                    <Check size={20} />
-                    Yes
-                  </button>
-                  <button
-                    className={`${styles.optionButton} ${answers[question.id] === "no" ? styles.selected : ""}`}
-                    onClick={() => handleAnswer("no")}
-                  >
-                    <X size={20} />
-                    No
-                  </button>
-                </div>
+                  <div className={styles.questionsGrid}>
+                    {eligibilityQuestions.map((q, index) => (
+                      <div key={q.id} className={styles.questionCard}>
+                        <p className={styles.questionText}>
+                          <span className={styles.questionNumber}>{index + 1}.</span>
+                          {q.question}
+                        </p>
+                        <div className={styles.yesNoButtons}>
+                          <button
+                            type="button"
+                            className={`${styles.optionButton} ${eligibilityAnswers[q.id] === true ? styles.selectedYes : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, true)}
+                          >
+                            <Check size={18} />
+                            Yes
+                          </button>
+                          <button
+                            type="button"
+                            className={`${styles.optionButton} ${eligibilityAnswers[q.id] === false ? styles.selectedNo : ''}`}
+                            onClick={() => handleEligibilityAnswer(q.id, false)}
+                          >
+                            <X size={18} />
+                            No
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className={styles.navigation}>
+                    <button
+                      className={styles.continueButton}
+                      onClick={goToContact}
+                      disabled={!allEligibilityAnswered}
+                    >
+                      Continue
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                </>
               ) : (
-                <form onSubmit={handleInputSubmit} className={styles.inputForm}>
-                  <input
-                    type={question.type}
-                    placeholder={question.placeholder}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    className={styles.textInput}
-                    autoFocus
-                    required={question.required}
-                  />
-                  <button
-                    type="submit"
-                    className={styles.continueButton}
-                    disabled={!inputValue.trim()}
-                  >
-                    Continue
-                    <ArrowRight size={20} />
-                  </button>
-                </form>
-              )}
-            </div>
+                <>
+                  <div className={styles.stepHeader}>
+                    <div className={styles.successBadge}>
+                      <Check size={20} />
+                      You Qualify!
+                    </div>
+                    <h2>Almost Done! Enter Your Contact Info</h2>
+                    <p>We'll use this information to process your case.</p>
+                  </div>
 
-            {/* Navigation */}
-            <div className={styles.navigation}>
-              {currentQuestion > 0 && (
-                <button className={styles.backButton} onClick={goToPrevious}>
-                  <ArrowLeft size={18} />
-                  Back
-                </button>
+                  <form onSubmit={handleSubmit} className={styles.contactForm}>
+                    <div className={styles.inputGroup}>
+                      <label htmlFor="usedEmail">Email address used with Kin Insurance</label>
+                      <input
+                        type="email"
+                        id="usedEmail"
+                        name="usedEmail"
+                        placeholder="your@email.com"
+                        value={contactInfo.usedEmail}
+                        onChange={handleContactChange}
+                        required
+                      />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                      <label htmlFor="name">Full Name</label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        placeholder="John Doe"
+                        value={contactInfo.name}
+                        onChange={handleContactChange}
+                        required
+                      />
+                    </div>
+
+                    <div className={styles.inputGroup}>
+                      <label htmlFor="phone">Phone Number</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="(555) 555-5555"
+                        value={contactInfo.phone}
+                        onChange={handleContactChange}
+                        required
+                      />
+                    </div>
+
+                    <div className={styles.navigation}>
+                      <button type="button" className={styles.backButton} onClick={goBackToEligibility}>
+                        <ArrowLeft size={18} />
+                        Back
+                      </button>
+                      <button
+                        type="submit"
+                        className={styles.submitButton}
+                        disabled={!contactComplete || isSubmitting}
+                      >
+                        {isSubmitting ? "Submitting..." : "Submit & Continue"}
+                        <ArrowRight size={20} />
+                      </button>
+                    </div>
+                  </form>
+                </>
               )}
             </div>
           </div>
