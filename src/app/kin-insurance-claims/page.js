@@ -219,10 +219,10 @@ export default function KinPrivacyLanding() {
                 </p>
               </div>
               <div className={styles.heroCtas}>
-                <a href="#check-eligibility" className={styles.primaryCta}>
+                <Link href="/kin-insurance-claims/qualify" className={styles.primaryCta}>
                   <span>Check Your Eligibility Now</span>
                   <ArrowRight size={20} />
-                </a>
+                </Link>
                 <a href="tel:8336574812" className={styles.secondaryCta}>
                   <Phone size={20} />
                   <span>833-657-4812</span>
@@ -433,10 +433,10 @@ export default function KinPrivacyLanding() {
               <p className={styles.stepsDescription2}>
                 There's no cost to get started and you won't pay a dime unless we win your case. We work on a contingency fee basis, which means our interests are aligned with yours. Simply fill out the form, let us review your eligibility, and we'll take it from there.
               </p>
-              <a href="#check-eligibility" className={styles.stepsButton}>
+              <Link href="/kin-insurance-claims/qualify" className={styles.stepsButton}>
                 Check Your Eligibility
                 <ArrowRight size={20} />
-              </a>
+              </Link>
             </div>
 
             {/* Right Column: Slider */}
@@ -518,85 +518,23 @@ export default function KinPrivacyLanding() {
                   <span>You are a resident of the United States</span>
                 </li>
               </ul>
-              <a href="#check-eligibility" className={styles.eligibilityCta}>
+              <Link href="/kin-insurance-claims/qualify" className={styles.eligibilityCta}>
                 Check Your Eligibility Now
                 <ArrowRight size={20} />
-              </a>
+              </Link>
             </div>
             <div className={styles.eligibilityFormWrapper}>
-              <div className={styles.formCard}>
-                <div className={styles.formHeader}>
-                  <Lock className={styles.formLockIcon} />
-                  <h3>Check Your Eligibility</h3>
-                  <p>Free & Confidential Case Review</p>
-                </div>
-                <form onSubmit={handleSubmit} className={styles.heroForm}>
-                  <div className={styles.formGrid}>
-                    <div className={styles.inputGroup}>
-                      <input
-                        type="text"
-                        name="name"
-                        placeholder="Full Name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className={styles.inputGroup}>
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="Phone Number"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.inputGroup}>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email Address"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className={styles.inputGroup}>
-                    <select
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="" disabled>Select Your State</option>
-                      <option value="FL">Florida</option>
-                      <option value="CA">California</option>
-                      <option value="TX">Texas</option>
-                      <option value="NY">New York</option>
-                      <option value="other">Other State</option>
-                    </select>
-                  </div>
-                  <div className={styles.checkboxGroup}>
-                    <input
-                      type="checkbox"
-                      name="consent"
-                      id="consent2"
-                      checked={formData.consent}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <label htmlFor="consent2">
-                      I agree to receive communications and understand the{" "}
-                      <Link href="/privacy-policy">Privacy Policy</Link>.
-                    </label>
-                  </div>
-                  <button type="submit" className={styles.submitButton}>
-                    Check My Eligibility
-                    <ArrowRight size={20} />
-                  </button>
-                </form>
+              <div className={styles.noFeeCard}>
+                <DollarSign className={styles.noFeeIcon} />
+                <h4>No Upfront Fees</h4>
+                <p>
+                  You pay nothing unless we win your case. Our attorneys work on
+                  a contingency basis—we only get paid if you do.
+                </p>
+                <Link href="/kin-insurance-claims/qualify" className={styles.cardCta}>
+                  Start Your Free Case Review
+                  <ArrowRight size={18} />
+                </Link>
               </div>
             </div>
           </div>
@@ -630,85 +568,26 @@ export default function KinPrivacyLanding() {
                   </div>
                 ))}
               </div>
-              <a href="#check-eligibility" className={styles.eligibilityCta}>
+              <Link href="/kin-insurance-claims/qualify" className={styles.eligibilityCta}>
                 Check Your Eligibility Now
                 <ArrowRight size={20} />
-              </a>
+              </Link>
             </div>
             <div className={styles.faqRightColumn}>
-              <div className={styles.formCard}>
-                <div className={styles.formHeader}>
-                  <Lock className={styles.formLockIcon} />
-                  <h3>Check Your Eligibility</h3>
-                  <p>Free & Confidential Case Review</p>
-                </div>
-                <form onSubmit={handleSubmit} className={styles.heroForm}>
-                  <div className={styles.formGrid}>
-                    <div className={styles.inputGroup}>
-                      <input
-                        type="text"
-                        name="name"
-                        placeholder="Full Name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                    <div className={styles.inputGroup}>
-                      <input
-                        type="tel"
-                        name="phone"
-                        placeholder="Phone Number"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className={styles.inputGroup}>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email Address"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className={styles.inputGroup}>
-                    <select
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      required
-                    >
-                      <option value="" disabled>Select Your State</option>
-                      <option value="FL">Florida</option>
-                      <option value="CA">California</option>
-                      <option value="TX">Texas</option>
-                      <option value="NY">New York</option>
-                      <option value="other">Other State</option>
-                    </select>
-                  </div>
-                  <div className={styles.checkboxGroup}>
-                    <input
-                      type="checkbox"
-                      name="consent"
-                      id="consent3"
-                      checked={formData.consent}
-                      onChange={handleInputChange}
-                      required
-                    />
-                    <label htmlFor="consent3">
-                      I agree to receive communications and understand the{" "}
-                      <Link href="/privacy-policy">Privacy Policy</Link>.
-                    </label>
-                  </div>
-                  <button type="submit" className={styles.submitButton}>
-                    Check My Eligibility
-                    <ArrowRight size={20} />
-                  </button>
-                </form>
+              <div className={styles.faqCtaCard}>
+                <Shield className={styles.faqCtaIcon} />
+                <h4>Ready to Take Action?</h4>
+                <p>
+                  Find out if you qualify for compensation in just a few minutes.
+                  It's free, fast, and confidential.
+                </p>
+                <Link href="/kin-insurance-claims/qualify" className={styles.faqCtaButton}>
+                  Check Your Eligibility
+                  <ArrowRight size={18} />
+                </Link>
+                <p className={styles.faqCtaPhone}>
+                  Or call us at <a href="tel:8336574812">833-657-4812</a>
+                </p>
               </div>
             </div>
           </div>
@@ -726,10 +605,10 @@ export default function KinPrivacyLanding() {
               Check your eligibility now—it's free, fast, and confidential.
             </p>
             <div className={styles.ctaButtons}>
-              <a href="#check-eligibility" className={styles.ctaPrimary}>
+              <Link href="/kin-insurance-claims/qualify" className={styles.ctaPrimary}>
                 <span>Check Eligibility Now</span>
                 <ArrowRight size={20} />
-              </a>
+              </Link>
               <a href="tel:8336574812" className={styles.ctaSecondary}>
                 <Phone size={20} />
                 <span>Call 833-657-4812</span>

@@ -887,8 +887,130 @@
   /* Form wrapper for eligibility section */
 }
 
-.eligibilityFormWrapper .formCard {
-  box-shadow: 0 15px 40px rgba(26, 43, 73, 0.1);
+.noFeeCard {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-radius: 24px;
+  padding: 3rem;
+  text-align: center;
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.noFeeCard::before {
+  content: '';
+  position: absolute;
+  top: -30%;
+  right: -30%;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 184, 0, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.noFeeIcon {
+  width: 64px;
+  height: 64px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+}
+
+.noFeeCard h4 {
+  font-family: "Anton", sans-serif;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.noFeeCard p {
+  opacity: 0.9;
+  line-height: 1.7;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.cardCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent);
+  color: var(--primary);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.cardCta:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* FAQ CTA Card */
+.faqCtaCard {
+  background: var(--white);
+  border-radius: 20px;
+  padding: 2.5rem;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(26, 43, 73, 0.1);
+  border: 1px solid var(--gray-100);
+}
+
+.faqCtaIcon {
+  width: 56px;
+  height: 56px;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+
+.faqCtaCard h4 {
+  font-family: "Anton", sans-serif;
+  font-size: 1.5rem;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.faqCtaCard > p {
+  color: var(--gray-600);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.faqCtaButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary);
+  color: var(--white);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.faqCtaButton:hover {
+  background: var(--primary-light);
+}
+
+.faqCtaPhone {
+  margin-top: 1.25rem;
+  color: var(--gray-600);
+  font-size: 0.9rem;
+}
+
+.faqCtaPhone a {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.faqCtaPhone a:hover {
+  text-decoration: underline;
 }
 
 /* ==================== FAQ SECTION ==================== */
