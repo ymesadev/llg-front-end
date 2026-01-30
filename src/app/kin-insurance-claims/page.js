@@ -167,20 +167,20 @@ export default function KinPrivacyLanding() {
   const processSteps = [
     {
       number: 1,
-      title: "Your Data Was Tracked",
-      description: "When you visited KIN Insurance's website to get a quote, compare coverage, or purchase a policy, hidden \"session replay\" and \"pixel tracking\" technology may have secretly recorded your mouse movements, clicks, scrolls, keystrokes, and every page you viewed—all without your knowledge.",
+      title: "Submit Your Information",
+      description: "Fill out our quick and easy form with your basic details. It only takes a few minutes and there's no obligation. Your information is kept confidential and secure.",
       animation: step1Animation
     },
     {
       number: 2,
-      title: "Your Data Was Shared",
-      description: "The data collected about your browsing activity was likely shared with third-party advertising companies, analytics firms, and other organizations—all without your permission or meaningful consent. Your private online behavior became a commodity traded without your knowledge.",
+      title: "Free Case Review",
+      description: "Our experienced attorneys will review your information and determine if you have a valid privacy violation claim. We'll contact you to discuss your case and answer any questions.",
       animation: step2Animation
     },
     {
       number: 3,
-      title: "Privacy Laws Were Violated",
-      description: "This covert surveillance may violate federal wiretapping laws, the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, and other state consumer protection statutes designed to protect your digital privacy. You may be entitled to compensation.",
+      title: "Get Compensated",
+      description: "If you qualify, we'll fight to get you the compensation you deserve. You pay nothing unless we win—our attorneys work on a contingency fee basis.",
       animation: step3Animation
     }
   ];
@@ -423,7 +423,7 @@ export default function KinPrivacyLanding() {
             {/* Left Column */}
             <div className={styles.stepsLeftColumn}>
               <h2 className={styles.stepsTitle}>How It Works</h2>
-              <h3 className={styles.stepsSubtitle}>Privacy<span className={styles.noFeeHighlight}> Violations</span></h3>
+              <h3 className={styles.stepsSubtitle}>No Fee<span className={styles.noFeeHighlight}> Unless We Win</span></h3>
               <p className={styles.stepsDescription}>
                 When you visited KIN Insurance's website to get a quote, compare coverage options, or purchase a policy, hidden tracking technology may have been secretly monitoring your every move. This software, often called "session replay" or "pixel tracking," records detailed information about your browsing session—including mouse movements, clicks, scrolls, keystrokes, and the pages you viewed.
               </p>
