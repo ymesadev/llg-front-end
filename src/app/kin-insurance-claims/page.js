@@ -167,20 +167,20 @@ export default function KinPrivacyLanding() {
   const processSteps = [
     {
       number: 1,
-      title: "Your Data Was Tracked",
-      description: "When you visited KIN Insurance's website, hidden tracking technology may have recorded your clicks, browsing behavior, and personal data without consent.",
+      title: "Check Eligibility",
+      description: "Answer a few quick questions to see if you qualify for this privacy case.",
       animation: step1Animation
     },
     {
       number: 2,
-      title: "Privacy Laws Were Violated",
-      description: "This secret tracking may violate federal wiretapping laws, the California Invasion of Privacy Act, and other state privacy statutes.",
+      title: "Free Case Review",
+      description: "Our privacy attorneys review your information and the details of your case at no cost.",
       animation: step2Animation
     },
     {
       number: 3,
-      title: "You May Be Owed Compensation",
-      description: "If you visited their website in the past 24 months, you could be entitled to compensation for this privacy violation.",
+      title: "We Fight For You",
+      description: "We handle everything—negotiations, paperwork, and litigation if needed—while you focus on your life.",
       animation: step3Animation
     }
   ];
@@ -423,13 +423,13 @@ export default function KinPrivacyLanding() {
           <div className={styles.stepsGrid}>
             {/* Left Column */}
             <div className={styles.stepsLeftColumn}>
-              <h2 className={styles.stepsTitle}>What Happened?</h2>
-              <h3 className={styles.stepsSubtitle}>Your Privacy<span className={styles.noFeeHighlight}> At Risk</span></h3>
+              <h2 className={styles.stepsTitle}>How It Works</h2>
+              <h3 className={styles.stepsSubtitle}>No Win,<span className={styles.noFeeHighlight}> No Fee</span></h3>
               <p className={styles.stepsDescription}>
-                When you visited KIN Insurance's website to get a quote, compare coverage options, or purchase a policy, hidden tracking technology may have been secretly monitoring your every move. This software, often called "session replay" or "pixel tracking," records detailed information about your browsing session—including mouse movements, clicks, scrolls, keystrokes, and the pages you viewed.
+                We like to simplify our intake process. From checking your eligibility to securing your case, our streamlined approach ensures a hassle-free experience. Our legal team is dedicated to making this process as efficient and straightforward as possible.
               </p>
               <p className={styles.stepsDescription2}>
-                What makes this particularly concerning is that this tracking likely occurred without your knowledge or meaningful consent. The data collected may have been shared with third-party advertising companies, analytics firms, and other organizations—all without you ever being informed. This type of covert surveillance may violate federal wiretapping laws, the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, and other state consumer protection statutes designed to protect your digital privacy.
+                You can expect transparent communication, prompt updates, and a commitment to achieving the best possible outcome for your privacy case.
               </p>
               <a href="#check-eligibility" className={styles.stepsButton}>
                 Check Your Eligibility

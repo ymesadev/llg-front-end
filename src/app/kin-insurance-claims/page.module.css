@@ -588,7 +588,7 @@
 
 /* ==================== STEPS SECTION (Matching Homepage) ==================== */
 .stepsSection {
-  background-color: #ede7e7;
+  background-color: #f4f4f4;
   padding-top: 4rem;
   padding-bottom: 4rem;
   padding-left: 2rem;
@@ -599,12 +599,11 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .stepsLeftColumn {
   padding-right: 2rem;
-  text-align: left;
 }
 
 .stepsTitle {
@@ -629,16 +628,14 @@
 
 .stepsDescription {
   color: var(--primary);
-  margin-bottom: 1.5rem;
-  line-height: 1.8;
-  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  line-height: 1.7;
 }
 
 .stepsDescription2 {
   margin-bottom: 2rem;
   color: var(--primary);
-  line-height: 1.8;
-  font-size: 1.05rem;
+  line-height: 1.7;
 }
 
 .stepsButton {
@@ -697,12 +694,12 @@
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: left;
+  text-align: center;
 }
 
 .lottieAnimation {
   width: 100px;
-  margin: 0 0 1rem 0;
+  margin: 0 auto 1rem;
 }
 
 .stepBoxTitle {
