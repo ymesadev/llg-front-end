@@ -91,6 +91,12 @@
   display: block;
 }
 
+.highlightBg {
+  background-color: var(--primary);
+  color: var(--white);
+  padding: 0.1rem 0.75rem;
+}
+
 .heroSubtitle {
   font-size: 1.125rem;
   line-height: 1.75;
@@ -437,67 +443,49 @@
 
 .issueCard {
   background: var(--white);
-  border-radius: 16px;
-  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  padding: 1.5rem;
   text-align: left;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 20px rgba(26, 43, 73, 0.06);
+  box-shadow: 0 2px 12px rgba(26, 43, 73, 0.06);
   position: relative;
-  overflow: hidden;
-}
-
-.issueCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary), var(--accent));
-  transform: scaleX(0);
-  transition: transform 0.3s ease;
+  border: 1px solid var(--gray-100);
 }
 
 .issueCard:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(26, 43, 73, 0.12);
-}
-
-.issueCard:hover::before {
-  transform: scaleX(1);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(26, 43, 73, 0.1);
+  border-color: var(--gray-200);
 }
 
 .issueIconWrapper {
-  width: 80px;
-  height: 80px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border-radius: 20px;
+  width: 48px;
+  height: 48px;
+  background: var(--gray-50);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 0 1.75rem 0;
-  box-shadow: 0 8px 20px rgba(26, 43, 73, 0.2);
+  margin: 0 0 1rem 0;
 }
 
 .issueIcon {
-  width: 36px;
-  height: 36px;
-  color: var(--accent);
+  color: var(--primary);
 }
 
 .issueCard h3 {
   font-family: "Anton", sans-serif;
-  font-size: 1.35rem;
+  font-size: 1.1rem;
   color: var(--primary);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   text-transform: uppercase;
 }
 
 .issueCard p {
   color: var(--gray-600);
-  font-size: 1rem;
-  line-height: 1.7;
-  font-weight: 300;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  font-weight: 400;
 }
 
 .violationBox {
@@ -1144,11 +1132,11 @@
 
   .stepsLeftColumn {
     padding-right: 0;
-    text-align: center;
+    text-align: left;
   }
 
   .stepsButton {
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .violationContent ul {

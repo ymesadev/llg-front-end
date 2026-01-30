@@ -19,7 +19,10 @@ import {
   ChevronDown,
   ShieldAlert,
   Database,
-  Share2
+  Share2,
+  ScanEye,
+  ServerCrash,
+  Send
 } from "lucide-react";
 import { FaSpinner, FaTimesCircle } from "react-icons/fa";
 import styles from "./page.module.css";
@@ -148,19 +151,19 @@ export default function KinPrivacyLanding() {
 
   const trackingIssues = [
     {
-      icon: <Eye className={styles.issueIcon} />,
+      icon: <ScanEye size={24} className={styles.issueIcon} />,
       title: "Behavior Monitoring",
-      description: "Every click, scroll, mouse movement, and page visit on the KIN Insurance website may have been secretly recorded using session replay technology. This invisible tracking captured your entire browsing session without your knowledge."
+      description: "Every click, scroll, mouse movement, and page visit on the KIN Insurance website may have been secretly recorded using session replay technology."
     },
     {
-      icon: <Database className={styles.issueIcon} />,
+      icon: <ServerCrash size={24} className={styles.issueIcon} />,
       title: "Data Collection",
-      description: "Your personal information, browsing habits, form inputs, and potentially sensitive data were captured and stored without proper disclosure or meaningful consent. This data collection went far beyond what's necessary for website functionality."
+      description: "Your personal information, browsing habits, and form inputs were captured and stored without proper disclosure or meaningful consent."
     },
     {
-      icon: <Share2 className={styles.issueIcon} />,
+      icon: <Send size={24} className={styles.issueIcon} />,
       title: "Third-Party Sharing",
-      description: "The data collected about you was likely shared with third-party advertising companies, analytics firms, and data brokers—all without your permission. Your private browsing activity became a commodity sold to the highest bidder."
+      description: "The data collected about you was likely shared with third-party advertising companies and analytics firms—all without your permission."
     }
   ];
 
@@ -381,7 +384,7 @@ export default function KinPrivacyLanding() {
         <div className="container">
           <div className={styles.problemHeader}>
             <h2 className={styles.sectionTitleCenter}>
-              What <span className={styles.highlight}>Happened?</span>
+              What <span className={styles.highlightBg}>Happened?</span>
             </h2>
             <p className={styles.sectionSubtitle}>
               When you visited KIN Insurance's website to get a quote, compare coverage options, or explore their services, hidden tracking technology may have been secretly monitoring your every move. This surveillance software—often called "session replay" or "pixel tracking"—records detailed information about your browsing session, including mouse movements, clicks, scrolls, keystrokes, and every page you viewed. All of this happened without your knowledge or meaningful consent, potentially violating your privacy rights under state and federal law.
@@ -425,10 +428,10 @@ export default function KinPrivacyLanding() {
               <h2 className={styles.stepsTitle}>How It Works</h2>
               <h3 className={styles.stepsSubtitle}>No Fee<span className={styles.noFeeHighlight}> Unless We Win</span></h3>
               <p className={styles.stepsDescription}>
-                When you visited KIN Insurance's website to get a quote, compare coverage options, or purchase a policy, hidden tracking technology may have been secretly monitoring your every move. This software, often called "session replay" or "pixel tracking," records detailed information about your browsing session—including mouse movements, clicks, scrolls, keystrokes, and the pages you viewed.
+                Getting the compensation you deserve is simple and straightforward. Our experienced privacy attorneys handle everything—from investigating the tracking practices to building your case and fighting for maximum recovery.
               </p>
               <p className={styles.stepsDescription2}>
-                What makes this particularly concerning is that this tracking likely occurred without your knowledge or meaningful consent. The data collected may have been shared with third-party advertising companies, analytics firms, and other organizations—all without you ever being informed. This type of covert surveillance may violate federal wiretapping laws, the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, and other state consumer protection statutes designed to protect your digital privacy.
+                There's no cost to get started and you won't pay a dime unless we win your case. We work on a contingency fee basis, which means our interests are aligned with yours. Simply fill out the form, let us review your eligibility, and we'll take it from there.
               </p>
               <a href="#check-eligibility" className={styles.stepsButton}>
                 Check Your Eligibility
