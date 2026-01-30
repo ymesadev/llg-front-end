@@ -2,34 +2,36 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import Link from "next/link";
 import {
   Shield,
-  Clock,
-  DollarSign,
+  Eye,
+  Lock,
   CheckCircle,
   Phone,
   ArrowRight,
+  AlertTriangle,
+  UserCheck,
   FileText,
-  Users,
-  Award,
-  Star,
-  ChevronDown
+  DollarSign,
+  ChevronDown,
+  ShieldAlert,
+  Database,
+  Share2
 } from "lucide-react";
 import { FaSpinner, FaTimesCircle } from "react-icons/fa";
 import styles from "./page.module.css";
 
-export default function KinInsuranceLanding() {
+export default function KinPrivacyLanding() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
     email: "",
     zipcode: "",
-    claimStatus: "",
-    damageType: "",
-    description: "",
+    state: "",
+    visitedWebsite: "",
+    timeframe: "",
     consent: false,
   });
   const [formStatus, setFormStatus] = useState("idle");
@@ -52,13 +54,13 @@ export default function KinInsuranceLanding() {
       phone: formData.phone,
       email: formData.email,
       zipcode: formData.zipcode,
-      caseType: "Property Damage",
-      filedCarrier: "KIN Insurance",
-      claimStatus: formData.claimStatus,
-      damageType: formData.damageType,
-      description: formData.description,
+      state: formData.state,
+      caseType: "Privacy Violation",
+      company: "KIN Insurance",
+      visitedWebsite: formData.visitedWebsite,
+      timeframe: formData.timeframe,
       consent: formData.consent ? "Yes" : "No",
-      page_source: "kin_insurance_landing",
+      page_source: "kin_privacy_landing",
       campaign_type: "organic",
     };
 
@@ -82,9 +84,9 @@ export default function KinInsuranceLanding() {
         phone: "",
         email: "",
         zipcode: "",
-        claimStatus: "",
-        damageType: "",
-        description: "",
+        state: "",
+        visitedWebsite: "",
+        timeframe: "",
         consent: false,
       });
     } catch (err) {
@@ -101,50 +103,65 @@ export default function KinInsuranceLanding() {
 
   const faqs = [
     {
-      question: "Why was my KIN Insurance claim denied?",
-      answer: "KIN Insurance may deny claims for various reasons including alleged policy exclusions, disputes over damage cause, or claims that damage was pre-existing. Many denials can be successfully challenged with proper legal representation."
+      question: "What is this privacy case about?",
+      answer: "This case alleges that KIN Insurance embedded hidden tracking technology on their website that monitored your online activity—including clicks, pages viewed, and personal information—without your knowledge or proper consent, potentially violating state and federal privacy laws."
     },
     {
-      question: "How long do I have to dispute a denied claim?",
-      answer: "In Florida, you typically have 5 years to file a breach of contract lawsuit against your insurance company. However, acting quickly is crucial as evidence can deteriorate and deadlines in your policy may apply."
+      question: "Who is eligible to file a claim?",
+      answer: "You may be eligible if you visited the KIN Insurance website within the past 24 months. Certain state residents, particularly those in California, Florida, and other states with strong privacy laws, may have additional protections."
     },
     {
-      question: "What does it cost to hire Louis Law Group?",
-      answer: "We work on a contingency fee basis for property damage claims. This means you pay nothing upfront, and we only get paid if we successfully recover compensation for you."
+      question: "How much does it cost to file a claim?",
+      answer: "There is no upfront cost to you. Our attorneys work on a contingency fee basis, meaning we only get paid if we successfully recover compensation on your behalf."
     },
     {
-      question: "What types of damage does KIN Insurance cover?",
-      answer: "KIN Insurance policies typically cover hurricane damage, wind damage, water damage, fire damage, and other covered perils. The specific coverage depends on your policy terms."
+      question: "What kind of compensation could I receive?",
+      answer: "Compensation varies by case and depends on factors such as the extent of tracking, your state of residence, and applicable laws. Privacy violation cases can result in statutory damages, actual damages, and other remedies."
+    },
+    {
+      question: "How does hidden tracking violate my privacy?",
+      answer: "When companies track your online behavior without disclosure or consent, they may violate laws like the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, federal wiretapping laws, and other consumer protection statutes."
     }
   ];
 
-  const stats = [
-    { value: "$500M+", label: "Recovered for Clients" },
-    { value: "15,000+", label: "Cases Handled" },
-    { value: "98%", label: "Success Rate" },
-    { value: "24/7", label: "Available Support" },
+  const trackingIssues = [
+    {
+      icon: <Eye className={styles.issueIcon} />,
+      title: "Behavior Monitoring",
+      description: "Your clicks, scrolls, and page visits may have been secretly recorded"
+    },
+    {
+      icon: <Database className={styles.issueIcon} />,
+      title: "Data Collection",
+      description: "Personal information and browsing habits captured without consent"
+    },
+    {
+      icon: <Share2 className={styles.issueIcon} />,
+      title: "Third-Party Sharing",
+      description: "Your data potentially shared with advertisers and other companies"
+    }
   ];
 
   const processSteps = [
     {
-      icon: <FileText className={styles.stepIcon} />,
-      title: "Free Consultation",
-      description: "Tell us about your claim denial. We'll review your case at no cost."
+      icon: <UserCheck className={styles.stepIcon} />,
+      title: "Check Eligibility",
+      description: "Answer a few quick questions to see if you qualify for this case"
     },
     {
-      icon: <Users className={styles.stepIcon} />,
-      title: "Case Evaluation",
-      description: "Our experts analyze your policy and denial to build a strong case."
+      icon: <FileText className={styles.stepIcon} />,
+      title: "Free Case Review",
+      description: "Our privacy attorneys review your information at no cost"
     },
     {
       icon: <Shield className={styles.stepIcon} />,
-      title: "Fight for You",
-      description: "We negotiate with KIN Insurance and litigate if necessary."
+      title: "We Fight For You",
+      description: "We handle everything while you focus on your life"
     },
     {
       icon: <DollarSign className={styles.stepIcon} />,
-      title: "Get Paid",
-      description: "Receive the compensation you deserve for your property damage."
+      title: "Get Compensated",
+      description: "Receive the compensation you deserve for the privacy violation"
     }
   ];
 
@@ -159,47 +176,56 @@ export default function KinInsuranceLanding() {
           <div className={styles.heroGrid}>
             <div className={styles.heroText}>
               <div className={styles.badge}>
-                <Shield size={16} />
-                <span>Florida's Trusted Insurance Claim Attorneys</span>
+                <ShieldAlert size={16} />
+                <span>Privacy Violation Alert</span>
               </div>
               <h1 className={styles.heroTitle}>
-                KIN Insurance <span className={styles.highlight}>Denied Your Claim?</span>
+                Visited KIN Insurance's Website?
+                <span className={styles.highlight}>Your Data May Have Been Secretly Tracked.</span>
               </h1>
               <p className={styles.heroSubtitle}>
-                Don't let KIN Insurance leave you without the coverage you paid for.
-                Our experienced attorneys have recovered millions for Florida homeowners
-                with denied or underpaid property damage claims.
+                KIN Insurance may have embedded hidden tracking technology on their website
+                to monitor your online activity—including your clicks, browsing behavior,
+                and personal information—without your knowledge or consent.
               </p>
+              <div className={styles.alertBox}>
+                <AlertTriangle className={styles.alertIcon} />
+                <p>
+                  <strong>You may be entitled to compensation</strong> if you visited
+                  kininsurance.com in the past 24 months.
+                </p>
+              </div>
               <div className={styles.heroCtas}>
-                <a href="tel:8336574812" className={styles.primaryCta}>
-                  <Phone size={20} />
-                  <span>Call Now: 833-657-4812</span>
-                </a>
-                <a href="#free-evaluation" className={styles.secondaryCta}>
-                  <span>Free Case Review</span>
+                <a href="#check-eligibility" className={styles.primaryCta}>
+                  <span>Check Your Eligibility Now</span>
                   <ArrowRight size={20} />
+                </a>
+                <a href="tel:8336574812" className={styles.secondaryCta}>
+                  <Phone size={20} />
+                  <span>833-657-4812</span>
                 </a>
               </div>
               <div className={styles.trustIndicators}>
                 <div className={styles.trustItem}>
                   <CheckCircle size={18} className={styles.trustIcon} />
-                  <span>No Win, No Fee</span>
+                  <span>No Upfront Cost</span>
                 </div>
                 <div className={styles.trustItem}>
                   <CheckCircle size={18} className={styles.trustIcon} />
-                  <span>Free Consultation</span>
+                  <span>Free Case Review</span>
                 </div>
                 <div className={styles.trustItem}>
                   <CheckCircle size={18} className={styles.trustIcon} />
-                  <span>24/7 Availability</span>
+                  <span>Confidential</span>
                 </div>
               </div>
             </div>
-            <div className={styles.heroFormWrapper}>
+            <div className={styles.heroFormWrapper} id="check-eligibility">
               <div className={styles.formCard}>
                 <div className={styles.formHeader}>
-                  <h3>Get Your Free Case Review</h3>
-                  <p>Find out what your claim is worth</p>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>Check Your Eligibility</h3>
+                  <p>Free & Confidential Case Review</p>
                 </div>
                 {formStatus === "error" ? (
                   <div className={styles.errorContainer}>
@@ -212,7 +238,7 @@ export default function KinInsuranceLanding() {
                 ) : formStatus === "submitting" ? (
                   <div className={styles.spinnerContainer}>
                     <FaSpinner className={styles.spinner} />
-                    <p>Submitting your case...</p>
+                    <p>Checking your eligibility...</p>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className={styles.heroForm}>
@@ -260,41 +286,46 @@ export default function KinInsuranceLanding() {
                     </div>
                     <div className={styles.inputGroup}>
                       <select
-                        name="claimStatus"
-                        value={formData.claimStatus}
+                        name="state"
+                        value={formData.state}
                         onChange={handleInputChange}
                         required
                       >
-                        <option value="" disabled>What happened with your claim?</option>
-                        <option value="denied">Claim was denied</option>
-                        <option value="underpaid">Claim was underpaid</option>
-                        <option value="delayed">Claim is delayed</option>
-                        <option value="not-filed">Haven't filed yet</option>
+                        <option value="" disabled>Select Your State</option>
+                        <option value="FL">Florida</option>
+                        <option value="CA">California</option>
+                        <option value="TX">Texas</option>
+                        <option value="NY">New York</option>
+                        <option value="other">Other State</option>
                       </select>
                     </div>
                     <div className={styles.inputGroup}>
                       <select
-                        name="damageType"
-                        value={formData.damageType}
+                        name="visitedWebsite"
+                        value={formData.visitedWebsite}
                         onChange={handleInputChange}
                         required
                       >
-                        <option value="" disabled>Type of damage</option>
-                        <option value="hurricane">Hurricane / Wind</option>
-                        <option value="water">Water Damage</option>
-                        <option value="roof">Roof Damage</option>
-                        <option value="fire">Fire Damage</option>
-                        <option value="other">Other</option>
+                        <option value="" disabled>Did you visit KIN Insurance's website?</option>
+                        <option value="yes">Yes, I visited their website</option>
+                        <option value="yes-quote">Yes, I got a quote online</option>
+                        <option value="yes-purchased">Yes, I purchased a policy online</option>
+                        <option value="not-sure">I'm not sure</option>
                       </select>
                     </div>
                     <div className={styles.inputGroup}>
-                      <textarea
-                        name="description"
-                        placeholder="Briefly describe your situation..."
-                        value={formData.description}
+                      <select
+                        name="timeframe"
+                        value={formData.timeframe}
                         onChange={handleInputChange}
-                        rows={3}
-                      />
+                        required
+                      >
+                        <option value="" disabled>When did you visit their website?</option>
+                        <option value="6-months">Within the last 6 months</option>
+                        <option value="1-year">Within the last year</option>
+                        <option value="2-years">Within the last 2 years</option>
+                        <option value="longer">More than 2 years ago</option>
+                      </select>
                     </div>
                     <div className={styles.checkboxGroup}>
                       <input
@@ -311,9 +342,12 @@ export default function KinInsuranceLanding() {
                       </label>
                     </div>
                     <button type="submit" className={styles.submitButton}>
-                      Get My Free Case Review
+                      Check My Eligibility
                       <ArrowRight size={20} />
                     </button>
+                    <p className={styles.formDisclaimer}>
+                      Your information is secure and confidential.
+                    </p>
                   </form>
                 )}
               </div>
@@ -322,84 +356,55 @@ export default function KinInsuranceLanding() {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className={styles.statsSection}>
+      {/* What Happened Section */}
+      <section className={styles.problemSection}>
         <div className="container">
-          <div className={styles.statsGrid}>
-            {stats.map((stat, index) => (
-              <div key={index} className={styles.statCard}>
-                <div className={styles.statValue}>{stat.value}</div>
-                <div className={styles.statLabel}>{stat.label}</div>
+          <div className={styles.problemHeader}>
+            <h2 className={styles.sectionTitleCenter}>
+              What <span className={styles.highlight}>Happened?</span>
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              Companies like KIN Insurance may be using hidden tracking technology
+              to monitor your every move online—without telling you.
+            </p>
+          </div>
+          <div className={styles.issuesGrid}>
+            {trackingIssues.map((issue, index) => (
+              <div key={index} className={styles.issueCard}>
+                <div className={styles.issueIconWrapper}>
+                  {issue.icon}
+                </div>
+                <h3>{issue.title}</h3>
+                <p>{issue.description}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* Problem Section */}
-      <section className={styles.problemSection}>
-        <div className="container">
-          <div className={styles.problemGrid}>
-            <div className={styles.problemContent}>
-              <h2 className={styles.sectionTitle}>
-                Is KIN Insurance <span className={styles.highlight}>Treating You Unfairly?</span>
-              </h2>
-              <p className={styles.problemText}>
-                After a storm damages your home, you expect your insurance company to help.
-                Unfortunately, KIN Insurance often denies valid claims, delays payments, or
-                offers far less than what's needed to repair your property.
+          <div className={styles.violationBox}>
+            <div className={styles.violationContent}>
+              <h3>This May Violate Your Privacy Rights</h3>
+              <p>
+                When companies secretly track your online activity without proper disclosure
+                or consent, they may be violating state and federal laws including:
               </p>
-              <ul className={styles.problemList}>
-                <li>
-                  <CheckCircle className={styles.listIcon} />
-                  <span>Claim denied without proper investigation</span>
-                </li>
-                <li>
-                  <CheckCircle className={styles.listIcon} />
-                  <span>Settlement offer doesn't cover repair costs</span>
-                </li>
-                <li>
-                  <CheckCircle className={styles.listIcon} />
-                  <span>Endless delays and unreturned calls</span>
-                </li>
-                <li>
-                  <CheckCircle className={styles.listIcon} />
-                  <span>Damage blamed on "pre-existing conditions"</span>
-                </li>
-                <li>
-                  <CheckCircle className={styles.listIcon} />
-                  <span>Policy exclusions used unfairly</span>
-                </li>
+              <ul>
+                <li>California Invasion of Privacy Act (CIPA)</li>
+                <li>Florida Security of Communications Act</li>
+                <li>Federal Wiretap Act</li>
+                <li>State Consumer Protection Laws</li>
               </ul>
-              <p className={styles.problemCta}>
-                <strong>You have rights.</strong> Let us fight for the compensation you deserve.
-              </p>
-            </div>
-            <div className={styles.problemImage}>
-              <div className={styles.imageCard}>
-                <Award className={styles.awardIcon} />
-                <h4>Recognized Excellence</h4>
-                <p>Top-rated insurance claim attorneys fighting for Florida homeowners</p>
-                <div className={styles.stars}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={styles.star} fill="#ffb800" />
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Process Section */}
-      <section className={styles.processSection} id="process">
+      <section className={styles.processSection}>
         <div className="container">
           <h2 className={styles.sectionTitleCenter}>
-            How We <span className={styles.highlight}>Win Your Case</span>
+            How It <span className={styles.highlight}>Works</span>
           </h2>
           <p className={styles.sectionSubtitle}>
-            Our proven 4-step process has helped thousands of Florida homeowners
-            get the insurance payouts they deserve.
+            Checking your eligibility is quick, easy, and completely free.
           </p>
           <div className={styles.processGrid}>
             {processSteps.map((step, index) => (
@@ -412,6 +417,54 @@ export default function KinInsuranceLanding() {
                 <p>{step.description}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Eligibility Section */}
+      <section className={styles.eligibilitySection}>
+        <div className="container">
+          <div className={styles.eligibilityGrid}>
+            <div className={styles.eligibilityContent}>
+              <h2 className={styles.sectionTitle}>
+                Are You <span className={styles.highlight}>Eligible?</span>
+              </h2>
+              <p className={styles.eligibilityText}>
+                You may qualify for this privacy case if:
+              </p>
+              <ul className={styles.eligibilityList}>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>You visited the KIN Insurance website</span>
+                </li>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>You got a quote or purchased insurance online from KIN</span>
+                </li>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>Your visit occurred within the past 24 months</span>
+                </li>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>You are a resident of the United States</span>
+                </li>
+              </ul>
+              <a href="#check-eligibility" className={styles.eligibilityCta}>
+                Check Your Eligibility Now
+                <ArrowRight size={20} />
+              </a>
+            </div>
+            <div className={styles.eligibilityImage}>
+              <div className={styles.noFeeCard}>
+                <DollarSign className={styles.noFeeIcon} />
+                <h4>No Upfront Fees</h4>
+                <p>
+                  You pay nothing unless we win your case. Our attorneys work on
+                  a contingency basis—we only get paid if you do.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -445,22 +498,23 @@ export default function KinInsuranceLanding() {
       </section>
 
       {/* CTA Section */}
-      <section className={styles.ctaSection} id="free-evaluation">
+      <section className={styles.ctaSection}>
         <div className="container">
           <div className={styles.ctaContent}>
-            <h2>Ready to Fight Back Against KIN Insurance?</h2>
+            <ShieldAlert className={styles.ctaIcon} />
+            <h2>Your Privacy Matters. Take Action Today.</h2>
             <p>
-              Get your free, no-obligation case review today. Our team is standing by
-              to help you get the compensation you deserve.
+              Don't let companies get away with secretly tracking your online activity.
+              Check your eligibility now—it's free, fast, and confidential.
             </p>
             <div className={styles.ctaButtons}>
-              <a href="tel:8336574812" className={styles.ctaPrimary}>
+              <a href="#check-eligibility" className={styles.ctaPrimary}>
+                <span>Check Eligibility Now</span>
+                <ArrowRight size={20} />
+              </a>
+              <a href="tel:8336574812" className={styles.ctaSecondary}>
                 <Phone size={20} />
                 <span>Call 833-657-4812</span>
-              </a>
-              <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className={styles.ctaSecondary}>
-                <span>Start Your Free Review</span>
-                <ArrowRight size={20} />
               </a>
             </div>
           </div>

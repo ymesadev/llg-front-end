@@ -1,4 +1,4 @@
-/* KIN Insurance Landing Page Styles */
+/* KIN Insurance Privacy Violation Landing Page Styles */
 
 .landingPage {
   --primary: #1a2b49;
@@ -13,6 +13,7 @@
   --gray-800: #1f2937;
   --success: #10b981;
   --error: #ef4444;
+  --warning: #f59e0b;
 }
 
 /* ==================== HERO SECTION ==================== */
@@ -65,20 +66,20 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 184, 0, 0.15);
-  border: 1px solid rgba(255, 184, 0, 0.3);
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
   padding: 0.5rem 1rem;
   border-radius: 50px;
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--accent);
+  font-weight: 600;
+  color: #fca5a5;
   margin-bottom: 1.5rem;
   animation: fadeInUp 0.6s ease-out;
 }
 
 .heroTitle {
-  font-size: 3.5rem;
-  line-height: 1.1;
+  font-size: 3rem;
+  line-height: 1.15;
   margin-bottom: 1.5rem;
   animation: fadeInUp 0.6s ease-out 0.1s both;
 }
@@ -89,12 +90,36 @@
 }
 
 .heroSubtitle {
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   line-height: 1.7;
   opacity: 0.9;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   max-width: 540px;
   animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.alertBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 2rem;
+  animation: fadeInUp 0.6s ease-out 0.25s both;
+}
+
+.alertIcon {
+  color: var(--warning);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.alertBox p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 .heroCtas {
@@ -159,7 +184,7 @@
 }
 
 .trustIcon {
-  color: var(--accent);
+  color: var(--success);
 }
 
 /* ==================== FORM CARD ==================== */
@@ -177,6 +202,13 @@
 .formHeader {
   text-align: center;
   margin-bottom: 1.5rem;
+}
+
+.formLockIcon {
+  width: 40px;
+  height: 40px;
+  color: var(--success);
+  margin-bottom: 0.75rem;
 }
 
 .formHeader h3 {
@@ -291,6 +323,13 @@
   box-shadow: 0 10px 25px rgba(26, 43, 73, 0.3);
 }
 
+.formDisclaimer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--gray-600);
+  margin: 0;
+}
+
 .spinnerContainer,
 .errorContainer {
   display: flex;
@@ -324,135 +363,15 @@
   font-weight: 600;
 }
 
-/* ==================== STATS SECTION ==================== */
-.statsSection {
-  background: var(--gray-50);
-  padding: 3rem 2rem;
-}
-
-.statsGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-}
-
-.statCard {
-  text-align: center;
-  padding: 1.5rem;
-}
-
-.statValue {
-  font-family: "Anton", sans-serif;
-  font-size: 2.5rem;
-  color: var(--primary);
-  margin-bottom: 0.5rem;
-}
-
-.statLabel {
-  color: var(--gray-600);
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
 /* ==================== PROBLEM SECTION ==================== */
 .problemSection {
   padding: 6rem 2rem;
   background: var(--white);
 }
 
-.problemGrid {
-  display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 4rem;
-  align-items: center;
-}
-
-.sectionTitle {
-  font-size: 2.75rem;
-  color: var(--primary);
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
-}
-
-.sectionTitle .highlight {
-  display: inline;
-}
-
-.problemText {
-  font-size: 1.1rem;
-  color: var(--gray-600);
-  line-height: 1.8;
-  margin-bottom: 2rem;
-}
-
-.problemList {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 2rem 0;
-}
-
-.problemList li {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  font-size: 1.05rem;
-  color: var(--gray-800);
-}
-
-.listIcon {
-  color: var(--accent);
-  flex-shrink: 0;
-}
-
-.problemCta {
-  font-size: 1.1rem;
-  color: var(--primary);
-}
-
-.imageCard {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border-radius: 20px;
-  padding: 3rem;
+.problemHeader {
   text-align: center;
-  color: var(--white);
-}
-
-.awardIcon {
-  width: 60px;
-  height: 60px;
-  color: var(--accent);
-  margin-bottom: 1.5rem;
-}
-
-.imageCard h4 {
-  font-family: "Anton", sans-serif;
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-}
-
-.imageCard p {
-  opacity: 0.9;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.stars {
-  display: flex;
-  justify-content: center;
-  gap: 0.25rem;
-}
-
-.star {
-  width: 24px;
-  height: 24px;
-  color: var(--accent);
-}
-
-/* ==================== PROCESS SECTION ==================== */
-.processSection {
-  padding: 6rem 2rem;
-  background: var(--gray-50);
+  margin-bottom: 4rem;
 }
 
 .sectionTitleCenter {
@@ -471,14 +390,118 @@
   font-size: 1.15rem;
   color: var(--gray-600);
   max-width: 600px;
-  margin: 0 auto 4rem;
+  margin: 0 auto;
   line-height: 1.7;
+}
+
+.issuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.issueCard {
+  background: var(--gray-50);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.issueCard:hover {
+  transform: translateY(-5px);
+  border-color: var(--error);
+  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.1);
+}
+
+.issueIconWrapper {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.issueIcon {
+  width: 32px;
+  height: 32px;
+  color: var(--white);
+}
+
+.issueCard h3 {
+  font-family: "Anton", sans-serif;
+  font-size: 1.25rem;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+}
+
+.issueCard p {
+  color: var(--gray-600);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.violationBox {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  border-radius: 20px;
+  padding: 3rem;
+  color: var(--white);
+}
+
+.violationContent h3 {
+  font-family: "Anton", sans-serif;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.violationContent p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+.violationContent ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+.violationContent ul li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+}
+
+.violationContent ul li::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ==================== PROCESS SECTION ==================== */
+.processSection {
+  padding: 6rem 2rem;
+  background: var(--gray-50);
 }
 
 .processGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 2rem;
+  margin-top: 4rem;
 }
 
 .processCard {
@@ -544,10 +567,103 @@
   line-height: 1.6;
 }
 
+/* ==================== ELIGIBILITY SECTION ==================== */
+.eligibilitySection {
+  padding: 6rem 2rem;
+  background: var(--white);
+}
+
+.eligibilityGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.sectionTitle {
+  font-size: 2.75rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.sectionTitle .highlight {
+  display: inline;
+}
+
+.eligibilityText {
+  font-size: 1.15rem;
+  color: var(--gray-600);
+  margin-bottom: 2rem;
+}
+
+.eligibilityList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem 0;
+}
+
+.eligibilityList li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  font-size: 1.05rem;
+  color: var(--gray-800);
+}
+
+.checkIcon {
+  color: var(--success);
+  flex-shrink: 0;
+}
+
+.eligibilityCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--accent);
+  color: var(--primary);
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.eligibilityCta:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.noFeeCard {
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  color: var(--white);
+}
+
+.noFeeIcon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1.5rem;
+}
+
+.noFeeCard h4 {
+  font-family: "Anton", sans-serif;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+}
+
+.noFeeCard p {
+  opacity: 0.95;
+  line-height: 1.6;
+}
+
 /* ==================== FAQ SECTION ==================== */
 .faqSection {
   padding: 6rem 2rem;
-  background: var(--white);
+  background: var(--gray-50);
 }
 
 .faqContainer {
@@ -561,6 +677,7 @@
   margin-bottom: 1rem;
   overflow: hidden;
   transition: all 0.3s ease;
+  background: var(--white);
 }
 
 .faqItem.active {
@@ -618,6 +735,13 @@
   text-align: center;
   max-width: 700px;
   margin: 0 auto;
+}
+
+.ctaIcon {
+  width: 60px;
+  height: 60px;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
 }
 
 .ctaContent h2 {
@@ -708,19 +832,23 @@
   }
 
   .heroTitle {
-    font-size: 2.75rem;
+    font-size: 2.5rem;
   }
 
-  .statsGrid {
-    grid-template-columns: repeat(2, 1fr);
+  .issuesGrid {
+    grid-template-columns: 1fr;
   }
 
-  .problemGrid {
+  .eligibilityGrid {
     grid-template-columns: 1fr;
   }
 
   .processGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .violationContent ul {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -730,7 +858,7 @@
   }
 
   .heroTitle {
-    font-size: 2.25rem;
+    font-size: 2rem;
   }
 
   .heroSubtitle {
@@ -760,15 +888,6 @@
     font-size: 2rem;
   }
 
-  .statsGrid {
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .statValue {
-    font-size: 2rem;
-  }
-
   .processGrid {
     grid-template-columns: 1fr;
   }
@@ -782,11 +901,15 @@
     width: 100%;
     justify-content: center;
   }
+
+  .violationBox {
+    padding: 2rem;
+  }
 }
 
 @media (max-width: 480px) {
   .heroTitle {
-    font-size: 1.85rem;
+    font-size: 1.75rem;
   }
 
   .badge {
@@ -795,5 +918,10 @@
 
   .formCard {
     padding: 1.5rem;
+  }
+
+  .alertBox {
+    flex-direction: column;
+    text-align: center;
   }
 }
