@@ -168,19 +168,19 @@ export default function KinPrivacyLanding() {
     {
       number: 1,
       title: "Your Data Was Tracked",
-      description: "When you visited KIN Insurance's website, hidden tracking technology may have recorded your clicks, browsing behavior, and personal data without your consent.",
+      description: "When you visited KIN Insurance's website to get a quote, compare coverage, or purchase a policy, hidden \"session replay\" and \"pixel tracking\" technology may have secretly recorded your mouse movements, clicks, scrolls, keystrokes, and every page you viewed—all without your knowledge.",
       animation: step1Animation
     },
     {
       number: 2,
-      title: "Privacy Laws Were Violated",
-      description: "This secret tracking may violate federal wiretapping laws, the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, and other state privacy statutes.",
+      title: "Your Data Was Shared",
+      description: "The data collected about your browsing activity was likely shared with third-party advertising companies, analytics firms, and other organizations—all without your permission or meaningful consent. Your private online behavior became a commodity traded without your knowledge.",
       animation: step2Animation
     },
     {
       number: 3,
-      title: "You May Be Owed Compensation",
-      description: "If you visited their website in the past 24 months, you could be entitled to statutory damages and compensation for this privacy violation.",
+      title: "Privacy Laws Were Violated",
+      description: "This covert surveillance may violate federal wiretapping laws, the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, and other state consumer protection statutes designed to protect your digital privacy. You may be entitled to compensation.",
       animation: step3Animation
     }
   ];
