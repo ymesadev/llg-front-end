@@ -433,7 +433,7 @@
 
 .issueCard {
   background: var(--white);
-  padding: 2.5rem 2.5rem 2.5rem 3rem;
+  padding: 2.5rem 3rem 2.5rem 3.5rem;
   text-align: center;
   position: relative;
   flex: 1;
@@ -441,11 +441,18 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  clip-path: polygon(0 0, calc(100% - 35px) 0, 100% 50%, calc(100% - 35px) 101%, 0 100%);
+  clip-path: polygon(35px 0, calc(100% - 35px) 0, 100% 50%, calc(100% - 35px) 100%, 35px 100%, 0 50%);
+}
+
+.issueCard:first-child {
+  clip-path: polygon(0 0, calc(100% - 35px) 0, 100% 50%, calc(100% - 35px) 100%, 0 100%);
+  padding-left: 2.5rem;
 }
 
 .issueCard:last-child {
   background: var(--primary);
+  clip-path: polygon(35px 0, 100% 0, 100% 100%, 35px 100%, 0 50%);
+  padding-right: 2.5rem;
 }
 
 .issueCard:last-child h3,
