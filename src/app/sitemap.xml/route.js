@@ -24,14 +24,14 @@ export async function GET() {
 
     const indexEntries = [];
     for (let i = 1; i <= totalPages; i++) {
-      // use 1-based numbered files matching the dynamic route: sitemap-1.xml, sitemap-2.xml, ...
-      indexEntries.push({ loc: `${SITE}/sitemap-${i}.xml`, lastmod: null });
+      // use nested route: /sitemap.xml/1, /sitemap.xml/2, ...
+      indexEntries.push({ loc: `${SITE}/sitemap.xml/${i}`, lastmod: null });
     }
 
   const xml = toIndexXml(indexEntries);
     return new Response(xml, { headers: { 'Content-Type': 'application/xml' } });
   } catch (e) {
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<sitemap><loc>${SITE}/sitemap-1.xml</loc></sitemap>\n</sitemapindex>\n`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<sitemap><loc>${SITE}/sitemap.xml/1</loc></sitemap>\n</sitemapindex>\n`;
     return new Response(xml, { headers: { 'Content-Type': 'application/xml' } });
   }
 }

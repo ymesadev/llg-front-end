@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 
-import { collectUrlsRange, toUrlsetXml, getEndpointCounts, SITE } from './chunked-helpers';
+import { collectUrlsRange, toUrlsetXml, getEndpointCounts, SITE } from '../chunked-helpers';
 
 const PAGE_SIZE = Number(process.env.SITEMAP_PAGE_SIZE || 2000);
 
@@ -21,6 +21,7 @@ export async function GET(request, { params }) {
     const xml = toUrlsetXml(chunk);
     return new Response(xml, { headers: { 'Content-Type': 'application/xml' } });
   } catch (e) {
+    console.error('Sitemap chunk error:', e);
     return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<url><loc>${SITE}/</loc></url>\n</urlset>\n`, { headers: { 'Content-Type': 'application/xml' } });
   }
 }
