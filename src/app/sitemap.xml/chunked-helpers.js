@@ -1,13 +1,96 @@
+import fs from 'fs';
+import path from 'path';
+
 export const SITE  = (process.env.NEXT_PUBLIC_SITE_URL || 'https://louislawgroup.com').replace(/\/+$/,'');
 const STRAPI = (process.env.NEXT_PUBLIC_STRAPI_API_URL || process.env.STRAPI_URL || 'https://login.louislawgroup.com').replace(/\/+$/,'');
 const TOKEN = process.env.STRAPI_API_TOKEN || '';
 
-/** Static pages not in Strapi CMS */
-export const STATIC_PAGES = [
-  '/kin-insurance-claims',
-  '/kin-insurance-claims/qualify',
-  '/kin-insurance-claims/sign',
-];
+/**
+ * Dynamically discover all static pages from the app directory
+ * Excludes: api routes, dynamic routes [...], private folders _, and special files
+ */
+function discoverStaticPages() {
+  const appDir = path.join(process.cwd(), 'src', 'app');
+  const staticPages = [];
+
+  function scanDir(dir, routePath = '') {
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+
+        // Skip private folders, api, and special Next.js folders
+        if (entry.name.startsWith('_') ||
+            entry.name.startsWith('.') ||
+            entry.name === 'api' ||
+            entry.name === 'sitemap.xml' ||
+            entry.name.endsWith('.xml')) {
+          continue;
+        }
+
+        if (entry.isDirectory()) {
+          // Skip dynamic route segments like [slug], [...slug], (groups)
+          if (entry.name.startsWith('[') || entry.name.startsWith('(')) {
+            continue;
+          }
+
+          const newRoutePath = routePath + '/' + entry.name;
+
+          // Check if this directory has a page.js/page.tsx
+          const hasPage = entries.some(e =>
+            e.name === 'page.js' || e.name === 'page.tsx' ||
+            e.name === 'page.jsx' || e.name === 'page.mdx'
+          );
+
+          // Check if the subdirectory has a page file
+          try {
+            const subEntries = fs.readdirSync(fullPath);
+            const subHasPage = subEntries.some(name =>
+              name === 'page.js' || name === 'page.tsx' ||
+              name === 'page.jsx' || name === 'page.mdx'
+            );
+            if (subHasPage) {
+              staticPages.push(newRoutePath);
+            }
+          } catch (e) {
+            // Ignore read errors
+          }
+
+          // Recurse into subdirectory
+          scanDir(fullPath, newRoutePath);
+        }
+      }
+
+      // Check if current directory (root) has a page file
+      if (routePath === '') {
+        const hasRootPage = entries.some(e =>
+          e.name === 'page.js' || e.name === 'page.tsx' ||
+          e.name === 'page.jsx' || e.name === 'page.mdx'
+        );
+        if (hasRootPage) {
+          staticPages.push('/');
+        }
+      }
+    } catch (e) {
+      console.error('Error scanning directory:', dir, e);
+    }
+  }
+
+  scanDir(appDir);
+
+  // Remove root '/' as it's added separately, and remove duplicates
+  return [...new Set(staticPages.filter(p => p !== '/'))];
+}
+
+// Cache static pages discovery
+let _staticPagesCache = null;
+export function getStaticPages() {
+  if (!_staticPagesCache) {
+    _staticPagesCache = discoverStaticPages();
+  }
+  return _staticPagesCache;
+}
 
 /** Which collections and which fields hold the path/slug **/
 export const MAP = [
@@ -76,9 +159,10 @@ export async function collectAllUrls() {
   // also include root
   all.unshift({ loc: `${SITE}/`, lastmod: null });
 
-  // add static pages
-  for (const path of STATIC_PAGES) {
-    all.push({ loc: `${SITE}${path}`, lastmod: null });
+  // add dynamically discovered static pages
+  const staticPages = getStaticPages();
+  for (const pagePath of staticPages) {
+    all.push({ loc: `${SITE}${pagePath}`, lastmod: null });
   }
 
   return all;
@@ -93,8 +177,9 @@ export async function getEndpointCounts() {
     const total = res?.meta?.pagination?.total ?? 0;
     out.push({ endpoint: m.endpoint, count: Number(total || 0), fields: m.fields, prefix: m.prefix });
   }
-  // Add static pages count
-  out.push({ endpoint: 'static', count: STATIC_PAGES.length, fields: [], prefix: '' });
+  // Add dynamically discovered static pages count
+  const staticPages = getStaticPages();
+  out.push({ endpoint: 'static', count: staticPages.length, fields: [], prefix: '' });
   return out;
 }
 
@@ -129,9 +214,10 @@ export async function collectUrlsRange(startIndex, limit, fetchPageSize = 200) {
 
     // Handle static pages specially
     if (c.endpoint === 'static') {
+      const staticPages = getStaticPages();
       const need = Math.min(remaining, c.count - offset);
-      for (let i = offset; i < offset + need && i < STATIC_PAGES.length; i++) {
-        out.push({ loc: `${SITE}${STATIC_PAGES[i]}`, lastmod: null });
+      for (let i = offset; i < offset + need && i < staticPages.length; i++) {
+        out.push({ loc: `${SITE}${staticPages[i]}`, lastmod: null });
         remaining -= 1;
       }
       offset = 0;
