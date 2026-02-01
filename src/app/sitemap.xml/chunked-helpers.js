@@ -2,6 +2,13 @@ export const SITE  = (process.env.NEXT_PUBLIC_SITE_URL || 'https://louislawgroup
 const STRAPI = (process.env.NEXT_PUBLIC_STRAPI_API_URL || process.env.STRAPI_URL || 'https://login.louislawgroup.com').replace(/\/+$/,'');
 const TOKEN = process.env.STRAPI_API_TOKEN || '';
 
+/** Static pages not in Strapi CMS */
+export const STATIC_PAGES = [
+  '/kin-insurance-claims',
+  '/kin-insurance-claims/qualify',
+  '/kin-insurance-claims/sign',
+];
+
 /** Which collections and which fields hold the path/slug **/
 export const MAP = [
   { endpoint: 'pages',       prefix: '',        fields: ['URL','Url','url','full_slug','Slug','slug','path'] },
@@ -68,6 +75,12 @@ export async function collectAllUrls() {
 
   // also include root
   all.unshift({ loc: `${SITE}/`, lastmod: null });
+
+  // add static pages
+  for (const path of STATIC_PAGES) {
+    all.push({ loc: `${SITE}${path}`, lastmod: null });
+  }
+
   return all;
 }
 
@@ -80,6 +93,8 @@ export async function getEndpointCounts() {
     const total = res?.meta?.pagination?.total ?? 0;
     out.push({ endpoint: m.endpoint, count: Number(total || 0), fields: m.fields, prefix: m.prefix });
   }
+  // Add static pages count
+  out.push({ endpoint: 'static', count: STATIC_PAGES.length, fields: [], prefix: '' });
   return out;
 }
 
@@ -109,6 +124,18 @@ export async function collectUrlsRange(startIndex, limit, fetchPageSize = 200) {
   for (const c of counts) {
     if (offset >= c.count) {
       offset -= c.count;
+      continue;
+    }
+
+    // Handle static pages specially
+    if (c.endpoint === 'static') {
+      const need = Math.min(remaining, c.count - offset);
+      for (let i = offset; i < offset + need && i < STATIC_PAGES.length; i++) {
+        out.push({ loc: `${SITE}${STATIC_PAGES[i]}`, lastmod: null });
+        remaining -= 1;
+      }
+      offset = 0;
+      if (remaining <= 0) break;
       continue;
     }
 

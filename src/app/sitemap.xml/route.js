@@ -23,9 +23,9 @@ export async function GET() {
     const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
     const indexEntries = [];
-    for (let i = 0; i < totalPages; i++) {
-      // use 0-based numbered files as requested: 0-sitemap.xml, 1-sitemap.xml, ...
-      indexEntries.push({ loc: `${SITE}/${i}-sitemap.xml`, lastmod: null });
+    for (let i = 1; i <= totalPages; i++) {
+      // use 1-based numbered files matching the dynamic route: sitemap-1.xml, sitemap-2.xml, ...
+      indexEntries.push({ loc: `${SITE}/sitemap-${i}.xml`, lastmod: null });
     }
 
   const xml = toIndexXml(indexEntries);
