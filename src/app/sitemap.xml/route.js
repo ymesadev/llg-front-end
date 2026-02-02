@@ -24,14 +24,24 @@ export async function GET() {
 
     const indexEntries = [];
     for (let i = 1; i <= totalPages; i++) {
-      // use nested route: /sitemap.xml/1, /sitemap.xml/2, ...
-      indexEntries.push({ loc: `${SITE}/sitemap.xml/${i}`, lastmod: null });
+      // Standard sitemap URL format: /sitemaps/1.xml, /sitemaps/2.xml, ...
+      indexEntries.push({ loc: `${SITE}/sitemaps/${i}.xml`, lastmod: null });
     }
 
-  const xml = toIndexXml(indexEntries);
-    return new Response(xml, { headers: { 'Content-Type': 'application/xml' } });
+    const xml = toIndexXml(indexEntries);
+    return new Response(xml, {
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600, s-maxage=3600'
+      }
+    });
   } catch (e) {
-    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<sitemap><loc>${SITE}/sitemap.xml/1</loc></sitemap>\n</sitemapindex>\n`;
-    return new Response(xml, { headers: { 'Content-Type': 'application/xml' } });
+    console.error('Sitemap index error:', e);
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<sitemap><loc>${SITE}/sitemaps/1.xml</loc></sitemap>\n</sitemapindex>\n`;
+    return new Response(xml, {
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8'
+      }
+    });
   }
 }
