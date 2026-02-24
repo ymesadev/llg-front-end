@@ -20,6 +20,38 @@ export const dynamic = 'force-dynamic';
 // 2) Keep revalidate if you want ISR for existing pages
 export const revalidate = 60; // Revalidate existing pages every 60s
 
+// ✅ Dynamic metadata for SEO (titles + descriptions from Strapi)
+export async function generateMetadata({ params }) {
+  const slugArray = params.slug || [];
+  const slug = slugArray.join("/");
+  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+
+  // Try articles first
+  try {
+    const res = await fetch(
+      `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description`,
+      { cache: 'no-store' }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data.data && data.data.length > 0) {
+        const article = data.data[0];
+        if (article.title) {
+          return {
+            title: `${article.title} | Louis Law Group`,
+            description: article.description || "Contact Louis Law Group for a free case evaluation. Florida's trusted property damage attorneys.",
+          };
+        }
+      }
+    }
+  } catch (e) {}
+
+  return {
+    title: "Louis Law Group",
+    description: "Trusted legal services for Florida property owners.",
+  };
+}
+
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
   const slugArray = params.slug || [];
@@ -179,6 +211,28 @@ export default async function Page({ params }) {
         </>
       ) : isArticlePage ? (
         <>
+          {/* FAQ Schema Markup for article pages */}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "LegalService",
+                "name": "Louis Law Group",
+                "url": "https://www.louislawgroup.com",
+                "telephone": "+18336574812",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "West Palm Beach",
+                  "addressRegion": "FL",
+                  "addressCountry": "US"
+                },
+                "areaServed": "Florida",
+                "description": page.description || "Florida property damage attorneys helping homeowners fight insurance claims.",
+                "priceRange": "Free Consultation"
+              })
+            }}
+          />
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
