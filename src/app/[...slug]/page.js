@@ -21,7 +21,8 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 60; // Revalidate existing pages every 60s
 
 // ✅ Dynamic metadata for SEO (titles + descriptions from Strapi)
-export async function generateMetadata({ params }) {
+export async function generateMetadata(props) {
+  const params = await props.params;
   const slugArray = params.slug || [];
   const slug = slugArray.join("/");
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
@@ -427,3 +428,4 @@ export default async function Page({ params }) {
     </Layout>
   );
 }
+
