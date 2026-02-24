@@ -20,6 +20,42 @@ export const dynamic = 'force-dynamic';
 // 2) Keep revalidate if you want ISR for existing pages
 export const revalidate = 60; // Revalidate existing pages every 60s
 
+
+// ✅ SEO: Dynamic meta titles per page
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const slugArray = resolvedParams.slug || [];
+  const slug = slugArray.join("/");
+  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+
+  try {
+    const res = await fetch(
+      `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description`,
+      { cache: "no-store" }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data.data && data.data.length > 0) {
+        const article = data.data[0];
+        if (article.title) {
+          return {
+            title: `${article.title} | Louis Law Group`,
+            description:
+              article.description ||
+              "Contact Louis Law Group for a free case evaluation. Florida's trusted property damage attorneys.",
+          };
+        }
+      }
+    }
+  } catch (e) {}
+
+  return {
+    title: "Louis Law Group | Florida Property Damage Attorneys",
+    description:
+      "Trusted legal services for Florida property owners. Contact us for a free case evaluation.",
+  };
+}
+
 // ✅ Fetch and Render Page Content
 export default async function Page({ params }) {
   const slugArray = params.slug || [];
