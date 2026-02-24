@@ -211,28 +211,6 @@ export default async function Page({ params }) {
         </>
       ) : isArticlePage ? (
         <>
-          {/* FAQ Schema Markup for article pages */}
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "LegalService",
-                "name": "Louis Law Group",
-                "url": "https://www.louislawgroup.com",
-                "telephone": "+18336574812",
-                "address": {
-                  "@type": "PostalAddress",
-                  "addressLocality": "West Palm Beach",
-                  "addressRegion": "FL",
-                  "addressCountry": "US"
-                },
-                "areaServed": "Florida",
-                "description": page.description || "Florida property damage attorneys helping homeowners fight insurance claims.",
-                "priceRange": "Free Consultation"
-              })
-            }}
-          />
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
