@@ -21,6 +21,60 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 60; // Revalidate existing pages every 60s
 
 
+// ✅ SEO: Parse FAQ section from article blocks for structured data
+function extractFaqSchema(blocks) {
+  const faqItems = [];
+  let inFaqSection = false;
+  let currentQ = null;
+  let currentA = [];
+
+  for (const block of blocks) {
+    if (block.__component !== "shared.rich-text") continue;
+    const body = block.body || "";
+
+    if (!inFaqSection) {
+      if (body.includes("Frequently Asked Questions") || body.includes("## **FAQ")) {
+        inFaqSection = true;
+      } else {
+        continue;
+      }
+    }
+
+    const lines = body.split("\n");
+    for (const line of lines) {
+      const qMatch = line.match(/^#{3,4}\s*\**\d+\.\s*(.+?)\**\s*$/);
+      if (qMatch) {
+        if (currentQ) {
+          faqItems.push({ q: currentQ, a: currentA.join(" ").trim() });
+          currentA = [];
+        }
+        currentQ = qMatch[1].replace(/\*\*/g, "").trim();
+      } else if (currentQ && line.trim() && !line.startsWith("#")) {
+        const clean = line
+          .replace(/\*\*|__/g, "")
+          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+          .trim();
+        if (clean) currentA.push(clean);
+      }
+    }
+    if (inFaqSection && currentQ) {
+      faqItems.push({ q: currentQ, a: currentA.join(" ").trim() });
+      break;
+    }
+  }
+
+  if (faqItems.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
 // ✅ SEO: Dynamic meta titles, OG tags, and Twitter Cards per page
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -282,6 +336,15 @@ export default async function Page({ params }) {
               })
             }}
           />
+          {(() => {
+            const faqSchema = extractFaqSchema(page.blocks);
+            return faqSchema ? (
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+              />
+            ) : null;
+          })()}
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
