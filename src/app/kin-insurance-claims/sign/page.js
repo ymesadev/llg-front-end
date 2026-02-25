@@ -65,6 +65,7 @@ export default function SignPage() {
               data-email={contactInfo.email}
               data-name={contactInfo.name}
               data-values={JSON.stringify({
+                Name: contactInfo.name,
                 Phone: contactInfo.phone,
                 Company: config.companyName,
                 "Company Website": config.companyWebsite,
