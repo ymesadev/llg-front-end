@@ -104,6 +104,11 @@ export default function KinPrivacyLanding() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!contactComplete) return;
+    localStorage.setItem('kin-contact', JSON.stringify({
+      email: contactInfo.email,
+      name: contactInfo.name,
+      phone: contactInfo.phone
+    }));
     router.push("/kin-insurance-claims/sign");
   };
 

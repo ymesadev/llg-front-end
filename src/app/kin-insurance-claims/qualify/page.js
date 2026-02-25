@@ -94,6 +94,11 @@ export default function QualifyPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!contactComplete) return;
+    localStorage.setItem('kin-contact', JSON.stringify({
+      email: contactInfo.usedEmail,
+      name: contactInfo.name,
+      phone: contactInfo.phone
+    }));
     router.push("/kin-insurance-claims/sign");
   };
 

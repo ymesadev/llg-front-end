@@ -1,11 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
 import styles from "./page.module.css";
 
 export default function SignPage() {
+  const [ready, setReady] = useState(false);
+  const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
+
   useEffect(() => {
+    // Read contact info saved from the qualify form
+    try {
+      const stored = localStorage.getItem('kin-contact');
+      if (stored) {
+        setContactInfo(JSON.parse(stored));
+      }
+    } catch {}
+    setReady(true);
+
     // Load DocuSeal script
     const script = document.createElement("script");
     script.src = "https://cdn.docuseal.com/js/form.js";
@@ -13,7 +25,6 @@ export default function SignPage() {
     document.body.appendChild(script);
 
     return () => {
-      // Cleanup
       const existingScript = document.querySelector('script[src="https://cdn.docuseal.com/js/form.js"]');
       if (existingScript) {
         existingScript.remove();
@@ -39,10 +50,14 @@ export default function SignPage() {
         </div>
 
         <div className={styles.formContainer}>
-          <docuseal-form
-            data-src="https://docuseal.com/d/XA1qkh69xekva3"
-            data-email=""
-          ></docuseal-form>
+          {ready && (
+            <docuseal-form
+              data-src="https://docuseal.com/d/XA1qkh69xekva3"
+              data-email={contactInfo.email}
+              data-name={contactInfo.name}
+              data-values={JSON.stringify({ "Phone": contactInfo.phone })}
+            ></docuseal-form>
+          )}
         </div>
 
         <div className={styles.helpSection}>
