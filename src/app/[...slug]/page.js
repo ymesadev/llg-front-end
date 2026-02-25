@@ -9,6 +9,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import parse from "html-react-parser";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
@@ -16,9 +17,8 @@ import { renderContentBlocks, processHeroContent, processSectionsContent } from 
 import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 
-// Disable static prerendering: fetch data at request time
-export const dynamic = 'force-dynamic';
-export const revalidate = 0; // dynamic routes ignore ISR; set to 0 to avoid build-time config collection issues
+// ISR: serve from cache, regenerate in background every hour
+export const revalidate = 3600;
 
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
@@ -109,11 +109,134 @@ function injectBlueButtonClass(html) {
   return html;
 }
 
+
+// ✅ SEO: Parse FAQ section from article blocks for structured data
+function extractFaqSchema(blocks) {
+  const faqItems = [];
+  let inFaqSection = false;
+  let currentQ = null;
+  let currentA = [];
+
+  for (const block of blocks) {
+    if (block.__component !== "shared.rich-text") continue;
+    const body = block.body || "";
+
+    if (!inFaqSection) {
+      if (body.includes("Frequently Asked Questions") || body.includes("## **FAQ")) {
+        inFaqSection = true;
+      } else {
+        continue;
+      }
+    }
+
+    const lines = body.split("\n");
+    for (const line of lines) {
+      const qMatch = line.match(/^#{3,4}\s*\**\d+\.\s*(.+?)\**\s*$/);
+      if (qMatch) {
+        if (currentQ) {
+          faqItems.push({ q: currentQ, a: currentA.join(" ").trim() });
+          currentA = [];
+        }
+        currentQ = qMatch[1].replace(/\*\*/g, "").trim();
+      } else if (currentQ && line.trim() && !line.startsWith("#")) {
+        const clean = line
+          .replace(/\*\*|__/g, "")
+          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+          .trim();
+        if (clean) currentA.push(clean);
+      }
+    }
+    if (inFaqSection && currentQ) {
+      faqItems.push({ q: currentQ, a: currentA.join(" ").trim() });
+      break;
+    }
+  }
+
+  if (faqItems.length === 0) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: { "@type": "Answer", text: item.a },
+    })),
+  };
+}
+
+// ✅ SEO: Dynamic meta titles, OG tags, and Twitter Cards per page
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const slugArray = resolvedParams.slug || [];
+  const slug = slugArray.join("/");
+  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+  const siteUrl = "https://www.louislawgroup.com";
+  const defaultImage = `${siteUrl}/og-default.jpg`;
+
+  try {
+    const res = await fetch(
+      `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description&populate[0]=cover`,
+      { cache: "no-store" }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data.data && data.data.length > 0) {
+        const article = data.data[0];
+        if (article.title) {
+          const imageUrl = article.cover?.url
+            ? `https://login.louislawgroup.com${article.cover.url}`
+            : defaultImage;
+          const description =
+            article.description ||
+            "Contact Louis Law Group for a free case evaluation. Florida\'s trusted property damage attorneys.";
+          return {
+            title: `${article.title} | Louis Law Group`,
+            description,
+            openGraph: {
+              title: `${article.title} | Louis Law Group`,
+              description,
+              url: `${siteUrl}/${slug}`,
+              siteName: "Louis Law Group",
+              images: [{ url: imageUrl, width: 1200, height: 630, alt: article.title }],
+              type: "article",
+            },
+            twitter: {
+              card: "summary_large_image",
+              title: `${article.title} | Louis Law Group`,
+              description,
+              images: [imageUrl],
+            },
+          };
+        }
+      }
+    }
+  } catch (e) {}
+
+  return {
+    title: "Louis Law Group | Florida Property Damage Attorneys",
+    description:
+      "Trusted legal services for Florida property owners. Contact us for a free case evaluation.",
+    openGraph: {
+      title: "Louis Law Group | Florida Property Damage Attorneys",
+      description: "Trusted legal services for Florida property owners. Contact us for a free case evaluation.",
+      url: siteUrl,
+      siteName: "Louis Law Group",
+      images: [{ url: defaultImage, width: 1200, height: 630, alt: "Louis Law Group" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Louis Law Group | Florida Property Damage Attorneys",
+      description: "Trusted legal services for Florida property owners. Contact us for a free case evaluation.",
+      images: [defaultImage],
+    },
+  };
+}
+
 // ✅ Fetch and Render Page Content
-export default async function Page({ params }) {
-  // Access params synchronously during build-time config collection
-  const { slug: maybeSlug = [] } = params || {};
-  const slugArray = Array.isArray(maybeSlug) ? maybeSlug : (typeof maybeSlug === 'string' ? [maybeSlug] : []);
+export default async function Page(props) {
+  const params = await props.params;
+  const slugArray = params.slug || [];
   const slug = slugArray.join("/");
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
@@ -548,6 +671,48 @@ export default async function Page({ params }) {
         </>
       ) : isArticlePage ? (
         <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": page.title,
+                "datePublished": page.createdAt,
+                "dateModified": page.updatedAt || page.createdAt,
+                "image": page.cover?.url
+                  ? `https://login.louislawgroup.com${page.cover.url}`
+                  : "https://www.louislawgroup.com/og-default.jpg",
+                "author": {
+                  "@type": "Organization",
+                  "name": "Louis Law Group",
+                  "url": "https://www.louislawgroup.com"
+                },
+                "publisher": {
+                  "@type": "LegalService",
+                  "name": "Louis Law Group",
+                  "url": "https://www.louislawgroup.com",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.louislawgroup.com/logo.png"
+                  }
+                },
+                "mainEntityOfPage": {
+                  "@type": "WebPage",
+                  "@id": `https://www.louislawgroup.com/${page.slug}`
+                }
+              })
+            }}
+          />
+          {(() => {
+            const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
+            return faqSchema ? (
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+              />
+            ) : null;
+          })()}
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
@@ -616,15 +781,19 @@ export default async function Page({ params }) {
               <div className={styles.blogContent}>
                 {page.blocks.map((block, index) => {
                   if (block.__component === "shared.rich-text") {
+                    const body = block.body || "";
+                    const isHtml = body.trimStart().startsWith("<");
                     return (
                       <div key={`rich-${index}`} className={styles.blogText} id={`cta-article-${index}`} data-cta-block-index={index}>
-                        <ReactMarkdown
-                          remarkPlugins={[remarkGfm]}
-                          rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
-                          urlTransform={mdUrlTransform}
-                        >
-                          {block.body}
-                        </ReactMarkdown>
+                        {isHtml ? parse(body) : (
+                          <ReactMarkdown
+                            remarkPlugins={[remarkGfm]}
+                            rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                            urlTransform={mdUrlTransform}
+                          >
+                            {body}
+                          </ReactMarkdown>
+                        )}
                       </div>
                     );
                   }

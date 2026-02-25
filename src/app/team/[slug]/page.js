@@ -1,6 +1,5 @@
-export const runtime = 'nodejs';
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+// ISR: serve from cache, regenerate in background every hour
+export const revalidate = 3600;
 
 import Layout from "../../components/Layout/Layout";
 import styles from "./page.module.css";
@@ -14,14 +13,54 @@ const makeAbs = (u) => {
   return `${STRAPI_BASE}${rel}`;
 };
 
-export default async function TeamPage({ params }) {
-  const slug = (params && params.slug) || '';
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const slug = resolvedParams?.slug || '';
+  try {
+    const res = await fetch(
+      `${STRAPI_BASE}/api/team-pages?filters[Slug][$eq]=${encodeURIComponent(slug)}&fields[0]=title`,
+      { next: { revalidate: 3600 } }
+    );
+    if (res.ok) {
+      const json = await res.json();
+      const item = json?.data?.[0];
+      const title = (item?.attributes || item)?.title;
+      if (title) return { title: `${title} | Louis Law Group` };
+    }
+  } catch {}
+  return { title: 'Louis Law Group' };
+}
+
+// ✅ Generate Static Paths for All Attorneys
+export async function generateStaticParams() {
+  try {
+    const res = await fetch(`${STRAPI_BASE}/api/team-pages?fields[]=Slug&pagination[limit]=1000`, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch team page slugs");
+
+    const data = await res.json();
+
+    return data.data.map((page) => ({
+      slug: page.Slug,
+    }));
+  } catch (error) {
+    console.error("Error in generateStaticParams:", error);
+    return [];
+  }
+}
+
+// ✅ Fetch and Render Attorney Page
+export default async function TeamPage(props) {
+  const params = await props.params;
+  const slug = params.slug;
   const apiUrl = `${STRAPI_BASE}/api/team-pages?filters[Slug][$eq]=${encodeURIComponent(slug)}&populate=*`;
 
   console.log("Fetching attorney page for slug:", slug, "API:", apiUrl);
 
   // Fetch the page content from Strapi
-  const res = await fetch(apiUrl, { cache: 'no-store' });
+  const res = await fetch(apiUrl, { next: { revalidate: 3600 } });
 
   if (!res.ok) {
     return (
