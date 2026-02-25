@@ -5,7 +5,7 @@ import { CheckCircle } from "lucide-react";
 import caseConfig, { DOCUSEAL_TEMPLATE } from "../../../config/cases";
 import styles from "./page.module.css";
 
-const config = caseConfig["kin-insurance-claims"];
+const config = caseConfig["american-integrity-insurance-privacy-torts"];
 
 export default function SignPage() {
   const [ready, setReady] = useState(false);

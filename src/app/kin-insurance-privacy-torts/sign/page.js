@@ -5,7 +5,7 @@ import { CheckCircle } from "lucide-react";
 import caseConfig, { DOCUSEAL_TEMPLATE } from "../../../config/cases";
 import styles from "./page.module.css";
 
-const config = caseConfig["vuori-privacy-violation"];
+const config = caseConfig["kin-insurance-privacy-torts"];
 
 export default function SignPage() {
   const [ready, setReady] = useState(false);
@@ -13,9 +13,8 @@ export default function SignPage() {
 
   useEffect(() => {
     // Read contact info saved from the qualify form
-    let stored = null;
     try {
-      stored = localStorage.getItem(config.localStorageKey);
+      const stored = localStorage.getItem(config.localStorageKey);
       if (stored) {
         setContactInfo(JSON.parse(stored));
       }

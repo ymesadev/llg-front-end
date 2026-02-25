@@ -1,13 +1,28 @@
 const caseConfig = {
-  "kin-insurance-claims": {
+  "kin-insurance-privacy-torts": {
     companyName: "Kin Insurance",
     companyWebsite: "kin.com",
     localStorageKey: "kin-contact",
   },
-  "vuori-privacy-violation": {
+  "vuori-privacy-torts": {
     companyName: "Vuori",
     companyWebsite: "vuori.com",
     localStorageKey: "vuori-contact",
+  },
+  "tower-hill-insurance-privacy-torts": {
+    companyName: "Tower Hill Insurance",
+    companyWebsite: "thig.com",
+    localStorageKey: "tower-hill-contact",
+  },
+  "slide-insurance-privacy-torts": {
+    companyName: "Slide Insurance",
+    companyWebsite: "slideinsurance.com",
+    localStorageKey: "slide-contact",
+  },
+  "american-integrity-insurance-privacy-torts": {
+    companyName: "American Integrity Insurance",
+    companyWebsite: "aii.com",
+    localStorageKey: "american-integrity-contact",
   },
 };
 

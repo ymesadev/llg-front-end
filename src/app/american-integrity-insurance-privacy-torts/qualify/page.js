@@ -13,17 +13,17 @@ const eligibilityQuestions = [
   },
   {
     id: "visited",
-    question: "Did you visit or shop on Vuori's website (vuori.com) within the last 2 years?",
+    question: "Did you visit or interact with American Integrity Insurance's website (aii.com) within the last 2 years?",
     required: true
   },
   {
-    id: "us",
-    question: "Were you located in the United States when you visited Vuori's website?",
+    id: "florida",
+    question: "Were you located in Florida at the time you visited or interacted with American Integrity Insurance's website?",
     required: true
   },
   {
     id: "submitted",
-    question: "Did you create an account, make a purchase, or submit personal information on Vuori's website?",
+    question: "Did you request a quote, create an account, or submit personal information through American Integrity Insurance's website?",
     required: true
   }
 ];
@@ -94,12 +94,12 @@ export default function QualifyPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!contactComplete) return;
-    localStorage.setItem('vuori-contact', JSON.stringify({
+    localStorage.setItem('american-integrity-contact', JSON.stringify({
       email: contactInfo.usedEmail,
       name: contactInfo.name,
       phone: contactInfo.phone
     }));
-    router.push("/vuori-privacy-violation/sign");
+    router.push("/american-integrity-insurance-privacy-torts/sign");
   };
 
   if (disqualified) {
@@ -121,7 +121,7 @@ export default function QualifyPage() {
             </p>
             <button
               className={styles.primaryButton}
-              onClick={() => router.push("/vuori-privacy-violation")}
+              onClick={() => router.push("/american-integrity-insurance-privacy-torts")}
             >
               Return to Homepage
             </button>
@@ -279,7 +279,7 @@ export default function QualifyPage() {
 
                   <form onSubmit={handleSubmit} className={styles.contactForm}>
                     <div className={styles.inputGroup}>
-                      <label htmlFor="usedEmail">Email address used with Vuori</label>
+                      <label htmlFor="usedEmail">Email address used with American Integrity Insurance</label>
                       <input
                         type="email"
                         id="usedEmail"

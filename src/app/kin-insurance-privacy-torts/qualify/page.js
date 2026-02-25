@@ -99,7 +99,7 @@ export default function QualifyPage() {
       name: contactInfo.name,
       phone: contactInfo.phone
     }));
-    router.push("/kin-insurance-claims/sign");
+    router.push("/kin-insurance-privacy-torts/sign");
   };
 
   if (disqualified) {
@@ -121,7 +121,7 @@ export default function QualifyPage() {
             </p>
             <button
               className={styles.primaryButton}
-              onClick={() => router.push("/kin-insurance-claims")}
+              onClick={() => router.push("/kin-insurance-privacy-torts")}
             >
               Return to Homepage
             </button>

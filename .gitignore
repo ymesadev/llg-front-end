@@ -26,7 +26,13 @@ public/*
 # allow case landing pages
 !src/
 !src/app/
-!src/app/kin-insurance-claims/
-!src/app/kin-insurance-claims/**
-!src/app/vuori-privacy-violation/
-!src/app/vuori-privacy-violation/**
+!src/app/kin-insurance-privacy-torts/
+!src/app/kin-insurance-privacy-torts/**
+!src/app/vuori-privacy-torts/
+!src/app/vuori-privacy-torts/**
+!src/app/tower-hill-insurance-privacy-torts/
+!src/app/tower-hill-insurance-privacy-torts/**
+!src/app/slide-insurance-privacy-torts/
+!src/app/slide-insurance-privacy-torts/**
+!src/app/american-integrity-insurance-privacy-torts/
+!src/app/american-integrity-insurance-privacy-torts/**

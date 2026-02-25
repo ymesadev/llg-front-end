@@ -109,7 +109,7 @@ export default function VuoriPrivacyLanding() {
       name: contactInfo.name,
       phone: contactInfo.phone
     }));
-    router.push("/vuori-privacy-violation/sign");
+    router.push("/vuori-privacy-torts/sign");
   };
 
   const faqs = [
@@ -205,7 +205,7 @@ export default function VuoriPrivacyLanding() {
                 </p>
               </div>
               <div className={styles.heroCtas}>
-                <Link href="/vuori-privacy-violation/qualify" className={styles.primaryCta}>
+                <Link href="/vuori-privacy-torts/qualify" className={styles.primaryCta}>
                   <span>Check Your Eligibility Now</span>
                   <ArrowRight size={20} />
                 </Link>
@@ -420,7 +420,7 @@ export default function VuoriPrivacyLanding() {
               <p className={styles.stepsDescription2}>
                 There's no cost to get started and you won't pay a dime unless we win your case. We work on a contingency fee basis, which means our interests are aligned with yours. Simply fill out the form, let us review your eligibility, and we'll take it from there.
               </p>
-              <Link href="/vuori-privacy-violation/qualify" className={styles.stepsButton}>
+              <Link href="/vuori-privacy-torts/qualify" className={styles.stepsButton}>
                 Check Your Eligibility
                 <ArrowRight size={20} />
               </Link>
@@ -505,7 +505,7 @@ export default function VuoriPrivacyLanding() {
                   <span>You are a resident of the United States</span>
                 </li>
               </ul>
-              <Link href="/vuori-privacy-violation/qualify" className={styles.eligibilityCta}>
+              <Link href="/vuori-privacy-torts/qualify" className={styles.eligibilityCta}>
                 Check Your Eligibility Now
                 <ArrowRight size={20} />
               </Link>
@@ -599,7 +599,7 @@ export default function VuoriPrivacyLanding() {
                     <div className={styles.qualifiedBadge}>
                       <Check size={16} /> You Qualify!
                     </div>
-                    <Link href="/vuori-privacy-violation/qualify" className={styles.submitButton}>
+                    <Link href="/vuori-privacy-torts/qualify" className={styles.submitButton}>
                       Complete Your Claim
                       <ArrowRight size={20} />
                     </Link>
@@ -638,7 +638,7 @@ export default function VuoriPrivacyLanding() {
                   </div>
                 ))}
               </div>
-              <Link href="/vuori-privacy-violation/qualify" className={styles.eligibilityCta}>
+              <Link href="/vuori-privacy-torts/qualify" className={styles.eligibilityCta}>
                 Check Your Eligibility Now
                 <ArrowRight size={20} />
               </Link>
@@ -732,7 +732,7 @@ export default function VuoriPrivacyLanding() {
                     <div className={styles.qualifiedBadge}>
                       <Check size={16} /> You Qualify!
                     </div>
-                    <Link href="/vuori-privacy-violation/qualify" className={styles.submitButton}>
+                    <Link href="/vuori-privacy-torts/qualify" className={styles.submitButton}>
                       Complete Your Claim
                       <ArrowRight size={20} />
                     </Link>
@@ -755,7 +755,7 @@ export default function VuoriPrivacyLanding() {
               Check your eligibility now—it's free, fast, and confidential.
             </p>
             <div className={styles.ctaButtons}>
-              <Link href="/vuori-privacy-violation/qualify" className={styles.ctaPrimary}>
+              <Link href="/vuori-privacy-torts/qualify" className={styles.ctaPrimary}>
                 <span>Check Eligibility Now</span>
                 <ArrowRight size={20} />
               </Link>
