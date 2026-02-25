@@ -14,13 +14,19 @@ public/*
 !src/app/sitemap.xml/
 !src/app/sitemap.xml/route.js
 
+# allow config
+!src/config/
+!src/config/**
+
 # allow helper libs
 !src/lib/
 !src/lib/media.js
 !src/app/sitemap.xml/chunked-helpers.js
 
-# allow vuori-privacy-violation landing page
+# allow case landing pages
 !src/
 !src/app/
+!src/app/kin-insurance-claims/
+!src/app/kin-insurance-claims/**
 !src/app/vuori-privacy-violation/
 !src/app/vuori-privacy-violation/**

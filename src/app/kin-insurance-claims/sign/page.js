@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
+import caseConfig, { DOCUSEAL_TEMPLATE } from "../../../config/cases";
 import styles from "./page.module.css";
+
+const config = caseConfig["kin-insurance-claims"];
 
 export default function SignPage() {
   const [ready, setReady] = useState(false);
@@ -11,18 +14,24 @@ export default function SignPage() {
   useEffect(() => {
     // Read contact info saved from the qualify form
     try {
-      const stored = localStorage.getItem('kin-contact');
+      const stored = localStorage.getItem(config.localStorageKey);
       if (stored) {
         setContactInfo(JSON.parse(stored));
       }
     } catch {}
-    setReady(true);
 
-    // Load DocuSeal script
+    // Load DocuSeal script, then mark ready so the form renders
+    // with contact data attributes already set
     const script = document.createElement("script");
     script.src = "https://cdn.docuseal.com/js/form.js";
     script.async = true;
+    script.onload = () => setReady(true);
     document.body.appendChild(script);
+
+    // Fallback in case script is cached and onload fires before state update
+    if (document.querySelector('script[src="https://cdn.docuseal.com/js/form.js"]')) {
+      setTimeout(() => setReady(true), 500);
+    }
 
     return () => {
       const existingScript = document.querySelector('script[src="https://cdn.docuseal.com/js/form.js"]');
@@ -52,10 +61,15 @@ export default function SignPage() {
         <div className={styles.formContainer}>
           {ready && (
             <docuseal-form
-              data-src="https://docuseal.com/d/XA1qkh69xekva3"
+              data-src={DOCUSEAL_TEMPLATE}
               data-email={contactInfo.email}
               data-name={contactInfo.name}
-              data-values={JSON.stringify({ "Phone": contactInfo.phone })}
+              data-values={JSON.stringify({
+                Phone: contactInfo.phone,
+                Company: config.companyName,
+                "Company Website": config.companyWebsite,
+                Date: new Date().toLocaleDateString("en-US"),
+              })}
             ></docuseal-form>
           )}
         </div>
