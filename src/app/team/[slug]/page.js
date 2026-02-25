@@ -26,7 +26,8 @@ export async function generateStaticParams() {
 }
 
 // ✅ **Fetch and Render Attorney Page**
-export default async function TeamPage({ params }) {
+export default async function TeamPage(props) {
+  const params = await props.params;
   const slug = params.slug;
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   const apiUrl = `${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&populate=*`;
@@ -68,7 +69,7 @@ export default async function TeamPage({ params }) {
           <div className="column-2a">
             {/* ✅ Left Column: Attorney Image */}
             <div>
-              <img src={page.Image.url} alt={page.Image.alt || page.Title} className={styles.teamImage} />
+              <img src={page.Image?.url ? `https://login.louislawgroup.com${page.Image.url}` : "/placeholder.jpg"} alt={page.Image?.alt || page.Title || "Attorney"} className={styles.teamImage} />
             </div>
 
             {/* ✅ Right Column: Attorney Details */}
