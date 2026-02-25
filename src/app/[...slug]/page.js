@@ -6,6 +6,7 @@ import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
 import Contact from "../components/Contact/ContactSection";
 import ReactMarkdown from "react-markdown";
+import parse from "html-react-parser";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
@@ -377,9 +378,11 @@ export default async function Page(props) {
               <div className={styles.blogContent}>
                 {page.blocks.map((block, index) => {
                   if (block.__component === "shared.rich-text") {
+                    const body = block.body || "";
+                    const isHtml = body.trimStart().startsWith("<");
                     return (
                       <div key={index} className={styles.blogText}>
-                        <ReactMarkdown>{block.body}</ReactMarkdown>
+                        {isHtml ? parse(body) : <ReactMarkdown>{body}</ReactMarkdown>}
                       </div>
                     );
                   }
