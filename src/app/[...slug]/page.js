@@ -145,7 +145,8 @@ export async function generateMetadata({ params }) {
 }
 
 // ✅ Fetch and Render Page Content
-export default async function Page({ params }) {
+export default async function Page(props) {
+  const params = await props.params;
   const slugArray = params.slug || [];
   const slug = slugArray.join("/");
 
@@ -337,7 +338,7 @@ export default async function Page({ params }) {
             }}
           />
           {(() => {
-            const faqSchema = extractFaqSchema(page.blocks);
+            const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
             return faqSchema ? (
               <script
                 type="application/ld+json"
