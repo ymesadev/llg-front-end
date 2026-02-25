@@ -21,16 +21,18 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 60; // Revalidate existing pages every 60s
 
 
-// ✅ SEO: Dynamic meta titles per page
+// ✅ SEO: Dynamic meta titles, OG tags, and Twitter Cards per page
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const slugArray = resolvedParams.slug || [];
   const slug = slugArray.join("/");
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+  const siteUrl = "https://www.louislawgroup.com";
+  const defaultImage = `${siteUrl}/og-default.jpg`;
 
   try {
     const res = await fetch(
-      `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description`,
+      `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description&populate[0]=cover`,
       { cache: "no-store" }
     );
     if (res.ok) {
@@ -38,11 +40,29 @@ export async function generateMetadata({ params }) {
       if (data.data && data.data.length > 0) {
         const article = data.data[0];
         if (article.title) {
+          const imageUrl = article.cover?.url
+            ? `https://login.louislawgroup.com${article.cover.url}`
+            : defaultImage;
+          const description =
+            article.description ||
+            "Contact Louis Law Group for a free case evaluation. Florida\'s trusted property damage attorneys.";
           return {
             title: `${article.title} | Louis Law Group`,
-            description:
-              article.description ||
-              "Contact Louis Law Group for a free case evaluation. Florida's trusted property damage attorneys.",
+            description,
+            openGraph: {
+              title: `${article.title} | Louis Law Group`,
+              description,
+              url: `${siteUrl}/${slug}`,
+              siteName: "Louis Law Group",
+              images: [{ url: imageUrl, width: 1200, height: 630, alt: article.title }],
+              type: "article",
+            },
+            twitter: {
+              card: "summary_large_image",
+              title: `${article.title} | Louis Law Group`,
+              description,
+              images: [imageUrl],
+            },
           };
         }
       }
@@ -53,6 +73,20 @@ export async function generateMetadata({ params }) {
     title: "Louis Law Group | Florida Property Damage Attorneys",
     description:
       "Trusted legal services for Florida property owners. Contact us for a free case evaluation.",
+    openGraph: {
+      title: "Louis Law Group | Florida Property Damage Attorneys",
+      description: "Trusted legal services for Florida property owners. Contact us for a free case evaluation.",
+      url: siteUrl,
+      siteName: "Louis Law Group",
+      images: [{ url: defaultImage, width: 1200, height: 630, alt: "Louis Law Group" }],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Louis Law Group | Florida Property Damage Attorneys",
+      description: "Trusted legal services for Florida property owners. Contact us for a free case evaluation.",
+      images: [defaultImage],
+    },
   };
 }
 
@@ -215,6 +249,39 @@ export default async function Page({ params }) {
         </>
       ) : isArticlePage ? (
         <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": page.title,
+                "datePublished": page.createdAt,
+                "dateModified": page.updatedAt || page.createdAt,
+                "image": page.cover?.url
+                  ? `https://login.louislawgroup.com${page.cover.url}`
+                  : "https://www.louislawgroup.com/og-default.jpg",
+                "author": {
+                  "@type": "Organization",
+                  "name": "Louis Law Group",
+                  "url": "https://www.louislawgroup.com"
+                },
+                "publisher": {
+                  "@type": "LegalService",
+                  "name": "Louis Law Group",
+                  "url": "https://www.louislawgroup.com",
+                  "logo": {
+                    "@type": "ImageObject",
+                    "url": "https://www.louislawgroup.com/logo.png"
+                  }
+                },
+                "mainEntityOfPage": {
+                  "@type": "WebPage",
+                  "@id": `https://www.louislawgroup.com/${page.slug}`
+                }
+              })
+            }}
+          />
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
