@@ -18,3 +18,9 @@ public/*
 !src/lib/
 !src/lib/media.js
 !src/app/sitemap.xml/chunked-helpers.js
+
+# allow vuori-privacy-violation landing page
+!src/
+!src/app/
+!src/app/vuori-privacy-violation/
+!src/app/vuori-privacy-violation/**
