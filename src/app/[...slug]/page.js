@@ -158,44 +158,25 @@ export default async function Page(props) {
   let isFaqsPage = false;
 
   try {
-    const attorneyRes = await fetch(
-      `${strapiURL}/api/team-pages?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
-    const articleRes = await fetch(
-      `${strapiURL}/api/articles?fields[]=slug&pagination[pageSize]=22000`,
-      { next: { revalidate: 60 } }
-    );
-    const jobRes = await fetch(
-      `${strapiURL}/api/jobs?fields[]=Slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
-    const faqsRes = await fetch(
-      `${strapiURL}/api/faqs-and-legals?fields[]=slug&pagination[limit]=1000`,
-      { next: { revalidate: 60 } }
-    );
+    // ✅ Query each type by the exact slug — avoids 22K+ slug list that misses new articles
+    const [attorneyRes, articleRes, jobRes, faqsRes] = await Promise.all([
+      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${slug}&fields[]=Slug&pagination[limit]=1`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[]=slug&pagination[limit]=1`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${slug}&fields[]=Slug&pagination[limit]=1`, { next: { revalidate: 60 } }),
+      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${slug}&fields[]=slug&pagination[limit]=1`, { next: { revalidate: 60 } }),
+    ]);
 
-    const attorneyData = await attorneyRes.json();
-    const articleData = await articleRes.json();
-    const jobData = await jobRes.json();
-    const faqsData = await faqsRes.json();
+    const [attorneyData, articleData, jobData, faqsData] = await Promise.all([
+      attorneyRes.json(), articleRes.json(), jobRes.json(), faqsRes.json(),
+    ]);
 
-    // Now define the slug arrays
-    const attorneySlugs = attorneyData.data.map((attorney) => attorney.Slug);
-    const articleSlugs = articleData.data.map((article) => article.slug);
-    const jobSlugs = jobData.data.map((job) => job.Slug);
-    const faqsSlugs = faqsData.data.map((faq) =>
-      faq.attributes && faq.attributes.slug ? faq.attributes.slug : faq.slug
-    );
-
-    // Decide which type of page it is
-    if (attorneySlugs.includes(slug)) {
+    if (attorneyData.data?.length > 0) {
       isAttorneyPage = true;
-    } else if (articleSlugs.includes(slug)) {
+    } else if (articleData.data?.length > 0) {
       isArticlePage = true;
-    } else if (jobSlugs.includes(slug)) {
+    } else if (jobData.data?.length > 0) {
       isJobPage = true;
-    } else if (faqsSlugs.includes(slug)) {
+    } else if (faqsData.data?.length > 0) {
       isFaqsPage = true;
     }
   } catch (error) {
