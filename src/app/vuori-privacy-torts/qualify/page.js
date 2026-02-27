@@ -1,9 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
+
+async function sha256(value) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(value.trim().toLowerCase());
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateEventId() {
+  return `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+}
 
 const eligibilityQuestions = [
   {
@@ -41,6 +52,26 @@ export default function QualifyPage() {
   const [direction, setDirection] = useState("next");
   const [disqualified, setDisqualified] = useState(false);
 
+  const ttqTrack = useCallback((eventName, contentName) => {
+    if (typeof window !== "undefined" && window.ttq) {
+      window.ttq.track(eventName, {
+        contents: [{
+          content_id: "vuori-privacy-torts-qualify",
+          content_type: "product",
+          content_name: contentName || "Vuori Privacy Torts - Qualify"
+        }],
+        value: 0,
+        currency: "USD"
+      }, {
+        event_id: generateEventId()
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    ttqTrack("ViewContent", "Vuori Privacy Torts - Qualify Page");
+  }, [ttqTrack]);
+
   const step1Questions = eligibilityQuestions.slice(0, 2);
   const step2Questions = eligibilityQuestions.slice(2, 4);
 
@@ -74,6 +105,8 @@ export default function QualifyPage() {
       return;
     }
 
+    ttqTrack("ClickButton", `Vuori Qualify - Step ${currentStep + 1} Continue`);
+
     setDirection("next");
     setIsAnimating(true);
     setTimeout(() => {
@@ -91,9 +124,27 @@ export default function QualifyPage() {
     }, 300);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!contactComplete) return;
+
+    // TikTok Pixel: identify with hashed PII + fire conversion events
+    if (typeof window !== "undefined" && window.ttq) {
+      const [hashedEmail, hashedPhone] = await Promise.all([
+        sha256(contactInfo.usedEmail),
+        sha256(contactInfo.phone)
+      ]);
+
+      window.ttq.identify({
+        email: hashedEmail,
+        phone_number: hashedPhone
+      });
+
+      ttqTrack("Contact", "Vuori Qualify - Contact Info Submitted");
+      ttqTrack("CompleteRegistration", "Vuori Qualify - Registration Complete");
+      ttqTrack("Lead", "Vuori Qualify - Lead Captured");
+    }
+
     localStorage.setItem('vuori-contact', JSON.stringify({
       email: contactInfo.usedEmail,
       name: contactInfo.name,
