@@ -53,9 +53,7 @@ export default function SignPage() {
           content_id: "vuori-privacy-torts-sign",
           content_type: "product",
           content_name: "Vuori Privacy Torts - Sign Retainer"
-        }],
-        value: 0,
-        currency: "USD"
+        }]
       }, {
         event_id: generateEventId()
       });

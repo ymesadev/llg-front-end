@@ -59,9 +59,7 @@ export default function QualifyPage() {
           content_id: "vuori-privacy-torts-qualify",
           content_type: "product",
           content_name: contentName || "Vuori Privacy Torts - Qualify"
-        }],
-        value: 0,
-        currency: "USD"
+        }]
       }, {
         event_id: generateEventId()
       });
