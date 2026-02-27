@@ -5,6 +5,17 @@ import { CheckCircle } from "lucide-react";
 import caseConfig, { DOCUSEAL_TEMPLATE } from "../../../config/cases";
 import styles from "./page.module.css";
 
+async function sha256(value) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(value.trim().toLowerCase());
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateEventId() {
+  return `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+}
+
 const config = caseConfig["vuori-privacy-torts"];
 
 export default function SignPage() {
@@ -17,9 +28,38 @@ export default function SignPage() {
     try {
       stored = localStorage.getItem(config.localStorageKey);
       if (stored) {
-        setContactInfo(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        setContactInfo(parsed);
+
+        // TikTok Pixel: identify with hashed PII from stored contact
+        if (typeof window !== "undefined" && window.ttq && parsed.email) {
+          Promise.all([
+            sha256(parsed.email),
+            sha256(parsed.phone || "")
+          ]).then(([hashedEmail, hashedPhone]) => {
+            window.ttq.identify({
+              email: hashedEmail,
+              phone_number: hashedPhone
+            });
+          });
+        }
       }
     } catch {}
+
+    // TikTok Pixel: ViewContent for sign page
+    if (typeof window !== "undefined" && window.ttq) {
+      window.ttq.track("ViewContent", {
+        contents: [{
+          content_id: "vuori-privacy-torts-sign",
+          content_type: "product",
+          content_name: "Vuori Privacy Torts - Sign Retainer"
+        }],
+        value: 0,
+        currency: "USD"
+      }, {
+        event_id: generateEventId()
+      });
+    }
 
     // Load DocuSeal script, then mark ready so the form renders
     // with contact data attributes already set

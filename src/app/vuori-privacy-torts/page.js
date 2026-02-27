@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -28,6 +28,17 @@ import {
   X
 } from "lucide-react";
 import styles from "./page.module.css";
+
+async function sha256(value) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(value.trim().toLowerCase());
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateEventId() {
+  return `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+}
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
@@ -58,6 +69,26 @@ export default function VuoriPrivacyLanding() {
   const step2Answered = step2Questions.every(q => eligibilityAnswers[q.id] !== undefined);
   const allEligibilityYes = eligibilityQuestions.every(q => eligibilityAnswers[q.id] === true);
   const contactComplete = contactInfo.email && contactInfo.name && contactInfo.phone;
+
+  const ttqTrack = useCallback((eventName, contentName) => {
+    if (typeof window !== "undefined" && window.ttq) {
+      window.ttq.track(eventName, {
+        contents: [{
+          content_id: "vuori-privacy-torts",
+          content_type: "product",
+          content_name: contentName || "Vuori Privacy Torts"
+        }],
+        value: 0,
+        currency: "USD"
+      }, {
+        event_id: generateEventId()
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    ttqTrack("ViewContent", "Vuori Privacy Torts - Landing Page");
+  }, [ttqTrack]);
 
   const updateProgress = () => {
     if (!emblaApi) return;
@@ -94,6 +125,7 @@ export default function VuoriPrivacyLanding() {
       return;
     }
 
+    ttqTrack("ClickButton", `Vuori Landing - Step ${formStep + 1} Continue`);
     setFormStep(formStep + 1);
   };
 
@@ -101,9 +133,26 @@ export default function VuoriPrivacyLanding() {
     setFormStep(formStep - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!contactComplete) return;
+
+    if (typeof window !== "undefined" && window.ttq) {
+      const [hashedEmail, hashedPhone] = await Promise.all([
+        sha256(contactInfo.email),
+        sha256(contactInfo.phone)
+      ]);
+
+      window.ttq.identify({
+        email: hashedEmail,
+        phone_number: hashedPhone
+      });
+
+      ttqTrack("Contact", "Vuori Landing - Contact Info Submitted");
+      ttqTrack("CompleteRegistration", "Vuori Landing - Registration Complete");
+      ttqTrack("Lead", "Vuori Landing - Lead Captured");
+    }
+
     localStorage.setItem('vuori-contact', JSON.stringify({
       email: contactInfo.email,
       name: contactInfo.name,
