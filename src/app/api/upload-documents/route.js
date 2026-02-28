@@ -14,19 +14,14 @@ function ghlHeaders() {
 }
 
 async function findOrCreateContact(name, email, phone) {
-  // Search for existing contact by email
   const searchRes = await fetch(
     `${GHL_BASE}/contacts/?locationId=${GHL_LOCATION}&query=${encodeURIComponent(email)}`,
     { headers: ghlHeaders() }
   );
   if (searchRes.ok) {
     const searchData = await searchRes.json();
-    if (searchData.contacts?.length > 0) {
-      return searchData.contacts[0].id;
-    }
+    if (searchData.contacts?.length > 0) return searchData.contacts[0].id;
   }
-
-  // Create new contact
   const createRes = await fetch(`${GHL_BASE}/contacts/`, {
     method: "POST",
     headers: ghlHeaders(),
@@ -40,29 +35,23 @@ async function findOrCreateContact(name, email, phone) {
       tags: ["document-upload"],
     }),
   });
-  if (!createRes.ok) {
-    const err = await createRes.text();
-    throw new Error(`GHL create contact failed: ${err}`);
-  }
-  const createData = await createRes.json();
-  return createData.contact?.id;
+  if (!createRes.ok) throw new Error(`GHL create contact failed: ${await createRes.text()}`);
+  const data = await createRes.json();
+  return data.contact?.id;
 }
 
-async function createConversation(contactId) {
-  const res = await fetch(`${GHL_BASE}/conversations/`, {
+async function getOrCreateConversation(contactId) {
+  const createRes = await fetch(`${GHL_BASE}/conversations/`, {
     method: "POST",
     headers: ghlHeaders(),
-    body: JSON.stringify({
-      locationId: GHL_LOCATION,
-      contactId,
-    }),
+    body: JSON.stringify({ locationId: GHL_LOCATION, contactId }),
   });
-  const data = await res.json();
-  // GHL returns 400 when conversation already exists but includes conversationId
-  if (data.conversationId) return data.conversationId;
+  const data = await createRes.json();
+  // Success response: { success: true, conversation: { id } }
   if (data.conversation?.id) return data.conversation.id;
-  if (data.id) return data.id;
-  // Fallback: search for existing conversation
+  // Already exists response: { conversationId: "..." }
+  if (data.conversationId) return data.conversationId;
+  // Fallback: search
   const listRes = await fetch(
     `${GHL_BASE}/conversations/search?locationId=${GHL_LOCATION}&contactId=${contactId}`,
     { headers: ghlHeaders() }
@@ -74,17 +63,29 @@ async function createConversation(contactId) {
   return null;
 }
 
-async function addNote(contactId, body) {
+async function sendInboundMessage(conversationId, contactId, body) {
+  const res = await fetch(`${GHL_BASE}/conversations/messages`, {
+    method: "POST",
+    headers: ghlHeaders(),
+    body: JSON.stringify({
+      type: "SMS",
+      direction: "inbound",
+      conversationId,
+      contactId,
+      message: body,
+    }),
+  });
+  if (!res.ok) console.error("GHL inbound message failed:", await res.text());
+  return res.ok;
+}
+
+async function addContactNote(contactId, body) {
   const res = await fetch(`${GHL_BASE}/contacts/${contactId}/notes`, {
     method: "POST",
     headers: ghlHeaders(),
     body: JSON.stringify({ body }),
   });
-  if (!res.ok) {
-    const err = await res.text();
-    console.error("GHL add note failed:", err);
-  }
-  return res.ok;
+  if (!res.ok) console.error("GHL note failed:", await res.text());
 }
 
 export async function POST(request) {
@@ -102,12 +103,9 @@ export async function POST(request) {
 
     const fileNames = files.map((f) => (f instanceof File ? f.name : String(f))).filter(Boolean);
     const fileStr = fileNames.length > 0 ? fileNames.join(", ") : "No files attached";
+    const docType = articleType === "ssdi" ? "SSDI Denial Letter" : "Denial Letter & Insurance Policy";
 
-    const docType = articleType === "ssdi"
-      ? "SSDI Denial Letter"
-      : "Denial Letter & Insurance Policy";
-
-    const noteBody = `Document Upload — ${docType}
+    const msgBody = `Document Upload — ${docType}
 
 Name: ${name}
 Email: ${email}
@@ -120,11 +118,11 @@ Submitted via article upload CTA on louislawgroup.com`;
     const contactId = await findOrCreateContact(name, email, phone);
     if (!contactId) throw new Error("Could not create or find GHL contact");
 
-    // Add note to contact (primary — always works)
-    await addNote(contactId, noteBody);
-
-    // Create/find conversation (secondary — non-blocking)
-    await createConversation(contactId).catch(() => null);
+    const conversationId = await getOrCreateConversation(contactId);
+    if (conversationId) {
+      await sendInboundMessage(conversationId, contactId, msgBody);
+    }
+    await addContactNote(contactId, msgBody);
 
     return NextResponse.json({ success: true });
   } catch (err) {
