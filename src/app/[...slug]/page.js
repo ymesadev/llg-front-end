@@ -77,6 +77,7 @@ function extractFaqSchema(blocks) {
 }
 
 // ✅ SEO: Dynamic meta titles, OG tags, and Twitter Cards per page
+// Covers articles, faqs-and-legals, and pages content types
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const slugArray = resolvedParams.slug || [];
@@ -85,6 +86,28 @@ export async function generateMetadata({ params }) {
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
 
+  function buildMeta(title, description, url, imageUrl, type = "article") {
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url,
+        siteName: "Louis Law Group",
+        images: [{ url: imageUrl, width: 1200, height: 630, alt: title }],
+        type,
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [imageUrl],
+      },
+    };
+  }
+
+  // 1. Try articles
   try {
     const res = await fetch(
       `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description&populate[0]=cover`,
@@ -101,29 +124,83 @@ export async function generateMetadata({ params }) {
           const description =
             article.description ||
             "Contact Louis Law Group for a free case evaluation. Florida\'s trusted property damage attorneys.";
-          return {
-            title: `${article.title} | Louis Law Group`,
+          return buildMeta(
+            `${article.title} | Louis Law Group`,
             description,
-            openGraph: {
-              title: `${article.title} | Louis Law Group`,
-              description,
-              url: `${siteUrl}/${slug}`,
-              siteName: "Louis Law Group",
-              images: [{ url: imageUrl, width: 1200, height: 630, alt: article.title }],
-              type: "article",
-            },
-            twitter: {
-              card: "summary_large_image",
-              title: `${article.title} | Louis Law Group`,
-              description,
-              images: [imageUrl],
-            },
-          };
+            `${siteUrl}/${slug}`,
+            imageUrl
+          );
         }
       }
     }
   } catch (e) {}
 
+  // 2. Try faqs-and-legals
+  try {
+    const res = await fetch(
+      `${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description`,
+      { cache: "no-store" }
+    );
+    if (res.ok) {
+      const data = await res.json();
+      if (data.data && data.data.length > 0) {
+        const page = data.data[0];
+        if (page.title) {
+          const description =
+            page.description ||
+            `${page.title} — Louis Law Group answers your legal questions. Free consultation available.`;
+          return buildMeta(
+            `${page.title} | Louis Law Group`,
+            description,
+            `${siteUrl}/${slug}`,
+            defaultImage,
+            "website"
+          );
+        }
+      }
+    }
+  } catch (e) {}
+
+  // 3. Try pages content type (practice area and location pages)
+  try {
+    const childSlug = slugArray[slugArray.length - 1];
+    const parentSlug =
+      slugArray.length > 1 ? slugArray.slice(0, -1).join("/") : null;
+
+    let pagesUrl;
+    if (parentSlug) {
+      const cleanParentSlug = parentSlug.replace(/^\/+|\/+$/g, "");
+      pagesUrl =
+        `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}` +
+        `&filters[parent_page][URL][$eq]=/${cleanParentSlug}&populate[0]=Hero&fields[0]=Title&fields[1]=Description`;
+    } else {
+      pagesUrl = `${strapiURL}/api/pages?filters[Slug][$eq]=${childSlug}&populate[0]=Hero&fields[0]=Title&fields[1]=Description`;
+    }
+
+    const res = await fetch(pagesUrl, { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.data && data.data.length > 0) {
+        const page = data.data[0];
+        const title = page.Hero?.title || page.Title;
+        if (title) {
+          const description =
+            page.Description ||
+            page.Hero?.subtitle ||
+            `${title} — Louis Law Group. Trusted Florida attorneys. Free case evaluation.`;
+          return buildMeta(
+            `${title} | Louis Law Group`,
+            description,
+            `${siteUrl}/${slug}`,
+            defaultImage,
+            "website"
+          );
+        }
+      }
+    }
+  } catch (e) {}
+
+  // 4. Default fallback
   return {
     title: "Louis Law Group | Florida Property Damage Attorneys",
     description:
