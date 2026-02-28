@@ -32,10 +32,12 @@ async function findOrCreateContact(name, email, phone) {
     headers: ghlHeaders(),
     body: JSON.stringify({
       locationId: GHL_LOCATION,
-      name,
+      firstName: name.split(" ")[0] || name,
+      lastName: name.split(" ").slice(1).join(" ") || "",
       email,
       phone,
       source: "Document Upload CTA",
+      tags: ["document-upload"],
     }),
   });
   if (!createRes.ok) {
@@ -53,39 +55,36 @@ async function createConversation(contactId) {
     body: JSON.stringify({
       locationId: GHL_LOCATION,
       contactId,
-      type: "TYPE_PHONE",
     }),
   });
-  if (!res.ok) {
-    // Conversation may already exist — try to find it
-    const listRes = await fetch(
-      `${GHL_BASE}/conversations/search?locationId=${GHL_LOCATION}&contactId=${contactId}`,
-      { headers: ghlHeaders() }
-    );
-    if (listRes.ok) {
-      const listData = await listRes.json();
-      if (listData.conversations?.length > 0) {
-        return listData.conversations[0].id;
-      }
-    }
-    throw new Error("Could not create or find conversation");
-  }
   const data = await res.json();
-  return data.conversation?.id || data.id;
+  // GHL returns 400 when conversation already exists but includes conversationId
+  if (data.conversationId) return data.conversationId;
+  if (data.conversation?.id) return data.conversation.id;
+  if (data.id) return data.id;
+  // Fallback: search for existing conversation
+  const listRes = await fetch(
+    `${GHL_BASE}/conversations/search?locationId=${GHL_LOCATION}&contactId=${contactId}`,
+    { headers: ghlHeaders() }
+  );
+  if (listRes.ok) {
+    const listData = await listRes.json();
+    if (listData.conversations?.length > 0) return listData.conversations[0].id;
+  }
+  return null;
 }
 
-async function sendMessage(conversationId, body) {
-  const res = await fetch(`${GHL_BASE}/conversations/${conversationId}/messages`, {
+async function addNote(contactId, body) {
+  const res = await fetch(`${GHL_BASE}/contacts/${contactId}/notes`, {
     method: "POST",
     headers: ghlHeaders(),
-    body: JSON.stringify({
-      type: "Note",
-      body,
-    }),
+    body: JSON.stringify({ body }),
   });
   if (!res.ok) {
-    console.error("GHL send message failed:", await res.text());
+    const err = await res.text();
+    console.error("GHL add note failed:", err);
   }
+  return res.ok;
 }
 
 export async function POST(request) {
@@ -101,7 +100,6 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
 
-    // Build file list string
     const fileNames = files.map((f) => (f instanceof File ? f.name : String(f))).filter(Boolean);
     const fileStr = fileNames.length > 0 ? fileNames.join(", ") : "No files attached";
 
@@ -109,7 +107,7 @@ export async function POST(request) {
       ? "SSDI Denial Letter"
       : "Denial Letter & Insurance Policy";
 
-    const messageBody = `📎 Document Upload — ${docType}
+    const noteBody = `Document Upload — ${docType}
 
 Name: ${name}
 Email: ${email}
@@ -119,10 +117,14 @@ Files: ${fileStr}
 
 Submitted via article upload CTA on louislawgroup.com`;
 
-    // GHL workflow
     const contactId = await findOrCreateContact(name, email, phone);
-    const conversationId = await createConversation(contactId);
-    await sendMessage(conversationId, messageBody);
+    if (!contactId) throw new Error("Could not create or find GHL contact");
+
+    // Add note to contact (primary — always works)
+    await addNote(contactId, noteBody);
+
+    // Create/find conversation (secondary — non-blocking)
+    await createConversation(contactId).catch(() => null);
 
     return NextResponse.json({ success: true });
   } catch (err) {
