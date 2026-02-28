@@ -11,6 +11,7 @@ import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
+import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA";
 
 // 1) Allow new slugs at runtime (fallback):
 export const dynamicParams = true;
@@ -453,30 +454,41 @@ export default async function Page(props) {
                 />
               )}
               <div className={styles.blogContent}>
-                {page.blocks.map((block, index) => {
-                  if (block.__component === "shared.rich-text") {
-                    const body = block.body || "";
-                    const isHtml = body.trimStart().startsWith("<");
+                {(() => {
+                  const _s = (page.slug || "").toLowerCase();
+                  const _t = (page.title || "").toLowerCase();
+                  const articleType = (_s.includes("ssdi") || _s.includes("social-security") || _t.includes("ssdi") || _t.includes("social security") || _s.includes("disability-benefit")) ? "ssdi" : "property-damage";
+                  const midpoint = Math.floor((page.blocks || []).length / 2);
+                  return (page.blocks || []).map((block, index) => {
+                    let blockEl = null;
+                    if (block.__component === "shared.rich-text") {
+                      const body = block.body || "";
+                      const isHtml = body.trimStart().startsWith("<");
+                      blockEl = (
+                        <div key={index} className={styles.blogText}>
+                          {isHtml ? parse(body) : <ReactMarkdown>{body}</ReactMarkdown>}
+                        </div>
+                      );
+                    } else if (block.__component === "shared.media" && block.file?.url) {
+                      const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
+                      blockEl = (
+                        <div key={index} className={styles.blogImageContainer}>
+                          <img
+                            src={imageUrl}
+                            alt={block.file.alternativeText || "Blog Image"}
+                            className={styles.blogPostImage}
+                          />
+                        </div>
+                      );
+                    }
                     return (
-                      <div key={index} className={styles.blogText}>
-                        {isHtml ? parse(body) : <ReactMarkdown>{body}</ReactMarkdown>}
+                      <div key={index}>
+                        {index === midpoint && <DocumentUploadCTA articleType={articleType} />}
+                        {blockEl}
                       </div>
                     );
-                  }
-                  if (block.__component === "shared.media" && block.file?.url) {
-                    const imageUrl = `https://login.louislawgroup.com${block.file.url}`;
-                    return (
-                      <div key={index} className={styles.blogImageContainer}>
-                        <img
-                          src={imageUrl}
-                          alt={block.file.alternativeText || "Blog Image"}
-                          className={styles.blogPostImage}
-                        />
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
+                  });
+                })()}
               </div>
             </div>
           </section>
