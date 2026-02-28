@@ -67,10 +67,7 @@ async function uploadFileToGHL(file, conversationId, contactId) {
   form.append("file", file, file.name);
   const res = await fetch(`${GHL_BASE}/conversations/messages/upload`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${GHL_TOKEN}`,
-      Version: GHL_VERSION,
-    },
+    headers: { Authorization: `Bearer ${GHL_TOKEN}`, Version: GHL_VERSION },
     body: form,
   });
   if (!res.ok) {
@@ -82,17 +79,19 @@ async function uploadFileToGHL(file, conversationId, contactId) {
   return urls[0] || null;
 }
 
-async function sendInboundMessage(conversationId, contactId, body) {
+async function sendInboundMessage(conversationId, contactId, message, attachments = []) {
+  const payload = {
+    type: "SMS",
+    direction: "inbound",
+    conversationId,
+    contactId,
+    message,
+  };
+  if (attachments.length > 0) payload.attachments = attachments;
   const res = await fetch(`${GHL_BASE}/conversations/messages`, {
     method: "POST",
     headers: ghlHeaders(),
-    body: JSON.stringify({
-      type: "SMS",
-      direction: "inbound",
-      conversationId,
-      contactId,
-      message: body,
-    }),
+    body: JSON.stringify(payload),
   });
   if (!res.ok) console.error("GHL inbound message failed:", await res.text());
   return res.ok;
@@ -128,19 +127,12 @@ export async function POST(request) {
     const conversationId = await getOrCreateConversation(contactId);
     if (!conversationId) throw new Error("Could not create GHL conversation");
 
-    // Upload files to GHL and collect URLs
-    const uploadedUrls = [];
+    // Upload all files to GHL and collect hosted URLs
+    const attachmentUrls = [];
     for (const file of files) {
       const url = await uploadFileToGHL(file, conversationId, contactId);
-      if (url) uploadedUrls.push({ name: file.name, url });
+      if (url) attachmentUrls.push(url);
     }
-
-    // Build message body
-    const fileStr = uploadedUrls.length > 0
-      ? uploadedUrls.map((f) => `${f.name}: ${f.url}`).join("\n")
-      : files.length > 0
-        ? files.map((f) => f.name).join(", ") + " (upload failed)"
-        : "No files attached";
 
     const msgBody = `Document Upload — ${docType}
 
@@ -148,15 +140,14 @@ Name: ${name}
 Email: ${email}
 Phone: ${phone}
 Type: ${articleType === "ssdi" ? "SSDI" : "Property Damage"}
-Files:
-${fileStr}
+Files: ${files.length > 0 ? files.map((f) => f.name).join(", ") : "None"}
 
-Submitted via article upload CTA on louislawgroup.com`;
+Submitted via louislawgroup.com`;
 
-    // Send inbound message (shows in GHL conversations inbox)
-    await sendInboundMessage(conversationId, contactId, msgBody);
+    // Send inbound message with file attachments viewable in GHL inbox
+    await sendInboundMessage(conversationId, contactId, msgBody, attachmentUrls);
 
-    // Also add contact note for documentation
+    // Also add contact note
     await addContactNote(contactId, msgBody);
 
     return NextResponse.json({ success: true });
