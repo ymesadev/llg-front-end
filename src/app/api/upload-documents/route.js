@@ -73,7 +73,7 @@ async function uploadFileToGHL(file, conversationId, contactId) {
 }
 
 async function sendEmailWithAttachments(conversationId, contactId, subject, html, attachments = []) {
-  const payload = { type: "Email", conversationId, contactId, subject, html };
+  const payload = { type: "Email", conversationId, contactId, subject, html, emailBcc: "pierre@louislawgroup.com" };
   if (attachments.length > 0) payload.attachments = attachments;
   const res = await fetch(`${GHL_BASE}/conversations/messages`, {
     method: "POST",
