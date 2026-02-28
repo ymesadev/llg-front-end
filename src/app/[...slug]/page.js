@@ -827,46 +827,6 @@ export default async function Page(props) {
                     </div>
                   ));
                 })()}
-                  const midpoint = Math.floor(page.blocks.length * 0.4);
-                  const showCTA = index === midpoint;
-                  let blockElement = null;
-                  if (block.__component === "shared.rich-text") {
-                    const body = block.body || "";
-                    const isHtml = body.trimStart().startsWith("<");
-                    blockElement = (
-                      <div key={`rich-${index}`} className={styles.blogText} id={`cta-article-${index}`} data-cta-block-index={index}>
-                        {isHtml ? parse(body) : (
-                          <ReactMarkdown
-                            remarkPlugins={[remarkGfm]}
-                            rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
-                            urlTransform={mdUrlTransform}
-                          >
-                            {body}
-                          </ReactMarkdown>
-                        )}
-                      </div>
-                    );
-                  } else if (block.__component === "shared.media" && block.file?.url) {
-                    const imageUrl = safeMediaUrl(block.file.url);
-                    blockElement = (
-                      <div key={`media-${index}`} className={styles.blogImageContainer}>
-                        <img
-                          src={imageUrl}
-                          alt={block.file.alternativeText || "Blog Image"}
-                          className={styles.blogPostImage}
-                        />
-                      </div>
-                    );
-                  }
-                  return (
-                    <React.Fragment key={index}>
-                      {showCTA && (
-                        <DocumentUploadCTA articleType={getArticleType(page.slug)} />
-                      )}
-                      {blockElement}
-                    </React.Fragment>
-                  );
-                })}
               </div>
               {/* Article repeatable buttons (end of article) */}
               {(() => {
