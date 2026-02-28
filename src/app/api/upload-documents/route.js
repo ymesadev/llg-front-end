@@ -40,23 +40,16 @@ async function findOrCreateContact(name, email, phone) {
   return data.contact?.id;
 }
 
-async function getOrCreateConversation(contactId) {
-  const createRes = await fetch(`${GHL_BASE}/conversations/`, {
+async function getOrCreateEmailConversation(contactId) {
+  // Create TYPE_EMAIL conversation (GHL returns existing if one exists)
+  const res = await fetch(`${GHL_BASE}/conversations/`, {
     method: "POST",
     headers: ghlHeaders(),
-    body: JSON.stringify({ locationId: GHL_LOCATION, contactId }),
+    body: JSON.stringify({ locationId: GHL_LOCATION, contactId, type: "TYPE_EMAIL" }),
   });
-  const data = await createRes.json();
+  const data = await res.json();
   if (data.conversation?.id) return data.conversation.id;
   if (data.conversationId) return data.conversationId;
-  const listRes = await fetch(
-    `${GHL_BASE}/conversations/search?locationId=${GHL_LOCATION}&contactId=${contactId}`,
-    { headers: ghlHeaders() }
-  );
-  if (listRes.ok) {
-    const listData = await listRes.json();
-    if (listData.conversations?.length > 0) return listData.conversations[0].id;
-  }
   return null;
 }
 
@@ -79,21 +72,15 @@ async function uploadFileToGHL(file, conversationId, contactId) {
   return urls[0] || null;
 }
 
-async function sendInboundMessage(conversationId, contactId, message, attachments = []) {
-  const payload = {
-    type: "SMS",
-    direction: "inbound",
-    conversationId,
-    contactId,
-    message,
-  };
+async function sendEmailWithAttachments(conversationId, contactId, subject, html, attachments = []) {
+  const payload = { type: "Email", conversationId, contactId, subject, html };
   if (attachments.length > 0) payload.attachments = attachments;
   const res = await fetch(`${GHL_BASE}/conversations/messages`, {
     method: "POST",
     headers: ghlHeaders(),
     body: JSON.stringify(payload),
   });
-  if (!res.ok) console.error("GHL inbound message failed:", await res.text());
+  if (!res.ok) console.error("GHL email send failed:", await res.text());
   return res.ok;
 }
 
@@ -120,35 +107,39 @@ export async function POST(request) {
     }
 
     const docType = articleType === "ssdi" ? "SSDI Denial Letter" : "Denial Letter & Insurance Policy";
+    const subject = `Document Upload — ${docType} from ${name}`;
 
     const contactId = await findOrCreateContact(name, email, phone);
     if (!contactId) throw new Error("Could not create or find GHL contact");
 
-    const conversationId = await getOrCreateConversation(contactId);
-    if (!conversationId) throw new Error("Could not create GHL conversation");
+    const conversationId = await getOrCreateEmailConversation(contactId);
+    if (!conversationId) throw new Error("Could not create GHL email conversation");
 
-    // Upload all files to GHL and collect hosted URLs
+    // Upload files to GHL hosted storage
     const attachmentUrls = [];
     for (const file of files) {
       const url = await uploadFileToGHL(file, conversationId, contactId);
       if (url) attachmentUrls.push(url);
     }
 
-    const msgBody = `Document Upload — ${docType}
+    const fileListHtml = files.length > 0
+      ? `<ul>${files.map((f) => `<li>${f.name}</li>`).join("")}</ul>`
+      : "<p>No files attached</p>";
 
-Name: ${name}
-Email: ${email}
-Phone: ${phone}
-Type: ${articleType === "ssdi" ? "SSDI" : "Property Damage"}
-Files: ${files.length > 0 ? files.map((f) => f.name).join(", ") : "None"}
+    const html = `
+      <h2>Document Upload — ${docType}</h2>
+      <table style="border-collapse:collapse;width:100%">
+        <tr><td style="padding:6px;font-weight:bold">Name</td><td style="padding:6px">${name}</td></tr>
+        <tr><td style="padding:6px;font-weight:bold">Email</td><td style="padding:6px">${email}</td></tr>
+        <tr><td style="padding:6px;font-weight:bold">Phone</td><td style="padding:6px">${phone}</td></tr>
+        <tr><td style="padding:6px;font-weight:bold">Type</td><td style="padding:6px">${articleType === "ssdi" ? "SSDI" : "Property Damage"}</td></tr>
+        <tr><td style="padding:6px;font-weight:bold">Files</td><td style="padding:6px">${fileListHtml}</td></tr>
+      </table>
+      <p style="color:#666;font-size:12px">Submitted via article upload CTA on louislawgroup.com</p>
+    `;
 
-Submitted via louislawgroup.com`;
-
-    // Send inbound message with file attachments viewable in GHL inbox
-    await sendInboundMessage(conversationId, contactId, msgBody, attachmentUrls);
-
-    // Also add contact note
-    await addContactNote(contactId, msgBody);
+    await sendEmailWithAttachments(conversationId, contactId, subject, html, attachmentUrls);
+    await addContactNote(contactId, `Document Upload — ${docType}\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nFiles: ${files.map(f=>f.name).join(", ") || "None"}`);
 
     return NextResponse.json({ success: true });
   } catch (err) {
