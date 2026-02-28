@@ -37,11 +37,11 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
         setStatus("success");
       } else {
         setStatus("error");
-        setErrorMsg(result.error || "Submission failed. Please call us at (305) 894-2141.");
+        setErrorMsg(result.error || "Submission failed. Please call us at (833) 657-4812.");
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Could not submit. Please call us at (305) 894-2141 or try again.");
+      setErrorMsg("Could not submit. Please call us at (833) 657-4812 or try again.");
     }
   };
 
