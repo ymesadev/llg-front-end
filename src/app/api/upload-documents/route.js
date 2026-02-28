@@ -47,11 +47,8 @@ async function getOrCreateConversation(contactId) {
     body: JSON.stringify({ locationId: GHL_LOCATION, contactId }),
   });
   const data = await createRes.json();
-  // Success response: { success: true, conversation: { id } }
   if (data.conversation?.id) return data.conversation.id;
-  // Already exists response: { conversationId: "..." }
   if (data.conversationId) return data.conversationId;
-  // Fallback: search
   const listRes = await fetch(
     `${GHL_BASE}/conversations/search?locationId=${GHL_LOCATION}&contactId=${contactId}`,
     { headers: ghlHeaders() }
@@ -61,6 +58,28 @@ async function getOrCreateConversation(contactId) {
     if (listData.conversations?.length > 0) return listData.conversations[0].id;
   }
   return null;
+}
+
+async function uploadFileToGHL(file, conversationId, contactId) {
+  const form = new FormData();
+  form.append("conversationId", conversationId);
+  form.append("contactId", contactId);
+  form.append("file", file, file.name);
+  const res = await fetch(`${GHL_BASE}/conversations/messages/upload`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${GHL_TOKEN}`,
+      Version: GHL_VERSION,
+    },
+    body: form,
+  });
+  if (!res.ok) {
+    console.error("GHL file upload failed:", await res.text());
+    return null;
+  }
+  const data = await res.json();
+  const urls = Object.values(data.uploadedFiles || {});
+  return urls[0] || null;
 }
 
 async function sendInboundMessage(conversationId, contactId, body) {
@@ -95,15 +114,33 @@ export async function POST(request) {
     const email = formData.get("email");
     const phone = formData.get("phone");
     const articleType = formData.get("articleType") || "property-damage";
-    const files = formData.getAll("files");
+    const files = formData.getAll("files").filter((f) => f instanceof File && f.size > 0);
 
     if (!name || !email || !phone) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
 
-    const fileNames = files.map((f) => (f instanceof File ? f.name : String(f))).filter(Boolean);
-    const fileStr = fileNames.length > 0 ? fileNames.join(", ") : "No files attached";
     const docType = articleType === "ssdi" ? "SSDI Denial Letter" : "Denial Letter & Insurance Policy";
+
+    const contactId = await findOrCreateContact(name, email, phone);
+    if (!contactId) throw new Error("Could not create or find GHL contact");
+
+    const conversationId = await getOrCreateConversation(contactId);
+    if (!conversationId) throw new Error("Could not create GHL conversation");
+
+    // Upload files to GHL and collect URLs
+    const uploadedUrls = [];
+    for (const file of files) {
+      const url = await uploadFileToGHL(file, conversationId, contactId);
+      if (url) uploadedUrls.push({ name: file.name, url });
+    }
+
+    // Build message body
+    const fileStr = uploadedUrls.length > 0
+      ? uploadedUrls.map((f) => `${f.name}: ${f.url}`).join("\n")
+      : files.length > 0
+        ? files.map((f) => f.name).join(", ") + " (upload failed)"
+        : "No files attached";
 
     const msgBody = `Document Upload — ${docType}
 
@@ -111,17 +148,15 @@ Name: ${name}
 Email: ${email}
 Phone: ${phone}
 Type: ${articleType === "ssdi" ? "SSDI" : "Property Damage"}
-Files: ${fileStr}
+Files:
+${fileStr}
 
 Submitted via article upload CTA on louislawgroup.com`;
 
-    const contactId = await findOrCreateContact(name, email, phone);
-    if (!contactId) throw new Error("Could not create or find GHL contact");
+    // Send inbound message (shows in GHL conversations inbox)
+    await sendInboundMessage(conversationId, contactId, msgBody);
 
-    const conversationId = await getOrCreateConversation(contactId);
-    if (conversationId) {
-      await sendInboundMessage(conversationId, contactId, msgBody);
-    }
+    // Also add contact note for documentation
     await addContactNote(contactId, msgBody);
 
     return NextResponse.json({ success: true });
