@@ -31,16 +31,17 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
     files.forEach((f) => data.append("files", f));
     try {
       const res = await fetch("/api/upload-documents", { method: "POST", body: data });
-      const result = await res.json();
+      let result;
+      try { result = await res.json(); } catch { result = { success: false }; }
       if (result.success) {
         setStatus("success");
       } else {
         setStatus("error");
-        setErrorMsg(result.error || "Something went wrong. Please try again.");
+        setErrorMsg(result.error || "Submission failed. Please call us at (305) 894-2141.");
       }
     } catch {
       setStatus("error");
-      setErrorMsg("Network error. Please try again.");
+      setErrorMsg("Could not submit. Please call us at (305) 894-2141 or try again.");
     }
   };
 
