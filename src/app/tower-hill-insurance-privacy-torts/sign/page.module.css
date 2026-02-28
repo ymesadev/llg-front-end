@@ -1,0 +1,101 @@
+/* Sign Page Styles */
+.container {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.header {
+  background: #fff;
+  border-bottom: 1px solid #e8e8e8;
+  padding: 1rem 2rem;
+}
+
+.headerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.successBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: linear-gradient(135deg, #1a2b49 0%, #2a3d5f 100%);
+  color: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+}
+
+.successBanner svg {
+  color: #ffb800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.successBanner strong {
+  display: block;
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.successBanner span {
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.formContainer {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.formContainer docuseal-form {
+  width: 100%;
+}
+
+.helpSection {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  color: #64748b;
+}
+
+.helpSection a {
+  color: #1a2b49;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.helpSection a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .successBanner {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+}
