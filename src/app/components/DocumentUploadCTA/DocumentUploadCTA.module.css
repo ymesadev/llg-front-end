@@ -1,0 +1,188 @@
+.ctaBox {
+  background: linear-gradient(135deg, #1a3a6b 0%, #0d2247 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2.5rem 0;
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.ctaInner {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.ctaBadge {
+  display: inline-block;
+  background: #e8a317;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.9rem;
+  border-radius: 20px;
+  margin-bottom: 0.8rem;
+}
+
+.ctaHeader {
+  margin-bottom: 1.5rem;
+}
+
+.headline {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0.4rem 0 0.6rem;
+  line-height: 1.3;
+  color: #fff;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.input:focus {
+  border-color: #e8a317;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.fileUpload {
+  display: block;
+  cursor: pointer;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  padding: 1rem 1.2rem;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.fileUpload:hover {
+  border-color: #e8a317;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.fileUploadInner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+.uploadIcon {
+  font-size: 1.2rem;
+}
+
+.fileInput {
+  display: none;
+}
+
+.fileList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.fileList li {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.3rem 0.75rem;
+  border-radius: 4px;
+}
+
+.error {
+  color: #ff8a8a;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.submitBtn {
+  background: #e8a317;
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.9rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  width: 100%;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: #f5b830;
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.disclaimer {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0.75rem 0 0;
+  text-align: center;
+}
+
+.successMsg {
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.successIcon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.successMsg h3 {
+  font-size: 1.4rem;
+  margin: 0 0 0.5rem;
+  color: #fff;
+}
+
+.successMsg p {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+}
