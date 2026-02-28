@@ -795,7 +795,38 @@ export default async function Page(props) {
                 />
               )}
               <div className={styles.blogContent}>
-                {page.blocks.map((block, index) => {
+                {(() => {
+                  const articleType = (() => {
+                    const s = (page.slug || "").toLowerCase();
+                    const t = (page.title || "").toLowerCase();
+                    if (s.includes("ssdi") || s.includes("social-security") || s.includes("social security") || t.includes("ssdi") || t.includes("social security") || s.includes("disability-benefit")) return "ssdi";
+                    return "property-damage";
+                  })();
+                  const midpoint = Math.floor((page.blocks || []).length / 2);
+                  return (page.blocks || []).map((block, index) => (
+                    <div key={index}>
+                      {index === midpoint && <DocumentUploadCTA articleType={articleType} />}
+                      {block.__component === "shared.rich-text" && (() => {
+                        const body = block.body || "";
+                        const isHtml = body.trimStart().startsWith("<");
+                        return (
+                          <div className={styles.blogText}>
+                            {isHtml ? parse(body) : <ReactMarkdown>{body}</ReactMarkdown>}
+                          </div>
+                        );
+                      })()}
+                      {block.__component === "shared.media" && block.file?.url && (
+                        <div className={styles.blogImageContainer}>
+                          <img
+                            src={`https://login.louislawgroup.com${block.file.url}`}
+                            alt={block.file.alternativeText || "Blog Image"}
+                            className={styles.blogPostImage}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ));
+                })()}
                   const midpoint = Math.floor(page.blocks.length * 0.4);
                   const showCTA = index === midpoint;
                   let blockElement = null;
