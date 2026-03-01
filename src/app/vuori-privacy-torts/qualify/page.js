@@ -89,11 +89,10 @@ export default function QualifyPage() {
     setTimeout(() => { setCurrentStep(currentStep - 1); setIsAnimating(false); }, 300);
   };
 
-  const handleSubmit = (async e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!contactComplete) return;
-    localStorage.setItem('vuori-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
-        if (typeof window !== "undefined" && window.ttq) {
+    if (typeof window !== "undefined" && window.ttq) {
       const [hashedEmail, hashedPhone] = await Promise.all([sha256(contactInfo.usedEmail), sha256(contactInfo.phone)]);
       window.ttq.identify({ email: hashedEmail, phone_number: hashedPhone });
       ttqTrack("Contact", "Vuori Qualify - Contact Info Submitted");
@@ -224,3 +223,4 @@ export default function QualifyPage() {
     </div>
   );
 }
+
