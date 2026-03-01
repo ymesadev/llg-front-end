@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/next";
 
 export default function TrackingScripts() {
   const [consentGiven, setConsentGiven] = useState(false);
@@ -124,6 +125,9 @@ export default function TrackingScripts() {
           src="https://www.facebook.com/tr?id=909380096123158&ev=PageView&noscript=1"
         />
       </noscript>
+
+      {/* Vercel Web Analytics — consent-gated, fires after terms + cookie accept */}
+      <Analytics />
     </>
   );
 }
