@@ -13,14 +13,12 @@ const Popup = () => {
   useEffect(() => {
     const hasAgreed = localStorage.getItem("agreedToTerms");
     if (!hasAgreed) {
-      setTimeout(() => setIsTermsOpen(true), 1000);
+      setTimeout(() => setIsTermsOpen(true), 500); // ⚡ 500ms (was 1000ms)
     }
   }, []);
 
   useEffect(() => {
-    const consultationDismissed = sessionStorage.getItem(
-      "consultationDismissed"
-    );
+    const consultationDismissed = sessionStorage.getItem("consultationDismissed");
     if (localStorage.getItem("agreedToTerms") && !consultationDismissed) {
       setTimeout(() => {
         setIsConsultationOpen(true);
@@ -63,29 +61,21 @@ const Popup = () => {
                 continuing, you agree to the updated terms.
               </p>
               <button onClick={agreeToTerms} className={styles.ctaButton}>
-                Continue
+                I Agree &amp; Continue
               </button>
             </div>
           </div>
         </div>
       )}
-      {/* Consultation Popup (After Navigation, Delayed by 3s) */}
+      {/* Consultation Popup */}
       {isConsultationOpen && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContainer}>
             <div className={styles.popupHeader}>
-              <Image
-                src="/images/logo.png"
-                alt="Logo"
-                width={100}
-                height={100}
-              />
+              <Image src="/images/logo.png" alt="Logo" width={100} height={100} />
             </div>
             <div className={styles.popupContent}>
-              <ClosePopup
-                className={styles.closeButton}
-                onClick={closeConsultation}
-              />
+              <ClosePopup className={styles.closeButton} onClick={closeConsultation} />
               <div className={styles.popupContentWrapper}>
                 <h2 className={styles.needHelp}>NEED HELP?</h2>
                 <span>
@@ -93,7 +83,7 @@ const Popup = () => {
                   <h2>NO FEE</h2>
                 </span>
                 <p>Call, Text or Chat 24/7</p>
-                <p> Free Case Review!</p>
+                <p>Free Case Review!</p>
               </div>
               <div className={styles.chatButtonContainer}>
                 <button className={styles.chatButton} onClick={handleMessageUs}>
@@ -113,7 +103,7 @@ const Popup = () => {
           </div>
         </div>
       )}
-      {/* Floating SMS Button*/}
+      {/* Floating SMS Button */}
       <a
         href="sms:8336574812"
         className={styles.textUsButton}
