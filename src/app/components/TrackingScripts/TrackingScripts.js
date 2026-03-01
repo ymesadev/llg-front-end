@@ -2,6 +2,10 @@
 import { useState, useEffect } from "react";
 import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
+import BehaviorTracking from "../BehaviorTracking/BehaviorTracking";
+
+// Microsoft Clarity — set your Project ID from clarity.microsoft.com
+const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || "";
 
 export default function TrackingScripts() {
   const [consentGiven, setConsentGiven] = useState(false);
@@ -126,8 +130,28 @@ export default function TrackingScripts() {
         />
       </noscript>
 
+      {/* Microsoft Clarity — session recordings + heatmaps */}
+      {CLARITY_PROJECT_ID && (
+        <Script
+          id="microsoft-clarity"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window,document,"clarity","script","${CLARITY_PROJECT_ID}");
+            `,
+          }}
+        />
+      )}
+
       {/* Vercel Web Analytics — consent-gated, fires after terms + cookie accept */}
       <Analytics />
+
+      {/* Deep behavior tracking — scroll, time, exit intent, rage clicks, form events */}
+      <BehaviorTracking />
     </>
   );
 }
