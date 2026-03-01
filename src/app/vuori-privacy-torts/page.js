@@ -28,6 +28,7 @@ import {
   X
 } from "lucide-react";
 import styles from "./page.module.css";
+import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 
 async function sha256(value) {
   const encoder = new TextEncoder();
@@ -278,6 +279,7 @@ export default function VuoriPrivacyLanding() {
             </div>
             <div className={styles.heroFormWrapper} id="check-eligibility">
               <div className={styles.formCard}>
+                <UrgencyBanner />
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
                   <h3>{formStep < 2 ? "Check Your Eligibility" : "Almost Done!"}</h3>

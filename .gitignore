@@ -1,41 +1,38 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+*
+!.env.local
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# allow sitemaps in public
+!public/
+public/*
+!public/images/
 
-# testing
-/coverage
+!public/images/**
+!public/sitemap*.xml
+!public/robots.txt
 
-# next.js
-/.next/
-/out/
+# allow dynamic sitemap route
+!src/app/sitemap.xml/
+!src/app/sitemap.xml/route.js
 
-# production
-/build
+# allow config
+!src/config/
+!src/config/**
 
-# misc
-.DS_Store
-*.pem
+# allow helper libs
+!src/lib/
+!src/lib/media.js
+!src/app/sitemap.xml/chunked-helpers.js
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# allow case landing pages
+!src/
+!src/app/
+!src/app/kin-insurance-privacy-torts/
+!src/app/kin-insurance-privacy-torts/**
+!src/app/vuori-privacy-torts/
+!src/app/vuori-privacy-torts/**
+!src/app/tower-hill-insurance-privacy-torts/
+!src/app/tower-hill-insurance-privacy-torts/**
+!src/app/slide-insurance-privacy-torts/
+!src/app/slide-insurance-privacy-torts/**
+!src/app/american-integrity-insurance-privacy-torts/
+!src/app/american-integrity-insurance-privacy-torts/**

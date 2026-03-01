@@ -3,44 +3,47 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Popup.module.css";
-import ChatbotPopup from "../ChatBot/ChatBot";
 import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
+import { trackEvent } from "@/app/utils/analytics";
 
 const Popup = () => {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     const hasAgreed = localStorage.getItem("agreedToTerms");
     if (!hasAgreed) {
-      setTimeout(() => setIsTermsOpen(true), 1000);
+      setTimeout(() => setIsTermsOpen(true), 500); // ⚡ 500ms (was 1000ms)
     }
   }, []);
 
   useEffect(() => {
-    const consultationDismissed = sessionStorage.getItem(
-      "consultationDismissed"
-    );
+    const consultationDismissed = sessionStorage.getItem("consultationDismissed");
     if (localStorage.getItem("agreedToTerms") && !consultationDismissed) {
-      setTimeout(() => setIsConsultationOpen(true), 3000);
+      setTimeout(() => {
+        setIsConsultationOpen(true);
+        trackEvent("consultation_popup_shown");
+      }, 3000);
     }
   }, []);
 
   const agreeToTerms = () => {
     localStorage.setItem("agreedToTerms", "true");
     setIsTermsOpen(false);
+    window.dispatchEvent(new Event("consentUpdated"));
+    trackEvent("terms_consent_given");
   };
 
   const closeConsultation = () => {
     sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
+    trackEvent("consultation_popup_dismissed");
   };
 
   const handleMessageUs = () => {
     sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
-    setIsChatOpen(true);
+    trackEvent("consultation_chat_clicked");
   };
 
   return (
@@ -58,29 +61,21 @@ const Popup = () => {
                 continuing, you agree to the updated terms.
               </p>
               <button onClick={agreeToTerms} className={styles.ctaButton}>
-                Continue
+                I Agree &amp; Continue
               </button>
             </div>
           </div>
         </div>
       )}
-      {/* Consultation Popup (After Navigation, Delayed by 3s) */}
+      {/* Consultation Popup */}
       {isConsultationOpen && (
         <div className={styles.popupOverlay}>
           <div className={styles.popupContainer}>
             <div className={styles.popupHeader}>
-              <Image
-                src="/images/logo.png"
-                alt="Logo"
-                width={100}
-                height={100}
-              />
+              <Image src="/images/logo.png" alt="Logo" width={100} height={100} />
             </div>
             <div className={styles.popupContent}>
-              <ClosePopup
-                className={styles.closeButton}
-                onClick={closeConsultation}
-              />
+              <ClosePopup className={styles.closeButton} onClick={closeConsultation} />
               <div className={styles.popupContentWrapper}>
                 <h2 className={styles.needHelp}>NEED HELP?</h2>
                 <span>
@@ -88,14 +83,18 @@ const Popup = () => {
                   <h2>NO FEE</h2>
                 </span>
                 <p>Call, Text or Chat 24/7</p>
-                <p> Free Case Review!</p>
+                <p>Free Case Review!</p>
               </div>
               <div className={styles.chatButtonContainer}>
                 <button className={styles.chatButton} onClick={handleMessageUs}>
                   <p>Let's Chat</p>
                   <ChatUsPopup className={styles.icon} />
                 </button>
-                <a href="sms:8336574812" className={styles.textUs}>
+                <a
+                  href="sms:8336574812"
+                  className={styles.textUs}
+                  onClick={() => trackEvent("consultation_sms_clicked")}
+                >
                   <p>Text Us</p>
                   <TextUsPopup className={styles.textUsIcon} />
                 </a>
@@ -104,13 +103,15 @@ const Popup = () => {
           </div>
         </div>
       )}
-      {/* Floating SMS Button*/}
-      <a href="sms:8336574812" className={styles.textUsButton}>
+      {/* Floating SMS Button */}
+      <a
+        href="sms:8336574812"
+        className={styles.textUsButton}
+        onClick={() => trackEvent("floating_sms_clicked")}
+      >
         <p>Text Us</p>
         <TextUsPopup className={styles.textUsIcon} />
       </a>
-
-      <ChatbotPopup open={isChatOpen} />
     </>
   );
 };

@@ -15,6 +15,7 @@ export default function FreeCaseEvaluationPage() {
     zipcode: "",
     email: "",
     caseType: "",
+    filedCarrier: "",
     description: "",
     consent: false,
   });
@@ -39,6 +40,13 @@ export default function FreeCaseEvaluationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Special case: Warranty Law + American Home Shield → redirect to retainer page
+    if (formData.caseType === "Warranty Law" && formData.filedCarrier === "American Home Shield") {
+      router.push("https://app.louislawgroup.com/american-home-shield-retainer");
+      return;
+    }
+
     setFormStatus("submitting");
 
     const payload = {
@@ -49,6 +57,7 @@ export default function FreeCaseEvaluationPage() {
       caseType: formData.caseType,
       description: formData.description,
       consent: formData.consent ? "Yes" : "No",
+      filedCarrier: formData.filedCarrier || null,
     };
 
     console.log("Form Data being submitted:", {
@@ -58,12 +67,11 @@ export default function FreeCaseEvaluationPage() {
 
     try {
       const response = await fetch(
-        "https://services.leadconnectorhq.com/hooks/OpuRBif1UwDh1UMMiJ7o/webhook-trigger/52c60449-a7a0-42ca-b25a-6b1b93ed4f66",
+        "https://dev-n8n.louislawgroup.com/webhook/forms",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: "your-authorization-key",
           },
           body: JSON.stringify(payload),
         }
@@ -93,6 +101,7 @@ export default function FreeCaseEvaluationPage() {
         zipcode: "",
         email: "",
         caseType: "",
+        filedCarrier: "",
         description: "",
         consent: false,
       });
@@ -236,8 +245,28 @@ export default function FreeCaseEvaluationPage() {
           <option value="Personal Injury">Personal Injury</option>
           <option value="SSDI">SSDI</option>
           <option value="Employment Law">Employment Law</option>
+          <option value="Warranty Law">Warranty Law</option>
         </select>
       </div>
+
+      {/* Filed Carrier (conditional for Warranty Law) */}
+      {formData.caseType === "Warranty Law" && (
+        <div className={styles.inputContainer}>
+          <select
+            name="filedCarrier"
+            value={formData.filedCarrier}
+            onChange={handleInputChange}
+            className={formData.filedCarrier === "" ? styles.placeholder : ""}
+            required
+          >
+            <option value="" disabled>
+              Select Carrier
+            </option>
+            <option value="American Home Shield">American Home Shield</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      )}
 
       {/* Description */}
       <div className={styles.message}>
@@ -254,19 +283,24 @@ export default function FreeCaseEvaluationPage() {
       </div>
 
       {/* Consent Checkbox */}
-      <div className={styles.checkboxContainer}>
-        <input
-          type="checkbox"
-          name="consent"
-          checked={formData.consent}
-          onChange={handleInputChange}
-          required
-        />
-        <label>
-          I hereby expressly consent to receive automated communications
-          including calls, texts, emails, and/or prerecorded messages.
-        </label>
-      </div>
+<div className={styles.checkboxContainer}>
+  <input
+    type="checkbox"
+    name="consent"
+    checked={formData.consent}
+    onChange={handleInputChange}
+    required
+  />
+  <label>
+    By submitting this form, you consent to receive case updates, appointment reminders, and important legal notifications from Louis Law Group at the number provided. Msg &amp; data rates may apply. Message frequency may vary depending on your case status. You can unsubscribe at any time by replying STOP or clicking the unsubscribe link. Reply HELP for assistance. Your phone number will not be shared with third parties. Read our{' '}
+    <a href="https://www.louislawgroup.com/privacy-policy" target="_blank" rel="noopener noreferrer">
+      Privacy Policy
+    </a>{' '}and{' '}
+    <a href="https://www.louislawgroup.com/terms-of-use-agreement" target="_blank" rel="noopener noreferrer">
+      Terms of Use Agreement
+    </a>{' '}for more information.
+  </label>
+</div>
 
       {/* Submission Button */}
       <button type="submit" className={styles.submitButton}>

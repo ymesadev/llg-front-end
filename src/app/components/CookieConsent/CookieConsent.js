@@ -15,6 +15,7 @@ export default function CookieConsent() {
   const acceptCookies = () => {
     localStorage.setItem("cookieConsent", "true");
     setShowConsent(false);
+    window.dispatchEvent(new Event("consentUpdated"));
   };
 
   if (!showConsent) return null;

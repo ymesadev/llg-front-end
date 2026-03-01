@@ -62,8 +62,9 @@ async function getBlogPosts(page = 1) {
     `${strapiURL}/api/articles?` +
     `populate=cover&` +
     `fields[]=title&fields[]=slug&fields[]=description&` +
-    `sort[0]=createdAt:desc&` +
-    `pagination[page]=${page}&pagination[pageSize]=20`;
+    `publicationState=live&` +
+    `sort[0]=publishedAt:desc&` +
+    `pagination[page]=${page}&pagination[pageSize]=20&pagination[withCount]=true`;
 
   try {
     const res = await fetch(apiUrl, { next: { revalidate: 60 } });
@@ -81,9 +82,20 @@ async function getBlogPosts(page = 1) {
 
 // ─── Page component ─────────────────────────────────────────────────────────
 export default async function ResourcesPage({ searchParams }) {
-  const currentPage = searchParams?.page ? parseInt(searchParams.page, 10) : 1;
-  const { posts, meta } = await getBlogPosts(currentPage);
-  const totalPages = meta?.pagination?.pageCount || 1;
+  // searchParams in Next's app router can be an async proxy; await it before using
+  const sp = await searchParams;
+  let currentPage = sp?.page ? parseInt(sp.page, 10) : 1;
+  if (!Number.isFinite(currentPage) || currentPage < 1) currentPage = 1;
+
+  let { posts, meta } = await getBlogPosts(currentPage);
+  let totalPages = meta?.pagination?.pageCount || 1;
+
+  // If requested page is beyond total pages (e.g., stale link), clamp and refetch
+  if (currentPage > totalPages && totalPages > 0) {
+    currentPage = totalPages;
+    ({ posts, meta } = await getBlogPosts(currentPage));
+    totalPages = meta?.pagination?.pageCount || 1;
+  }
 
   const paginationItems = getPaginationRange({
     totalPages,
@@ -119,7 +131,7 @@ export default async function ResourcesPage({ searchParams }) {
 
           {totalPages > 1 && (
             <nav className={styles.pagination}>
-              {/* Previous link */}
+              {/* Previous lnk */}
               {currentPage > 1 && (
                 <Link
                   href={`/resources?page=${currentPage - 1}`}

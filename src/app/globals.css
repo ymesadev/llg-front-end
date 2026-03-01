@@ -122,7 +122,7 @@ h3 {
   .column-3,
   .column-4,
   .column-5 {
-    grid-template-columns: 1fr; /* Stack columns vertically on small screens */
+    grid-template-columns: 1fr; 
   }
   section {
     padding-left: 1rem;
@@ -131,4 +131,19 @@ h3 {
 }
 .widget-open-icon {
   display: none !important;
+}
+
+.blueButton {
+  text-decoration: none;
+  color: #f4f4f4;
+  background-color: #1a2b49;
+  padding: 1rem 2rem;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  transition: background-color 0.3s;
 }
