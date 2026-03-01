@@ -13,6 +13,7 @@ import parse from "html-react-parser";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
+import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
 import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
@@ -750,6 +751,7 @@ export default async function Page(props) {
                 if (typeof window !== 'undefined') { try { console.log('🧪 Buttons resolved (top):', _btns); } catch(e){} }
                 return <ArticleButtonsRow buttons={_btns} />;
               })()}
+              <UrgencyBanner />
               <p className={styles.blogDate}>
                 <FaRegCalendarAlt className={styles.icon} />{" "}
                 {new Date(page.createdAt).toLocaleDateString()} |{" "}
