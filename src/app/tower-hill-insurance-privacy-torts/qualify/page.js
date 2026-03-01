@@ -1,31 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
+import { trackEvent } from "@/app/utils/analytics";
 
 const eligibilityQuestions = [
-  {
-    id: "age",
-    question: "Are you 18 years of age or older?",
-    required: true
-  },
-  {
-    id: "visited",
-    question: "Did you visit or interact with Tower Hill Insurance's website (thig.com) within the last 2 years?",
-    required: true
-  },
-  {
-    id: "florida",
-    question: "Were you located in Florida at the time you visited or interacted with Tower Hill Insurance's website?",
-    required: true
-  },
-  {
-    id: "submitted",
-    question: "Did you request a quote, create an account, or submit personal information through Tower Hill Insurance's website?",
-    required: true
-  }
+  { id: "age", question: "Are you 18 years of age or older?", required: true },
+  { id: "visited", question: "Did you visit or interact with Tower Hill Insurance's website (thig.com) within the last 2 years?", required: true },
+  { id: "florida", question: "Were you located in Florida at the time you visited or interacted with Tower Hill Insurance's website?", required: true },
+  { id: "submitted", question: "Did you request a quote, create an account, or submit personal information through Tower Hill Insurance's website?", required: true }
 ];
 
 export default function QualifyPage() {
@@ -40,6 +25,10 @@ export default function QualifyPage() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [direction, setDirection] = useState("next");
   const [disqualified, setDisqualified] = useState(false);
+
+  useEffect(() => {
+    trackEvent("qualify_page_view", { case_type: "tower_hill" });
+  }, []);
 
   const step1Questions = eligibilityQuestions.slice(0, 2);
   const step2Questions = eligibilityQuestions.slice(2, 4);
@@ -64,16 +53,19 @@ export default function QualifyPage() {
     const hasNo = currentQuestions.some(q => eligibilityAnswers[q.id] === false);
 
     if (hasNo) {
+      trackEvent("qualify_disqualified", { case_type: "tower_hill", step: currentStep });
       setDisqualified(true);
       return;
     }
 
     // If going from step 1 to contact, check all answers
     if (currentStep === 1 && !allEligibilityYes) {
+      trackEvent("qualify_disqualified", { case_type: "tower_hill", step: currentStep });
       setDisqualified(true);
       return;
     }
 
+    trackEvent("qualify_step_complete", { case_type: "tower_hill", from_step: currentStep });
     setDirection("next");
     setIsAnimating(true);
     setTimeout(() => {
@@ -99,6 +91,7 @@ export default function QualifyPage() {
       name: contactInfo.name,
       phone: contactInfo.phone
     }));
+    trackEvent("qualify_contact_submitted", { case_type: "tower_hill" });
     router.push("/tower-hill-insurance-privacy-torts/sign");
   };
 
