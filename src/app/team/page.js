@@ -17,9 +17,8 @@ const teamMembers = [
   { name: "Benaejah Simmonds, Esq", photo: "/images/Benaejah-Simmonds-Esq-LLG.jpg", description: "Miami, FL", link: "/benaejah-simmonds-esq" },
   { name: "Melissa Romero, Esq", photo: "/images/Melissa-Romero-Esq.jpg", description: "West Palm Beach, FL", link: "/melissa-romero-esq" },
   { name: "Magdaline Mintz, Esq", photo: "/images/Magdaline-Mintz-Esq-LLG.jpg", description: "Atlanta, GA" },
-  { name: "Thomas Singer, Esq", photo: "/images/thomas-singer.jpg", description: "Miami, Fl", link:"/thomas-singer-esq" },
+
   { name: "Brett Conger, Esq", photo: "/images/brett-conger.jpg", description: "Miami, Fl", link:"/brett-conger-esq" },
-  { name: "Stephanie Corbin, Esq", photo: "/images/stephanie-corbin.jpg", description: "Miami, Fl", link:"/stephanie-corbin-esq" },
   { name: "Marie Fabre", photo: "/images/marie-fabre.jpg", description: "Miami, FL",link: "/marie-fabre" },
   { name: "Olena Perez", photo: "/images/olena-perez.jpg", description: "Tallahassee, FL", link: "/olena-perez" },
   { name: "Matthew Mobley", photo: "/images/matthew-mobley.jpg", description: "Miami, FL", link: "/matthew-mobley"},
