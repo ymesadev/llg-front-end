@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
 import { trackEvent } from "@/app/utils/analytics";
+import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 
 async function sha256(value) {
   const encoder = new TextEncoder();
@@ -48,7 +49,6 @@ export default function QualifyPage() {
 
   const step1Questions = eligibilityQuestions.slice(0, 2);
   const step2Questions = eligibilityQuestions.slice(2, 4);
-
   const step1Answered = step1Questions.every(q => eligibilityAnswers[q.id] !== undefined);
   const step2Answered = step2Questions.every(q => eligibilityAnswers[q.id] !== undefined);
   const allEligibilityYes = eligibilityQuestions.every(q => eligibilityAnswers[q.id] === true);
@@ -66,20 +66,17 @@ export default function QualifyPage() {
   const goToNextStep = () => {
     const currentQuestions = currentStep === 0 ? step1Questions : step2Questions;
     const hasNo = currentQuestions.some(q => eligibilityAnswers[q.id] === false);
-
     if (hasNo) {
       trackEvent("qualify_disqualified", { case_type: "vuori", step: currentStep });
       setDisqualified(true);
       return;
     }
-
     if (currentStep === 1 && !allEligibilityYes) {
       trackEvent("qualify_disqualified", { case_type: "vuori", step: currentStep });
       setDisqualified(true);
       return;
     }
-
-    ttqTrack("ClickButton", `Vuori Qualify - Step ${currentStep + 1} Continue`);
+        ttqTrack("ClickButton", `Vuori Qualify - Step ${currentStep + 1} Continue`);
     trackEvent("qualify_step_complete", { case_type: "vuori", from_step: currentStep });
     setDirection("next");
     setIsAnimating(true);
@@ -92,18 +89,17 @@ export default function QualifyPage() {
     setTimeout(() => { setCurrentStep(currentStep - 1); setIsAnimating(false); }, 300);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (async e) => {
     e.preventDefault();
     if (!contactComplete) return;
-
-    if (typeof window !== "undefined" && window.ttq) {
+    localStorage.setItem('vuori-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
+        if (typeof window !== "undefined" && window.ttq) {
       const [hashedEmail, hashedPhone] = await Promise.all([sha256(contactInfo.usedEmail), sha256(contactInfo.phone)]);
       window.ttq.identify({ email: hashedEmail, phone_number: hashedPhone });
       ttqTrack("Contact", "Vuori Qualify - Contact Info Submitted");
       ttqTrack("CompleteRegistration", "Vuori Qualify - Registration Complete");
       ttqTrack("Lead", "Vuori Qualify - Lead Captured");
     }
-
     localStorage.setItem('vuori-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
     trackEvent("qualify_contact_submitted", { case_type: "vuori" });
     router.push("/vuori-privacy-torts/sign");
@@ -118,7 +114,7 @@ export default function QualifyPage() {
             <h2>We're Sorry</h2>
             <p>Based on your responses, you may not qualify for this particular case. However, you may have other legal options available to you.</p>
             <p>If you believe this is an error or have questions, please call us at{" "}<a href="tel:8336574812">833-657-4812</a>.</p>
-            <button className={styles.primaryButton} onClick={() => router.push("/vuori-privacy-torts")}>Return to Homepage</button>
+            <button className={styles.primaryButton} onClick={() => router.push("/vuori-privacy-torts")} >Return to Homepage</button>
           </div>
         </div>
       </div>
@@ -144,6 +140,7 @@ export default function QualifyPage() {
           </nav>
         </aside>
         <main className={styles.main}>
+          <UrgencyBanner />
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
               {currentStep === 0 && (
@@ -151,7 +148,7 @@ export default function QualifyPage() {
                   <div className={styles.stepHeader}>
                     <Shield className={styles.stepIcon} />
                     <h2>Let's Check Your Eligibility</h2>
-                    <p>Step 1 of 3 - Answer these questions</p>
+                    <p>Step 1 of 3 — Answer these questions</p>
                   </div>
                   <div className={styles.questionsGrid}>
                     {step1Questions.map((q, index) => (
@@ -174,7 +171,7 @@ export default function QualifyPage() {
                   <div className={styles.stepHeader}>
                     <Shield className={styles.stepIcon} />
                     <h2>Just a Couple More Questions</h2>
-                    <p>Step 2 of 3 - Almost there!</p>
+                    <p>Step 2 of 3 — Almost there!</p>
                   </div>
                   <div className={styles.questionsGrid}>
                     {step2Questions.map((q, index) => (
@@ -198,7 +195,7 @@ export default function QualifyPage() {
                   <div className={styles.stepHeader}>
                     <div className={styles.successBadge}><Check size={20} />You Qualify!</div>
                     <h2>Almost Done! Enter Your Contact Info</h2>
-                    <p>Step 3 of 3 - We'll use this to process your case.</p>
+                    <p>Step 3 of 3 — We'll use this to process your case.</p>
                   </div>
                   <form onSubmit={handleSubmit} className={styles.contactForm}>
                     <div className={styles.inputGroup}>
@@ -215,7 +212,7 @@ export default function QualifyPage() {
                     </div>
                     <div className={styles.navigation}>
                       <button type="button" className={styles.backButton} onClick={goToPrevStep}><ArrowLeft size={18} />Back</button>
-                      <button type="submit" className={styles.submitButton} disabled={!contactComplete}>Submit & Continue<ArrowRight size={20} /></button>
+                      <button type="submit" className={styles.submitButton} disabled={!contactComplete}>Submit &amp; Continue<ArrowRight size={20} /></button>
                     </div>
                   </form>
                 </>
