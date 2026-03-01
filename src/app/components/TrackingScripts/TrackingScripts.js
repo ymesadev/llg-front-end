@@ -4,8 +4,7 @@ import Script from "next/script";
 import { Analytics } from "@vercel/analytics/next";
 import BehaviorTracking from "../BehaviorTracking/BehaviorTracking";
 
-// Microsoft Clarity — set your Project ID from clarity.microsoft.com
-const CLARITY_PROJECT_ID = process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID || "";
+const CLARITY_PROJECT_ID = "3219271935026135";
 
 export default function TrackingScripts() {
   const [consentGiven, setConsentGiven] = useState(false);
