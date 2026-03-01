@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Popup.module.css";
-// import ChatbotPopup from "../ChatBot/ChatBot";
 import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
+import { trackEvent } from "@/app/utils/analytics";
 
 const Popup = () => {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
@@ -22,7 +22,10 @@ const Popup = () => {
       "consultationDismissed"
     );
     if (localStorage.getItem("agreedToTerms") && !consultationDismissed) {
-      setTimeout(() => setIsConsultationOpen(true), 3000);
+      setTimeout(() => {
+        setIsConsultationOpen(true);
+        trackEvent("consultation_popup_shown");
+      }, 3000);
     }
   }, []);
 
@@ -30,17 +33,19 @@ const Popup = () => {
     localStorage.setItem("agreedToTerms", "true");
     setIsTermsOpen(false);
     window.dispatchEvent(new Event("consentUpdated"));
+    trackEvent("terms_consent_given");
   };
 
   const closeConsultation = () => {
     sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
+    trackEvent("consultation_popup_dismissed");
   };
 
   const handleMessageUs = () => {
     sessionStorage.setItem("consultationDismissed", "true");
     setIsConsultationOpen(false);
-    // Chat is now handled by AIChatBot in layout.js
+    trackEvent("consultation_chat_clicked");
   };
 
   return (
@@ -95,7 +100,11 @@ const Popup = () => {
                   <p>Let's Chat</p>
                   <ChatUsPopup className={styles.icon} />
                 </button>
-                <a href="sms:8336574812" className={styles.textUs}>
+                <a
+                  href="sms:8336574812"
+                  className={styles.textUs}
+                  onClick={() => trackEvent("consultation_sms_clicked")}
+                >
                   <p>Text Us</p>
                   <TextUsPopup className={styles.textUsIcon} />
                 </a>
@@ -105,13 +114,14 @@ const Popup = () => {
         </div>
       )}
       {/* Floating SMS Button*/}
-      <a href="sms:8336574812" className={styles.textUsButton}>
+      <a
+        href="sms:8336574812"
+        className={styles.textUsButton}
+        onClick={() => trackEvent("floating_sms_clicked")}
+      >
         <p>Text Us</p>
         <TextUsPopup className={styles.textUsIcon} />
       </a>
-      {/* <ChatbotPopup open={isChatOpen} /> */}
-
-      {/* AIChatBot is now handled in layout.js */}
     </>
   );
 };
