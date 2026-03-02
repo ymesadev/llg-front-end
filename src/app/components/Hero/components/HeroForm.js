@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import styles from "./HeroForm.module.css";
 
 export default function FreeCaseEvaluationPage() {
   const router = useRouter();
+  const formLoadTime = useRef(Date.now());
 
   // Form data
   const [formData, setFormData] = useState({
@@ -19,6 +20,9 @@ export default function FreeCaseEvaluationPage() {
     description: "",
     consent: false,
   });
+
+  // Honeypot field — hidden from humans, bots fill it
+  const [honeypot, setHoneypot] = useState("");
 
   // Focus states for custom placeholders (optional)
   const [isNameFocused, setIsNameFocused] = useState(false);
@@ -40,6 +44,21 @@ export default function FreeCaseEvaluationPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Bot check 1: honeypot — real users never see or fill this field
+    if (honeypot) return;
+
+    // Bot check 2: time gate — real users take >3s to fill a form
+    const elapsed = Date.now() - formLoadTime.current;
+    if (elapsed < 3000) return;
+
+    // Bot check 3: basic US phone validation (10 digits, area code not starting with 0 or 1)
+    const digits = formData.phone.replace(/\D/g, "");
+    const areaCode = digits.length === 11 && digits[0] === "1" ? digits.slice(1, 4) : digits.slice(0, 3);
+    if (digits.length < 10 || areaCode[0] === "0" || areaCode[0] === "1") {
+      setFormStatus("error");
+      return;
+    }
 
     // Special case: Warranty Law + American Home Shield → redirect to retainer page
     if (formData.caseType === "Warranty Law" && formData.filedCarrier === "American Home Shield") {
@@ -144,7 +163,7 @@ export default function FreeCaseEvaluationPage() {
       <div className={styles.errorContainer}>
         <FaTimesCircle className={styles.errorIcon} />
         <p className={styles.errorMessage}>
-          Oops! Something went wrong. Please try again.
+          Please enter a valid US phone number and try again.
         </p>
       </div>
     );
@@ -163,6 +182,18 @@ export default function FreeCaseEvaluationPage() {
   // — default (idle) state: show form —
   return (
     <form onSubmit={handleSubmit} className={styles.heroForm}>
+      {/* Honeypot — hidden from real users, bots fill it */}
+      <div style={{ position: "absolute", left: "-9999px", top: "-9999px", opacity: 0, height: 0, overflow: "hidden" }} aria-hidden="true">
+        <input
+          type="text"
+          name="website"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
+
       <div className={styles.grid}>
         {/* Name */}
         <div className={styles.inputContainer}>
