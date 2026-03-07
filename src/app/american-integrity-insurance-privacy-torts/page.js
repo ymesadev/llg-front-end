@@ -198,6 +198,17 @@ export default function AmericanIntegrityPrivacyLanding() {
                 to monitor your online activity—including your clicks, browsing behavior,
                 and personal information—without your knowledge or consent.
               </p>
+              <div className={styles.statuteBanner}>
+                <AlertTriangle size={20} className={styles.statuteIcon} />
+                <div>
+                  <strong>⏰ Statute of Limitations Warning</strong>
+                  <p>
+                    The deadline to file a privacy tort claim is typically <strong>2 years</strong> from
+                    the date of the violation. If you visited aii.com in the past 24 months,
+                    you may be running out of time. <strong>Act now to protect your rights.</strong>
+                  </p>
+                </div>
+              </div>
               <div className={styles.alertBox}>
                 <AlertTriangle className={styles.alertIcon} />
                 <p>
