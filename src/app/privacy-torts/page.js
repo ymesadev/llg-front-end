@@ -120,7 +120,7 @@ export default function PrivacyTortsHub() {
                 Not sure if you qualify? Our attorneys offer a completely free, no-obligation
                 case review. If we take your case, you pay nothing unless we win.
               </p>
-              <Link href="/free-case-evaluation" className={styles.callBtn}>
+              <Link href="/vuori-privacy-torts" className={styles.callBtn}>
                 Check Eligibility
                 <ArrowRight size={18} />
               </Link>
@@ -176,7 +176,7 @@ export default function PrivacyTortsHub() {
                 Get a Free Case Evaluation
                 <ArrowRight size={20} />
               </Link>
-              <Link href="/free-case-evaluation" className={styles.ctaSecondary}>
+              <Link href="/vuori-privacy-torts" className={styles.ctaSecondary}>
                 Check Eligibility
                 <ArrowRight size={20} />
               </Link>
