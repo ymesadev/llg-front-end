@@ -151,7 +151,7 @@ export default function PrivacyTortsHub() {
                 <h3 className={styles.caseCompany}>{c.company}</h3>
                 <p className={styles.caseDescription}>{c.description}</p>
                 <Link href={`/${c.slug}`} className={styles.caseBtn}>
-                  Check My Eligibility
+                  Check Availability
                   <ArrowRight size={18} />
                 </Link>
               </div>
