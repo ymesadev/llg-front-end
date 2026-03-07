@@ -1,6 +1,6 @@
 import Link from "next/link";
 import styles from "./page.module.css";
-import { ShieldAlert, ArrowRight, Eye, Lock, AlertTriangle, Phone } from "lucide-react";
+import { ShieldAlert, ArrowRight, Eye, Lock, AlertTriangle } from "lucide-react";
 
 export const metadata = {
   title: "Privacy Torts | Louis Law Group",
@@ -120,10 +120,10 @@ export default function PrivacyTortsHub() {
                 Not sure if you qualify? Our attorneys offer a completely free, no-obligation
                 case review. If we take your case, you pay nothing unless we win.
               </p>
-              <a href="tel:8336574812" className={styles.callBtn}>
-                <Phone size={18} />
-                Call 833-657-4812
-              </a>
+              <Link href="/free-case-evaluation" className={styles.callBtn}>
+                Check Eligibility
+                <ArrowRight size={18} />
+              </Link>
             </div>
           </div>
         </div>
@@ -176,10 +176,10 @@ export default function PrivacyTortsHub() {
                 Get a Free Case Evaluation
                 <ArrowRight size={20} />
               </Link>
-              <a href="tel:8336574812" className={styles.ctaSecondary}>
-                <Phone size={20} />
-                Call 833-657-4812
-              </a>
+              <Link href="/free-case-evaluation" className={styles.ctaSecondary}>
+                Check Eligibility
+                <ArrowRight size={20} />
+              </Link>
             </div>
           </div>
         </div>
