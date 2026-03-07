@@ -21,7 +21,7 @@ function generateEventId() {
 const eligibilityQuestions = [
   { id: "age", question: "Are you 18 years of age or older?", required: true },
   { id: "visited", question: "Did you visit or shop on Vuori's website (vuori.com) within the last 2 years?", required: true },
-  { id: "us", question: "Were you located in the United States when you visited Vuori's website?", required: true },
+  { id: "us", question: "Were you located in Florida when you accessed Vuori's website?", required: true },
   { id: "submitted", question: "Did you create an account, make a purchase, or submit personal information on Vuori's website?", required: true }
 ];
 
