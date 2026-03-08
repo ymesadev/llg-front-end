@@ -159,10 +159,12 @@ export async function collectAllUrls() {
   // also include root
   all.unshift({ loc: `${SITE}/`, lastmod: null });
 
-  // add dynamically discovered static pages
+  // add dynamically discovered static pages (with today's date for /faq/ so Google sees fresh content)
   const staticPages = getStaticPages();
+  const TODAY = new Date().toISOString();
   for (const pagePath of staticPages) {
-    all.push({ loc: `${SITE}${pagePath}`, lastmod: null });
+    const lastmod = pagePath === '/faq' ? TODAY : null;
+    all.push({ loc: `${SITE}${pagePath}`, lastmod });
   }
 
   return all;
