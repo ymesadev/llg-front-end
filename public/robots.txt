@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin
+Disallow: /preview
+Disallow: /draft
+Disallow: /private
+Disallow: /_next
+
+Sitemap: https://www.louislawgroup.com/sitemap.xml
+Host: https://www.louislawgroup.com
