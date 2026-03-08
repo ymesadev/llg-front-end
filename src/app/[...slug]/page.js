@@ -683,6 +683,20 @@ export default async function Page(props) {
         </>
       ) : isArticlePage ? (
         <>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.louislawgroup.com" },
+                  { "@type": "ListItem", "position": 2, "name": "Resources", "item": "https://www.louislawgroup.com/resources" },
+                  { "@type": "ListItem", "position": 3, "name": page.title, "item": `https://www.louislawgroup.com/${slug}` }
+                ]
+              })
+            }}
+          />
           {slug.startsWith("faq-") ? (
             <script
               type="application/ld+json"

@@ -14,10 +14,37 @@ export const metadata = {
   description: "Trusted legal services",
 };
 
+const legalServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "LegalService",
+  "name": "Louis Law Group",
+  "url": "https://www.louislawgroup.com",
+  "logo": "https://www.louislawgroup.com/logo.png",
+  "telephone": "+18336574812",
+  "priceRange": "Free consultation — contingency fee",
+  "description": "Louis Law Group is a Florida law firm specializing in Social Security Disability (SSDI/SSI) and property damage insurance claims. No fees unless we win.",
+  "areaServed": { "@type": "State", "name": "Florida" },
+  "address": { "@type": "PostalAddress", "addressRegion": "FL", "addressCountry": "US" },
+  "openingHours": "Mo-Fr 09:00-17:00",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Legal Services",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Social Security Disability (SSDI/SSI) Representation" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Property Damage Insurance Claims" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Insurance Claim Denials & Appeals" } }
+    ]
+  }
+};
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(legalServiceSchema) }}
+        />
       </head>
       <body>
         <ConditionalNavbar />
