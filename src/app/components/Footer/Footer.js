@@ -165,6 +165,11 @@ export default function Footer() {
             </div>
             <ul className={styles.navList}>
               <li className={styles.navItem}>
+                <Link href="/abogados-florida" className={styles.navLink}>
+                  Abogados en Florida
+                </Link>
+              </li>
+              <li className={styles.navItem}>
                 <Link href="/abogado-discapacidad-florida" className={styles.navLink}>
                   Abogado Discapacidad Florida
                 </Link>
