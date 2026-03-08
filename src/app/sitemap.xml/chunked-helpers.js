@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export const SITE  = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.louislawgroup.com').replace(/\/+$/,'');
+export const SITE  = 'https://www.louislawgroup.com';
 const STRAPI = (process.env.NEXT_PUBLIC_STRAPI_API_URL || process.env.STRAPI_URL || 'https://login.louislawgroup.com').replace(/\/+$/,'');
 const TOKEN = process.env.STRAPI_API_TOKEN || '';
 
