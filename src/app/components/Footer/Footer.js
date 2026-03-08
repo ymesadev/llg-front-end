@@ -155,6 +155,22 @@ export default function Footer() {
               </li>
             </ul>
           </div>
+
+          {/* Español Column */}
+          <div className={styles.column}>
+            <div className={styles.sectionHeader}>
+              <Link href="#" className={styles.sectionLink}>
+                <h1>Español</h1>
+              </Link>
+            </div>
+            <ul className={styles.navList}>
+              <li className={styles.navItem}>
+                <Link href="/abogado-discapacidad-florida" className={styles.navLink}>
+                  Abogado Discapacidad Florida
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className={styles.copyright}>
