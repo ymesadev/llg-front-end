@@ -22,13 +22,8 @@ import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA
 
 function getArticleType(slug) {
   const s = (slug || "").toLowerCase();
-  if (
-    s.includes("ssdi") ||
-    s.includes("social-security") ||
-    s.includes("social security") ||
-    s.includes("disability-benefit") ||
-    s.includes("supplemental-security")
-  ) {
+  const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-claim","disability-appeal","disability-insurance","sga","ssdi-pay","ssdi-payment"];
+  if (ssdiKeywords.some(k => s.includes(k))) {
     return "ssdi";
   }
   return "property-damage";
@@ -842,7 +837,8 @@ export default async function Page(props) {
                   const articleType = (() => {
                     const s = (page.slug || "").toLowerCase();
                     const t = (page.title || "").toLowerCase();
-                    if (s.includes("ssdi") || s.includes("social-security") || s.includes("social security") || t.includes("ssdi") || t.includes("social security") || s.includes("disability-benefit")) return "ssdi";
+                    const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","sga","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-claim","disability-appeal","disability-insurance","disability-benefit","ssdi-pay","ssdi-payment","ssdi-amount","ssdi-back","ssdi-check"];
+                    if (ssdiKeywords.some(k => s.includes(k) || t.includes(k))) return "ssdi";
                     return "property-damage";
                   })();
                   const midpoint = Math.floor((page.blocks || []).length / 2);
