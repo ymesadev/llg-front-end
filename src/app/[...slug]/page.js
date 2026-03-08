@@ -688,48 +688,89 @@ export default async function Page(props) {
         </>
       ) : isArticlePage ? (
         <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "Article",
-                "headline": page.title,
-                "datePublished": page.createdAt,
-                "dateModified": page.updatedAt || page.createdAt,
-                "image": page.cover?.url
-                  ? `https://login.louislawgroup.com${page.cover.url}`
-                  : "https://www.louislawgroup.com/og-default.jpg",
-                "author": {
-                  "@type": "Organization",
-                  "name": "Louis Law Group",
-                  "url": "https://www.louislawgroup.com"
-                },
-                "publisher": {
-                  "@type": "LegalService",
-                  "name": "Louis Law Group",
-                  "url": "https://www.louislawgroup.com",
-                  "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://www.louislawgroup.com/logo.png"
-                  }
-                },
-                "mainEntityOfPage": {
-                  "@type": "WebPage",
-                  "@id": `https://www.louislawgroup.com/${page.slug}`
-                }
-              })
-            }}
-          />
-          {(() => {
-            const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
-            return faqSchema ? (
+          {slug.startsWith("faq-") ? (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": [{
+                    "@type": "Question",
+                    "name": page.title,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": page.description || ""
+                    }
+                  }]
+                })
+              }}
+            />
+          ) : (
+            <>
               <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": page.title,
+                    "datePublished": page.createdAt,
+                    "dateModified": page.updatedAt || page.createdAt,
+                    "image": page.cover?.url
+                      ? `https://login.louislawgroup.com${page.cover.url}`
+                      : "https://www.louislawgroup.com/og-default.jpg",
+                    "author": {
+                      "@type": "Organization",
+                      "name": "Louis Law Group",
+                      "url": "https://www.louislawgroup.com"
+                    },
+                    "publisher": {
+                      "@type": "LegalService",
+                      "name": "Louis Law Group",
+                      "url": "https://www.louislawgroup.com",
+                      "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://www.louislawgroup.com/logo.png"
+                      }
+                    },
+                    "mainEntityOfPage": {
+                      "@type": "WebPage",
+                      "@id": `https://www.louislawgroup.com/${page.slug}`
+                    }
+                  })
+                }}
               />
-            ) : null;
-          })()}
+              {(() => {
+                const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
+                return faqSchema ? (
+                  <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                  />
+                ) : null;
+              })()}
+            </>
+          )}
+          {slug.startsWith("faq-") && page.description && (
+            <section className={styles.blogPost}>
+              <div className="container blogContainer">
+                <nav aria-label="Breadcrumb" style={{ marginBottom: "1rem", fontSize: "0.9rem" }}>
+                  <Link href="/">Home</Link> &rsaquo; <Link href="/faq">FAQ</Link> &rsaquo; <span>{page.title}</span>
+                </nav>
+                <h1 className={styles.blogTitle}>{page.title}</h1>
+                <UrgencyBanner />
+                <div className={styles.blogContent}>
+                  <div className={styles.blogText}>
+                    <p>{page.description}</p>
+                    <p>Have questions about your legal rights? <Link href="/#contact">Contact Louis Law Group</Link> for a free case evaluation.</p>
+                  </div>
+                </div>
+                <ArticleButtonsRow buttons={getArticleButtons(page)} />
+              </div>
+            </section>
+          )}
+          {!slug.startsWith("faq-") && (
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
@@ -838,6 +879,7 @@ export default async function Page(props) {
               })()}
             </div>
           </section>
+          )}
           <Steps />
           <Contact />
         </>
