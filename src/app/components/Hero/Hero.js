@@ -99,7 +99,6 @@ export default function Hero() {
           <div className={styles.heroLeft}>
             <h1 className={styles.heroTitle}>
               <span className={styles.florida}>Florida</span>
-              <span className={styles.insurance}>Insurance</span>
               <span className={styles.litigation}>Litigation</span>
               <span className={styles.attorneys}>Attorneys</span>
             </h1>
