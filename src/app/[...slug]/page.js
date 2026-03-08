@@ -622,6 +622,10 @@ export default async function Page(props) {
     return null;
   };
 
+  // Compute article type early — used in schema injection + content rendering
+  const articleType = getArticleType(slug);
+  const isSSAFormPage = /^ssa-\d+/.test(slug) || slug === 'request-for-reconsideration-form-ssa-561';
+
   // Debug: log keys so we can see what's coming from Strapi in server logs
   console.log("🔎 Page keys:", Object.keys(page || {}));
   if (typeof window !== 'undefined') {
@@ -750,12 +754,44 @@ export default async function Page(props) {
                   })
                 }}
               />
+              {/* HowTo schema for SSA form pages (triggers step-by-step rich results) */}
+              {isSSAFormPage && (
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                      "@context": "https://schema.org",
+                      "@type": "HowTo",
+                      "name": page.title,
+                      "description": page.description || `Step-by-step guide for ${page.title}`,
+                      "step": [
+                        { "@type": "HowToStep", "position": 1, "name": "Download the form", "text": "Use the download button on this page to get the official form directly from SSA.gov." },
+                        { "@type": "HowToStep", "position": 2, "name": "Complete all sections", "text": "Fill in every required field carefully. Incomplete forms are a common cause of delays in disability cases." },
+                        { "@type": "HowToStep", "position": 3, "name": "Attach supporting documents", "text": "Include medical records, doctor statements, and any other evidence supporting your disability claim." },
+                        { "@type": "HowToStep", "position": 4, "name": "Submit to the SSA", "text": "Deliver your completed form to a local Social Security office, mail it, or submit online at my.ssa.gov." },
+                        { "@type": "HowToStep", "position": 5, "name": "Get legal help if denied", "text": "If your claim is denied, Louis Law Group can represent you on contingency at no upfront cost. Call (833) 657-4812." }
+                      ]
+                    })
+                  }}
+                />
+              )}
+              {/* FAQPage schema — extracted from content or static SSDI fallback */}
               {(() => {
                 const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
-                return faqSchema ? (
+                const ssdiStaticFaq = !faqSchema && articleType === "ssdi" ? {
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": [
+                    { "@type": "Question", "name": "How long does it take to get approved for SSDI?", "acceptedAnswer": { "@type": "Answer", "text": "Most initial SSDI applications take 3–6 months for a decision. Appeals can take 12–24 months. Working with a disability attorney significantly improves your approval odds at every stage." }},
+                    { "@type": "Question", "name": "What should I do if my SSDI claim is denied?", "acceptedAnswer": { "@type": "Answer", "text": "About 67% of initial SSDI claims are denied. You have 60 days to file a Request for Reconsideration. If denied again, request an ALJ hearing — this is where most claims are ultimately approved. A disability attorney can represent you at no upfront cost." }},
+                    { "@type": "Question", "name": "Does Louis Law Group handle SSDI cases?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency — you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }}
+                  ]
+                } : null;
+                const schema = faqSchema || ssdiStaticFaq;
+                return schema ? (
                   <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
                   />
                 ) : null;
               })()}
@@ -848,13 +884,7 @@ export default async function Page(props) {
               )}
               <div className={styles.blogContent}>
                 {(() => {
-                  const articleType = (() => {
-                    const s = (page.slug || "").toLowerCase();
-                    const t = (page.title || "").toLowerCase();
-                    const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","sga","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-claim","disability-appeal","disability-insurance","disability-benefit","ssdi-pay","ssdi-payment","ssdi-amount","ssdi-back","ssdi-check"];
-                    if (ssdiKeywords.some(k => s.includes(k) || t.includes(k))) return "ssdi";
-                    return "property-damage";
-                  })();
+                  // articleType computed above via getArticleType(slug)
                   const midpoint = Math.floor((page.blocks || []).length / 2);
                   return (page.blocks || []).map((block, index) => (
                     <div key={index}>
@@ -881,6 +911,20 @@ export default async function Page(props) {
                   ));
                 })()}
               </div>
+              {/* SSDI: Related Forms box — contextual internal links to SSA form pages */}
+              {articleType === "ssdi" && !isSSAFormPage && (
+                <div style={{background:"#f0f7ff",borderLeft:"4px solid #1a56db",padding:"20px 24px",borderRadius:"4px",margin:"32px 0"}}>
+                  <h3 style={{marginTop:0,color:"#1a56db"}}>SSDI Forms You May Need</h3>
+                  <ul>
+                    <li><a href="/request-for-reconsideration-form-ssa-561">SSA-561 — Request for Reconsideration</a></li>
+                    <li><a href="/ssa-3373-function-report-adult">SSA-3373 — Function Report Adult</a></li>
+                    <li><a href="/ssa-3441-disability-report-appeal">SSA-3441 — Disability Report Appeal</a></li>
+                    <li><a href="/ssa-3368-disability-report-adult">SSA-3368 — Disability Report Adult</a></li>
+                    <li><a href="/ssa-1696-appointment-of-representative">SSA-1696 — Appointment of Representative</a></li>
+                    <li><a href="/ssa-827-authorization-to-disclose-information">SSA-827 — Authorization to Disclose</a></li>
+                  </ul>
+                </div>
+              )}
               {/* Article repeatable buttons (end of article) */}
               {(() => {
                 const _btns = getArticleButtons(page);
