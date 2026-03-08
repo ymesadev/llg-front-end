@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import styles from "./Navbar.module.css";
 import SearchBar from "./components/SearchBar/SearchBar";
@@ -56,7 +57,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className={styles.logo}>
           <Link href="/">
-            <img src="/images/logo.png" alt="Logo" />
+            <Image src="/images/logo.png" alt="Louis Law Group" width={160} height={48} priority />
           </Link>
         </div>
 
