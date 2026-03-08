@@ -144,9 +144,11 @@ export default function FAQPage() {
                 <div className={styles.faqAnswer}>
                   <p>{faq.answer}</p>
                   <div className={styles.faqCta}>
-                    <span>Have a similar situation?</span>
-                    <Link href="tel:8336574812" className={styles.faqCtaLink}>
-                      Get a free consultation →
+                    <Link href="sms:+18336574812" className={styles.faqCtaTextUs}>
+                      💬 Text Us Now
+                    </Link>
+                    <Link href="tel:+18336574812" className={styles.faqCtaCall}>
+                      📞 Call Free
                     </Link>
                   </div>
                 </div>
