@@ -1,0 +1,648 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import dynamic from "next/dynamic";
+import useEmblaCarousel from "embla-carousel-react";
+import {
+  Shield,
+  Eye,
+  Lock,
+  CheckCircle,
+  Phone,
+  ArrowRight,
+  ArrowLeft,
+  AlertTriangle,
+  UserCheck,
+  FileText,
+  DollarSign,
+  ChevronDown,
+  ShieldAlert,
+  Database,
+  Share2,
+  ScanEye,
+  ServerCrash,
+  Send,
+  Check,
+  X
+} from "lucide-react";
+import styles from "./page.module.css";
+import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
+
+async function sha256(value) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(value.trim().toLowerCase());
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateEventId() {
+  return `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+}
+
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+
+import step1Animation from "../../../public/lottie/step1.json";
+import step2Animation from "../../../public/lottie/step2.json";
+import step3Animation from "../../../public/lottie/step3.json";
+
+const eligibilityQuestions = [
+  { id: "age", question: "Are you 18 years of age or older?" },
+  { id: "visited", question: "Did you visit or use American Home Shield's website (ahs.com) within the last 2 years?" },
+  { id: "us", question: "Were you located in the United States when you visited American Home Shield's website?" },
+  { id: "submitted", question: "Did you create an account, purchase a warranty, or submit personal information on American Home Shield's website?" }
+];
+
+export default function AHSPrivacyLanding() {
+  const router = useRouter();
+  const [formStep, setFormStep] = useState(0);
+  const [eligibilityAnswers, setEligibilityAnswers] = useState({});
+  const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
+  const [disqualified, setDisqualified] = useState(false);
+  const [activeAccordion, setActiveAccordion] = useState(null);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  const [progress, setProgress] = useState(0);
+
+  const step1Questions = eligibilityQuestions.slice(0, 2);
+  const step2Questions = eligibilityQuestions.slice(2, 4);
+  const step1Answered = step1Questions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const step2Answered = step2Questions.every(q => eligibilityAnswers[q.id] !== undefined);
+  const allEligibilityYes = eligibilityQuestions.every(q => eligibilityAnswers[q.id] === true);
+  const contactComplete = contactInfo.email && contactInfo.name && contactInfo.phone;
+
+  const ttqTrack = useCallback((eventName, contentName) => {
+    if (typeof window !== "undefined" && window.ttq) {
+      window.ttq.track(eventName, {
+        contents: [{
+          content_id: "american-home-shield-privacy-torts",
+          content_type: "product",
+          content_name: contentName || "American Home Shield Privacy Torts"
+        }]
+      }, {
+        event_id: generateEventId()
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    ttqTrack("ViewContent", "American Home Shield Privacy Torts - Landing Page");
+  }, [ttqTrack]);
+
+  const updateProgress = () => {
+    if (!emblaApi) return;
+    const scrollProgress = emblaApi.scrollProgress();
+    setProgress(scrollProgress * 100);
+  };
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on("scroll", updateProgress);
+    updateProgress();
+  }, [emblaApi]);
+
+  const handleEligibilityAnswer = (questionId, answer) => {
+    setEligibilityAnswers(prev => ({ ...prev, [questionId]: answer }));
+  };
+
+  const handleContactChange = (e) => {
+    const { name, value } = e.target;
+    setContactInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const goToNextFormStep = () => {
+    const currentQuestions = formStep === 0 ? step1Questions : step2Questions;
+    const hasNo = currentQuestions.some(q => eligibilityAnswers[q.id] === false);
+
+    if (hasNo) {
+      setDisqualified(true);
+      return;
+    }
+
+    if (formStep === 1 && !allEligibilityYes) {
+      setDisqualified(true);
+      return;
+    }
+
+    ttqTrack("ClickButton", `AHS Landing - Step ${formStep + 1} Continue`);
+    setFormStep(formStep + 1);
+  };
+
+  const goToPrevFormStep = () => {
+    setFormStep(formStep - 1);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!contactComplete) return;
+
+    if (typeof window !== "undefined" && window.ttq) {
+      const [hashedEmail, hashedPhone] = await Promise.all([
+        sha256(contactInfo.email),
+        sha256(contactInfo.phone)
+      ]);
+
+      window.ttq.identify({
+        email: hashedEmail,
+        phone_number: hashedPhone
+      });
+
+      ttqTrack("Contact", "AHS Landing - Contact Info Submitted");
+      ttqTrack("CompleteRegistration", "AHS Landing - Registration Complete");
+      ttqTrack("Lead", "AHS Landing - Lead Captured");
+    }
+
+    localStorage.setItem('ahs-contact', JSON.stringify({
+      email: contactInfo.email,
+      name: contactInfo.name,
+      phone: contactInfo.phone
+    }));
+    router.push("/american-home-shield-privacy-torts/sign");
+  };
+
+  const faqs = [
+    {
+      question: "What is this privacy case about?",
+      answer: "This case alleges that American Home Shield embedded hidden tracking technology on their website that monitored your online activity—including clicks, pages viewed, and personal information—without your knowledge or proper consent, potentially violating state and federal privacy laws."
+    },
+    {
+      question: "Who is eligible to file a claim?",
+      answer: "You may be eligible if you visited the American Home Shield website (ahs.com) within the past 24 months. Certain state residents, particularly those in California, Florida, and other states with strong privacy laws, may have additional protections."
+    },
+    {
+      question: "How much does it cost to file a claim?",
+      answer: "There is no upfront cost to you. Our attorneys work on a contingency fee basis, meaning we only get paid if we successfully recover compensation on your behalf."
+    },
+    {
+      question: "What kind of compensation could I receive?",
+      answer: "Compensation varies by case and depends on factors such as the extent of tracking, your state of residence, and applicable laws. Privacy violation cases can result in statutory damages, actual damages, and other remedies."
+    },
+    {
+      question: "How does hidden tracking violate my privacy?",
+      answer: "When companies track your online behavior without disclosure or consent, they may violate laws like the California Invasion of Privacy Act (CIPA), the Florida Security of Communications Act, federal wiretapping laws, and other consumer protection statutes."
+    }
+  ];
+
+  const trackingIssues = [
+    {
+      icon: <ScanEye size={24} className={styles.issueIcon} />,
+      title: "Behavior Monitoring",
+      description: "Every click, scroll, mouse movement, and page visit on American Home Shield's website may have been secretly recorded using session replay technology."
+    },
+    {
+      icon: <ServerCrash size={24} className={styles.issueIcon} />,
+      title: "Data Collection",
+      description: "Your personal information, browsing habits, and form inputs were captured and stored without proper disclosure or meaningful consent."
+    },
+    {
+      icon: <Send size={24} className={styles.issueIcon} />,
+      title: "Third-Party Sharing",
+      description: "The data collected about you was likely shared with third-party advertising companies and analytics firms—all without your permission."
+    }
+  ];
+
+  const processSteps = [
+    {
+      number: 1,
+      title: "Submit Your Information",
+      description: "Fill out our quick and easy form with your basic details. It only takes a few minutes and there's no obligation. Your information is kept confidential and secure.",
+      animation: step1Animation
+    },
+    {
+      number: 2,
+      title: "Free Case Review",
+      description: "Our experienced attorneys will review your information and determine if you have a valid privacy violation claim. We'll contact you to discuss your case and answer any questions.",
+      animation: step2Animation
+    },
+    {
+      number: 3,
+      title: "Get Compensated",
+      description: "If you qualify, we'll fight to get you the compensation you deserve. You pay nothing unless we win—our attorneys work on a contingency fee basis.",
+      animation: step3Animation
+    }
+  ];
+
+  return (
+    <div className={styles.landingPage}>
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <div className={styles.heroBackground}>
+          <div className={styles.heroOverlay}></div>
+        </div>
+        <div className={`container ${styles.heroContent}`}>
+          <div className={styles.heroGrid}>
+            <div className={styles.heroText}>
+              <div className={styles.badge}>
+                <ShieldAlert size={16} />
+                <span>Privacy Violation Alert</span>
+              </div>
+              <h1 className={styles.heroTitle}>
+                Used American Home Shield's Website?
+                <span className={styles.highlight}>Your Data May Have Been Secretly Tracked.</span>
+              </h1>
+              <p className={styles.heroSubtitle}>
+                American Home Shield, one of the nation's largest home warranty providers, may have embedded hidden tracking technology
+                on their website to monitor your online activity—including your clicks,
+                browsing behavior, and personal information—without your knowledge or consent.
+              </p>
+              <div className={styles.alertBox}>
+                <AlertTriangle className={styles.alertIcon} />
+                <p>
+                  <strong>You may be entitled to compensation</strong> if you visited
+                  ahs.com in the past 24 months.
+                </p>
+              </div>
+              <div className={styles.heroCtas}>
+                <Link href="/american-home-shield-privacy-torts/qualify" className={styles.primaryCta}>
+                  <span>Check Your Eligibility Now</span>
+                  <ArrowRight size={20} />
+                </Link>
+                <a href="tel:8336574812" className={styles.secondaryCta}>
+                  <Phone size={20} />
+                  <span>833-657-4812</span>
+                </a>
+              </div>
+              <div className={styles.trustIndicators}>
+                <div className={styles.trustItem}>
+                  <CheckCircle size={18} className={styles.trustIcon} />
+                  <span>No Upfront Cost</span>
+                </div>
+                <div className={styles.trustItem}>
+                  <CheckCircle size={18} className={styles.trustIcon} />
+                  <span>Free Case Review</span>
+                </div>
+                <div className={styles.trustItem}>
+                  <CheckCircle size={18} className={styles.trustIcon} />
+                  <span>Confidential</span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.heroFormWrapper} id="check-eligibility">
+              <div className={styles.formCard}>
+                <UrgencyBanner />
+                <div className={styles.formHeader}>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>{formStep < 2 ? "Check Your Eligibility" : "Almost Done!"}</h3>
+                  <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3 - Enter your contact info"}</p>
+                </div>
+
+                {disqualified ? (
+                  <div className={styles.disqualifiedBox}>
+                    <X size={24} className={styles.disqualifiedIcon} />
+                    <p>Based on your answers, you may not qualify for this case.</p>
+                    <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
+                  </div>
+                ) : formStep === 0 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step1Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, true)}>
+                            <Check size={16} /> Yes
+                          </button>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, false)}>
+                            <X size={16} /> No
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <button type="button" className={styles.submitButton} onClick={goToNextFormStep} disabled={!step1Answered}>
+                      Continue
+                      <ArrowRight size={20} />
+                    </button>
+                  </div>
+                ) : formStep === 1 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step2Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 3}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, true)}>
+                            <Check size={16} /> Yes
+                          </button>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, false)}>
+                            <X size={16} /> No
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={goToPrevFormStep}>
+                        <ArrowLeft size={16} /> Back
+                      </button>
+                      <button type="button" className={styles.submitButton} onClick={goToNextFormStep} disabled={!step2Answered}>
+                        Continue
+                        <ArrowRight size={20} />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleSubmit} className={styles.contactForm}>
+                    <div className={styles.qualifiedBadge}>
+                      <Check size={16} /> You Qualify!
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input type="email" name="email" placeholder="Email used with American Home Shield" value={contactInfo.email} onChange={handleContactChange} required />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input type="text" name="name" placeholder="Full Name" value={contactInfo.name} onChange={handleContactChange} required />
+                    </div>
+                    <div className={styles.inputGroup}>
+                      <input type="tel" name="phone" placeholder="Phone Number" value={contactInfo.phone} onChange={handleContactChange} required />
+                    </div>
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={() => setFormStep(0)}>
+                        <ArrowLeft size={16} /> Back
+                      </button>
+                      <button type="submit" className={styles.submitButton} disabled={!contactComplete}>
+                        Submit
+                        <ArrowRight size={20} />
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* What Happened Section */}
+      <section className={styles.problemSection}>
+        <div className="container">
+          <div className={styles.problemHeader}>
+            <h2 className={styles.sectionTitleCenter}>
+              What <span className={styles.highlightBg}>Happened?</span>
+            </h2>
+            <p className={styles.sectionSubtitle}>
+              When you visited American Home Shield's website to research home warranties, request a quote, or file a service request, hidden tracking technology may have been secretly monitoring your every move. This surveillance software—often called "session replay" or "pixel tracking"—records detailed information about your browsing session, including mouse movements, clicks, scrolls, keystrokes, and every page you viewed. All of this happened without your knowledge or meaningful consent, potentially violating your privacy rights under state and federal law.
+            </p>
+          </div>
+          <div className={styles.issuesGrid}>
+            {trackingIssues.map((issue, index) => (
+              <div key={index} className={styles.issueCard}>
+                <div className={styles.issueIconWrapper}>
+                  {issue.icon}
+                </div>
+                <h3>{issue.title}</h3>
+                <p>{issue.description}</p>
+              </div>
+            ))}
+          </div>
+          <div className={styles.violationBox}>
+            <div className={styles.violationContent}>
+              <h3>This May Violate Your Privacy Rights</h3>
+              <p>
+                When companies secretly track your online activity without proper disclosure
+                or consent, they may be violating state and federal laws including:
+              </p>
+              <ul>
+                <li>California Invasion of Privacy Act (CIPA)</li>
+                <li>Florida Security of Communications Act</li>
+                <li>Federal Wiretap Act</li>
+                <li>State Consumer Protection Laws</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Process Section */}
+      <section className={styles.stepsSection}>
+        <div className="container">
+          <div className={styles.stepsGrid}>
+            <div className={styles.stepsLeftColumn}>
+              <h2 className={styles.stepsTitle}>How It Works</h2>
+              <h3 className={styles.stepsSubtitle}>No Fee<span className={styles.noFeeHighlight}> Unless We Win</span></h3>
+              <p className={styles.stepsDescription}>
+                Getting the compensation you deserve is simple and straightforward. Our experienced privacy attorneys handle everything—from investigating the tracking practices to building your case and fighting for maximum recovery.
+              </p>
+              <p className={styles.stepsDescription2}>
+                There's no cost to get started and you won't pay a dime unless we win your case. We work on a contingency fee basis, which means our interests are aligned with yours. Simply fill out the form, let us review your eligibility, and we'll take it from there.
+              </p>
+              <Link href="/american-home-shield-privacy-torts/qualify" className={styles.stepsButton}>
+                Check Your Eligibility
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+            <div className={styles.stepsRightColumn}>
+              <div className={styles.carouselWrapper}>
+                <button className={`${styles.navButton} ${styles.prevButton}`} onClick={() => emblaApi && emblaApi.scrollPrev()}>&#8249;</button>
+                <div className={styles.carousel} ref={emblaRef}>
+                  <div className={styles.emblaContainer}>
+                    {processSteps.map((step) => (
+                      <div key={step.number} className={styles.emblaSlide}>
+                        <div className={styles.stepBox}>
+                          <Lottie animationData={step.animation} loop className={styles.lottieAnimation} />
+                          <h4 className={styles.stepBoxTitle}>Step {step.number}: {step.title}</h4>
+                          <p className={styles.stepBoxDescription}>{step.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <button className={`${styles.navButton} ${styles.nextButton}`} onClick={() => emblaApi && emblaApi.scrollNext()}>&#8250;</button>
+              </div>
+              <div className={styles.progressBarWrapper}>
+                <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Eligibility Section */}
+      <section className={styles.eligibilitySection}>
+        <div className="container">
+          <div className={styles.eligibilityGrid}>
+            <div className={styles.eligibilityContent}>
+              <h2 className={styles.sectionTitle}>
+                Are You <span className={styles.highlightBg}>Eligible?</span>
+              </h2>
+              <p className={styles.eligibilityText}>
+                You may qualify for this privacy case if:
+              </p>
+              <ul className={styles.eligibilityList}>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>You visited or used American Home Shield's website (ahs.com)</span>
+                </li>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>You created an account, purchased a warranty, or submitted personal information on their website</span>
+                </li>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>Your visit occurred within the past 24 months</span>
+                </li>
+                <li>
+                  <CheckCircle className={styles.checkIcon} />
+                  <span>You are a resident of the United States</span>
+                </li>
+              </ul>
+              <Link href="/american-home-shield-privacy-torts/qualify" className={styles.eligibilityCta}>
+                Check Your Eligibility Now
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+            <div className={styles.eligibilityFormWrapper}>
+              <div className={styles.formCard}>
+                <div className={styles.formHeader}>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>Check Your Eligibility</h3>
+                  <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3"}</p>
+                </div>
+                {disqualified ? (
+                  <div className={styles.disqualifiedBox}>
+                    <X size={24} className={styles.disqualifiedIcon} />
+                    <p>Based on your answers, you may not qualify for this case.</p>
+                    <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
+                  </div>
+                ) : formStep === 0 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step1Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, true)}><Check size={16} /> Yes</button>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, false)}><X size={16} /> No</button>
+                        </div>
+                      </div>
+                    ))}
+                    <button type="button" className={styles.submitButton} onClick={goToNextFormStep} disabled={!step1Answered}>Continue<ArrowRight size={20} /></button>
+                  </div>
+                ) : formStep === 1 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step2Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 3}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, true)}><Check size={16} /> Yes</button>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, false)}><X size={16} /> No</button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={goToPrevFormStep}><ArrowLeft size={16} /> Back</button>
+                      <button type="button" className={styles.submitButton} onClick={goToNextFormStep} disabled={!step2Answered}>Continue<ArrowRight size={20} /></button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.eligibilityForm}>
+                    <div className={styles.qualifiedBadge}><Check size={16} /> You Qualify!</div>
+                    <Link href="/american-home-shield-privacy-torts/qualify" className={styles.submitButton}>Complete Your Claim<ArrowRight size={20} /></Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className={styles.faqSection}>
+        <div className="container">
+          <div className={styles.faqGrid}>
+            <div className={styles.faqLeftColumn}>
+              <h2 className={styles.sectionTitle}>
+                Frequently Asked <span className={styles.highlightBg}>Questions</span>
+              </h2>
+              <div className={styles.faqContainer}>
+                {faqs.map((faq, index) => (
+                  <div key={index} className={`${styles.faqItem} ${activeAccordion === index ? styles.active : ''}`}>
+                    <button className={styles.faqQuestion} onClick={() => setActiveAccordion(activeAccordion === index ? null : index)}>
+                      <span>{faq.question}</span>
+                      <ChevronDown className={styles.faqChevron} />
+                    </button>
+                    <div className={styles.faqAnswer}>
+                      <p>{faq.answer}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Link href="/american-home-shield-privacy-torts/qualify" className={styles.eligibilityCta}>
+                Check Your Eligibility Now
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+            <div className={styles.faqRightColumn}>
+              <div className={styles.formCard}>
+                <div className={styles.formHeader}>
+                  <Lock className={styles.formLockIcon} />
+                  <h3>Check Your Eligibility</h3>
+                  <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3"}</p>
+                </div>
+                {disqualified ? (
+                  <div className={styles.disqualifiedBox}>
+                    <X size={24} className={styles.disqualifiedIcon} />
+                    <p>Based on your answers, you may not qualify for this case.</p>
+                    <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
+                  </div>
+                ) : formStep === 0 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step1Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 1}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, true)}><Check size={16} /> Yes</button>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, false)}><X size={16} /> No</button>
+                        </div>
+                      </div>
+                    ))}
+                    <button type="button" className={styles.submitButton} onClick={goToNextFormStep} disabled={!step1Answered}>Continue<ArrowRight size={20} /></button>
+                  </div>
+                ) : formStep === 1 ? (
+                  <div className={styles.eligibilityForm}>
+                    {step2Questions.map((q, index) => (
+                      <div key={q.id} className={styles.questionRow}>
+                        <p className={styles.questionLabel}>{index + 3}. {q.question}</p>
+                        <div className={styles.yesNoGroup}>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === true ? styles.yesSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, true)}><Check size={16} /> Yes</button>
+                          <button type="button" className={`${styles.yesNoBtn} ${eligibilityAnswers[q.id] === false ? styles.noSelected : ''}`} onClick={() => handleEligibilityAnswer(q.id, false)}><X size={16} /> No</button>
+                        </div>
+                      </div>
+                    ))}
+                    <div className={styles.formButtons}>
+                      <button type="button" className={styles.backBtn} onClick={goToPrevFormStep}><ArrowLeft size={16} /> Back</button>
+                      <button type="button" className={styles.submitButton} onClick={goToNextFormStep} disabled={!step2Answered}>Continue<ArrowRight size={20} /></button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className={styles.eligibilityForm}>
+                    <div className={styles.qualifiedBadge}><Check size={16} /> You Qualify!</div>
+                    <Link href="/american-home-shield-privacy-torts/qualify" className={styles.submitButton}>Complete Your Claim<ArrowRight size={20} /></Link>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className={styles.ctaSection}>
+        <div className="container">
+          <div className={styles.ctaContent}>
+            <ShieldAlert className={styles.ctaIcon} />
+            <h2>Your Privacy Matters. Take Action Today.</h2>
+            <p>
+              Don't let companies get away with secretly tracking your online activity.
+              Check your eligibility now—it's free, fast, and confidential.
+            </p>
+            <div className={styles.ctaButtons}>
+              <Link href="/american-home-shield-privacy-torts/qualify" className={styles.ctaPrimary}>
+                <span>Check Eligibility Now</span>
+                <ArrowRight size={20} />
+              </Link>
+              <a href="tel:8336574812" className={styles.ctaSecondary}>
+                <Phone size={20} />
+                <span>Call 833-657-4812</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
