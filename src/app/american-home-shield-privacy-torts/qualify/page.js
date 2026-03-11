@@ -20,8 +20,8 @@ function generateEventId() {
 
 const eligibilityQuestions = [
   { id: "age", question: "Are you 18 years of age or older?", required: true },
+  { id: "florida", question: "Are you a current resident of the state of Florida?", required: true },
   { id: "visited", question: "Did you visit or use American Home Shield's website (ahs.com) within the last 2 years?", required: true },
-  { id: "us", question: "Were you located in the United States when you visited American Home Shield's website?", required: true },
   { id: "submitted", question: "Did you create an account, purchase a warranty, or submit personal information on American Home Shield's website?", required: true }
 ];
 
@@ -139,6 +139,7 @@ export default function QualifyPage() {
           </nav>
         </aside>
         <main className={styles.main}>
+          <UrgencyBanner small />
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
               {currentStep === 0 && (
@@ -217,7 +218,6 @@ export default function QualifyPage() {
               )}
             </div>
           </div>
-          <UrgencyBanner small />
         </main>
       </div>
     </div>

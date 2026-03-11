@@ -49,8 +49,8 @@ import step3Animation from "../../../public/lottie/step3.json";
 
 const eligibilityQuestions = [
   { id: "age", question: "Are you 18 years of age or older?" },
+  { id: "florida", question: "Are you a current resident of the state of Florida?" },
   { id: "visited", question: "Did you visit or use American Home Shield's website (ahs.com) within the last 2 years?" },
-  { id: "us", question: "Were you located in the United States when you visited American Home Shield's website?" },
   { id: "submitted", question: "Did you create an account, purchase a warranty, or submit personal information on American Home Shield's website?" }
 ];
 
