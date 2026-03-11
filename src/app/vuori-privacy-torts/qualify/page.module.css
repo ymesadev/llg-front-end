@@ -113,8 +113,9 @@
 .main {
   flex: 1;
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   padding: 6rem 2rem 3rem 2rem;
   overflow-y: auto;
 }

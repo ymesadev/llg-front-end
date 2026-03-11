@@ -10,14 +10,46 @@ import AIChatBot from "./components/AIChatBot/AIChatBot";
 
 
 export const metadata = {
-  title: "Louis Law Group",
-  description: "Trusted legal services",
+  title: "Louis Law Group | Florida Property Damage & SSDI Attorneys",
+  description: "Louis Law Group helps Florida residents fight denied insurance claims and win SSDI/SSI benefits. Free consultation — no fees unless we win.",
+};
+
+const legalServiceSchema = {
+  "@context": "https://schema.org",
+  "@type": "LegalService",
+  "name": "Louis Law Group",
+  "url": "https://www.louislawgroup.com",
+  "logo": "https://www.louislawgroup.com/logo.png",
+  "telephone": "+18336574812",
+  "priceRange": "Free consultation — contingency fee",
+  "description": "Louis Law Group is a Florida law firm specializing in Social Security Disability (SSDI/SSI) and property damage insurance claims. No fees unless we win.",
+  "areaServed": { "@type": "State", "name": "Florida" },
+  "address": { "@type": "PostalAddress", "addressRegion": "FL", "addressCountry": "US" },
+  "openingHours": "Mo-Fr 09:00-17:00",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Legal Services",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Social Security Disability (SSDI/SSI) Representation" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Property Damage Insurance Claims" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Insurance Claim Denials & Appeals" } }
+    ]
+  }
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        {/* Google Fonts — non-blocking with preconnect */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(legalServiceSchema) }}
+        />
       </head>
       <body>
         <ConditionalNavbar />

@@ -61,6 +61,7 @@ async function getBlogPosts(page = 1) {
   const apiUrl = 
     `${strapiURL}/api/articles?` +
     `populate=cover&` +
+    `filters[slug][$notContains]=faq-&` +
     `fields[]=title&fields[]=slug&fields[]=description&` +
     `publicationState=live&` +
     `sort[0]=publishedAt:desc&` +

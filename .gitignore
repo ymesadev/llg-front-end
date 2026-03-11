@@ -36,3 +36,18 @@ public/*
 !src/app/slide-insurance-privacy-torts/**
 !src/app/american-integrity-insurance-privacy-torts/
 !src/app/american-integrity-insurance-privacy-torts/**
+!src/app/privacy-torts/
+!src/app/privacy-torts/**
+!src/app/abogado-discapacidad-florida/
+!src/app/abogado-discapacidad-florida/**
+!src/app/abogados-florida/
+!src/app/abogados-florida/**
+!src/app/faq/
+!src/app/faq/**
+
+# allow layout/globals/components perf fixes
+!src/app/layout.js
+!src/app/globals.css
+!src/app/components/
+!src/app/components/Navbar/
+!src/app/components/Navbar/Navbar.js

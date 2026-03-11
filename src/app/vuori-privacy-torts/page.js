@@ -254,7 +254,7 @@ export default function VuoriPrivacyLanding() {
               </div>
               <div className={styles.heroCtas}>
                 <Link href="/vuori-privacy-torts/qualify" className={styles.primaryCta}>
-                  <span>Check Your Eligibility Now</span>
+                  <span>Check Eligibility</span>
                   <ArrowRight size={20} />
                 </Link>
                 <a href="tel:8336574812" className={styles.secondaryCta}>
@@ -282,7 +282,7 @@ export default function VuoriPrivacyLanding() {
                 <UrgencyBanner />
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
-                  <h3>{formStep < 2 ? "Check Your Eligibility" : "Almost Done!"}</h3>
+                  <h3>{formStep < 2 ? "Check Eligibility" : "Almost Done!"}</h3>
                   <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3 - Enter your contact info"}</p>
                 </div>
 
@@ -470,7 +470,7 @@ export default function VuoriPrivacyLanding() {
                 There's no cost to get started and you won't pay a dime unless we win your case. We work on a contingency fee basis, which means our interests are aligned with yours. Simply fill out the form, let us review your eligibility, and we'll take it from there.
               </p>
               <Link href="/vuori-privacy-torts/qualify" className={styles.stepsButton}>
-                Check Your Eligibility
+                Check Eligibility
                 <ArrowRight size={20} />
               </Link>
             </div>
@@ -555,7 +555,7 @@ export default function VuoriPrivacyLanding() {
                 </li>
               </ul>
               <Link href="/vuori-privacy-torts/qualify" className={styles.eligibilityCta}>
-                Check Your Eligibility Now
+                Check Eligibility
                 <ArrowRight size={20} />
               </Link>
             </div>
@@ -563,7 +563,7 @@ export default function VuoriPrivacyLanding() {
               <div className={styles.formCard}>
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
-                  <h3>Check Your Eligibility</h3>
+                  <h3>Check Eligibility</h3>
                   <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3"}</p>
                 </div>
                 {disqualified ? (
@@ -649,7 +649,7 @@ export default function VuoriPrivacyLanding() {
                       <Check size={16} /> You Qualify!
                     </div>
                     <Link href="/vuori-privacy-torts/qualify" className={styles.submitButton}>
-                      Complete Your Claim
+                      Check Eligibility
                       <ArrowRight size={20} />
                     </Link>
                   </div>
@@ -688,7 +688,7 @@ export default function VuoriPrivacyLanding() {
                 ))}
               </div>
               <Link href="/vuori-privacy-torts/qualify" className={styles.eligibilityCta}>
-                Check Your Eligibility Now
+                Check Eligibility
                 <ArrowRight size={20} />
               </Link>
             </div>
@@ -696,7 +696,7 @@ export default function VuoriPrivacyLanding() {
               <div className={styles.formCard}>
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
-                  <h3>Check Your Eligibility</h3>
+                  <h3>Check Eligibility</h3>
                   <p>{formStep === 0 ? "Step 1 of 3" : formStep === 1 ? "Step 2 of 3" : "Step 3 of 3"}</p>
                 </div>
                 {disqualified ? (
@@ -782,7 +782,7 @@ export default function VuoriPrivacyLanding() {
                       <Check size={16} /> You Qualify!
                     </div>
                     <Link href="/vuori-privacy-torts/qualify" className={styles.submitButton}>
-                      Complete Your Claim
+                      Check Eligibility
                       <ArrowRight size={20} />
                     </Link>
                   </div>
@@ -805,7 +805,7 @@ export default function VuoriPrivacyLanding() {
             </p>
             <div className={styles.ctaButtons}>
               <Link href="/vuori-privacy-torts/qualify" className={styles.ctaPrimary}>
-                <span>Check Eligibility Now</span>
+                <span>Check Eligibility</span>
                 <ArrowRight size={20} />
               </Link>
               <a href="tel:8336574812" className={styles.ctaSecondary}>

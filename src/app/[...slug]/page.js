@@ -22,13 +22,8 @@ import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA
 
 function getArticleType(slug) {
   const s = (slug || "").toLowerCase();
-  if (
-    s.includes("ssdi") ||
-    s.includes("social-security") ||
-    s.includes("social security") ||
-    s.includes("disability-benefit") ||
-    s.includes("supplemental-security")
-  ) {
+  const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-claim","disability-appeal","disability-insurance","sga","ssdi-pay","ssdi-payment"];
+  if (ssdiKeywords.some(k => s.includes(k))) {
     return "ssdi";
   }
   return "property-damage";
@@ -190,6 +185,11 @@ export async function generateMetadata({ params }) {
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
 
+  // Canonical: strip numbered suffix (e.g. -5, -12) so duplicates point to base slug
+  const canonicalMatch = slug.match(/^(.+)-(\d+)$/);
+  const canonicalSlug = canonicalMatch ? canonicalMatch[1] : slug;
+  const canonicalUrl = `${siteUrl}/${canonicalSlug}`;
+
   try {
     const res = await fetch(
       `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description&populate[0]=cover`,
@@ -209,6 +209,7 @@ export async function generateMetadata({ params }) {
           return {
             title: `${article.title} | Louis Law Group`,
             description,
+            alternates: { canonical: canonicalUrl },
             openGraph: {
               title: `${article.title} | Louis Law Group`,
               description,
@@ -627,6 +628,10 @@ export default async function Page(props) {
     return null;
   };
 
+  // Compute article type early — used in schema injection + content rendering
+  const articleType = getArticleType(slug);
+  const isSSAFormPage = /^ssa-\d+/.test(slug) || slug === 'request-for-reconsideration-form-ssa-561';
+
   // Debug: log keys so we can see what's coming from Strapi in server logs
   console.log("🔎 Page keys:", Object.keys(page || {}));
   if (typeof window !== 'undefined') {
@@ -693,43 +698,130 @@ export default async function Page(props) {
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
                 "@context": "https://schema.org",
-                "@type": "Article",
-                "headline": page.title,
-                "datePublished": page.createdAt,
-                "dateModified": page.updatedAt || page.createdAt,
-                "image": page.cover?.url
-                  ? `https://login.louislawgroup.com${page.cover.url}`
-                  : "https://www.louislawgroup.com/og-default.jpg",
-                "author": {
-                  "@type": "Organization",
-                  "name": "Louis Law Group",
-                  "url": "https://www.louislawgroup.com"
-                },
-                "publisher": {
-                  "@type": "LegalService",
-                  "name": "Louis Law Group",
-                  "url": "https://www.louislawgroup.com",
-                  "logo": {
-                    "@type": "ImageObject",
-                    "url": "https://www.louislawgroup.com/logo.png"
-                  }
-                },
-                "mainEntityOfPage": {
-                  "@type": "WebPage",
-                  "@id": `https://www.louislawgroup.com/${page.slug}`
-                }
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.louislawgroup.com" },
+                  { "@type": "ListItem", "position": 2, "name": "Resources", "item": "https://www.louislawgroup.com/resources" },
+                  { "@type": "ListItem", "position": 3, "name": page.title, "item": `https://www.louislawgroup.com/${slug}` }
+                ]
               })
             }}
           />
-          {(() => {
-            const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
-            return faqSchema ? (
+          {slug.startsWith("faq-") ? (
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": [{
+                    "@type": "Question",
+                    "name": page.title,
+                    "acceptedAnswer": {
+                      "@type": "Answer",
+                      "text": page.description || ""
+                    }
+                  }]
+                })
+              }}
+            />
+          ) : (
+            <>
               <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+                dangerouslySetInnerHTML={{
+                  __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "Article",
+                    "headline": page.title,
+                    "datePublished": page.createdAt,
+                    "dateModified": page.updatedAt || page.createdAt,
+                    "image": page.cover?.url
+                      ? `https://login.louislawgroup.com${page.cover.url}`
+                      : "https://www.louislawgroup.com/og-default.jpg",
+                    "author": {
+                      "@type": "Organization",
+                      "name": "Louis Law Group",
+                      "url": "https://www.louislawgroup.com"
+                    },
+                    "publisher": {
+                      "@type": "LegalService",
+                      "name": "Louis Law Group",
+                      "url": "https://www.louislawgroup.com",
+                      "logo": {
+                        "@type": "ImageObject",
+                        "url": "https://www.louislawgroup.com/logo.png"
+                      }
+                    },
+                    "mainEntityOfPage": {
+                      "@type": "WebPage",
+                      "@id": `https://www.louislawgroup.com/${page.slug}`
+                    }
+                  })
+                }}
               />
-            ) : null;
-          })()}
+              {/* HowTo schema for SSA form pages (triggers step-by-step rich results) */}
+              {isSSAFormPage && (
+                <script
+                  type="application/ld+json"
+                  dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                      "@context": "https://schema.org",
+                      "@type": "HowTo",
+                      "name": page.title,
+                      "description": page.description || `Step-by-step guide for ${page.title}`,
+                      "step": [
+                        { "@type": "HowToStep", "position": 1, "name": "Download the form", "text": "Use the download button on this page to get the official form directly from SSA.gov." },
+                        { "@type": "HowToStep", "position": 2, "name": "Complete all sections", "text": "Fill in every required field carefully. Incomplete forms are a common cause of delays in disability cases." },
+                        { "@type": "HowToStep", "position": 3, "name": "Attach supporting documents", "text": "Include medical records, doctor statements, and any other evidence supporting your disability claim." },
+                        { "@type": "HowToStep", "position": 4, "name": "Submit to the SSA", "text": "Deliver your completed form to a local Social Security office, mail it, or submit online at my.ssa.gov." },
+                        { "@type": "HowToStep", "position": 5, "name": "Get legal help if denied", "text": "If your claim is denied, Louis Law Group can represent you on contingency at no upfront cost. Call (833) 657-4812." }
+                      ]
+                    })
+                  }}
+                />
+              )}
+              {/* FAQPage schema — extracted from content or static SSDI fallback */}
+              {(() => {
+                const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
+                const ssdiStaticFaq = !faqSchema && articleType === "ssdi" ? {
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": [
+                    { "@type": "Question", "name": "How long does it take to get approved for SSDI?", "acceptedAnswer": { "@type": "Answer", "text": "Most initial SSDI applications take 3–6 months for a decision. Appeals can take 12–24 months. Working with a disability attorney significantly improves your approval odds at every stage." }},
+                    { "@type": "Question", "name": "What should I do if my SSDI claim is denied?", "acceptedAnswer": { "@type": "Answer", "text": "About 67% of initial SSDI claims are denied. You have 60 days to file a Request for Reconsideration. If denied again, request an ALJ hearing — this is where most claims are ultimately approved. A disability attorney can represent you at no upfront cost." }},
+                    { "@type": "Question", "name": "Does Louis Law Group handle SSDI cases?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency — you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }}
+                  ]
+                } : null;
+                const schema = faqSchema || ssdiStaticFaq;
+                return schema ? (
+                  <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+                  />
+                ) : null;
+              })()}
+            </>
+          )}
+          {slug.startsWith("faq-") && page.description && (
+            <section className={styles.blogPost}>
+              <div className="container blogContainer">
+                <nav aria-label="Breadcrumb" style={{ marginBottom: "1rem", fontSize: "0.9rem" }}>
+                  <Link href="/">Home</Link> &rsaquo; <Link href="/faq">FAQ</Link> &rsaquo; <span>{page.title}</span>
+                </nav>
+                <h1 className={styles.blogTitle}>{page.title}</h1>
+                <UrgencyBanner />
+                <div className={styles.blogContent}>
+                  <div className={styles.blogText}>
+                    <p>{page.description}</p>
+                    <p>Have questions about your legal rights? <Link href="/#contact">Contact Louis Law Group</Link> for a free case evaluation.</p>
+                  </div>
+                </div>
+                <ArticleButtonsRow buttons={getArticleButtons(page)} />
+              </div>
+            </section>
+          )}
+          {!slug.startsWith("faq-") && (
           <section className={styles.blogPost}>
             <div className="container blogContainer">
               <h1 className={styles.blogTitle}>{page.title}</h1>
@@ -798,12 +890,7 @@ export default async function Page(props) {
               )}
               <div className={styles.blogContent}>
                 {(() => {
-                  const articleType = (() => {
-                    const s = (page.slug || "").toLowerCase();
-                    const t = (page.title || "").toLowerCase();
-                    if (s.includes("ssdi") || s.includes("social-security") || s.includes("social security") || t.includes("ssdi") || t.includes("social security") || s.includes("disability-benefit")) return "ssdi";
-                    return "property-damage";
-                  })();
+                  // articleType computed above via getArticleType(slug)
                   const midpoint = Math.floor((page.blocks || []).length / 2);
                   return (page.blocks || []).map((block, index) => (
                     <div key={index}>
@@ -830,6 +917,51 @@ export default async function Page(props) {
                   ));
                 })()}
               </div>
+              {/* SSDI: Related Forms box — contextual internal links to SSA form pages */}
+              {articleType === "ssdi" && !isSSAFormPage && (
+                <div style={{background:"#f0f7ff",borderLeft:"4px solid #1a56db",padding:"20px 24px",borderRadius:"4px",margin:"32px 0"}}>
+                  <h3 style={{marginTop:0,color:"#1a56db"}}>SSDI Forms You May Need</h3>
+                  <ul>
+                    <li><a href="/request-for-reconsideration-form-ssa-561">SSA-561 — Request for Reconsideration</a></li>
+                    <li><a href="/ssa-3373-function-report-adult">SSA-3373 — Function Report Adult</a></li>
+                    <li><a href="/ssa-3441-disability-report-appeal">SSA-3441 — Disability Report Appeal</a></li>
+                    <li><a href="/ssa-3368-disability-report-adult">SSA-3368 — Disability Report Adult</a></li>
+                    <li><a href="/ssa-1696-appointment-of-representative">SSA-1696 — Appointment of Representative</a></li>
+                    <li><a href="/ssa-827-authorization-to-disclose-information">SSA-827 — Authorization to Disclose</a></li>
+                  </ul>
+                </div>
+              )}
+              {/* Related Articles — internal linking for SEO */}
+              {articleType === "ssdi" && (
+                <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
+                  <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>Related SSDI Resources</h3>
+                  <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
+                    <li><a href="/request-for-reconsideration-form-ssa-561">SSA-561: How to File a Request for Reconsideration</a></li>
+                    <li><a href="/ssa-561-request-for-reconsideration-california">SSA-561 Reconsideration Guide for California</a></li>
+                    <li><a href="/ssi-appeal-success-tips-california">10 Steps to Win Your SSI Appeal in California</a></li>
+                    <li><a href="/average-ssdi-payment-california-2026">Average SSDI Payment in California 2026</a></li>
+                    <li><a href="/how-much-does-ssdi-pay-in-florida-2026">How Much Does SSDI Pay in Florida 2026?</a></li>
+                    <li><a href="/ssdi-benefit-calculator-ohio-2026">SSDI Benefit Calculator for Ohio 2026</a></li>
+                  </ul>
+                </div>
+              )}
+              {articleType === "property-damage" && (
+                <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
+                  <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>Related Insurance Claim Resources</h3>
+                  <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
+                    <li><a href="/insurance-claim-denied-fl">Insurance Claim Denied in Florida? Your Legal Rights</a></li>
+                    <li><a href="/how-to-file-a-claim-with-castle-key-indemnity-company">How to File a Claim with Castle Key Indemnity</a></li>
+                    <li><a href="/ten-tips-handling-allstate-claim-denials">10 Tips for Handling Allstate Claim Denials</a></li>
+                    <li><a href="/ten-tips-handling-usaa-insurance-claim-denials">10 Tips for Handling USAA Claim Denials</a></li>
+                    <li><a href="/tips-handling-claim-denials-progressive-select-insurance">Progressive Select Claim Denied? 10 Ways to Win</a></li>
+                    <li><a href="/tower-hill-insurance-florida">Tower Hill Insurance Denied Your Florida Claim?</a></li>
+                    <li><a href="/tower-hill-insurance-exchange-in-florida">Tower Hill Insurance Exchange: Claims, Coverage & 2026 Status</a></li>
+                    <li><a href="/home-warranty-claim-denied-texas">Can You Sue a Home Warranty Company in Texas?</a></li>
+                    <li><a href="/underpaid-insurance-claim-florida">Underpaid Insurance Claim in Florida? How to Fight Back</a></li>
+                    <li><a href="/insurance-company-delayed-my-claim-florida">Insurance Company Delaying Your Florida Claim?</a></li>
+                  </ul>
+                </div>
+              )}
               {/* Article repeatable buttons (end of article) */}
               {(() => {
                 const _btns = getArticleButtons(page);
@@ -838,6 +970,7 @@ export default async function Page(props) {
               })()}
             </div>
           </section>
+          )}
           <Steps />
           <Contact />
         </>

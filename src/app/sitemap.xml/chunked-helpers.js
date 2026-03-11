@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export const SITE  = (process.env.NEXT_PUBLIC_SITE_URL || 'https://louislawgroup.com').replace(/\/+$/,'');
+export const SITE  = 'https://www.louislawgroup.com';
 const STRAPI = (process.env.NEXT_PUBLIC_STRAPI_API_URL || process.env.STRAPI_URL || 'https://login.louislawgroup.com').replace(/\/+$/,'');
 const TOKEN = process.env.STRAPI_API_TOKEN || '';
 
@@ -159,10 +159,12 @@ export async function collectAllUrls() {
   // also include root
   all.unshift({ loc: `${SITE}/`, lastmod: null });
 
-  // add dynamically discovered static pages
+  // add dynamically discovered static pages (with today's date for /faq/ so Google sees fresh content)
   const staticPages = getStaticPages();
+  const TODAY = new Date().toISOString();
   for (const pagePath of staticPages) {
-    all.push({ loc: `${SITE}${pagePath}`, lastmod: null });
+    const lastmod = pagePath === '/faq' ? TODAY : null;
+    all.push({ loc: `${SITE}${pagePath}`, lastmod });
   }
 
   return all;
