@@ -1,80 +1,74 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
+import FAQAccordion from "./FAQAccordion";
+
+// ISR: regenerate every hour
+export const revalidate = 3600;
+
+export const metadata = {
+  title: "Insurance & SSDI Legal FAQ | Louis Law Group",
+  description: "Answers to common questions about property damage claims, SSDI, insurance claim process, ACV vs RCV, EUO, recorded statements, and Florida deadlines.",
+  alternates: { canonical: "https://www.louislawgroup.com/faq" },
+};
 
 const STRAPI = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
 
-const CATEGORIES = {
-  ssdi: "Social Security Disability (SSDI/SSI)",
-  "property-damage": "Property Damage Claims",
-  "water-damage": "Water Damage & Restoration",
-  mold: "Mold Damage",
-  "insurance-litigation": "Insurance Litigation",
-  statutes: "Florida Statutes & Deadlines",
-  general: "General Legal Questions",
-};
-
 function getCategoryFromSlug(slug) {
-  for (const key of Object.keys(CATEGORIES)) {
+  const KEYS = ["ssdi", "property-damage", "water-damage", "mold", "insurance-litigation", "statutes"];
+  for (const key of KEYS) {
     if (slug.includes(`faq-${key}`)) return key;
   }
   return "general";
 }
 
-export default function FAQPage() {
-  const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [openIndex, setOpenIndex] = useState(null);
-  const [activeCategory, setActiveCategory] = useState("all");
-  const [lastUpdated, setLastUpdated] = useState(null);
+async function fetchFAQs() {
+  try {
+    const res = await fetch(
+      `${STRAPI}/api/articles?filters[slug][$startsWith]=faq-&pagination[limit]=500&sort=updatedAt:desc&fields[0]=title&fields[1]=slug&fields[2]=description&fields[3]=updatedAt`,
+      { next: { revalidate: 3600 } }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data?.data || []).map((item) => {
+      const attrs = item?.attributes ?? item ?? {};
+      return {
+        id: item.id,
+        question: attrs.title || "",
+        answer: attrs.description || "",
+        slug: attrs.slug || "",
+        category: getCategoryFromSlug(attrs.slug || ""),
+        updatedAt: attrs.updatedAt || "",
+      };
+    }).filter(f => f.question && f.answer);
+  } catch {
+    return [];
+  }
+}
 
-  useEffect(() => {
-    async function fetchFAQs() {
-      try {
-        const res = await fetch(
-          `${STRAPI}/api/articles?filters[slug][$startsWith]=faq-&pagination[limit]=500&sort=updatedAt:desc&fields[0]=title&fields[1]=slug&fields[2]=description&fields[3]=updatedAt`,
-          { next: { revalidate: 3600 } }
-        );
-        const data = await res.json();
-        const items = (data?.data || []).map((item) => {
-          const attrs = item?.attributes ?? item ?? {};
-          return {
-            id: item.id,
-            question: attrs.title || "",
-            answer: attrs.description || "",
-            slug: attrs.slug || "",
-            category: getCategoryFromSlug(attrs.slug || ""),
-            updatedAt: attrs.updatedAt || "",
-          };
-        }).filter(f => f.question && f.answer);
+export default async function FAQPage() {
+  const faqs = await fetchFAQs();
+  const lastUpdated = faqs.length > 0
+    ? new Date(faqs[0].updatedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+    : null;
 
-        setFaqs(items);
-        if (items.length > 0) {
-          setLastUpdated(new Date(items[0].updatedAt));
-        }
-      } catch (e) {
-        console.error("FAQ fetch error:", e);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchFAQs();
-  }, []);
-
-  const categories = ["all", ...Object.keys(CATEGORIES).filter(k =>
-    faqs.some(f => f.category === k)
-  )];
-
-  const filtered = activeCategory === "all"
-    ? faqs
-    : faqs.filter(f => f.category === activeCategory);
-
-  const toggle = (i) => setOpenIndex(openIndex === i ? null : i);
+  // FAQPage schema — use top 20 for structured data (keeps payload reasonable)
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.slice(0, 20).map(f => ({
+      "@type": "Question",
+      "name": f.question,
+      "acceptedAnswer": { "@type": "Answer", "text": f.answer }
+    }))
+  };
 
   return (
     <main className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+
       {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
@@ -83,15 +77,12 @@ export default function FAQPage() {
             Frequently Asked Legal Questions
           </h1>
           <p className={styles.heroSub}>
-            Answers to common questions about SSDI, property damage, insurance
-            claims, water damage, mold, and Florida statutes. Updated continuously.
+            Answers to common questions about property damage claims, SSDI, insurance
+            claim process, ACV vs RCV, EUO, recorded statements, and Florida deadlines.
+            Updated continuously.
           </p>
           {lastUpdated && (
-            <p className={styles.lastUpdated}>
-              Last updated: {lastUpdated.toLocaleDateString("en-US", {
-                year: "numeric", month: "long", day: "numeric"
-              })}
-            </p>
+            <p className={styles.lastUpdated}>Last updated: {lastUpdated}</p>
           )}
           <Link href="tel:8336574812" className={styles.ctaBtn}>
             Speak with an Attorney — (833) 657-4812
@@ -99,64 +90,8 @@ export default function FAQPage() {
         </div>
       </section>
 
-      {/* Category Filter */}
-      <section className={styles.filterBar}>
-        <div className={styles.filterInner}>
-          {categories.map(cat => (
-            <button
-              key={cat}
-              className={`${styles.filterBtn} ${activeCategory === cat ? styles.filterActive : ""}`}
-              onClick={() => { setActiveCategory(cat); setOpenIndex(null); }}
-            >
-              {cat === "all" ? `All (${faqs.length})` : CATEGORIES[cat] || cat}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ Accordion */}
-      <section className={styles.faqSection}>
-        <div className={styles.faqInner}>
-          {loading && (
-            <div className={styles.loading}>Loading answers...</div>
-          )}
-
-          {!loading && filtered.length === 0 && (
-            <div className={styles.empty}>
-              No FAQs in this category yet. Check back soon.
-            </div>
-          )}
-
-          {!loading && filtered.map((faq, i) => (
-            <div
-              key={faq.id || i}
-              className={`${styles.faqItem} ${openIndex === i ? styles.faqOpen : ""}`}
-            >
-              <button
-                className={styles.faqQuestion}
-                onClick={() => toggle(i)}
-                aria-expanded={openIndex === i}
-              >
-                <span>{faq.question}</span>
-                <span className={styles.faqIcon}>{openIndex === i ? "−" : "+"}</span>
-              </button>
-              {openIndex === i && (
-                <div className={styles.faqAnswer}>
-                  <p>{faq.answer}</p>
-                  <div className={styles.faqCta}>
-                    <Link href="sms:+18336574812" className={styles.faqCtaTextUs}>
-                      💬 Text Us Now
-                    </Link>
-                    <Link href="tel:+18336574812" className={styles.faqCtaCall}>
-                      📞 Call Free
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Client component handles filter + accordion interactivity */}
+      <FAQAccordion faqs={faqs} />
 
       {/* Bottom CTA */}
       <section className={styles.bottomCta}>
