@@ -185,6 +185,11 @@ export async function generateMetadata({ params }) {
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
 
+  // Canonical: strip numbered suffix (e.g. -5, -12) so duplicates point to base slug
+  const canonicalMatch = slug.match(/^(.+)-(\d+)$/);
+  const canonicalSlug = canonicalMatch ? canonicalMatch[1] : slug;
+  const canonicalUrl = `${siteUrl}/${canonicalSlug}`;
+
   try {
     const res = await fetch(
       `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description&populate[0]=cover`,
@@ -204,6 +209,7 @@ export async function generateMetadata({ params }) {
           return {
             title: `${article.title} | Louis Law Group`,
             description,
+            alternates: { canonical: canonicalUrl },
             openGraph: {
               title: `${article.title} | Louis Law Group`,
               description,
@@ -922,6 +928,33 @@ export default async function Page(props) {
                     <li><a href="/ssa-3368-disability-report-adult">SSA-3368 — Disability Report Adult</a></li>
                     <li><a href="/ssa-1696-appointment-of-representative">SSA-1696 — Appointment of Representative</a></li>
                     <li><a href="/ssa-827-authorization-to-disclose-information">SSA-827 — Authorization to Disclose</a></li>
+                  </ul>
+                </div>
+              )}
+              {/* Related Articles — internal linking for SEO */}
+              {articleType === "ssdi" && (
+                <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
+                  <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>Related SSDI Resources</h3>
+                  <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
+                    <li><a href="/request-for-reconsideration-form-ssa-561">SSA-561: How to File a Request for Reconsideration</a></li>
+                    <li><a href="/ssa-561-request-for-reconsideration-california">SSA-561 Reconsideration Guide for California</a></li>
+                    <li><a href="/ssi-appeal-success-tips-california">10 Steps to Win Your SSI Appeal in California</a></li>
+                    <li><a href="/average-ssdi-payment-california-2026">Average SSDI Payment in California 2026</a></li>
+                    <li><a href="/how-much-does-ssdi-pay-in-florida-2026">How Much Does SSDI Pay in Florida 2026?</a></li>
+                    <li><a href="/ssdi-benefit-calculator-ohio-2026">SSDI Benefit Calculator for Ohio 2026</a></li>
+                  </ul>
+                </div>
+              )}
+              {articleType === "property-damage" && (
+                <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
+                  <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>Related Insurance Claim Resources</h3>
+                  <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
+                    <li><a href="/insurance-claim-denied-fl">Insurance Claim Denied in Florida? Your Legal Rights</a></li>
+                    <li><a href="/how-to-file-a-claim-with-castle-key-indemnity-company">How to File a Claim with Castle Key Indemnity</a></li>
+                    <li><a href="/ten-tips-handling-allstate-claim-denials">10 Tips for Handling Allstate Claim Denials</a></li>
+                    <li><a href="/ten-tips-handling-usaa-insurance-claim-denials">10 Tips for Handling USAA Claim Denials</a></li>
+                    <li><a href="/tips-handling-claim-denials-progressive-select-insurance">Progressive Select Claim Denied? 10 Ways to Win</a></li>
+                    <li><a href="/tower-hill-insurance-florida">Tower Hill Insurance Denied Your Florida Claim?</a></li>
                   </ul>
                 </div>
               )}
