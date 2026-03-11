@@ -49,6 +49,14 @@ const cases = [
     badge: null,
     urgent: false,
   },
+  {
+    company: "American Home Shield",
+    slug: "american-home-shield-privacy-torts",
+    description:
+      "American Home Shield may have embedded hidden tracking technology on their website that recorded your clicks, browsing activity, and personal information without your knowledge or consent when you visited ahs.com to get a quote or manage your home warranty.",
+    badge: "⚠️ Statute of Limitations Applies",
+    urgent: true,
+  },
 ];
 
 export default function PrivacyTortsHub() {

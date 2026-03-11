@@ -24,6 +24,11 @@ const caseConfig = {
     companyWebsite: "aii.com",
     localStorageKey: "american-integrity-contact",
   },
+  "american-home-shield-privacy-torts": {
+    companyName: "American Home Shield",
+    companyWebsite: "ahs.com",
+    localStorageKey: "american-home-shield-contact",
+  },
 };
 
 export const DOCUSEAL_TEMPLATE = "https://docuseal.com/d/DJJQhoJGYyp327";
