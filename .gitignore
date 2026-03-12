@@ -14,6 +14,10 @@ public/*
 !src/app/sitemap.xml/
 !src/app/sitemap.xml/route.js
 
+# allow api routes
+!src/app/api/
+!src/app/api/**
+
 # allow config
 !src/config/
 !src/config/**
