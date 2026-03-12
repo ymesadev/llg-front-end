@@ -30,6 +30,69 @@ function getArticleType(slug) {
   return "property-damage";
 }
 
+// US state slug fragments → full names
+const STATE_MAP = {
+  alabama:"Alabama",alaska:"Alaska",arizona:"Arizona",arkansas:"Arkansas",
+  california:"California",colorado:"Colorado",connecticut:"Connecticut",delaware:"Delaware",
+  florida:"Florida",georgia:"Georgia",hawaii:"Hawaii",idaho:"Idaho",
+  illinois:"Illinois",indiana:"Indiana",iowa:"Iowa",kansas:"Kansas",
+  kentucky:"Kentucky",louisiana:"Louisiana",maine:"Maine",maryland:"Maryland",
+  massachusetts:"Massachusetts",michigan:"Michigan",minnesota:"Minnesota",mississippi:"Mississippi",
+  missouri:"Missouri",montana:"Montana",nebraska:"Nebraska",nevada:"Nevada",
+  "new-hampshire":"New Hampshire","new-jersey":"New Jersey","new-mexico":"New Mexico","new-york":"New York",
+  "north-carolina":"North Carolina","north-dakota":"North Dakota",ohio:"Ohio",oklahoma:"Oklahoma",
+  oregon:"Oregon",pennsylvania:"Pennsylvania","rhode-island":"Rhode Island","south-carolina":"South Carolina",
+  "south-dakota":"South Dakota",tennessee:"Tennessee",texas:"Texas",utah:"Utah",
+  vermont:"Vermont",virginia:"Virginia",washington:"Washington","west-virginia":"West Virginia",
+  wisconsin:"Wisconsin",wyoming:"Wyoming",
+};
+
+function getStateFromSlug(slug) {
+  const s = slug.toLowerCase();
+  for (const [key] of Object.entries(STATE_MAP)) {
+    if (s.includes(key)) return key;
+  }
+  return null;
+}
+
+function getRelatedLinks(slug, articleType) {
+  const state = getStateFromSlug(slug);
+  const stateName = state ? STATE_MAP[state] : null;
+
+  if (articleType === "ssdi") {
+    const stateLinks = state ? [
+      { href: `/how-much-does-ssdi-pay-in-${state}-2026`, label: `How Much Does SSDI Pay in ${stateName}?` },
+      { href: `/average-ssdi-payment-${state}-2026`, label: `Average SSDI Payment in ${stateName} 2026` },
+      { href: `/ssdi-benefit-calculator-${state}-2026`, label: `SSDI Benefit Calculator for ${stateName}` },
+      { href: `/disability-attorney-${state}`, label: `SSDI Attorney in ${stateName}` },
+    ] : [];
+    const baseLinks = [
+      { href: "/request-for-reconsideration-form-ssa-561", label: "SSA-561: How to File a Request for Reconsideration" },
+      { href: "/ssa-3373-function-report-adult", label: "SSA-3373 — Function Report Adult" },
+      { href: "/how-long-does-ssdi-approval-take", label: "How Long Does SSDI Approval Take?" },
+      { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI in 2026" },
+      { href: "/how-to-win-ssdi-appeal", label: "How to Win Your SSDI Appeal" },
+    ];
+    return { title: `Related SSDI Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...baseLinks].slice(0, 8) };
+  }
+
+  // property-damage
+  const stateLinks = state ? [
+    { href: `/insurance-claim-denied-${state}`, label: `Insurance Claim Denied in ${stateName}? Your Rights` },
+    { href: `/property-damage-attorney-${state}`, label: `Property Damage Attorney in ${stateName}` },
+    { href: `/homeowners-insurance-claim-${state}`, label: `Homeowners Insurance Claim in ${stateName}` },
+  ] : [];
+  const baseLinks = [
+    { href: "/insurance-claim-denied-fl", label: "Insurance Claim Denied in Florida? Your Legal Rights" },
+    { href: "/ten-tips-handling-allstate-claim-denials", label: "10 Tips for Handling Allstate Claim Denials" },
+    { href: "/ten-tips-handling-usaa-insurance-claim-denials", label: "10 Tips for Handling USAA Claim Denials" },
+    { href: "/underpaid-insurance-claim-florida", label: "Underpaid Insurance Claim? How to Fight Back" },
+    { href: "/insurance-company-delayed-my-claim-florida", label: "Insurance Company Delaying Your Claim?" },
+    { href: "/tips-handling-claim-denials-progressive-select-insurance", label: "Progressive Select Claim Denied? 10 Ways to Win" },
+  ];
+  return { title: `Related Insurance Claim Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...baseLinks].slice(0, 8) };
+}
+
 // Returns the correct href for the end-of-article CTA button
 function getEndCtaHref(slug) {
   const s = (slug || "").toLowerCase();
@@ -222,9 +285,10 @@ export async function generateMetadata({ params }) {
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
 
-  // Canonical: strip numbered suffix (e.g. -5, -12) so duplicates point to base slug
-  const canonicalMatch = slug.match(/^(.+)-(\d+)$/);
-  const canonicalSlug = canonicalMatch ? canonicalMatch[1] : slug;
+  // Canonical: strip dedup suffix (e.g. -5, -12) but NOT year suffixes (2024, 2025, 2026)
+  const canonicalMatch = slug.match(/^(.+)-(\d{1,2})$/);
+  const isDupSlug = canonicalMatch && parseInt(canonicalMatch[2]) >= 2 && parseInt(canonicalMatch[2]) <= 50;
+  const canonicalSlug = isDupSlug ? canonicalMatch[1] : slug;
   const canonicalUrl = `${siteUrl}/${canonicalSlug}`;
 
   try {
@@ -247,6 +311,7 @@ export async function generateMetadata({ params }) {
             title: `${article.title} | Louis Law Group`,
             description,
             alternates: { canonical: canonicalUrl },
+            ...(isDupSlug && { robots: { index: false, follow: true } }),
             openGraph: {
               title: `${article.title} | Louis Law Group`,
               description,
@@ -955,6 +1020,10 @@ export default async function Page(props) {
                   publisher: { "@type": "Organization", name: "Louis Law Group", url: "https://www.louislawgroup.com" },
                   datePublished: page.createdAt,
                   dateModified: page.updatedAt || page.createdAt,
+                  wordCount: (page.blocks || []).reduce((acc, b) => {
+                    if (b.__component !== "shared.rich-text") return acc;
+                    return acc + (b.body || "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
+                  }, 0),
                 }) }}
               />
               {page.cover?.url && (
@@ -962,7 +1031,7 @@ export default async function Page(props) {
                   src={safeMediaUrl(page.cover.url)}
                   alt={page.title}
                   className={styles.blogImage}
-                  loading="lazy"
+                  fetchPriority="high"
                 />
               )}
               {/* Table of Contents */}
@@ -1030,37 +1099,18 @@ export default async function Page(props) {
                   </ul>
                 </div>
               )}
-              {/* Related Articles — internal linking for SEO */}
-              {articleType === "ssdi" && (
-                <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
-                  <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>Related SSDI Resources</h3>
-                  <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
-                    <li><a href="/request-for-reconsideration-form-ssa-561">SSA-561: How to File a Request for Reconsideration</a></li>
-                    <li><a href="/ssa-561-request-for-reconsideration-california">SSA-561 Reconsideration Guide for California</a></li>
-                    <li><a href="/ssi-appeal-success-tips-california">10 Steps to Win Your SSI Appeal in California</a></li>
-                    <li><a href="/average-ssdi-payment-california-2026">Average SSDI Payment in California 2026</a></li>
-                    <li><a href="/how-much-does-ssdi-pay-in-florida-2026">How Much Does SSDI Pay in Florida 2026?</a></li>
-                    <li><a href="/ssdi-benefit-calculator-ohio-2026">SSDI Benefit Calculator for Ohio 2026</a></li>
-                  </ul>
-                </div>
-              )}
-              {articleType === "property-damage" && (
-                <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
-                  <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>Related Insurance Claim Resources</h3>
-                  <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
-                    <li><a href="/insurance-claim-denied-fl">Insurance Claim Denied in Florida? Your Legal Rights</a></li>
-                    <li><a href="/how-to-file-a-claim-with-castle-key-indemnity-company">How to File a Claim with Castle Key Indemnity</a></li>
-                    <li><a href="/ten-tips-handling-allstate-claim-denials">10 Tips for Handling Allstate Claim Denials</a></li>
-                    <li><a href="/ten-tips-handling-usaa-insurance-claim-denials">10 Tips for Handling USAA Claim Denials</a></li>
-                    <li><a href="/tips-handling-claim-denials-progressive-select-insurance">Progressive Select Claim Denied? 10 Ways to Win</a></li>
-                    <li><a href="/tower-hill-insurance-florida">Tower Hill Insurance Denied Your Florida Claim?</a></li>
-                    <li><a href="/tower-hill-insurance-exchange-in-florida">Tower Hill Insurance Exchange: Claims, Coverage & 2026 Status</a></li>
-                    <li><a href="/home-warranty-claim-denied-texas">Can You Sue a Home Warranty Company in Texas?</a></li>
-                    <li><a href="/underpaid-insurance-claim-florida">Underpaid Insurance Claim in Florida? How to Fight Back</a></li>
-                    <li><a href="/insurance-company-delayed-my-claim-florida">Insurance Company Delaying Your Florida Claim?</a></li>
-                  </ul>
-                </div>
-              )}
+              {/* Related Articles — dynamic state-specific internal linking */}
+              {(() => {
+                const { title: relTitle, links: relLinks } = getRelatedLinks(slug, articleType);
+                return (
+                  <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
+                    <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>{relTitle}</h3>
+                    <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
+                      {relLinks.map((l, i) => <li key={i}><a href={l.href}>{l.label}</a></li>)}
+                    </ul>
+                  </div>
+                );
+              })()}
               {/* End-of-article CTA */}
               {(() => {
                 const endCtaHref = getEndCtaHref(slug);

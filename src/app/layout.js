@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Anton, Montserrat, Work_Sans, Inter } from "next/font/google";
 import CookieConsent from "./components/CookieConsent/CookieConsent";
 import TrackingScripts from "./components/TrackingScripts/TrackingScripts";
 import ConditionalPopup from "./components/ConditionalPopup/ConditionalPopup";
@@ -7,6 +8,11 @@ import ConditionalFooter from "./components/ConditionalFooter/ConditionalFooter"
 // import ChatbotPopup from "./components/ChatBot/ChatBot";
 import AIChatBot from "./components/AIChatBot/AIChatBot";
 import { Analytics } from "@vercel/analytics/next";
+
+const anton = Anton({ weight: "400", subsets: ["latin"], display: "swap", variable: "--font-anton" });
+const montserrat = Montserrat({ subsets: ["latin"], display: "swap", variable: "--font-montserrat" });
+const workSans = Work_Sans({ subsets: ["latin"], display: "swap", variable: "--font-work-sans" });
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 
 
 
@@ -40,13 +46,8 @@ const legalServiceSchema = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${anton.variable} ${montserrat.variable} ${workSans.variable} ${inter.variable}`}>
       <head>
-        {/* Google Fonts — non-blocking with preconnect */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(legalServiceSchema) }}

@@ -1,4 +1,4 @@
-/* Google Fonts loaded via <link> in layout.js for non-blocking performance */
+/* Fonts self-hosted via next/font/google — no external font requests */
 
 * {
   box-sizing: border-box;
@@ -6,7 +6,7 @@
 
 body {
   margin: 0;
-  font-family: "Work Sans", serif;
+  font-family: var(--font-work-sans), "Work Sans", serif;
   font-weight: 300;
   letter-spacing: 2px;
   font-size: 1.1rem;
@@ -29,7 +29,7 @@ section {
 h1,
 h2,
 h3 {
-  font-family: "Anton", serif;
+  font-family: var(--font-anton), "Anton", serif;
   font-weight: 400;
   font-style: normal;
   margin-block-start: 0em;
