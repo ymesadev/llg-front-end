@@ -35,9 +35,13 @@ async function findOrCreateContact(name, email, phone) {
       tags: ["document-upload"],
     }),
   });
-  if (!createRes.ok) throw new Error(`GHL create contact failed: ${await createRes.text()}`);
-  const data = await createRes.json();
-  return data.contact?.id;
+  const createData = await createRes.json();
+  // GHL returns 400 with meta.contactId when duplicate contact protection is on
+  if (!createRes.ok) {
+    if (createData?.meta?.contactId) return createData.meta.contactId;
+    throw new Error(`GHL create contact failed: ${JSON.stringify(createData)}`);
+  }
+  return createData.contact?.id;
 }
 
 async function getOrCreateEmailConversation(contactId) {
