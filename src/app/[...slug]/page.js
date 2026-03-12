@@ -900,7 +900,13 @@ export default async function Page(props) {
                         const isHtml = body.trimStart().startsWith("<");
                         return (
                           <div className={styles.blogText}>
-                            {isHtml ? parse(body) : <ReactMarkdown>{body}</ReactMarkdown>}
+                            {isHtml ? parse(body) : (
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                                urlTransform={mdUrlTransform}
+                              >{body}</ReactMarkdown>
+                            )}
                           </div>
                         );
                       })()}

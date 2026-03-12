@@ -189,27 +189,256 @@
 }
 
 .blogPost .container {
-  max-width: 640px;
+  max-width: 720px;
   overflow: hidden;
 }
 
+/* Article title */
+.blogTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #1a2b49;
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
+
+/* Article date / meta line */
+.blogDate {
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Outer content wrapper */
+.blogContent {
+  margin-top: 1.5rem;
+}
+
+/* Article prose — all typographic styles live here */
+.blogText {
+  font-family: "Work Sans", sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+  color: #1f2937;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.blogText h1 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.875rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #1a2b49;
+  margin: 2rem 0 0.75rem;
+}
+
+.blogText h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #1a2b49;
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.375rem;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.blogText h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a2b49;
+  margin: 1.75rem 0 0.5rem;
+}
+
+.blogText h4,
+.blogText h5,
+.blogText h6 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: #374151;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.blogText p {
+  margin: 0 0 1.25rem;
+}
+
+.blogText a {
+  color: #1a56db;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.blogText a:hover {
+  color: #1e40af;
+}
+
+.blogText ul,
+.blogText ol {
+  margin: 0 0 1.25rem 1.5rem;
+  padding: 0;
+}
+
+.blogText ul {
+  list-style-type: disc;
+}
+
+.blogText ol {
+  list-style-type: decimal;
+}
+
+.blogText li {
+  margin-bottom: 0.375rem;
+  padding-left: 0.25rem;
+}
+
+.blogText li > ul,
+.blogText li > ol {
+  margin-top: 0.375rem;
+  margin-bottom: 0;
+}
+
+.blogText strong,
+.blogText b {
+  font-weight: 700;
+  color: #111827;
+}
+
+.blogText em,
+.blogText i {
+  font-style: italic;
+}
+
+.blogText blockquote {
+  border-left: 4px solid #1a2b49;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1.25rem;
+  background: #f8fafc;
+  border-radius: 0 4px 4px 0;
+  color: #374151;
+  font-style: italic;
+}
+
+.blogText blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.blogText code {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.875rem;
+  background: #f3f4f6;
+  padding: 0.125rem 0.375rem;
+  border-radius: 3px;
+  color: #c0392b;
+}
+
+.blogText pre {
+  background: #1f2937;
+  color: #f9fafb;
+  padding: 1.25rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.blogText pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+.blogText table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.9375rem;
+}
+
+.blogText th {
+  background: #1a2b49;
+  color: #fff;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  padding: 0.625rem 1rem;
+  text-align: left;
+  border: 1px solid #374151;
+}
+
+.blogText td {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+.blogText tr:nth-child(even) td {
+  background: #f9fafb;
+}
+
+.blogText img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1rem 0;
+  display: block;
+}
+
+.blogText hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 2rem 0;
+}
+
 .blogImageContainer img {
-  width: 640px;
   margin-top: 1rem;
   margin-bottom: 1rem;
   width: 100%;
+  border-radius: 6px;
 }
-
 
 .blogImage {
-  max-width: 640px;
+  max-width: 100%;
   margin-top: 1rem;
   margin-bottom: 1rem;
   width: 100%;
+  border-radius: 6px;
 }
+
 .socialShare svg {
   margin-left: 1rem;
   margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .blogTitle {
+    font-size: 1.5rem;
+  }
+
+  .blogText {
+    font-size: 1rem;
+  }
+
+  .blogText h2 {
+    font-size: 1.25rem;
+  }
+
+  .blogText h3 {
+    font-size: 1.125rem;
+  }
+
+  .blogPost {
+    padding-top: 6rem;
+  }
 }
 .jobText {
   max-width: 800px;
