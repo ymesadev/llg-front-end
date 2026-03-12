@@ -3,25 +3,40 @@ import styles from "./Testimonials.module.css";
 
 const testimonials = [
   {
-    quote: "After my insurance company denied my hurricane damage claim for two years, Louis Law Group stepped in and recovered far more than I expected. Pierre and his team fought hard for me. I can finally repair my home.",
-    name: "M. Rodriguez",
-    location: "Broward County, FL",
-    type: "Property Damage",
+    quote: "Citizens denied our roof leak claim, but this firm fought for us and got money for our repairs. We even had funds left over after fixing the roof.",
+    name: "Ketty M.",
+    type: "Roof Damage Claim",
+    outcome: "Claim Won",
+  },
+  {
+    quote: "Pierre and his team are amazing. They truly cater to their clients and help you get the most from your insurance company.",
+    name: "Elizabeth M.",
+    type: "Insurance Claim",
+    outcome: "Maximized Recovery",
+  },
+  {
+    quote: "When my insurance company denied my roof damage claim, Louis Law Group stepped in and fought for me. I'm extremely satisfied with the results they obtained.",
+    name: "Michael N.",
+    type: "Roof Damage Claim",
     outcome: "Claim Resolved",
   },
   {
-    quote: "I had been denied SSDI twice and was ready to give up. Louis Law Group took my case and won my appeal. Now I have the benefits I needed. I'm so grateful for their persistence and professionalism.",
-    name: "D. Williams",
-    location: "Miami, FL",
-    type: "SSDI Appeal",
-    outcome: "Benefits Approved",
+    quote: "They accomplished exactly what they set out to do and helped me finally receive my insurance check.",
+    name: "Helen F.",
+    type: "Insurance Claim",
+    outcome: "Insurance Check Received",
   },
   {
-    quote: "Citizens Insurance delayed my water damage claim for over a year. Louis Law Group resolved it in 60 days. They handled everything — I didn't have to deal with the insurance company at all.",
-    name: "T. Johnson",
-    location: "Fort Lauderdale, FL",
-    type: "Insurance Claim",
-    outcome: "Claim Settled",
+    quote: "Louis Law Group handled our homeowners insurance dispute and got results much faster than we expected. Excellent service and great communication.",
+    name: "Tee T.",
+    type: "Homeowners Insurance",
+    outcome: "Dispute Resolved",
+  },
+  {
+    quote: "Very professional attorneys with outstanding attention to detail. They will not stop fighting for their clients.",
+    name: "Edwin M.",
+    type: "Property Damage",
+    outcome: "Claim Recovered",
   },
 ];
 
@@ -29,10 +44,10 @@ export default function Testimonials() {
   return (
     <section className={styles.section}>
       <div className="container">
-        <p className={styles.eyebrow}>Client Success Stories</p>
-        <h2 className={styles.title}>Real Clients. Real Results.</h2>
+        <p className={styles.eyebrow}>★★★★★ 4.7 · 67 Google Reviews</p>
+        <h2 className={styles.title}>What Our Clients Say</h2>
         <p className={styles.subtitle}>
-          We've helped thousands of Florida residents fight back against insurance companies and the SSA.
+          Real reviews from real clients who fought their insurance companies — and won.
         </p>
         <div className={styles.grid}>
           {testimonials.map((t, i) => (
@@ -43,7 +58,7 @@ export default function Testimonials() {
                 <div className={styles.avatar}>{t.name.charAt(0)}</div>
                 <div>
                   <p className={styles.name}>{t.name}</p>
-                  <p className={styles.location}>{t.location} · {t.type}</p>
+                  <p className={styles.location}>{t.type}</p>
                 </div>
                 <span className={styles.outcome}>{t.outcome}</span>
               </div>
@@ -51,7 +66,7 @@ export default function Testimonials() {
           ))}
         </div>
         <p className={styles.disclaimer}>
-          * Client names anonymized for privacy. Results vary by case.
+          * Reviews from Google. Results may vary by case.
         </p>
       </div>
     </section>
