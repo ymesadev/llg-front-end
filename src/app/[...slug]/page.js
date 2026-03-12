@@ -18,6 +18,7 @@ import { renderContentBlocks, processHeroContent, processSectionsContent } from 
 import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA";
+import Testimonials from "../components/Testimonials/Testimonials";
 
 
 function getArticleType(slug) {
@@ -1077,6 +1078,7 @@ export default async function Page(props) {
             <a href="tel:8336574812" className={styles.stickyCall}>📞 (833) 657-4812</a>
             <Link href="/#contact" className={styles.stickyReview}>Free Case Review →</Link>
           </div>
+          <Testimonials />
           <Steps />
           <Contact />
         </>
