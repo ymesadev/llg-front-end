@@ -6,6 +6,7 @@ import ConditionalNavbar from "./components/ConditionalNavbar/ConditionalNavbar"
 import ConditionalFooter from "./components/ConditionalFooter/ConditionalFooter";
 // import ChatbotPopup from "./components/ChatBot/ChatBot";
 import AIChatBot from "./components/AIChatBot/AIChatBot";
+import { Analytics } from "@vercel/analytics/next";
 
 
 
@@ -227,6 +228,8 @@ export default function RootLayout({ children }) {
         
         <AIChatBot />
         <CookieConsent />
+        {/* Vercel Analytics — cookieless, fires for ALL visitors regardless of consent */}
+        <Analytics />
       </body>
     </html>
   );
