@@ -230,6 +230,23 @@ export default function RootLayout({ children }) {
         <CookieConsent />
         {/* Vercel Analytics — cookieless, fires for ALL visitors regardless of consent */}
         <Analytics />
+        {/* Real-time visitor beacon — fires on every page load */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){
+            try {
+              fetch('https://www.louislawgroup.com/api/hit', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                  path: window.location.pathname,
+                  referrer: document.referrer || '',
+                  ua: navigator.userAgent
+                }),
+                keepalive: true
+              });
+            } catch(e) {}
+          })();
+        `}} />
       </body>
     </html>
   );
