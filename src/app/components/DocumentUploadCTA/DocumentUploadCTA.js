@@ -63,28 +63,35 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
         <p className={styles.subtitle}>{subtitle}</p>
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.fields}>
+            <label htmlFor="doc-cta-name" className={styles.srOnly}>Full Name</label>
             <input
+              id="doc-cta-name"
               type="text" placeholder="Full Name" required
               value={formData.name}
               onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
               className={styles.input}
             />
+            <label htmlFor="doc-cta-email" className={styles.srOnly}>Email Address</label>
             <input
+              id="doc-cta-email"
               type="email" placeholder="Email Address" required
               value={formData.email}
               onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
               className={styles.input}
             />
+            <label htmlFor="doc-cta-phone" className={styles.srOnly}>Phone Number</label>
             <input
+              id="doc-cta-phone"
               type="tel" placeholder="Phone Number" required
               value={formData.phone}
               onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))}
               className={styles.input}
             />
           </div>
-          <label className={styles.fileArea}>
+          <label htmlFor="doc-cta-files" className={styles.fileArea}>
             <span className={styles.fileBtn}>📎 {fileLabel}</span>
             <input
+              id="doc-cta-files"
               type="file" multiple
               accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
               onChange={(e) => setFiles(Array.from(e.target.files))}

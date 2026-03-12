@@ -122,6 +122,23 @@ function injectBlueButtonClass(html) {
 }
 
 
+// ✅ UX: Extract H2 headings from blocks for Table of Contents
+function extractTocHeadings(blocks) {
+  if (!Array.isArray(blocks)) return [];
+  const headings = [];
+  for (const block of blocks) {
+    if (block.__component !== "shared.rich-text") continue;
+    const body = block.body || "";
+    // Markdown ## headings (with optional bold **)
+    const mdMatches = [...body.matchAll(/^##\s+\*{0,2}([^*\n]+)\*{0,2}\s*$/gm)];
+    for (const m of mdMatches) headings.push(m[1].replace(/\*+/g, "").trim());
+    // HTML <h2>
+    const htmlMatches = [...body.matchAll(/<h2[^>]*>([^<]+)<\/h2>/gi)];
+    for (const m of htmlMatches) headings.push(m[1].trim());
+  }
+  return headings;
+}
+
 // ✅ SEO: Parse FAQ section from article blocks for structured data
 function extractFaqSchema(blocks) {
   const faqItems = [];
@@ -907,13 +924,42 @@ export default async function Page(props) {
                   <FaLinkedin className={styles.socialIcon} />
                 </a>
               </div>
+              {/* Article schema */}
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "Article",
+                  headline: page.title,
+                  author: { "@type": "Person", name: "Pierre A. Louis, Esq.", url: "https://www.louislawgroup.com/pierre-a-louis-esq" },
+                  publisher: { "@type": "Organization", name: "Louis Law Group", url: "https://www.louislawgroup.com" },
+                  datePublished: page.createdAt,
+                  dateModified: page.updatedAt || page.createdAt,
+                }) }}
+              />
               {page.cover?.url && (
                 <img
                   src={safeMediaUrl(page.cover.url)}
                   alt={page.title}
                   className={styles.blogImage}
+                  loading="lazy"
                 />
               )}
+              {/* Table of Contents */}
+              {(() => {
+                const tocHeadings = extractTocHeadings(page.blocks);
+                if (tocHeadings.length < 4) return null;
+                return (
+                  <nav className={styles.toc} aria-label="Table of contents">
+                    <p className={styles.tocTitle}>In This Article</p>
+                    <ol className={styles.tocList}>
+                      {tocHeadings.map((h, i) => (
+                        <li key={i} className={styles.tocItem}>{h}</li>
+                      ))}
+                    </ol>
+                  </nav>
+                );
+              })()}
               <div className={styles.blogContent}>
                 {(() => {
                   // articleType computed above via getArticleType(slug)
@@ -942,6 +988,7 @@ export default async function Page(props) {
                             src={`https://login.louislawgroup.com${block.file.url}`}
                             alt={block.file.alternativeText || "Blog Image"}
                             className={styles.blogPostImage}
+                            loading="lazy"
                           />
                         </div>
                       )}
