@@ -57,3 +57,7 @@ public/*
 !src/app/components/
 !src/app/components/Navbar/
 !src/app/components/Navbar/Navbar.js
+!src/app/components/Testimonials/
+!src/app/components/Testimonials/**
+!src/app/components/WhyChooseUs/
+!src/app/components/WhyChooseUs/**

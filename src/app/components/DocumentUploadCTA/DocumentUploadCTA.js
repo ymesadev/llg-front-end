@@ -101,7 +101,7 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
             {status === "submitting" ? "Uploading…" : "Submit for Free Attorney Review →"}
           </button>
         </form>
-        <p className={styles.disclaimer}>🔒 Confidential · No fees unless we win · Available 24/7</p>
+        <p className={styles.disclaimer}>🔒 256-bit encrypted · Attorney-client privilege applies · No fees unless we win · Same-day response</p>
       </div>
     </div>
   );

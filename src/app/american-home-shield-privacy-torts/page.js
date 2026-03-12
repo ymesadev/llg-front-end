@@ -209,8 +209,12 @@ export default function AmericanHomeShieldPrivacyLanding() {
       return (
         <div className={styles.disqualifiedBox}>
           <X size={24} className={styles.disqualifiedIcon} />
-          <p>Based on your answers, you may not qualify for this case.</p>
-          <a href="tel:8336574812" className={styles.callLink}>Call us: 833-657-4812</a>
+          <p><strong>You may not qualify for the AHS privacy tracking case</strong> based on your answers.</p>
+          <p style={{fontSize:"0.9rem",margin:"8px 0 16px",color:"#555"}}>
+            However, you may still have rights under Florida consumer protection law or have a separate property damage or SSDI claim. Our attorneys offer a free review for all legal matters.
+          </p>
+          <a href="tel:8336574812" className={styles.callLink}>📞 Call for a Free Review: (833) 657-4812</a>
+          <p style={{fontSize:"0.8rem",margin:"12px 0 0",color:"#888"}}>No fees unless we win · Confidential consultation</p>
         </div>
       );
     }

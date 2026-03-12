@@ -824,6 +824,16 @@ export default async function Page(props) {
           {!slug.startsWith("faq-") && (
           <section className={styles.blogPost}>
             <div className="container blogContainer">
+              {/* Breadcrumb */}
+              <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
+                <Link href="/">Home</Link>
+                <span aria-hidden="true"> › </span>
+                <Link href={articleType === "ssdi" ? "/social-security-disability" : "/property-damage-insurance-claim"}>
+                  {articleType === "ssdi" ? "SSDI" : "Property Damage"}
+                </Link>
+                <span aria-hidden="true"> › </span>
+                <span>{page.title}</span>
+              </nav>
               <h1 className={styles.blogTitle}>{page.title}</h1>
               <Script id="debug-article-buttons-present" strategy="afterInteractive"
                 dangerouslySetInnerHTML={{
@@ -844,6 +854,22 @@ export default async function Page(props) {
                 return <ArticleButtonsRow buttons={_btns} />;
               })()}
               <UrgencyBanner />
+              {/* Author byline */}
+              <div className={styles.authorByline}>
+                <img
+                  src="https://login.louislawgroup.com/uploads/pierre_louis_new_003bb95e9b.jpg"
+                  alt="Pierre A. Louis, Esq."
+                  className={styles.authorPhoto}
+                />
+                <div className={styles.authorInfo}>
+                  <Link href="/pierre-a-louis-esq" className={styles.authorName}>
+                    Pierre A. Louis, Esq.
+                  </Link>
+                  <span className={styles.authorCredential}>
+                    Florida Bar Member · Louis Law Group
+                  </span>
+                </div>
+              </div>
               <p className={styles.blogDate}>
                 <FaRegCalendarAlt className={styles.icon} />{" "}
                 {new Date(page.createdAt).toLocaleDateString()} |{" "}
@@ -968,6 +994,28 @@ export default async function Page(props) {
                   </ul>
                 </div>
               )}
+              {/* End-of-article CTA */}
+              <div className={styles.endCta}>
+                <h3 className={styles.endCtaTitle}>Ready to Fight Back? Get a Free Case Review.</h3>
+                <p className={styles.endCtaSubtext}>No fees unless we win · 100% confidential · Same-day response</p>
+                <Link href="/#contact" className={styles.endCtaBtn}>Start Your Free Review →</Link>
+              </div>
+              {/* Author bio card */}
+              <div className={styles.authorCard}>
+                <img
+                  src="https://login.louislawgroup.com/uploads/pierre_louis_new_003bb95e9b.jpg"
+                  alt="Pierre A. Louis, Esq."
+                  className={styles.authorCardPhoto}
+                />
+                <div>
+                  <p className={styles.authorCardName}>
+                    <Link href="/pierre-a-louis-esq">Pierre A. Louis, Esq.</Link>
+                  </p>
+                  <p className={styles.authorCardBio}>
+                    Pierre A. Louis is a Florida-licensed attorney and founder of Louis Law Group, specializing in property damage insurance claims and Social Security disability (SSDI/SSI). He has recovered over $200 million for clients against major insurance companies.
+                  </p>
+                </div>
+              </div>
               {/* Article repeatable buttons (end of article) */}
               {(() => {
                 const _btns = getArticleButtons(page);
@@ -977,6 +1025,11 @@ export default async function Page(props) {
             </div>
           </section>
           )}
+          {/* Sticky mobile CTA */}
+          <div className={styles.stickyMobileCta}>
+            <a href="tel:8336574812" className={styles.stickyCall}>📞 (833) 657-4812</a>
+            <Link href="/#contact" className={styles.stickyReview}>Free Case Review →</Link>
+          </div>
           <Steps />
           <Contact />
         </>
