@@ -118,6 +118,28 @@
   margin-top: 2rem;
 }
 
+.ctaWrap {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: #1a2b49;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.ctaBtn:hover {
+  background: #243d68;
+  transform: translateY(-2px);
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;

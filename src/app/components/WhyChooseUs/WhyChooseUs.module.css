@@ -69,6 +69,29 @@
   margin: 0;
 }
 
+.ctaWrap {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: #c9a84c;
+  color: #1a2b49;
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.ctaBtn:hover {
+  background: #b8922f;
+  transform: translateY(-2px);
+}
+
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr 1fr;
@@ -82,5 +105,10 @@
 @media (max-width: 600px) {
   .grid {
     grid-template-columns: 1fr;
+  }
+
+  .ctaBtn {
+    font-size: 0.93rem;
+    padding: 0.9rem 1.5rem;
   }
 }

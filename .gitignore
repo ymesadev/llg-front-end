@@ -61,3 +61,7 @@ public/*
 !src/app/components/Testimonials/**
 !src/app/components/WhyChooseUs/
 !src/app/components/WhyChooseUs/**
+!src/app/components/UrgencyBanner/
+!src/app/components/UrgencyBanner/**
+!src/app/components/Popup/
+!src/app/components/Popup/**

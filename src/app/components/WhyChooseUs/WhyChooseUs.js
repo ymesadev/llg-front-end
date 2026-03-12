@@ -52,6 +52,11 @@ export default function WhyChooseUs() {
             </div>
           ))}
         </div>
+        <div className={styles.ctaWrap}>
+          <a href="sms:8336574812" className={styles.ctaBtn}>
+            Start Your Free Case Review — No Fee Unless We Win →
+          </a>
+        </div>
       </div>
     </section>
   );

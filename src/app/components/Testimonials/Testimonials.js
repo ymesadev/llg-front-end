@@ -68,6 +68,11 @@ export default function Testimonials() {
         <p className={styles.disclaimer}>
           * Reviews from Google. Results may vary by case.
         </p>
+        <div className={styles.ctaWrap}>
+          <a href="sms:8336574812" className={styles.ctaBtn}>
+            Join 67+ Clients Who Won — Get Your Free Review →
+          </a>
+        </div>
       </div>
     </section>
   );
