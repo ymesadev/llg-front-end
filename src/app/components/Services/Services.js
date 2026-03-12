@@ -17,11 +17,11 @@ export default function Services() {
           </p>
           <p className={styles.description}>
             Our experienced team of attorneys is dedicated to providing
-            personalized advocacy for your insurance claim. Whether you've
-            suffered property damage, need assistance with a personal injury,
-            require help with an SSDI claim, or have issues with your health
-            insurance, we’re here to help. We’re committed to securing the
-            compensation you deserve.
+            personalized advocacy for your case. Whether you’ve suffered
+            property damage, need assistance with a personal injury, require
+            help with an SSDI claim, or have had your privacy rights violated,
+            we’re here to help. We’re committed to securing the compensation
+            you deserve.
           </p>
         </div>
 
@@ -114,16 +114,15 @@ export default function Services() {
             </span>
           </a>
           <a
-            href="/health-insurance-claim-denial-lawyer-in-florida"
+            href="/privacy-torts"
             className={styles.serviceBox}
           >
-            <h3>Health Insurance</h3>
+            <h3>Privacy Torts</h3>
             <p>
-              Health insurance plays a pivotal role in ensuring Floridians
-              receive essential medical care without incurring insurmountable
-              expenses. Whether you’re an individual seeking coverage or an
-              employer offering benefits, understanding Florida’s health
-              insurance landscape can be crucial.
+              Companies like American Home Shield, Kin Insurance, and Vuori
+              may be sharing your personal data without consent. If your
+              privacy rights have been violated, you may be entitled to
+              compensation — with no out-of-pocket cost to you.
             </p>
 
             <span className={styles.arrowCircle}>
