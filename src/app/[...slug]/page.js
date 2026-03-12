@@ -30,6 +30,25 @@ function getArticleType(slug) {
   return "property-damage";
 }
 
+// Returns the correct href for the end-of-article CTA button
+function getEndCtaHref(slug) {
+  const s = (slug || "").toLowerCase();
+  if (s.includes("american-home-shield") || s.startsWith("ahs-"))
+    return "/american-home-shield-privacy-torts";
+  if (s.includes("kin-insurance"))
+    return "/kin-insurance-privacy-torts";
+  if (s.includes("tower-hill"))
+    return "/tower-hill-insurance-privacy-torts";
+  if (s.includes("slide-insurance"))
+    return "/slide-insurance-privacy-torts";
+  if (s.includes("american-integrity"))
+    return "/american-integrity-insurance-privacy-torts";
+  if (s.includes("vuori"))
+    return "/vuori-privacy-torts";
+  // SSDI and property damage → SMS
+  return "sms:8336574812";
+}
+
 // ISR: serve from cache, regenerate in background every hour
 export const revalidate = 3600;
 
@@ -1043,11 +1062,24 @@ export default async function Page(props) {
                 </div>
               )}
               {/* End-of-article CTA */}
-              <div className={styles.endCta}>
-                <h3 className={styles.endCtaTitle}>Ready to Fight Back? Get a Free Case Review.</h3>
-                <p className={styles.endCtaSubtext}>No fees unless we win · 100% confidential · Same-day response</p>
-                <Link href="/#contact" className={styles.endCtaBtn}>Start Your Free Review →</Link>
-              </div>
+              {(() => {
+                const endCtaHref = getEndCtaHref(slug);
+                const isPrivacyTort = endCtaHref.includes("privacy-torts") || endCtaHref.includes("vuori");
+                const isSms = endCtaHref.startsWith("sms:");
+                return (
+                  <div className={styles.endCta}>
+                    <h3 className={styles.endCtaTitle}>
+                      {isPrivacyTort ? "See If You Qualify — Free Eligibility Check" : "Ready to Fight Back? Get a Free Case Review."}
+                    </h3>
+                    <p className={styles.endCtaSubtext}>No fees unless we win · 100% confidential · Same-day response</p>
+                    {isSms ? (
+                      <a href={endCtaHref} className={styles.endCtaBtn}>Start Your Free Review →</a>
+                    ) : (
+                      <Link href={endCtaHref} className={styles.endCtaBtn}>Check Your Eligibility →</Link>
+                    )}
+                  </div>
+                );
+              })()}
               {/* Author bio card */}
               <div className={styles.authorCard}>
                 <img
