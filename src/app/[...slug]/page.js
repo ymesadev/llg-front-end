@@ -23,8 +23,11 @@ import Testimonials from "../components/Testimonials/Testimonials";
 
 function getArticleType(slug) {
   const s = (slug || "").toLowerCase();
+  const parts = s.split('-');
+  // Multi-word keywords: match as substring; single-word: match as full slug segment only
+  // (prevents "ssi" matching inside "progressive", "passive", etc.)
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-claim","disability-appeal","disability-insurance","sga","ssdi-pay","ssdi-payment"];
-  if (ssdiKeywords.some(k => s.includes(k))) {
+  if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
     return "ssdi";
   }
   return "property-damage";
@@ -1051,12 +1054,11 @@ export default async function Page(props) {
                 );
               })()}
               <div className={styles.blogContent}>
+                <DocumentUploadCTA articleType={articleType} />
                 {(() => {
                   // articleType computed above via getArticleType(slug)
-                  const midpoint = Math.floor((page.blocks || []).length / 2);
                   return (page.blocks || []).map((block, index) => (
                     <div key={index}>
-                      {index === midpoint && <DocumentUploadCTA articleType={articleType} />}
                       {block.__component === "shared.rich-text" && (() => {
                         const body = block.body || "";
                         const isHtml = body.trimStart().startsWith("<");
