@@ -116,14 +116,14 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
             e.preventDefault();
             const body = encodeURIComponent(
               isSSdi
-                ? "Need help with an initial SSDI/SSI application?"
+                ? "I need help with an initial SSDI/SSI application"
                 : "I need help with submitting my property damage claim"
             );
             window.location.href = `sms:+18336574812;?&body=${body}`;
           }}
         >
           {isSSdi
-            ? "Need help with an initial SSDI/SSI application? Click here for help submitting your claim"
+            ? "Need help with an initial SSDI/SSI application — Click here for help"
             : "Filing a new claim? Click here for help submitting your claim"}
         </a>
       </div>
