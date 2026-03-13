@@ -63,5 +63,7 @@ public/*
 !src/app/components/WhyChooseUs/**
 !src/app/components/UrgencyBanner/
 !src/app/components/UrgencyBanner/**
+!src/app/components/DocumentUploadCTA/
+!src/app/components/DocumentUploadCTA/**
 !src/app/components/Popup/
 !src/app/components/Popup/**

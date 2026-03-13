@@ -109,6 +109,11 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
           </button>
         </form>
         <p className={styles.disclaimer}>🔒 256-bit encrypted · Attorney-client privilege applies · No fees unless we win · Same-day response</p>
+        {!isSSdi && (
+          <a href="sms:8336574812" className={styles.smsBtn}>
+            Click Here For Help With Submitting Your Claim
+          </a>
+        )}
       </div>
     </div>
   );

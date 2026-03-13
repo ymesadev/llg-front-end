@@ -143,6 +143,25 @@
   margin: 1rem 0 0;
 }
 
+.smsBtn {
+  display: block;
+  margin-top: 1rem;
+  background: #c0392b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.smsBtn:hover {
+  background: #a93226;
+  color: #fff;
+}
+
 .success {
   padding: 2rem 2.5rem;
   color: #fff;
