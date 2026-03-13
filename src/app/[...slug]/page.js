@@ -26,7 +26,7 @@ function getArticleType(slug) {
   const parts = s.split('-');
   // Multi-word keywords: match as substring; single-word: match as full slug segment only
   // (prevents "ssi" matching inside "progressive", "passive", etc.)
-  const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-claim","disability-appeal","disability-insurance","sga","ssdi-pay","ssdi-payment"];
+  const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
     return "ssdi";
   }
