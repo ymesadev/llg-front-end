@@ -121,6 +121,10 @@ export const revalidate = 3600;
 // Sanitization schema that preserves <a> with class/href/target/rel and allows inline HTML rendering
 const sanitizeSchema = {
   ...defaultSchema,
+  protocols: {
+    ...(defaultSchema.protocols || {}),
+    href: [...(defaultSchema.protocols?.href || ["http", "https", "mailto", "tel"]), "sms"],
+  },
   tagNames: [...(defaultSchema.tagNames || []), "a"],
   attributes: {
     ...(defaultSchema.attributes || {}),
