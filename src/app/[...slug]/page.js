@@ -185,6 +185,10 @@ export async function generateMetadata({ params }) {
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
 
+  if (slug === "thank-you") {
+    return { robots: { index: false, follow: false } };
+  }
+
   // Canonical: strip numbered suffix (e.g. -5, -12) so duplicates point to base slug
   const canonicalMatch = slug.match(/^(.+)-(\d+)$/);
   const canonicalSlug = canonicalMatch ? canonicalMatch[1] : slug;
