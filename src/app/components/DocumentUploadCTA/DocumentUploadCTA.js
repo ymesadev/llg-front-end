@@ -110,7 +110,15 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
         </form>
         <p className={styles.disclaimer}>🔒 256-bit encrypted · Attorney-client privilege applies · No fees unless we win · Same-day response</p>
         {!isSSdi && (
-          <a href="sms:8336574812?body=I%20need%20help%20with%20submitting%20my%20property%20damage%20claim" className={styles.smsBtn}>
+          <a
+            href="#"
+            className={styles.smsBtn}
+            onClick={(e) => {
+              e.preventDefault();
+              const body = encodeURIComponent("I need help with submitting my property damage claim");
+              window.location.href = `sms:+18336574812;?&body=${body}`;
+            }}
+          >
             Filing a new claim? Click here for help submitting your claim
           </a>
         )}
