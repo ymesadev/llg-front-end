@@ -109,19 +109,23 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
           </button>
         </form>
         <p className={styles.disclaimer}>🔒 256-bit encrypted · Attorney-client privilege applies · No fees unless we win · Same-day response</p>
-        {!isSSdi && (
-          <a
-            href="#"
-            className={styles.smsBtn}
-            onClick={(e) => {
-              e.preventDefault();
-              const body = encodeURIComponent("I need help with submitting my property damage claim");
-              window.location.href = `sms:+18336574812;?&body=${body}`;
-            }}
-          >
-            Filing a new claim? Click here for help submitting your claim
-          </a>
-        )}
+        <a
+          href="#"
+          className={styles.smsBtn}
+          onClick={(e) => {
+            e.preventDefault();
+            const body = encodeURIComponent(
+              isSSdi
+                ? "Need help with an initial SSDI/SSI application?"
+                : "I need help with submitting my property damage claim"
+            );
+            window.location.href = `sms:+18336574812;?&body=${body}`;
+          }}
+        >
+          {isSSdi
+            ? "Need help with an initial SSDI/SSI application? Click here for help submitting your claim"
+            : "Filing a new claim? Click here for help submitting your claim"}
+        </a>
       </div>
     </div>
   );
