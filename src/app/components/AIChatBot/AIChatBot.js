@@ -38,9 +38,18 @@ const AIChatBot = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [conversationId, setConversationId] = useState(null);
   const [userId, setUserId] = useState(null);
+  const [cookieVisible, setCookieVisible] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const messagesContainerRef = useRef(null);
+
+  // Track cookie consent banner visibility so we can avoid overlap on mobile
+  useEffect(() => {
+    const check = () => setCookieVisible(!localStorage.getItem("cookieConsent"));
+    check();
+    window.addEventListener("consentUpdated", check);
+    return () => window.removeEventListener("consentUpdated", check);
+  }, []);
 
   // Generate unique user ID and load chat history
   useEffect(() => {
@@ -375,11 +384,11 @@ const AIChatBot = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${cookieVisible ? styles.cookieBump : ""}`}>
       {/* Chat Button */}
       <button
         onClick={toggleChat}
-        className={`${styles.chatButton} ${isOpen ? styles.buttonClicked : ""}`}
+        className={`${styles.chatButton} ${isOpen ? styles.buttonClicked : ""} ${cookieVisible ? styles.cookieBump : ""}`}
         aria-label="Open chat"
       >
         <p>Let's Chat</p>
