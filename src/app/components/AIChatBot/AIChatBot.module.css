@@ -439,6 +439,15 @@
     padding: 0 0.875rem;
   }
 
+  /* Push button above cookie consent banner on mobile */
+  .container.cookieBump {
+    bottom: 5.5rem;
+  }
+
+  .chatButton.cookieBump {
+    bottom: 5.5rem;
+  }
+
   .chatButton p {
     font-size: 0.875rem;
   }
