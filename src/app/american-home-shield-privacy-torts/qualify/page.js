@@ -1,17 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
 import { trackEvent } from "@/app/utils/analytics";
 import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 
+async function sha256(value) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(value.trim().toLowerCase());
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateEventId() {
+  return `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+}
+
 const eligibilityQuestions = [
   { id: "age", question: "Are you 18 years of age or older?", required: true },
-  { id: "visited", question: "Did you visit or interact with American Home Shield's website (ahs.com) within the last 2 years?", required: true },
-  { id: "florida", question: "Were you located in Florida at the time you visited or interacted with American Home Shield's website?", required: true },
-  { id: "submitted", question: "Did you request a quote, create an account, or submit personal information through American Home Shield's website?", required: true }
+  { id: "florida", question: "Are you a current resident of the state of Florida?", required: true },
+  { id: "visited", question: "Did you visit or use American Home Shield's website (ahs.com) within the last 2 years?", required: true },
+  { id: "submitted", question: "Did you create an account, purchase a warranty, or submit personal information on American Home Shield's website?", required: true }
 ];
 
 export default function QualifyPage() {
@@ -23,9 +34,18 @@ export default function QualifyPage() {
   const [direction, setDirection] = useState("next");
   const [disqualified, setDisqualified] = useState(false);
 
-  useEffect(() => {
-    trackEvent("qualify_page_view", { case_type: "american_home_shield" });
+  const ttqTrack = useCallback((eventName, contentName) => {
+    if (typeof window !== "undefined" && window.ttq) {
+      window.ttq.track(eventName, {
+        contents: [{ content_id: "american-home-shield-privacy-torts-qualify", content_type: "product", content_name: contentName || "AHS Privacy Torts - Qualify" }]
+      }, { event_id: generateEventId() });
+    }
   }, []);
+
+  useEffect(() => {
+    ttqTrack("ViewContent", "AHS Privacy Torts - Qualify Page");
+    trackEvent("qualify_page_view", { case_type: "american-home-shield" });
+  }, [ttqTrack]);
 
   const step1Questions = eligibilityQuestions.slice(0, 2);
   const step2Questions = eligibilityQuestions.slice(2, 4);
@@ -47,16 +67,17 @@ export default function QualifyPage() {
     const currentQuestions = currentStep === 0 ? step1Questions : step2Questions;
     const hasNo = currentQuestions.some(q => eligibilityAnswers[q.id] === false);
     if (hasNo) {
-      trackEvent("qualify_disqualified", { case_type: "american_home_shield", step: currentStep });
+      trackEvent("qualify_disqualified", { case_type: "american-home-shield", step: currentStep });
       setDisqualified(true);
       return;
     }
     if (currentStep === 1 && !allEligibilityYes) {
-      trackEvent("qualify_disqualified", { case_type: "american_home_shield", step: currentStep });
+      trackEvent("qualify_disqualified", { case_type: "american-home-shield", step: currentStep });
       setDisqualified(true);
       return;
     }
-    trackEvent("qualify_step_complete", { case_type: "american_home_shield", from_step: currentStep });
+    ttqTrack("ClickButton", `AHS Qualify - Step ${currentStep + 1} Continue`);
+    trackEvent("qualify_step_complete", { case_type: "american-home-shield", from_step: currentStep });
     setDirection("next");
     setIsAnimating(true);
     setTimeout(() => { setCurrentStep(currentStep + 1); setIsAnimating(false); }, 300);
@@ -68,11 +89,18 @@ export default function QualifyPage() {
     setTimeout(() => { setCurrentStep(currentStep - 1); setIsAnimating(false); }, 300);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!contactComplete) return;
-    localStorage.setItem('american-home-shield-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
-    trackEvent("qualify_contact_submitted", { case_type: "american_home_shield" });
+    if (typeof window !== "undefined" && window.ttq) {
+      const [hashedEmail, hashedPhone] = await Promise.all([sha256(contactInfo.usedEmail), sha256(contactInfo.phone)]);
+      window.ttq.identify({ email: hashedEmail, phone_number: hashedPhone });
+      ttqTrack("Contact", "AHS Qualify - Contact Info Submitted");
+      ttqTrack("CompleteRegistration", "AHS Qualify - Registration Complete");
+      ttqTrack("Lead", "AHS Qualify - Lead Captured");
+    }
+    localStorage.setItem('ahs-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
+    trackEvent("qualify_contact_submitted", { case_type: "american-home-shield" });
     router.push("/american-home-shield-privacy-torts/sign");
   };
 
@@ -85,7 +113,7 @@ export default function QualifyPage() {
             <h2>We're Sorry</h2>
             <p>Based on your responses, you may not qualify for this particular case. However, you may have other legal options available to you.</p>
             <p>If you believe this is an error or have questions, please call us at{" "}<a href="tel:8336574812">833-657-4812</a>.</p>
-            <button className={styles.primaryButton} onClick={() => router.push("/american-home-shield-privacy-torts")} >Return to Homepage</button>
+            <button className={styles.primaryButton} onClick={() => router.push("/american-home-shield-privacy-torts")}>Return to Homepage</button>
           </div>
         </div>
       </div>
@@ -111,7 +139,7 @@ export default function QualifyPage() {
           </nav>
         </aside>
         <main className={styles.main}>
-          <UrgencyBanner />
+          <UrgencyBanner small />
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
               {currentStep === 0 && (

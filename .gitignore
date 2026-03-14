@@ -67,3 +67,19 @@ public/*
 !src/app/components/DocumentUploadCTA/**
 !src/app/components/Popup/
 !src/app/components/Popup/**
+
+# allow ServicesCarousel clickable cards
+!src/app/components/ServicesCarousel/
+!src/app/components/ServicesCarousel/**
+
+# allow property damage qualify flow
+!src/app/property-damage-claims/
+!src/app/property-damage-claims/**
+
+# allow qualify-intake API route
+!src/app/api/qualify-intake/
+!src/app/api/qualify-intake/**
+
+# allow package.json for nodemailer
+!package.json
+!package-lock.json

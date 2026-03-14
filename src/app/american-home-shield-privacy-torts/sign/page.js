@@ -5,30 +5,78 @@ import { CheckCircle } from "lucide-react";
 import caseConfig, { DOCUSEAL_TEMPLATE } from "../../../config/cases";
 import styles from "./page.module.css";
 
+async function sha256(value) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(value.trim().toLowerCase());
+  const hash = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function generateEventId() {
+  return `${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+}
+
 const config = caseConfig["american-home-shield-privacy-torts"];
 
 export default function SignPage() {
   const [ready, setReady] = useState(false);
   const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
+  const [adSource, setAdSource] = useState("");
 
   useEffect(() => {
     // Read contact info saved from the qualify form
+    let stored = null;
     try {
-      const stored = localStorage.getItem(config.localStorageKey);
+      stored = localStorage.getItem(config.localStorageKey);
       if (stored) {
-        setContactInfo(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        setContactInfo(parsed);
+
+        // TikTok Pixel: identify with hashed PII from stored contact
+        if (typeof window !== "undefined" && window.ttq && parsed.email) {
+          Promise.all([
+            sha256(parsed.email),
+            sha256(parsed.phone || "")
+          ]).then(([hashedEmail, hashedPhone]) => {
+            window.ttq.identify({
+              email: hashedEmail,
+              phone_number: hashedPhone
+            });
+          });
+        }
       }
     } catch {}
 
+    // Build ad source string from lead attribution data
+    try {
+      const utmSource = localStorage.getItem("utm_source") || "";
+      const utmMedium = localStorage.getItem("utm_medium") || "";
+      const utmCampaign = localStorage.getItem("utm_campaign") || "";
+      const pageSource = localStorage.getItem("page_source") || "";
+      const parts = [utmSource, utmMedium, utmCampaign].filter(Boolean);
+      setAdSource(parts.length > 0 ? parts.join(" / ") : pageSource || "organic");
+    } catch {}
+
+    // TikTok Pixel: ViewContent for sign page
+    if (typeof window !== "undefined" && window.ttq) {
+      window.ttq.track("ViewContent", {
+        contents: [{
+          content_id: "american-home-shield-privacy-torts-sign",
+          content_type: "product",
+          content_name: "AHS Privacy Torts - Sign Retainer"
+        }]
+      }, {
+        event_id: generateEventId()
+      });
+    }
+
     // Load DocuSeal script, then mark ready so the form renders
-    // with contact data attributes already set
     const script = document.createElement("script");
     script.src = "https://cdn.docuseal.com/js/form.js";
     script.async = true;
     script.onload = () => setReady(true);
     document.body.appendChild(script);
 
-    // Fallback in case script is cached and onload fires before state update
     if (document.querySelector('script[src="https://cdn.docuseal.com/js/form.js"]')) {
       setTimeout(() => setReady(true), 500);
     }
@@ -70,6 +118,7 @@ export default function SignPage() {
                 Company: config.companyName,
                 "Company Website": config.companyWebsite,
                 Date: new Date().toLocaleDateString("en-US"),
+                Source: adSource,
               })}
             ></docuseal-form>
           )}

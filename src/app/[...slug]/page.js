@@ -292,6 +292,10 @@ export async function generateMetadata({ params }) {
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
 
+  if (slug === "thank-you") {
+    return { robots: { index: false, follow: false } };
+  }
+
   // Canonical: strip dedup suffix (e.g. -5, -12) but NOT year suffixes (2024, 2025, 2026)
   // Match dedup suffixes up to 3 digits (2-999) — excludes 4-digit years (2024, 2026 etc.)
   const canonicalMatch = slug.match(/^(.+)-(\d{1,3})$/);

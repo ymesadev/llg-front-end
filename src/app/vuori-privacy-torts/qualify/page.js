@@ -139,7 +139,6 @@ export default function QualifyPage() {
           </nav>
         </aside>
         <main className={styles.main}>
-          <UrgencyBanner />
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
               {currentStep === 0 && (
@@ -218,6 +217,7 @@ export default function QualifyPage() {
               )}
             </div>
           </div>
+          <UrgencyBanner small />
         </main>
       </div>
     </div>

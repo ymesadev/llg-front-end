@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
 import styles from "./ServicesCarousel.module.css"; // Import the CSS module
 import { ArrowRight } from "../../../../public/icons";
 
@@ -42,14 +43,15 @@ const ServicesCarousel = ({ services }) => {
               <div className={styles.embla__container}>
                 {services.map((service) => (
                   <div key={service.id} className={styles.embla__slide}>
-                    <div className={styles.serviceBox}>
+                    <Link href="/property-damage-claims/qualify" className={styles.serviceBox}>
                       <h3 className={styles.serviceTitle}>{service.title}</h3>
                       {service.description.map((block, idx) => (
                         <p key={idx} className={styles.serviceDescription}>
                           {block.children[0].text}
                         </p>
                       ))}
-                    </div>
+                      <span className={styles.serviceCardCta}>See if you qualify →</span>
+                    </Link>
                   </div>
                 ))}
               </div>
