@@ -50,10 +50,30 @@
 
 /* Service Box */
 .serviceBox {
+  display: block;
   padding: 2rem;
   border: 1px solid #e7e2e3;
   border-radius: 0.5rem;
   height: fit-content;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.serviceBox:hover {
+  border-color: #ffb800;
+  background-color: rgba(255, 184, 0, 0.05);
+}
+
+/* Card CTA label */
+.serviceCardCta {
+  display: inline-block;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 600;
+  color: #ffb800;
+  letter-spacing: 0.04em;
 }
 
 /* Title */

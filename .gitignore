@@ -52,6 +52,10 @@ public/*
 !src/app/components/Navbar/
 !src/app/components/Navbar/Navbar.js
 
+# allow ServicesCarousel clickable cards
+!src/app/components/ServicesCarousel/
+!src/app/components/ServicesCarousel/**
+
 # allow property damage qualify flow
 !src/app/property-damage-claims/
 !src/app/property-damage-claims/**
