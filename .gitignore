@@ -51,3 +51,16 @@ public/*
 !src/app/components/
 !src/app/components/Navbar/
 !src/app/components/Navbar/Navbar.js
+
+# allow property damage qualify flow
+!src/app/property-damage-claims/
+!src/app/property-damage-claims/**
+
+# allow qualify-intake API route
+!src/app/api/
+!src/app/api/qualify-intake/
+!src/app/api/qualify-intake/**
+
+# allow package.json for nodemailer
+!package.json
+!package-lock.json
