@@ -54,12 +54,12 @@ export async function POST(request) {
           secure: false,
           ignoreTLS: true,
           auth: {
-            user: process.env.SMTP_USER || "info@louislawgroup.claims",
-            pass: process.env.SMTP_PASS || "LLGInfo2026!",
+            user: process.env.SMTP_USER || "admin@louislawgroup.claims",
+            pass: process.env.SMTP_PASS || "LLGAdmin2026!",
           },
         });
         await transporter.sendMail({
-          from: `"LLG Qualifier" <info@louislawgroup.claims>`,
+          from: `"LLG Qualifier" <admin@louislawgroup.claims>`,
           to: toEmail,
           subject: `[${scoreLabel}] New Property Damage Inquiry — ${name}`,
           text: `${description}\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`,
