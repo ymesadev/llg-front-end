@@ -103,28 +103,46 @@ const FAQS = [
 
 const TESTIMONIALS = [
   {
-    initials: "M.R.",
-    name: "Maria R.",
-    location: "Coral Springs, FL",
-    stars: 5,
-    outcome: "Settled for $58,000",
-    text: "My insurance company offered me $4,200 for a burst pipe that destroyed my kitchen and flooring. Louis Law Group took over and got me $58,000. Couldn't believe it.",
+    initial: "K",
+    name: "Ketty M.",
+    type: "Roof Damage Claim",
+    outcome: "Claim Won",
+    text: "Citizens denied our roof leak claim, but this firm fought for us and got money for our repairs. We even had funds left over after fixing the roof.",
   },
   {
-    initials: "J.T.",
-    name: "James T.",
-    location: "Miami, FL",
-    stars: 5,
-    outcome: "Claim reopened & paid",
-    text: "They denied my mold remediation claim twice. The team at Louis Law Group found exactly where the policy language was being misread and forced them to pay in full.",
+    initial: "E",
+    name: "Elizabeth M.",
+    type: "Insurance Claim",
+    outcome: "Maximized Recovery",
+    text: "Pierre and his team are amazing. They truly cater to their clients and help you get the most from your insurance company.",
   },
   {
-    initials: "C.M.",
-    name: "Carmen M.",
-    location: "West Palm Beach, FL",
-    stars: 5,
-    outcome: "Full roof replacement covered",
-    text: "After Hurricane season, my insurer said my roof damage was 'pre-existing.' Louis Law Group got an independent inspection done and recovered the full replacement cost.",
+    initial: "M",
+    name: "Michael N.",
+    type: "Roof Damage Claim",
+    outcome: "Claim Resolved",
+    text: "When my insurance company denied my roof damage claim, Louis Law Group stepped in and fought for me. I'm extremely satisfied with the results they obtained.",
+  },
+  {
+    initial: "H",
+    name: "Helen F.",
+    type: "Insurance Claim",
+    outcome: "Insurance Check Received",
+    text: "They accomplished exactly what they set out to do and helped me finally receive my insurance check.",
+  },
+  {
+    initial: "T",
+    name: "Tee T.",
+    type: "Homeowners Insurance",
+    outcome: "Dispute Resolved",
+    text: "Louis Law Group handled our homeowners insurance dispute and got results much faster than we expected. Excellent service and great communication.",
+  },
+  {
+    initial: "E",
+    name: "Edwin M.",
+    type: "Property Damage",
+    outcome: "Claim Recovered",
+    text: "Very professional attorneys with outstanding attention to detail. They will not stop fighting for their clients.",
   },
 ];
 
@@ -165,8 +183,8 @@ export default function WaterDamageRestorationPage() {
               mold remediation, structural repairs, and emergency services.
             </p>
             <div className={styles.trustRow}>
-              <div className={styles.trustStat}><strong>$50M+</strong><span>Recovered</span></div>
-              <div className={styles.trustStat}><strong>500+</strong><span>Cases Won</span></div>
+              <div className={styles.trustStat}><strong>$200M+</strong><span>Recovered</span></div>
+              <div className={styles.trustStat}><strong>3,000+</strong><span>Cases Won</span></div>
               <div className={styles.trustStat}><strong>No Win</strong><span>No Fee</span></div>
             </div>
             <a href={CTA_URL} className={styles.ctaCard}>
@@ -297,26 +315,28 @@ export default function WaterDamageRestorationPage() {
       {/* TESTIMONIALS */}
       <section className={styles.testimonials}>
         <div className={styles.sectionInner}>
-          <div className={styles.sectionEyebrow}>Real Results</div>
+          <div className={styles.sectionEyebrow}>★★★★★ 4.7 · 67 Google Reviews</div>
           <h2 className={styles.sectionTitle}>What Our Clients Say</h2>
+          <p className={styles.sectionSubtitle}>Real reviews from real clients who fought their insurance companies — and won.</p>
           <div className={styles.testimonialsGrid}>
             {TESTIMONIALS.map((t) => (
               <div key={t.name} className={styles.testimonialCard}>
                 <div className={styles.testimonialTop}>
-                  <div className={styles.testimonialAvatar}>{t.initials}</div>
+                  <div className={styles.testimonialAvatar}>{t.initial}</div>
                   <div>
                     <div className={styles.testimonialName}>{t.name}</div>
-                    <div className={styles.testimonialLocation}>{t.location}</div>
+                    <div className={styles.testimonialLocation}>{t.type}</div>
                   </div>
                   <div className={styles.outcomeBadge}>{t.outcome}</div>
                 </div>
-                <div className={styles.stars}>{"★".repeat(t.stars)}</div>
+                <div className={styles.stars}>★★★★★</div>
                 <p className={styles.testimonialText}>&ldquo;{t.text}&rdquo;</p>
               </div>
             ))}
           </div>
+          <p className={styles.testimonialDisclaimer}>* Reviews from Google. Results may vary by case.</p>
           <a href={CTA_URL} className={styles.ctaSecondary}>
-            Get Your Free Case Evaluation →
+            Join 67+ Clients Who Won — Get Your Free Review →
           </a>
         </div>
       </section>

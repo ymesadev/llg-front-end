@@ -55,6 +55,8 @@ public/*
 !src/app/layout.js
 !src/app/globals.css
 !src/app/components/
+!src/app/components/Footer/
+!src/app/components/Footer/**
 !src/app/components/Navbar/
 !src/app/components/Navbar/Navbar.js
 !src/app/components/Testimonials/

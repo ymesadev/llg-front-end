@@ -87,6 +87,13 @@
   transform: translateY(-3px);
 }
 
+.testimonialDisclaimer {
+  font-size: 0.8rem;
+  color: #888;
+  text-align: center;
+  margin: 1rem 0 1.5rem;
+}
+
 .ctaSecondary {
   display: inline-block;
   background: #1a2b49;

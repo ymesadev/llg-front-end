@@ -153,6 +153,11 @@ export default function Footer() {
                   Careers
                 </Link>
               </li>
+              <li className={styles.navItem}>
+                <Link href="/water-damage-restoration" className={styles.navLink}>
+                  Water Damage Claims
+                </Link>
+              </li>
             </ul>
           </div>
 
