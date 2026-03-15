@@ -185,6 +185,7 @@ export default function WaterDamageRestorationPage() {
             <div className={styles.trustRow}>
               <div className={styles.trustStat}><strong>$200M+</strong><span>Recovered</span></div>
               <div className={styles.trustStat}><strong>3,000+</strong><span>Cases Won</span></div>
+              <div className={styles.trustStat}><strong>Day 1</strong><span>Lawyer on Your Case</span></div>
               <div className={styles.trustStat}><strong>No Win</strong><span>No Fee</span></div>
             </div>
             <a href={CTA_URL} className={styles.ctaCard}>
