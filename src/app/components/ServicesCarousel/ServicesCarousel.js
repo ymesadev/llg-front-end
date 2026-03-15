@@ -6,7 +6,19 @@ import Link from "next/link";
 import styles from "./ServicesCarousel.module.css"; // Import the CSS module
 import { ArrowRight } from "../../../../public/icons";
 
-const ServicesCarousel = ({ services }) => {
+const INTAKE_MAP = {
+  "ssdi":               "/ssdi/qualify",
+  "property-damage":    "/property-damage-claims/qualify",
+  "ahs":                "/american-home-shield-privacy-torts/qualify",
+  "vuori":              "/vuori-privacy-torts/qualify",
+  "kin":                "/kin-insurance-privacy-torts/qualify",
+  "slide":              "/slide-insurance-privacy-torts/qualify",
+  "tower-hill":         "/tower-hill-insurance-privacy-torts/qualify",
+  "american-integrity": "/american-integrity-insurance-privacy-torts/qualify",
+};
+
+const ServicesCarousel = ({ services, articleType = "property-damage" }) => {
+  const qualifyHref = INTAKE_MAP[articleType] || INTAKE_MAP["property-damage"];
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -43,7 +55,7 @@ const ServicesCarousel = ({ services }) => {
               <div className={styles.embla__container}>
                 {services.map((service) => (
                   <div key={service.id} className={styles.embla__slide}>
-                    <Link href="/property-damage-claims/qualify" className={styles.serviceBox}>
+                    <Link href={qualifyHref} className={styles.serviceBox}>
                       <h3 className={styles.serviceTitle}>{service.title}</h3>
                       {service.description.map((block, idx) => (
                         <p key={idx} className={styles.serviceDescription}>
