@@ -63,8 +63,8 @@ export async function POST(request) {
           host: smtpHost,
           port: smtpPort,
           secure: false,
+          ignoreTLS: true,
           auth: { user: smtpUser, pass: smtpPass },
-          tls: { rejectUnauthorized: false },
         });
 
         await transporter.sendMail({
