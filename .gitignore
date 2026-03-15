@@ -72,6 +72,10 @@ public/*
 !src/app/components/ServicesCarousel/
 !src/app/components/ServicesCarousel/**
 
+# allow water damage restoration landing page
+!src/app/water-damage-restoration/
+!src/app/water-damage-restoration/**
+
 # allow property damage qualify flow
 !src/app/property-damage-claims/
 !src/app/property-damage-claims/**
@@ -83,3 +87,4 @@ public/*
 # allow package.json for nodemailer
 !package.json
 !package-lock.json
+.vercel

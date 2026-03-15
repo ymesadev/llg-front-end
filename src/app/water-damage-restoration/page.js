@@ -1,0 +1,371 @@
+import styles from "./page.module.css";
+import Link from "next/link";
+
+export const metadata = {
+  title: "Water Damage Restoration & Mold Remediation Claims | Louis Law Group",
+  description:
+    "Suffering from water damage, mold, or roof leaks in Miami-Dade, Broward, or Palm Beach? Louis Law Group fights insurance companies to get you the compensation you deserve. Free case evaluation.",
+  keywords:
+    "water damage restoration, water damage repair, mold removal service, mold remediation, roof leak repair, emergency water restoration, flood damage, water damage miami, water damage fort lauderdale, water damage west palm beach",
+  openGraph: {
+    title: "Water Damage Restoration Claims | Louis Law Group",
+    description:
+      "Insurance company underpaying or denying your water damage claim? We fight for full compensation. No fees unless we win.",
+    url: "https://www.louislawgroup.com/water-damage-restoration",
+  },
+};
+
+const CTA_URL = "https://www.louislawgroup.com/property-damage-claims/qualify";
+
+const SERVICES = [
+  {
+    icon: "💧",
+    title: "Water Damage Repair",
+    keywords: ["water damage repair", "water damage cleanup", "water extraction"],
+    desc: "Burst pipes, appliance leaks, flooding — insurance companies routinely underpay these claims. We recover the full cost of restoration.",
+  },
+  {
+    icon: "🍃",
+    title: "Mold Remediation Claims",
+    keywords: ["mold removal service", "mold remediation", "mold inspection"],
+    desc: "Mold from water damage is a serious health hazard. If your insurer denied or lowballed your mold claim, we hold them accountable.",
+  },
+  {
+    icon: "🏠",
+    title: "Roof Leak & Storm Damage",
+    keywords: ["fix leak roof", "emergency roof repair", "storm damage restoration"],
+    desc: "Hurricane, hail, and wind damage to your roof is covered — yet insurers frequently dispute the scope. We maximize your settlement.",
+  },
+  {
+    icon: "🚨",
+    title: "Emergency Water Restoration",
+    keywords: ["emergency water restoration", "emergency water removal", "24 hour water damage"],
+    desc: "Emergency mitigation costs add up fast. We document every expense and fight to ensure every dollar is included in your claim.",
+  },
+  {
+    icon: "🔧",
+    title: "Plumbing Leak Damage",
+    keywords: ["plumbing leak repair", "water leak repair", "leak repair near me"],
+    desc: "Hidden pipe leaks can cause thousands in structural damage. Our attorneys know how to prove long-term loss to your insurer.",
+  },
+  {
+    icon: "🏢",
+    title: "Sewage & Contamination",
+    keywords: ["sewage cleanup", "water damage contractors", "water mitigation company"],
+    desc: "Sewage backups and contaminated water damage require specialized remediation. We ensure insurers cover the full remediation scope.",
+  },
+];
+
+const STEPS = [
+  {
+    num: "01",
+    title: "Free Case Evaluation",
+    desc: "Answer a few quick questions about your water damage claim. Takes less than 3 minutes.",
+  },
+  {
+    num: "02",
+    title: "Attorney Review",
+    desc: "Our property damage attorneys review your policy and damage documentation at no cost.",
+  },
+  {
+    num: "03",
+    title: "We Fight — You Win",
+    desc: "We negotiate or litigate your claim. You pay nothing unless we recover money for you.",
+  },
+];
+
+const FAQS = [
+  {
+    q: "My insurance company denied my water damage claim. What can I do?",
+    a: "A denial is not the end. Insurance companies frequently deny valid claims hoping policyholders won't push back. Our attorneys review your denial letter, identify bad-faith tactics, and build a case to overturn it. You have rights under Florida law.",
+  },
+  {
+    q: "How long do I have to file a water damage insurance claim in Florida?",
+    a: "Under Florida law, you generally have 1–2 years from the date of loss to file or re-open a claim, depending on your policy and loss date. Do not wait — evidence degrades and deadlines are strict. Contact us immediately.",
+  },
+  {
+    q: "Does homeowners insurance cover mold from water damage?",
+    a: "It depends on the source. If mold resulted from a covered water loss (like a burst pipe or roof leak from a storm), your insurer is typically responsible for mold remediation. Insurers often try to exclude mold coverage — we fight that.",
+  },
+  {
+    q: "What does water damage restoration cost in Miami-Dade, Broward, or Palm Beach?",
+    a: "Water damage restoration typically costs $2,000–$10,000+ depending on the extent, materials affected, and mold involvement. If your insurer is paying less than the actual repair cost, you may be entitled to more. We evaluate this for free.",
+  },
+  {
+    q: "Do I need a public adjuster or an attorney?",
+    a: "An attorney provides stronger protection. Unlike public adjusters, attorneys can take your case to court, file bad-faith claims, and recover attorney's fees from the insurance company under Florida Statute § 627.428. In many cases, the insurer pays our fees — not you.",
+  },
+  {
+    q: "What areas do you serve for water damage claims?",
+    a: "We serve all of Miami-Dade, Broward, and Palm Beach counties — including Miami, Fort Lauderdale, Boca Raton, West Palm Beach, Coral Springs, Pembroke Pines, Hollywood, Miramar, Homestead, and surrounding areas.",
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    initials: "M.R.",
+    name: "Maria R.",
+    location: "Coral Springs, FL",
+    stars: 5,
+    outcome: "Settled for $58,000",
+    text: "My insurance company offered me $4,200 for a burst pipe that destroyed my kitchen and flooring. Louis Law Group took over and got me $58,000. Couldn't believe it.",
+  },
+  {
+    initials: "J.T.",
+    name: "James T.",
+    location: "Miami, FL",
+    stars: 5,
+    outcome: "Claim reopened & paid",
+    text: "They denied my mold remediation claim twice. The team at Louis Law Group found exactly where the policy language was being misread and forced them to pay in full.",
+  },
+  {
+    initials: "C.M.",
+    name: "Carmen M.",
+    location: "West Palm Beach, FL",
+    stars: 5,
+    outcome: "Full roof replacement covered",
+    text: "After Hurricane season, my insurer said my roof damage was 'pre-existing.' Louis Law Group got an independent inspection done and recovered the full replacement cost.",
+  },
+];
+
+export default function WaterDamageRestorationPage() {
+  return (
+    <main className={styles.page}>
+
+      {/* HERO */}
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <div className={styles.heroContent}>
+            <div className={styles.eyebrow}>Property Damage Attorneys — South Florida</div>
+            <h1 className={styles.heroTitle}>
+              <span className={styles.gold}>Water Damage</span> &amp; Mold Claims{" "}
+              <span className={styles.gold}>Lawyers</span> in Miami-Dade, Broward &amp; Palm Beach
+            </h1>
+            <p className={styles.heroSubtitle}>
+              Insurance companies underpay and deny water damage, mold remediation, and roof
+              leak claims every day. We fight back — and we don&apos;t charge you unless we win.
+            </p>
+            <ul className={styles.heroBullets}>
+              <li>✔ Water damage repair &amp; restoration claims</li>
+              <li>✔ Mold removal &amp; remediation disputes</li>
+              <li>✔ Emergency water extraction claims</li>
+              <li>✔ Roof leak &amp; storm damage recovery</li>
+              <li>✔ No fees unless we recover money for you</li>
+            </ul>
+            <a href={CTA_URL} className={styles.ctaPrimary}>
+              Start Your Free Case Evaluation →
+            </a>
+            <p className={styles.ctaNote}>Takes 3 minutes · No obligation · Available 24/7</p>
+          </div>
+          <div className={styles.heroCard}>
+            <div className={styles.heroCardBadge}>Free Case Review</div>
+            <h2 className={styles.heroCardTitle}>Was Your Water Damage Claim Denied or Underpaid?</h2>
+            <p className={styles.heroCardBody}>
+              Our attorneys recover the full cost of your water damage restoration — including
+              mold remediation, structural repairs, and emergency services.
+            </p>
+            <div className={styles.trustRow}>
+              <div className={styles.trustStat}><strong>$50M+</strong><span>Recovered</span></div>
+              <div className={styles.trustStat}><strong>500+</strong><span>Cases Won</span></div>
+              <div className={styles.trustStat}><strong>No Win</strong><span>No Fee</span></div>
+            </div>
+            <a href={CTA_URL} className={styles.ctaCard}>
+              Check If You Qualify — Free
+            </a>
+            <p className={styles.cardDisclaimer}>
+              Licensed in FL · Serving Miami-Dade, Broward &amp; Palm Beach
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* URGENCY BANNER */}
+      <div className={styles.urgencyBanner}>
+        <span className={styles.urgencyIcon}>⚠️</span>
+        <span>
+          <strong>Florida Deadline Alert:</strong> Water damage claims have strict filing windows.
+          If your loss occurred within the last 2 years,{" "}
+          <a href={CTA_URL} className={styles.urgencyLink}>act now before your claim expires</a>.
+        </span>
+      </div>
+
+      {/* SERVICES */}
+      <section className={styles.services}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>What We Handle</div>
+          <h2 className={styles.sectionTitle}>
+            We Fight Every Type of <span className={styles.gold}>Water Damage Claim</span>
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            From emergency water extraction to mold remediation services near you — if your
+            insurance company is refusing to pay, we step in.
+          </p>
+          <div className={styles.servicesGrid}>
+            {SERVICES.map((s) => (
+              <a href={CTA_URL} key={s.title} className={styles.serviceCard}>
+                <div className={styles.serviceIcon}>{s.icon}</div>
+                <h3 className={styles.serviceTitle}>{s.title}</h3>
+                <div className={styles.serviceKeywords}>
+                  {s.keywords.map((k) => (
+                    <span key={k} className={styles.kwTag}>{k}</span>
+                  ))}
+                </div>
+                <p className={styles.serviceDesc}>{s.desc}</p>
+                <span className={styles.serviceArrow}>Get Help →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MID-PAGE CTA */}
+      <section className={styles.midCta}>
+        <div className={styles.midCtaInner}>
+          <h2 className={styles.midCtaTitle}>Is Your Insurance Company Lowballing You?</h2>
+          <p className={styles.midCtaBody}>
+            Water damage restoration contractors near you will give you a fair estimate. Your
+            insurance company&apos;s estimate is often 40–70% lower. We close that gap.
+          </p>
+          <a href={CTA_URL} className={styles.ctaPrimary}>
+            See If You Have a Case — Free
+          </a>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className={styles.steps}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Simple Process</div>
+          <h2 className={styles.sectionTitle}>How It Works</h2>
+          <div className={styles.stepsGrid}>
+            {STEPS.map((s) => (
+              <div key={s.num} className={styles.stepCard}>
+                <div className={styles.stepNum}>{s.num}</div>
+                <h3 className={styles.stepTitle}>{s.title}</h3>
+                <p className={styles.stepDesc}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <a href={CTA_URL} className={styles.ctaPrimary} style={{ marginTop: "2.5rem" }}>
+            Start Step 01 Now — It&apos;s Free
+          </a>
+        </div>
+      </section>
+
+      {/* WHY LLG */}
+      <section className={styles.why}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrowLight}>Why Louis Law Group</div>
+          <h2 className={styles.sectionTitleLight}>
+            South Florida&apos;s Property Damage Attorneys
+          </h2>
+          <div className={styles.whyGrid}>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>⚖️</div>
+              <h3>Attorney-Level Representation</h3>
+              <p>Unlike public adjusters, we can take your case to court and file bad-faith claims against your insurer.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>💰</div>
+              <h3>No Fees Unless We Win</h3>
+              <p>We work on contingency. If we don&apos;t recover money for you, you owe us nothing. Zero risk.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>📍</div>
+              <h3>Local South Florida Experts</h3>
+              <p>We know Florida insurance law, local contractors, and the tactics insurers use in Miami-Dade, Broward, and Palm Beach.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>⚡</div>
+              <h3>Fast Response</h3>
+              <p>Water damage worsens every hour. We move quickly to document your claim and stop further delays from your insurer.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>🛡️</div>
+              <h3>Full Coverage Disputes</h3>
+              <p>We handle denied claims, underpaid settlements, delayed responses, and bad-faith insurance practices.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>📋</div>
+              <h3>Complete Documentation</h3>
+              <p>We coordinate with water damage restoration contractors, mold specialists, and engineers to build an airtight claim.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className={styles.testimonials}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Real Results</div>
+          <h2 className={styles.sectionTitle}>What Our Clients Say</h2>
+          <div className={styles.testimonialsGrid}>
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className={styles.testimonialCard}>
+                <div className={styles.testimonialTop}>
+                  <div className={styles.testimonialAvatar}>{t.initials}</div>
+                  <div>
+                    <div className={styles.testimonialName}>{t.name}</div>
+                    <div className={styles.testimonialLocation}>{t.location}</div>
+                  </div>
+                  <div className={styles.outcomeBadge}>{t.outcome}</div>
+                </div>
+                <div className={styles.stars}>{"★".repeat(t.stars)}</div>
+                <p className={styles.testimonialText}>&ldquo;{t.text}&rdquo;</p>
+              </div>
+            ))}
+          </div>
+          <a href={CTA_URL} className={styles.ctaSecondary}>
+            Get Your Free Case Evaluation →
+          </a>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className={styles.faq}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Common Questions</div>
+          <h2 className={styles.sectionTitle}>
+            Water Damage Claim FAQs
+          </h2>
+          <div className={styles.faqGrid}>
+            {FAQS.map((f) => (
+              <div key={f.q} className={styles.faqItem}>
+                <h3 className={styles.faqQ}>{f.q}</h3>
+                <p className={styles.faqA}>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className={styles.finalCta}>
+        <div className={styles.finalCtaInner}>
+          <h2 className={styles.finalCtaTitle}>
+            Don&apos;t Let Your Insurance Company Shortchange You
+          </h2>
+          <p className={styles.finalCtaBody}>
+            Whether you need water damage restoration near you, mold removal services, or roof
+            leak repair — if your insurer isn&apos;t paying fairly, we fight for you.
+            <strong> No fees unless we win.</strong>
+          </p>
+          <a href={CTA_URL} className={styles.ctaFinal}>
+            Start Your Free Case Evaluation Now →
+          </a>
+          <p className={styles.finalCtaNote}>
+            Serving Miami-Dade · Broward · Palm Beach · Available 24/7
+          </p>
+          <div className={styles.finalTrust}>
+            <span>📞 (833) 657-4812</span>
+            <span>·</span>
+            <span>Licensed Florida Attorneys</span>
+            <span>·</span>
+            <span>No Win, No Fee</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  );
+}

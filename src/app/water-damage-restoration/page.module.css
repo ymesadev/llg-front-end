@@ -1,0 +1,717 @@
+/* ===========================
+   WATER DAMAGE RESTORATION PAGE
+   Matches LLG site aesthetic:
+   Navy #1a2b49 | Gold #ffb800
+   Anton headings | Work Sans body
+   =========================== */
+
+.page {
+  font-family: "Work Sans", sans-serif;
+  font-weight: 300;
+  letter-spacing: 2px;
+  color: #1a2b49;
+}
+
+/* ---- SHARED ---- */
+.gold { color: #ffb800; }
+
+.sectionInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.sectionEyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #c9a84c;
+  margin-bottom: 0.75rem;
+}
+
+.sectionEyebrowLight {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #c9a84c;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #1a2b49;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.sectionTitleLight {
+  font-family: "Anton", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.sectionSubtitle {
+  font-size: 1.05rem;
+  color: #3a4a6a;
+  max-width: 680px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.7;
+}
+
+/* ---- CTAs ---- */
+.ctaPrimary {
+  display: inline-block;
+  background: #ffb800;
+  color: #1a2b49;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  padding: 0.9rem 2.2rem;
+  border-radius: 30px;
+  transition: background 0.2s, transform 0.2s;
+  margin-top: 1.5rem;
+}
+
+.ctaPrimary:hover {
+  background: #e5a600;
+  transform: translateY(-3px);
+}
+
+.ctaSecondary {
+  display: inline-block;
+  background: #1a2b49;
+  color: #fff;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  padding: 0.9rem 2.2rem;
+  border-radius: 30px;
+  transition: background 0.2s, transform 0.2s;
+  margin-top: 2.5rem;
+}
+
+.ctaSecondary:hover {
+  background: #243d68;
+  transform: translateY(-3px);
+}
+
+.ctaNote {
+  font-size: 0.82rem;
+  color: #6b7a99;
+  margin-top: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+/* ---- HERO ---- */
+.hero {
+  background: #1a2b49;
+  padding: 5rem 2rem 4rem;
+}
+
+.heroInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.heroContent { color: #fff; }
+
+.eyebrow {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #c9a84c;
+  margin-bottom: 1rem;
+}
+
+.heroTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 3rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: #ede7e7;
+  margin-bottom: 1.25rem;
+}
+
+.heroSubtitle {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.heroBullets {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.5px;
+}
+
+.heroBullets li {
+  padding: 0.35rem 0;
+  letter-spacing: 0;
+}
+
+/* Hero Card */
+.heroCard {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+}
+
+.heroCardBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #1a2b49;
+  background: #fff8e0;
+  border: 1px solid #ffb800;
+  border-radius: 20px;
+  padding: 0.25rem 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.heroCardTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 1.55rem;
+  font-weight: 400;
+  color: #1a2b49;
+  margin-bottom: 0.85rem;
+  line-height: 1.25;
+}
+
+.heroCardBody {
+  font-size: 0.97rem;
+  color: #3a4a6a;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.trustRow {
+  display: flex;
+  gap: 0;
+  border: 1px solid #e0e4ef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.trustStat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.85rem 0.5rem;
+  border-right: 1px solid #e0e4ef;
+}
+
+.trustStat:last-child { border-right: none; }
+
+.trustStat strong {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1a2b49;
+  letter-spacing: 0;
+}
+
+.trustStat span {
+  font-size: 0.72rem;
+  color: #6b7a99;
+  letter-spacing: 0.05em;
+}
+
+.ctaCard {
+  display: block;
+  text-align: center;
+  background: #1a2b49;
+  color: #fff;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  padding: 0.9rem 1.5rem;
+  border-radius: 8px;
+  transition: background 0.2s, transform 0.2s;
+  margin-bottom: 0.85rem;
+}
+
+.ctaCard:hover {
+  background: #243d68;
+  transform: translateY(-2px);
+}
+
+.cardDisclaimer {
+  font-size: 0.75rem;
+  color: #8a93aa;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* ---- URGENCY BANNER ---- */
+.urgencyBanner {
+  background: #fff7ed;
+  border-top: 2px solid #f97316;
+  border-bottom: 2px solid #f97316;
+  padding: 0.85rem 2rem;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #7c2d12;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.urgencyIcon { font-size: 1rem; }
+
+.urgencyLink {
+  color: #c2410c;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+/* ---- SERVICES ---- */
+.services {
+  background: #f9f7f4;
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  text-align: left;
+}
+
+.serviceCard {
+  display: block;
+  background: #fff;
+  border: 1px solid #e0e4ef;
+  border-radius: 16px;
+  padding: 1.75rem;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  cursor: pointer;
+}
+
+.serviceCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(26, 43, 73, 0.1);
+  border-color: #ffb800;
+}
+
+.serviceIcon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.serviceTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #1a2b49;
+  margin-bottom: 0.6rem;
+}
+
+.serviceKeywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+
+.kwTag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #f8f9fa;
+  border: 1px solid #e0e4ef;
+  color: #3a4a6a;
+  padding: 0.2rem 0.55rem;
+  border-radius: 20px;
+}
+
+.serviceDesc {
+  font-size: 0.92rem;
+  color: #3a4a6a;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+  margin-bottom: 1rem;
+}
+
+.serviceArrow {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffb800;
+  letter-spacing: 0.05em;
+}
+
+/* ---- MID CTA ---- */
+.midCta {
+  background: linear-gradient(135deg, #1a2b49 0%, #243d68 100%);
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.midCtaInner {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.midCtaTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.midCtaBody {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+/* ---- STEPS ---- */
+.steps {
+  background: #fff;
+}
+
+.stepsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-top: 2.5rem;
+  text-align: left;
+}
+
+.stepCard {
+  background: #f8f9fa;
+  border: 1px solid #e0e4ef;
+  border-radius: 16px;
+  padding: 2rem;
+}
+
+.stepNum {
+  font-family: "Anton", sans-serif;
+  font-size: 2.5rem;
+  color: #ffb800;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.stepTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #1a2b49;
+  margin-bottom: 0.6rem;
+}
+
+.stepDesc {
+  font-size: 0.93rem;
+  color: #3a4a6a;
+  line-height: 1.65;
+  letter-spacing: 0.3px;
+}
+
+/* ---- WHY ---- */
+.why {
+  background: #1a2b49;
+}
+
+.whyGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  text-align: left;
+}
+
+.whyCard {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 1.75rem;
+  color: #fff;
+}
+
+.whyCardIcon {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.whyCard h3 {
+  font-family: "Anton", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #ffb800;
+  margin-bottom: 0.6rem;
+}
+
+.whyCard p {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.65;
+  letter-spacing: 0.3px;
+}
+
+/* ---- TESTIMONIALS ---- */
+.testimonials {
+  background: #f9f7f4;
+}
+
+.testimonialsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  text-align: left;
+}
+
+.testimonialCard {
+  background: #fff;
+  border: 1px solid #e0e4ef;
+  border-top: 4px solid #1a2b49;
+  border-radius: 12px;
+  padding: 1.75rem;
+}
+
+.testimonialTop {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.testimonialAvatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1a2b49;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+
+.testimonialName {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1a2b49;
+  letter-spacing: 0;
+}
+
+.testimonialLocation {
+  font-size: 0.78rem;
+  color: #6b7a99;
+  letter-spacing: 0.05em;
+}
+
+.outcomeBadge {
+  margin-left: auto;
+  background: #eaf7ea;
+  color: #2e7d32;
+  border: 1px solid #4caf50;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+.stars {
+  color: #f4b50a;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-bottom: 0.75rem;
+}
+
+.testimonialText {
+  font-size: 0.92rem;
+  color: #3a4a6a;
+  line-height: 1.65;
+  letter-spacing: 0.3px;
+}
+
+/* ---- FAQ ---- */
+.faq {
+  background: #fff;
+}
+
+.faqGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+  text-align: left;
+}
+
+.faqItem {
+  background: #f8f9fa;
+  border: 1px solid #e0e4ef;
+  border-radius: 12px;
+  padding: 1.5rem 1.75rem;
+}
+
+.faqQ {
+  font-family: "Anton", sans-serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  color: #1a2b49;
+  margin-bottom: 0.65rem;
+  line-height: 1.3;
+}
+
+.faqA {
+  font-size: 0.91rem;
+  color: #3a4a6a;
+  line-height: 1.7;
+  letter-spacing: 0.3px;
+}
+
+/* ---- FINAL CTA ---- */
+.finalCta {
+  background: #1a2b49;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.finalCtaInner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.finalCtaTitle {
+  font-family: "Anton", sans-serif;
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: #fff;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+}
+
+.finalCtaBody {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.7;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.ctaFinal {
+  display: inline-block;
+  background: #ffb800;
+  color: #1a2b49;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  padding: 1rem 2.5rem;
+  border-radius: 30px;
+  transition: background 0.2s, transform 0.2s;
+  margin: 1.5rem 0 1rem;
+  display: inline-block;
+}
+
+.ctaFinal:hover {
+  background: #e5a600;
+  transform: translateY(-3px);
+}
+
+.finalCtaNote {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.08em;
+  margin-bottom: 1.5rem;
+}
+
+.finalTrust {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+  flex-wrap: wrap;
+  letter-spacing: 0.05em;
+}
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 980px) {
+  .heroInner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .heroTitle { font-size: 2.2rem; }
+  .sectionTitle { font-size: 2rem; }
+  .sectionTitleLight { font-size: 2rem; }
+  .finalCtaTitle { font-size: 2rem; }
+
+  .servicesGrid,
+  .stepsGrid,
+  .whyGrid,
+  .testimonialsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .faqGrid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 640px) {
+  .heroTitle { font-size: 1.9rem; }
+
+  .servicesGrid,
+  .stepsGrid,
+  .whyGrid,
+  .testimonialsGrid,
+  .faqGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionInner { padding: 3.5rem 1.25rem; }
+  .hero { padding: 3.5rem 1.25rem 3rem; }
+
+  .trustRow { flex-direction: column; }
+  .trustStat { border-right: none; border-bottom: 1px solid #e0e4ef; }
+  .trustStat:last-child { border-bottom: none; }
+}
