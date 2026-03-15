@@ -1344,7 +1344,8 @@ export default async function Page(props) {
                       const deepHref = __heroButtonFromDeep?.href || null;
                       const deepLabel = __heroButtonFromDeep?.label || null;
 
-                      let finalHref = href || deepHref || fallbackBtn?.href || '/free-case-evaluation';
+                      const defaultHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : '/free-case-evaluation';
+                      let finalHref = href || deepHref || fallbackBtn?.href || defaultHref;
                       let finalLabel = label || deepLabel || fallbackBtn?.label || 'See if you qualify';
 
                       // Normalize to start with "/" for internal links like "warranty"
@@ -1354,7 +1355,7 @@ export default async function Page(props) {
 
                       // Never allow a media link to become the CTA href
                       if (finalHref && isMediaUrl(finalHref)) {
-                        finalHref = fallbackBtn?.href || '/free-case-evaluation';
+                        finalHref = fallbackBtn?.href || defaultHref;
                         source = source || (fallbackBtn ? 'resolver' : 'fallback');
                       }
 
@@ -1449,12 +1450,13 @@ export default async function Page(props) {
                       </svg>
                     );
 
+                    const sectionFallbackHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : '/free-case-evaluation';
                     return isExternal ? (
                       <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
                         {label} <Icon />
                       </a>
                     ) : (
-                      <Link href={href || '/free-case-evaluation'} className={className}>
+                      <Link href={href || sectionFallbackHref} className={className}>
                         {label} <Icon />
                       </Link>
                     );

@@ -1,6 +1,6 @@
 .banner {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   background: #fff7ed;
   border: 1.5px solid #f97316;
@@ -12,6 +12,9 @@
   text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
 }
 
 .banner:hover {
