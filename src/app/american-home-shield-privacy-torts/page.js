@@ -29,6 +29,9 @@ import {
 } from "lucide-react";
 import styles from "./page.module.css";
 import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
+import caseConfig from "../../config/cases";
+
+const config = caseConfig["american-home-shield-privacy-torts"];
 
 async function sha256(value) {
   const encoder = new TextEncoder();
@@ -152,7 +155,7 @@ export default function AHSPrivacyLanding() {
       ttqTrack("Lead", "AHS Landing - Lead Captured");
     }
 
-    localStorage.setItem('ahs-contact', JSON.stringify({
+    localStorage.setItem(config.localStorageKey, JSON.stringify({
       email: contactInfo.email,
       name: contactInfo.name,
       phone: contactInfo.phone

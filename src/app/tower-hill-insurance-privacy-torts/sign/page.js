@@ -10,6 +10,7 @@ const config = caseConfig["tower-hill-insurance-privacy-torts"];
 export default function SignPage() {
   const [ready, setReady] = useState(false);
   const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
+  const [adSource, setAdSource] = useState("");
 
   useEffect(() => {
     // Read contact info saved from the qualify form
@@ -18,6 +19,18 @@ export default function SignPage() {
       if (stored) {
         setContactInfo(JSON.parse(stored));
       }
+    } catch {}
+
+    // Build ad source string from lead attribution data
+    try {
+      const utmSource = localStorage.getItem("utm_source") || "";
+      const utmMedium = localStorage.getItem("utm_medium") || "";
+      const utmCampaign = localStorage.getItem("utm_campaign") || "";
+      const utmContent = localStorage.getItem("utm_content") || "";
+      const utmTerm = localStorage.getItem("utm_term") || "";
+      const pageSource = localStorage.getItem("page_source") || "";
+      const parts = [utmSource, utmMedium, utmCampaign, utmContent, utmTerm].filter(Boolean);
+      setAdSource(parts.length > 0 ? parts.join(" / ") : pageSource || "organic");
     } catch {}
 
     // Load DocuSeal script, then mark ready so the form renders
@@ -102,6 +115,7 @@ export default function SignPage() {
                 Company: config.companyName,
                 "Company Website": config.companyWebsite,
                 Date: new Date().toLocaleDateString("en-US"),
+                Source: adSource,
               })}
             ></docuseal-form>
           )}

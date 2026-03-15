@@ -52,8 +52,10 @@ export default function SignPage() {
       const utmSource = localStorage.getItem("utm_source") || "";
       const utmMedium = localStorage.getItem("utm_medium") || "";
       const utmCampaign = localStorage.getItem("utm_campaign") || "";
+      const utmContent = localStorage.getItem("utm_content") || "";
+      const utmTerm = localStorage.getItem("utm_term") || "";
       const pageSource = localStorage.getItem("page_source") || "";
-      const parts = [utmSource, utmMedium, utmCampaign].filter(Boolean);
+      const parts = [utmSource, utmMedium, utmCampaign, utmContent, utmTerm].filter(Boolean);
       setAdSource(parts.length > 0 ? parts.join(" / ") : pageSource || "organic");
     } catch {}
 
