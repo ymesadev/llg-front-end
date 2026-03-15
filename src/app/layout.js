@@ -52,6 +52,12 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(legalServiceSchema) }}
         />
+        {/* Umami Analytics — self-hosted, page-level traffic tracking */}
+        <script
+          async
+          src="https://analytics.llg.claims/script.js"
+          data-website-id="5ad1819e-aa8a-4716-b1b4-dfdd5c58104e"
+        />
       </head>
       <body>
         <ConditionalNavbar />
