@@ -86,6 +86,14 @@ public/*
 !src/app/api/qualify-intake/
 !src/app/api/qualify-intake/**
 
+# allow SSDI qualify flow
+!src/app/ssdi/
+!src/app/ssdi/**
+
+# allow ssdi-intake API route
+!src/app/api/ssdi-intake/
+!src/app/api/ssdi-intake/**
+
 # allow package.json for nodemailer
 !package.json
 !package-lock.json
