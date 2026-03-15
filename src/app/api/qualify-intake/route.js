@@ -22,51 +22,41 @@ export async function POST(request) {
       `Insurer Response: ${responseLabels[insurerResponse] ?? "Not provided"}`,
     ].join("\n");
 
-    // Primary: Email relay on Mailu server (authenticated SMTP via localhost:587)
-    const relayUrl = process.env.EMAIL_RELAY_URL || "http://144.217.164.240:9090/send-email";
-    const relaySecret = process.env.EMAIL_RELAY_SECRET || "llg-relay-2026";
-    const toEmail = process.env.QUALIFY_TO_EMAIL || "pierre@louislawgroup.com";
+    // Primary: n8n webhook → Microsoft Outlook
+    const n8nWebhookUrl = process.env.N8N_INTAKE_WEBHOOK_URL || "https://n8n.louislawgroup.com/webhook/llg-intake-qualifier";
     let sent = false;
 
     try {
-      const relayRes = await fetch(relayUrl, {
+      const n8nRes = await fetch(n8nWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          secret: relaySecret,
-          to: toEmail,
-          subject: `[${scoreLabel}] New Property Damage Inquiry — ${name}`,
-          body: `${description}\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`,
-        }),
+        body: JSON.stringify({ name, phone, email, carrier, damageType, dateOfLoss, insurerResponse, score }),
       });
-      if (relayRes.ok) sent = true;
-    } catch (relayErr) {
-      console.error("[qualify-intake] Email relay failed:", relayErr.message);
+      if (n8nRes.ok) sent = true;
+      else console.error("[qualify-intake] n8n webhook returned:", n8nRes.status);
+    } catch (n8nErr) {
+      console.error("[qualify-intake] n8n webhook failed:", n8nErr.message);
     }
 
-    // Fallback: direct SMTP via nodemailer
+    // Fallback: email relay on Mailu server
     if (!sent) {
+      const relayUrl = process.env.EMAIL_RELAY_URL || "http://144.217.164.240:9090/send-email";
+      const relaySecret = process.env.EMAIL_RELAY_SECRET || "llg-relay-2026";
+      const toEmail = process.env.QUALIFY_TO_EMAIL || "pierre@louislawgroup.com";
       try {
-        const nodemailer = await import("nodemailer");
-        const transporter = nodemailer.default.createTransport({
-          host: process.env.SMTP_HOST || "144.217.164.240",
-          port: parseInt(process.env.SMTP_PORT || "587"),
-          secure: false,
-          ignoreTLS: true,
-          auth: {
-            user: process.env.SMTP_USER || "admin@louislawgroup.claims",
-            pass: process.env.SMTP_PASS || "LLGAdmin2026!",
-          },
+        const relayRes = await fetch(relayUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            secret: relaySecret,
+            to: toEmail,
+            subject: `[${scoreLabel}] New Property Damage Inquiry — ${name}`,
+            body: `${description}\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`,
+          }),
         });
-        await transporter.sendMail({
-          from: `"LLG Qualifier" <admin@louislawgroup.claims>`,
-          to: toEmail,
-          subject: `[${scoreLabel}] New Property Damage Inquiry — ${name}`,
-          text: `${description}\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`,
-        });
-        sent = true;
-      } catch (smtpErr) {
-        console.error("[qualify-intake] SMTP fallback failed:", smtpErr.message);
+        if (relayRes.ok) sent = true;
+      } catch (relayErr) {
+        console.error("[qualify-intake] Email relay fallback failed:", relayErr.message);
       }
     }
 

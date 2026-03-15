@@ -24,8 +24,14 @@ import Testimonials from "../components/Testimonials/Testimonials";
 function getArticleType(slug) {
   const s = (slug || "").toLowerCase();
   const parts = s.split('-');
-  // Multi-word keywords: match as substring; single-word: match as full slug segment only
-  // (prevents "ssi" matching inside "progressive", "passive", etc.)
+  // Privacy tort detection (must come before generic checks)
+  if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("ahs-")) return "ahs";
+  if (s.includes("vuori")) return "vuori";
+  if (s.includes("kin-insurance") || s.includes("kin-ins")) return "kin";
+  if (s.includes("slide-insurance") || (s.includes("slide") && s.includes("insurance"))) return "slide";
+  if (s.includes("tower-hill")) return "tower-hill";
+  if (s.includes("american-integrity")) return "american-integrity";
+  // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
     return "ssdi";
@@ -924,7 +930,7 @@ export default async function Page(props) {
                   <Link href="/">Home</Link> &rsaquo; <Link href="/faq">FAQ</Link> &rsaquo; <span>{page.title}</span>
                 </nav>
                 <h1 className={styles.blogTitle}>{page.title}</h1>
-                <UrgencyBanner />
+                <UrgencyBanner articleType={articleType} />
                 <div className={styles.blogContent}>
                   <div className={styles.blogText}>
                     <p>{page.description}</p>
@@ -967,7 +973,7 @@ export default async function Page(props) {
                 if (typeof window !== 'undefined') { try { console.log('🧪 Buttons resolved (top):', _btns); } catch(e){} }
                 return <ArticleButtonsRow buttons={_btns} />;
               })()}
-              <UrgencyBanner />
+              <UrgencyBanner articleType={articleType} />
               {/* Author byline */}
               <div className={styles.authorByline}>
                 <img
@@ -1344,7 +1350,7 @@ export default async function Page(props) {
                       const deepHref = __heroButtonFromDeep?.href || null;
                       const deepLabel = __heroButtonFromDeep?.label || null;
 
-                      const defaultHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : '/free-case-evaluation';
+                      const defaultHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : '/free-case-evaluation';
                       let finalHref = href || deepHref || fallbackBtn?.href || defaultHref;
                       let finalLabel = label || deepLabel || fallbackBtn?.label || 'See if you qualify';
 
@@ -1450,7 +1456,7 @@ export default async function Page(props) {
                       </svg>
                     );
 
-                    const sectionFallbackHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : '/free-case-evaluation';
+                    const sectionFallbackHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : '/free-case-evaluation';
                     return isExternal ? (
                       <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
                         {label} <Icon />

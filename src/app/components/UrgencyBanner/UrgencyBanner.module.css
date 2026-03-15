@@ -30,6 +30,20 @@
   color: #c2410c;
 }
 
+.cta {
+  display: inline-block;
+  margin-left: auto;
+  flex-shrink: 0;
+  background: #f97316;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+  align-self: center;
+}
+
 .small {
   font-size: 0.75rem;
   padding: 8px 12px;
