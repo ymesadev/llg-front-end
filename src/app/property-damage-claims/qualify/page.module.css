@@ -399,6 +399,18 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
+.urgencyNote {
+  font-size: 12px;
+  color: #c05c00;
+  background: #fff8ed;
+  border: 1px solid #ffd99a;
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  margin-top: 0.75rem;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
 .restartBtn {
   background: none;
   border: 1.5px solid #e0e4ef;

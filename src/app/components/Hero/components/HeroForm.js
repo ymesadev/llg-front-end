@@ -112,8 +112,13 @@ export default function FreeCaseEvaluationPage() {
         timestamp: new Date().toISOString(),
       });
 
+      // Redirect based on case type before resetting form
+      const intakeRoutes = {
+        "Property Damage": "/property-damage-claims/qualify",
+        "SSDI": "/ssdi/qualify",
+      };
+      const redirectTo = intakeRoutes[formData.caseType] || "/thank-you";
       setFormStatus("success");
-      // reset form if you like—user will be redirected immediately
       setFormData({
         name: "",
         phone: "",
@@ -124,6 +129,8 @@ export default function FreeCaseEvaluationPage() {
         description: "",
         consent: false,
       });
+      router.push(redirectTo);
+      return;
     } catch (err) {
       console.error("API Error:", {
         error: err.message,
@@ -150,12 +157,6 @@ export default function FreeCaseEvaluationPage() {
     });
   }, [formStatus]);
 
-  // Redirect on success
-  useEffect(() => {
-    if (formStatus === "success") {
-      router.push("https://www.louislawgroup.com/thank-you");
-    }
-  }, [formStatus, router]);
 
   // — error state —
   if (formStatus === "error") {

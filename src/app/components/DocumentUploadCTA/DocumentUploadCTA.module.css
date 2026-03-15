@@ -116,20 +116,21 @@
 }
 
 .btn {
+  display: inline-block;
   background: #e8a020;
   color: #fff;
   font-weight: 700;
   font-size: 1rem;
-  padding: 0.85rem 1.5rem;
+  padding: 0.9rem 2rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
-  align-self: flex-start;
+  transition: background 0.2s;
+  text-decoration: none;
+  margin-bottom: 0.5rem;
 }
 
-.btn:hover { background: #cf8e1a; }
-.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn:hover { background: #cf8e1a; color: #fff; }
 
 .error {
   color: #ff8080;

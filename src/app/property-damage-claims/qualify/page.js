@@ -189,10 +189,10 @@ export default function PropertyDamageQualify() {
     const iconChar = isStrong ? "✓" : isPossible ? "~" : "!";
     const title = isStrong ? "Strong candidate for representation" : isPossible ? "Potentially qualifying case" : "May not qualify at this time";
     const sub = isStrong
-      ? "Your case shows multiple strong indicators. A Louis Law Group attorney will review your file and reach out within 24 hours."
+      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your case review, sign your retainer now — the sooner you do, the faster we can get started protecting your claim."
       : isPossible
-      ? "Your case has some qualifying factors. Our intake team will follow up to discuss your options in detail."
-      : "Based on your answers, there may be challenges. We still recommend a short call — options may exist that this form cannot capture.";
+      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your case review, sign your retainer now so our team can begin working on your file immediately."
+      : "We have received your submission. To avoid any delay, sign your retainer now and a case specialist will review your file and reach out to discuss your options.";
     const barColor = isStrong ? "#4caf50" : isPossible ? "#ffb800" : "#e57373";
 
     const tags = [];
@@ -228,9 +228,18 @@ export default function PropertyDamageQualify() {
                   {tags.map((t, i) => <span key={i} className={`${styles.tag} ${t.cls}`}>{t.label}</span>)}
                 </div>
               )}
-              <button className={`${styles.btn} ${styles.btnGold}`} onClick={() => window.location.href = "tel:9546764179"}>
-                Schedule free consultation →
-              </button>
+              <a
+                href="https://app.louislawgroup.com/first-party-property-retainer-25"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`${styles.btn} ${styles.btnGold}`}
+                style={{ display: "block", textAlign: "center", textDecoration: "none" }}
+              >
+                Open Retainer — Secure Your Case Now →
+              </a>
+              <div className={styles.urgencyNote}>
+                ⚡ Act now — delays can affect your claim eligibility and recovery amount.
+              </div>
               <button className={styles.restartBtn} onClick={restart}>Start over</button>
             </div>
           </div>
