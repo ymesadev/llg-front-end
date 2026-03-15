@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, FileSignature, PhoneCall, ShieldCheck, DollarSign, BadgeCheck } from "lucide-react";
 import caseConfig, { DOCUSEAL_TEMPLATE } from "../../../config/cases";
 import styles from "./page.module.css";
 
@@ -21,6 +21,7 @@ const config = caseConfig["vuori-privacy-torts"];
 export default function SignPage() {
   const [ready, setReady] = useState(false);
   const [contactInfo, setContactInfo] = useState({ email: "", name: "", phone: "" });
+  const [adSource, setAdSource] = useState("");
 
   useEffect(() => {
     // Read contact info saved from the qualify form
@@ -44,6 +45,16 @@ export default function SignPage() {
           });
         }
       }
+    } catch {}
+
+    // Build ad source string from lead attribution data
+    try {
+      const utmSource = localStorage.getItem("utm_source") || "";
+      const utmMedium = localStorage.getItem("utm_medium") || "";
+      const utmCampaign = localStorage.getItem("utm_campaign") || "";
+      const pageSource = localStorage.getItem("page_source") || "";
+      const parts = [utmSource, utmMedium, utmCampaign].filter(Boolean);
+      setAdSource(parts.length > 0 ? parts.join(" / ") : pageSource || "organic");
     } catch {}
 
     // TikTok Pixel: ViewContent for sign page
@@ -89,11 +100,43 @@ export default function SignPage() {
       </div>
 
       <div className={styles.content}>
-        <div className={styles.successBanner}>
-          <CheckCircle size={24} />
-          <div>
-            <strong>You Qualify!</strong>
-            <span>Please complete and sign the agreement below to proceed with your case.</span>
+        <div className={styles.heroBanner}>
+          <div className={styles.heroLeft}>
+            <div className={styles.qualifyBadge}>
+              <CheckCircle size={18} />
+              <span>You Qualify!</span>
+            </div>
+            <h1 className={styles.heroTitle}>Ready to get the money you're owed?</h1>
+            <ul className={styles.heroSteps}>
+              <li>
+                <FileSignature size={18} className={styles.stepIcon} />
+                <span>Sign below to start your free investigation.</span>
+              </li>
+              <li>
+                <PhoneCall size={18} className={styles.stepIcon} />
+                <span>Our team will contact you shortly.</span>
+              </li>
+            </ul>
+          </div>
+          <div className={styles.heroRight}>
+            <h3 className={styles.guaranteeTitle}>
+              <ShieldCheck size={20} />
+              No-Win, No-Fee Guarantee
+            </h3>
+            <ul className={styles.guaranteeList}>
+              <li>
+                <BadgeCheck size={16} className={styles.guaranteeIcon} />
+                <span>This agreement only authorizes us to work on your case.</span>
+              </li>
+              <li>
+                <DollarSign size={16} className={styles.guaranteeIcon} />
+                <span>We only get paid if we recover money for you.</span>
+              </li>
+              <li>
+                <CheckCircle size={16} className={styles.guaranteeIcon} />
+                <span>You pay nothing upfront.</span>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -109,6 +152,7 @@ export default function SignPage() {
                 Company: config.companyName,
                 "Company Website": config.companyWebsite,
                 Date: new Date().toLocaleDateString("en-US"),
+                Source: adSource,
               })}
             ></docuseal-form>
           )}
