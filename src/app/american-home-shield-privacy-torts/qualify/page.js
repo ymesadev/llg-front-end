@@ -6,6 +6,9 @@ import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
 import { trackEvent } from "@/app/utils/analytics";
 import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
+import caseConfig from "../../../config/cases";
+
+const config = caseConfig["american-home-shield-privacy-torts"];
 
 async function sha256(value) {
   const encoder = new TextEncoder();
@@ -99,7 +102,7 @@ export default function QualifyPage() {
       ttqTrack("CompleteRegistration", "AHS Qualify - Registration Complete");
       ttqTrack("Lead", "AHS Qualify - Lead Captured");
     }
-    localStorage.setItem('ahs-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
+    localStorage.setItem(config.localStorageKey, JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
     trackEvent("qualify_contact_submitted", { case_type: "american-home-shield" });
     router.push("/american-home-shield-privacy-torts/sign");
   };
