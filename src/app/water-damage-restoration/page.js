@@ -250,6 +250,58 @@ export default function WaterDamageRestorationPage() {
         </div>
       </section>
 
+      {/* DAY ONE REPRESENTATION */}
+      <section className={styles.dayOne}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Why It Matters</div>
+          <h2 className={styles.sectionTitle}>
+            Why You Need an Attorney <span className={styles.gold}>From Day One</span>
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Most policyholders wait until their claim is denied to call a lawyer. By then, critical
+            evidence is gone and the insurance company has already built its case against you.
+          </p>
+          <div className={styles.dayOneGrid}>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>📸</div>
+              <h3>Evidence Preserved Immediately</h3>
+              <p>Water damage deteriorates fast. An attorney documents the full scope of loss before it&apos;s repaired, dried out, or questioned by an adjuster. That documentation becomes your leverage.</p>
+            </div>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>🛑</div>
+              <h3>Stop Lowball Offers Before They&apos;re Made</h3>
+              <p>Insurers send adjusters whose job is to minimize payouts. When an attorney is already on record, carriers know a lowball offer will be challenged — so they often settle fairly from the start.</p>
+            </div>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>📄</div>
+              <h3>Your Statements Are Protected</h3>
+              <p>Anything you say to your insurance company can be used to reduce your claim. Your attorney speaks for you — ensuring no recorded statement, EUO, or document request harms your case.</p>
+            </div>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>⏱️</div>
+              <h3>Deadlines Met Without Mistakes</h3>
+              <p>Florida insurance claims have strict notice requirements and proof-of-loss deadlines. Missing even one can void your right to recover. We track every deadline from the day we take your case.</p>
+            </div>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>🏗️</div>
+              <h3>Scope of Damage Fully Captured</h3>
+              <p>Insurance adjusters often miss hidden damage — inside walls, under flooring, in the HVAC system. We bring in independent experts to ensure every affected area is documented and claimed.</p>
+            </div>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>⚖️</div>
+              <h3>Bad Faith Leverage From the Start</h3>
+              <p>Under Florida law, insurers who act in bad faith — delaying, underpaying, or misrepresenting your policy — can owe you extra damages. That leverage only exists if an attorney is monitoring the process.</p>
+            </div>
+          </div>
+          <div className={styles.dayOneCta}>
+            <p className={styles.dayOneCtaNote}>Don&apos;t wait for a denial. The earlier we get involved, the stronger your case.</p>
+            <a href={CTA_URL} className={styles.ctaPrimary}>
+              Get an Attorney Involved Now — It&apos;s Free
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* HOW IT WORKS */}
       <section className={styles.steps}>
         <div className={styles.sectionInner}>

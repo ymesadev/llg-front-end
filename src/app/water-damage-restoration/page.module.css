@@ -410,6 +410,67 @@
   letter-spacing: 0.5px;
 }
 
+/* ---- DAY ONE ---- */
+.dayOne {
+  background: #f9f7f4;
+  padding: 5rem 1.5rem;
+}
+
+.dayOneGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.75rem;
+  margin-top: 3rem;
+}
+
+.dayOneCard {
+  background: #fff;
+  border: 1px solid #e0e4ef;
+  border-radius: 12px;
+  padding: 2rem 1.75rem;
+  border-top: 4px solid #ffb800;
+}
+
+.dayOneCard h3 {
+  font-family: "Anton", sans-serif;
+  font-size: 1.1rem;
+  color: #1a2b49;
+  margin: 0.75rem 0 0.5rem;
+  letter-spacing: 0.03em;
+}
+
+.dayOneCard p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #444;
+  margin: 0;
+}
+
+.dayOneIcon {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.dayOneCta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.dayOneCtaNote {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 1.25rem;
+  font-style: italic;
+}
+
+@media (max-width: 980px) {
+  .dayOneGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .dayOneGrid { grid-template-columns: 1fr; }
+}
+
 /* ---- STEPS ---- */
 .steps {
   background: #fff;
