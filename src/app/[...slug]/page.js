@@ -1473,7 +1473,7 @@ export default async function Page(props) {
           </section>
 
           {Array.isArray(page.Services) && page.Services.length > 0 && (
-            <ServicesCarousel services={page.Services} />
+            <ServicesCarousel services={page.Services} articleType={articleType} />
           )}
 
           <Results />
