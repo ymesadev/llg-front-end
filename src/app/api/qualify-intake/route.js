@@ -22,53 +22,44 @@ export async function POST(request) {
       `Insurer Response: ${responseLabels[insurerResponse] ?? "Not provided"}`,
     ].join("\n");
 
-    // Primary: N8N forms webhook (same pipeline as main contact form)
-    const n8nUrl = process.env.N8N_QUALIFY_WEBHOOK || "https://dev-n8n.louislawgroup.com/webhook/forms";
+    // Primary: Email relay on Mailu server (authenticated SMTP via localhost:587)
+    const relayUrl = process.env.EMAIL_RELAY_URL || "http://144.217.164.240:9090/send-email";
+    const relaySecret = process.env.EMAIL_RELAY_SECRET || "llg-relay-2026";
+    const toEmail = process.env.QUALIFY_TO_EMAIL || "pierre@louislawgroup.com";
     let sent = false;
 
     try {
-      const n8nRes = await fetch(n8nUrl, {
+      const relayRes = await fetch(relayUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          phone,
-          email,
-          zipcode: "",
-          caseType: "Property Damage",
-          description,
-          consent: "Yes",
-          filedCarrier: carrier || "",
-          source: "property-damage-qualifier",
-          qualifierScore: score,
-          scoreLabel,
+          secret: relaySecret,
+          to: toEmail,
+          subject: `[${scoreLabel}] New Property Damage Inquiry — ${name}`,
+          body: `${description}\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`,
         }),
       });
-      if (n8nRes.ok) sent = true;
-    } catch (n8nErr) {
-      console.error("[qualify-intake] N8N webhook failed:", n8nErr.message);
+      if (relayRes.ok) sent = true;
+    } catch (relayErr) {
+      console.error("[qualify-intake] Email relay failed:", relayErr.message);
     }
 
-    // Fallback: SMTP via nodemailer
+    // Fallback: direct SMTP via nodemailer
     if (!sent) {
       try {
-        const smtpHost = process.env.SMTP_HOST || "144.217.164.240";
-        const smtpPort = parseInt(process.env.SMTP_PORT || "587");
-        const smtpUser = process.env.SMTP_USER || "admin@louislawgroup.claims";
-        const smtpPass = process.env.SMTP_PASS || "LLGAdmin2026!";
-        const toEmail = process.env.QUALIFY_TO_EMAIL || "pierre@louislawgroup.com";
-
         const nodemailer = await import("nodemailer");
         const transporter = nodemailer.default.createTransport({
-          host: smtpHost,
-          port: smtpPort,
+          host: process.env.SMTP_HOST || "144.217.164.240",
+          port: parseInt(process.env.SMTP_PORT || "587"),
           secure: false,
           ignoreTLS: true,
-          auth: { user: smtpUser, pass: smtpPass },
+          auth: {
+            user: process.env.SMTP_USER || "admin@louislawgroup.claims",
+            pass: process.env.SMTP_PASS || "LLGAdmin2026!",
+          },
         });
-
         await transporter.sendMail({
-          from: `"LLG Qualifier" <${smtpUser}>`,
+          from: `"LLG Qualifier" <admin@louislawgroup.claims>`,
           to: toEmail,
           subject: `[${scoreLabel}] New Property Damage Inquiry — ${name}`,
           text: `${description}\n\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`,
