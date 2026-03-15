@@ -61,6 +61,7 @@
 }
 
 .heroTitle {
+  font-family: "Work Sans", "Work Sans Fallback", serif;
   font-size: 1.5rem;
   font-weight: 700;
   line-height: 1.3;
