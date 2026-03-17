@@ -89,6 +89,8 @@ public/*
 # allow SSDI qualify flow
 !src/app/ssdi/
 !src/app/ssdi/**
+!src/app/ssdi-lawyers/
+!src/app/ssdi-lawyers/**
 
 # allow ssdi-intake API route
 !src/app/api/ssdi-intake/

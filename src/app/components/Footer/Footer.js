@@ -158,6 +158,11 @@ export default function Footer() {
                   Water Damage Claims
                 </Link>
               </li>
+              <li className={styles.navItem}>
+                <Link href="/ssdi-lawyers" className={styles.navLink}>
+                  SSDI Disability Lawyers
+                </Link>
+              </li>
             </ul>
           </div>
 
