@@ -28,7 +28,6 @@ import {
   X
 } from "lucide-react";
 import styles from "./page.module.css";
-import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
@@ -243,7 +242,6 @@ export default function AmericanIntegrityPrivacyLanding() {
             </div>
             <div className={styles.heroFormWrapper} id="check-eligibility">
               <div className={styles.formCard}>
-                <UrgencyBanner />
                 <div className={styles.formHeader}>
                   <Lock className={styles.formLockIcon} />
                   <h3>{formStep < 2 ? "Check Eligibility" : "Almost Done!"}</h3>

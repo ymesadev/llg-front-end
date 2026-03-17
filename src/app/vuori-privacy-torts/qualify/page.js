@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
 import { trackEvent } from "@/app/utils/analytics";
-import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 
 async function sha256(value) {
   const encoder = new TextEncoder();
@@ -217,7 +216,6 @@ export default function QualifyPage() {
               )}
             </div>
           </div>
-          <UrgencyBanner small />
         </main>
       </div>
     </div>

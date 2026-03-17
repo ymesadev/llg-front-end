@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
 import { trackEvent } from "@/app/utils/analytics";
-import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 import caseConfig from "../../../config/cases";
 
 const config = caseConfig["american-home-shield-privacy-torts"];
@@ -142,7 +141,6 @@ export default function QualifyPage() {
           </nav>
         </aside>
         <main className={styles.main}>
-          <UrgencyBanner small />
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
               {currentStep === 0 && (

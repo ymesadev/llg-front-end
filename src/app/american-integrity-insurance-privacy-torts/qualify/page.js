@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
 import { trackEvent } from "@/app/utils/analytics";
-import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 
 const eligibilityQuestions = [
   { id: "age", question: "Are you 18 years of age or older?", required: true },
@@ -111,7 +110,6 @@ export default function QualifyPage() {
           </nav>
         </aside>
         <main className={styles.main}>
-          <UrgencyBanner />
           <div className={styles.questionContainer}>
             <div className={`${styles.questionContent} ${isAnimating ? (direction === "next" ? styles.slideOutLeft : styles.slideOutRight) : styles.slideIn}`}>
               {currentStep === 0 && (
