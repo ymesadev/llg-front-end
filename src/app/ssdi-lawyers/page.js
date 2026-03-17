@@ -2,13 +2,13 @@ import styles from "./page.module.css";
 import Link from "next/link";
 
 export const metadata = {
-  title: "SSDI Disability Lawyers Florida | Louis Law Group",
+  title: "SSDI Disability Lawyers | Social Security Disability Attorneys | Louis Law Group",
   description:
-    "Denied Social Security disability benefits in Florida? Louis Law Group fights for SSDI claimants. Representation triples your approval odds. No fees unless you win.",
+    "Denied Social Security disability benefits? Louis Law Group fights for SSDI claimants nationwide. Representation triples your approval odds. No fees unless you win.",
   keywords:
-    "SSDI lawyer Florida, social security disability attorney, SSDI denial appeal, disability benefits lawyer, social security disability claim Florida, SSDI hearing representation, SSI attorney Florida",
+    "SSDI lawyer, social security disability attorney, SSDI denial appeal, disability benefits lawyer, social security disability claim, SSDI hearing representation, SSI attorney, disability lawyer",
   openGraph: {
-    title: "SSDI Disability Lawyers Florida | Louis Law Group",
+    title: "SSDI Disability Lawyers | Louis Law Group",
     description:
       "70% of SSDI applications are denied. With an attorney, your odds of winning at hearing more than double. Free case evaluation — no fees unless we win.",
     url: "https://www.louislawgroup.com/ssdi-lawyers",
@@ -121,7 +121,7 @@ const FAQS = [
     a: "No — but deadlines matter. You have 60 days from your denial notice to file a timely appeal. Missing that window can reset your case and cost you months of back pay. Contact us immediately after a denial.",
   },
   {
-    q: "What conditions qualify for SSDI in Florida?",
+    q: "What conditions qualify for SSDI?",
     a: "Any condition that prevents you from working full-time for 12+ months can qualify: cancer, heart disease, diabetes, chronic pain, mental health disorders, spinal conditions, fibromyalgia, neurological conditions, and more. The SSA evaluates your specific limitations — not just your diagnosis.",
   },
   {
@@ -187,10 +187,10 @@ export default function SSDILawyersPage() {
       <section className={styles.hero}>
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <div className={styles.eyebrow}>Social Security Disability Attorneys — Florida</div>
+            <div className={styles.eyebrow}>Social Security Disability Attorneys</div>
             <h1 className={styles.heroTitle}>
               <span className={styles.gold}>SSDI Disability</span> Lawyers{" "}
-              Who <span className={styles.gold}>Win Benefits</span> for Floridians
+              Who <span className={styles.gold}>Win Benefits</span>
             </h1>
             <p className={styles.heroSubtitle}>
               The SSA denies 70% of first applications. With legal representation, your
@@ -202,7 +202,7 @@ export default function SSDILawyersPage() {
               <li>✔ Medical evidence development &amp; documentation</li>
               <li>✔ Back pay recovery from your onset date</li>
               <li>✔ No upfront fees — SSA-regulated contingency</li>
-              <li>✔ Serving all of Florida — available 24/7</li>
+              <li>✔ Available 24/7 · No obligation</li>
             </ul>
             <a href={CTA_URL} className={styles.ctaPrimary}>
               See If You Qualify — Free →
@@ -227,7 +227,7 @@ export default function SSDILawyersPage() {
               See If You Qualify — Free
             </a>
             <p className={styles.cardDisclaimer}>
-              Licensed in FL · Serving all Florida counties
+              Licensed Attorneys · No Win, No Fee
             </p>
           </div>
         </div>
@@ -338,7 +338,7 @@ export default function SSDILawyersPage() {
         <div className={styles.sectionInner}>
           <div className={styles.sectionEyebrowLight}>Why Louis Law Group</div>
           <h2 className={styles.sectionTitleLight}>
-            Florida&apos;s SSDI Disability Attorneys
+            Disability Attorneys Who Fight for You
           </h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
@@ -363,8 +363,8 @@ export default function SSDILawyersPage() {
             </div>
             <div className={styles.whyCard}>
               <div className={styles.whyCardIcon}>📍</div>
-              <h3>Statewide Florida Coverage</h3>
-              <p>We represent SSDI claimants across all of Florida — Miami, Orlando, Tampa, Jacksonville, Fort Lauderdale, West Palm Beach, and all surrounding areas.</p>
+              <h3>Available Nationwide</h3>
+              <p>We represent SSDI claimants across the country. Social Security disability hearings can be handled remotely — no matter where you are, we can fight for you.</p>
             </div>
             <div className={styles.whyCard}>
               <div className={styles.whyCardIcon}>🔄</div>
@@ -438,12 +438,12 @@ export default function SSDILawyersPage() {
             See If You Qualify Now — Free →
           </a>
           <p className={styles.finalCtaNote}>
-            Serving all of Florida · Available 24/7
+            Available 24/7 · No Obligation · No Upfront Cost
           </p>
           <div className={styles.finalTrust}>
             <span>📞 (833) 657-4812</span>
             <span>·</span>
-            <span>Licensed Florida Attorneys</span>
+            <span>Licensed Attorneys</span>
             <span>·</span>
             <span>No Win, No Fee</span>
           </div>
