@@ -24,6 +24,8 @@ import Testimonials from "../components/Testimonials/Testimonials";
 function getArticleType(slug) {
   const s = (slug || "").toLowerCase();
   const parts = s.split('-');
+  // Case law detection
+  if (s.startsWith("case-law-")) return "case-law";
   // Privacy tort detection (must come before generic checks)
   if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("ahs-")) return "ahs";
   if (s.includes("vuori")) return "vuori";
@@ -967,8 +969,8 @@ export default async function Page(props) {
               <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
                 <Link href="/">Home</Link>
                 <span aria-hidden="true"> › </span>
-                <Link href={articleType === "ssdi" ? "/social-security-disability" : "/property-damage-insurance-claim"}>
-                  {articleType === "ssdi" ? "SSDI" : "Property Damage"}
+                <Link href={articleType === "case-law" ? "/case-law-updates" : articleType === "ssdi" ? "/social-security-disability" : "/property-damage-insurance-claim"}>
+                  {articleType === "case-law" ? "Case Law Updates" : articleType === "ssdi" ? "SSDI" : "Property Damage"}
                 </Link>
                 <span aria-hidden="true"> › </span>
                 <span>{page.title}</span>
@@ -992,7 +994,18 @@ export default async function Page(props) {
                 if (typeof window !== 'undefined') { try { console.log('🧪 Buttons resolved (top):', _btns); } catch(e){} }
                 return <ArticleButtonsRow buttons={_btns} />;
               })()}
-              <UrgencyBanner articleType={articleType} />
+              {articleType === "case-law" ? (
+                <Link href="/case-law-updates#submit-policy" className={styles.caseLawTopCta}>
+                  <span className={styles.caseLawTopCtaIcon}>📋</span>
+                  <span className={styles.caseLawTopCtaText}>
+                    <strong>Submit a Policy or Denial Letter for Review</strong>{" "}
+                    Free review by our property damage attorneys — response within 24 hours.
+                  </span>
+                  <span className={styles.caseLawTopCtaBtn}>Submit for Review →</span>
+                </Link>
+              ) : (
+                <UrgencyBanner articleType={articleType} />
+              )}
               {/* Author byline */}
               <div className={styles.authorByline}>
                 <img
@@ -1087,7 +1100,7 @@ export default async function Page(props) {
                 );
               })()}
               <div className={styles.blogContent}>
-                <DocumentUploadCTA articleType={articleType} />
+                {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} />}
                 {(() => {
                   // articleType computed above via getArticleType(slug)
                   return (page.blocks || []).map((block, index) => (

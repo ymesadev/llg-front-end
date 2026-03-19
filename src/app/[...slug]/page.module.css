@@ -676,6 +676,56 @@
   text-decoration: underline;
 }
 
+/* ── Case Law Top CTA Banner ── */
+.caseLawTopCta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #1a2b49;
+  color: #fff;
+  padding: 0.85rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  margin: 0.75rem 0 1rem;
+  transition: background 0.2s ease;
+}
+.caseLawTopCta:hover {
+  background: #243558;
+}
+.caseLawTopCtaIcon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.caseLawTopCtaText {
+  flex: 1;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  color: #d6dce8;
+}
+.caseLawTopCtaText strong {
+  color: #fff;
+}
+.caseLawTopCtaBtn {
+  flex-shrink: 0;
+  background: #c9a84c;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+@media (max-width: 640px) {
+  .caseLawTopCta {
+    flex-direction: column;
+    text-align: center;
+  }
+  .caseLawTopCtaBtn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 /* ── End-of-article CTA ── */
 .endCta {
   background: #1a2b49;
