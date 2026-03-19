@@ -96,6 +96,10 @@ public/*
 !src/app/api/ssdi-intake/
 !src/app/api/ssdi-intake/**
 
+# allow public adjuster resources landing page
+!src/app/public-adjuster-resources-florida/
+!src/app/public-adjuster-resources-florida/**
+
 # allow package.json for nodemailer
 !package.json
 !package-lock.json
