@@ -87,6 +87,40 @@
   transform: translateY(-3px);
 }
 
+/* ---- Ask A Lawyer SMS CTAs ---- */
+.askLawyerHeroCta,
+.askLawyerMidCta,
+.askLawyerFinalCta {
+  display: inline-block;
+  background: #0d6e3f;
+  color: #fff;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  padding: 0.9rem 2.2rem;
+  border-radius: 30px;
+  transition: background 0.2s, transform 0.2s;
+  margin-top: 0.75rem;
+  margin-left: 0.5rem;
+}
+.askLawyerHeroCta:hover,
+.askLawyerMidCta:hover,
+.askLawyerFinalCta:hover {
+  background: #0b5c34;
+  transform: translateY(-3px);
+}
+@media (max-width: 640px) {
+  .askLawyerHeroCta,
+  .askLawyerMidCta,
+  .askLawyerFinalCta {
+    display: block;
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
 .testimonialDisclaimer {
   font-size: 0.8rem;
   color: #888;

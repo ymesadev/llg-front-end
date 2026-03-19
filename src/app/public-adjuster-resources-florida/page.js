@@ -10,12 +10,11 @@ export const metadata = {
   openGraph: {
     title: "Florida Public Adjuster Resources | Louis Law Group",
     description:
-      "Regulatory updates, carrier intelligence, and legal support for Florida's public adjusters. Partner with property damage attorneys who fight alongside PAs.",
+      "Regulatory updates, carrier intelligence, and legal support for Florida's public adjusters. Property damage attorneys who fight alongside PAs.",
     url: "https://www.louislawgroup.com/public-adjuster-resources-florida",
   },
 };
 
-const CTA_URL = "https://forms.louislawgroup.com/s/cmfkzvlq6001e684en1k5e2iy";
 
 const SERVICES = [
   {
@@ -64,11 +63,6 @@ const SERVICES = [
 
 const STATS = [
   {
-    number: "466+",
-    label: "public adjusters on our partner network across Florida",
-    icon: "🤝",
-  },
-  {
     number: "$200M+",
     label: "recovered for Florida policyholders in property damage claims",
     icon: "💰",
@@ -80,7 +74,7 @@ const STATS = [
   },
   {
     number: "$0",
-    label: "upfront cost — we work on contingency alongside your PA",
+    label: "upfront cost — we work on contingency",
     icon: "🛡️",
   },
   {
@@ -150,7 +144,7 @@ const REFERRAL_TRIGGERS = [
   {
     icon: "🚫",
     title: "Claim Denied After PA Involvement",
-    desc: "If the carrier issues a final denial after your estimate and supplement, litigation is the next step. PAs cannot file lawsuits — an attorney can.",
+    desc: "If the carrier issues a final denial after your estimate and supplement, litigation is the next step. PAs cannot file lawsuits — an attorney can handle that.",
   },
   {
     icon: "⚠️",
@@ -185,12 +179,12 @@ const FAQS = [
     a: "Yes. Florida law allows policyholders to hire both a PA and an attorney. The PA handles damage assessment and estimating, while the attorney handles legal disputes, bad faith claims, and litigation. This combination often produces the best outcomes for policyholders.",
   },
   {
-    q: "When should a public adjuster refer a claim to an attorney?",
+    q: "When should a public adjuster involve an attorney?",
     a: "If the carrier denies the claim, acts in bad faith, requests an Examination Under Oath, or if there is a coverage dispute, it is time to involve a property damage attorney. PAs cannot practice law or file lawsuits on behalf of policyholders.",
   },
   {
     q: "How does Louis Law Group work with public adjusters?",
-    a: "We partner with PAs across Florida. When a claim requires legal action, we step in to handle litigation, bad faith claims, and coverage disputes. PAs can submit policies for review or ask our attorneys questions directly through this page.",
+    a: "When a claim requires legal action, we handle litigation, bad faith claims, and coverage disputes. PAs can submit policies for review or ask our attorneys questions directly through this page.",
   },
   {
     q: "What are the PA contract requirements under Florida law?",
@@ -201,55 +195,11 @@ const FAQS = [
     a: "Monitor the Florida OIR website (floir.gov) for rate decisions and carrier actions, the DFS Insurance Insights newsletter for PA-specific updates, and Insurance Journal's Southeast section for market trends. All resources are linked on this page.",
   },
   {
-    q: "Does it cost anything for a PA to partner with Louis Law Group?",
-    a: "No. We work on contingency — the policyholder pays nothing unless we recover. There is no cost to the PA for referring a case or submitting a policy for review. Our goal is the same as yours: maximum recovery for the policyholder.",
+    q: "Does it cost anything for a PA to work with Louis Law Group?",
+    a: "No. We work on contingency — the policyholder pays nothing unless we recover. There is no cost to the PA for submitting a policy for review. Our goal is the same as yours: maximum recovery for the policyholder.",
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    initial: "R",
-    name: "Rafael M.",
-    type: "PA Referral — Denied Roof Claim",
-    outcome: "$47,000 Recovered",
-    text: "I had a client whose roof claim was denied by Citizens after my estimate. Louis Law Group took over the legal side, filed a bad faith claim, and we recovered $47K. I keep adjusting, they handle the legal fight.",
-  },
-  {
-    initial: "T",
-    name: "Tanya W.",
-    type: "PA Referral — Water Damage",
-    outcome: "Full Payout + Bad Faith",
-    text: "The carrier underpaid my client's water damage claim by $30K. After I referred to Louis Law Group, they negotiated the full amount plus bad faith penalties. Best referral partnership I have.",
-  },
-  {
-    initial: "K",
-    name: "Kevin D.",
-    type: "PA Referral — Hurricane Claim",
-    outcome: "$82,000 Settlement",
-    text: "Post-hurricane claim that the carrier kept delaying. Louis Law Group filed suit and we settled for $82K — three times the carrier's original offer. They understand how to work with PAs.",
-  },
-  {
-    initial: "S",
-    name: "Sandra L.",
-    type: "PA Referral — Mold Claim",
-    outcome: "Coverage Dispute Won",
-    text: "Carrier denied mold remediation claiming it was a maintenance issue. Louis Law Group proved it was storm-related water intrusion. My client got full remediation covered.",
-  },
-  {
-    initial: "A",
-    name: "Anthony C.",
-    type: "PA Referral — EUO Defense",
-    outcome: "Claim Preserved",
-    text: "My client was hit with an EUO demand. I immediately referred to Louis Law Group. They prepped my client, attended the EUO, and the carrier paid the claim in full two weeks later.",
-  },
-  {
-    initial: "M",
-    name: "Maria G.",
-    type: "PA Referral — Underpayment",
-    outcome: "$28,500 Additional",
-    text: "The carrier accepted my estimate but only paid 60%. Louis Law Group negotiated the remaining balance plus interest. Having an attorney on standby makes all the difference.",
-  },
-];
 
 export default function PublicAdjusterResourcesPage() {
   return (
@@ -267,19 +217,21 @@ export default function PublicAdjusterResourcesPage() {
             <p className={styles.heroSubtitle}>
               Regulatory updates, carrier intelligence, key statutes, and legal support —
               everything Florida public adjusters need to maximize policyholder recoveries.
-              Partner with attorneys who fight alongside PAs.
             </p>
             <ul className={styles.heroBullets}>
               <li>✔ OIR &amp; DFS regulatory updates for PAs</li>
               <li>✔ Carrier enforcement actions &amp; market data</li>
               <li>✔ Key Florida statutes every PA should know</li>
               <li>✔ Free policy reviews &amp; attorney consultations</li>
-              <li>✔ No cost to PAs — we work on contingency</li>
+              <li>✔ No upfront cost — we work on contingency</li>
             </ul>
-            <a href={CTA_URL} className={styles.ctaPrimary} target="_blank" rel="noopener noreferrer">
+            <Link href="/case-law-updates#submit-policy" className={styles.ctaPrimary}>
               Submit a Policy for Review →
+            </Link>
+            <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerHeroCta}>
+              💬 Ask A Lawyer — Text Us Now
             </a>
-            <p className={styles.ctaNote}>Free review · No obligation · No cost to the PA</p>
+            <p className={styles.ctaNote}>Free review · No obligation · No upfront cost</p>
           </div>
           <div className={styles.heroCard}>
             <div className={styles.heroCardBadge}>For Public Adjusters</div>
@@ -295,9 +247,9 @@ export default function PublicAdjusterResourcesPage() {
               <div className={styles.trustStat}><strong>24/7</strong><span>Available</span></div>
               <div className={styles.trustStat}><strong>No Win</strong><span>No Fee</span></div>
             </div>
-            <a href={CTA_URL} className={styles.ctaCard} target="_blank" rel="noopener noreferrer">
+            <Link href="/case-law-updates#submit-policy" className={styles.ctaCard}>
               Submit Policy for Review — Free
-            </a>
+            </Link>
             <p className={styles.cardDisclaimer}>
               Licensed Attorneys · No Win, No Fee
             </p>
@@ -350,7 +302,7 @@ export default function PublicAdjusterResourcesPage() {
         <div className={styles.sectionInner}>
           <div className={styles.sectionEyebrow}>By the Numbers</div>
           <h2 className={styles.sectionTitle}>
-            Why PAs <span className={styles.gold}>Partner</span> with Louis Law Group
+            Why PAs <span className={styles.gold}>Choose</span> Louis Law Group
           </h2>
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
@@ -396,22 +348,25 @@ export default function PublicAdjusterResourcesPage() {
             policyholder lose. Submit the policy for a free attorney review. We handle the legal
             fight so you can focus on what you do best.
           </p>
-          <a href={CTA_URL} className={styles.ctaPrimary} target="_blank" rel="noopener noreferrer">
+          <Link href="/case-law-updates#submit-policy" className={styles.ctaPrimary}>
             Submit Policy for Review — Free
+          </Link>
+          <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerMidCta}>
+            💬 Ask A Lawyer — Text Us Now
           </a>
         </div>
       </section>
 
-      {/* WHEN TO REFER */}
+      {/* WHEN TO INVOLVE AN ATTORNEY */}
       <section className={styles.dayOne}>
         <div className={styles.sectionInner}>
           <div className={styles.sectionEyebrow}>Know When to Call</div>
           <h2 className={styles.sectionTitle}>
-            When to <span className={styles.gold}>Partner</span> with an Attorney
+            When to <span className={styles.gold}>Involve</span> an Attorney
           </h2>
           <p className={styles.sectionSubtitle}>
             PAs and property damage attorneys serve complementary roles. Here are the
-            situations where bringing in legal counsel maximizes the policyholder&apos;s recovery.
+            situations where legal counsel maximizes the policyholder&apos;s recovery.
           </p>
           <div className={styles.dayOneGrid}>
             {REFERRAL_TRIGGERS.map((s) => (
@@ -447,9 +402,9 @@ export default function PublicAdjusterResourcesPage() {
               </div>
             ))}
           </div>
-          <a href={CTA_URL} className={styles.ctaPrimary} target="_blank" rel="noopener noreferrer" style={{ marginTop: "2.5rem" }}>
+          <Link href="/case-law-updates#submit-policy" className={styles.ctaPrimary} style={{ marginTop: "2.5rem" }}>
             Start Step 01 — Submit a Policy for Review
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -468,12 +423,12 @@ export default function PublicAdjusterResourcesPage() {
             </div>
             <div className={styles.whyCard}>
               <div className={styles.whyCardIcon}>💰</div>
-              <h3>Zero Cost to the PA</h3>
-              <p>There is no referral fee, no cost to the PA, and no upfront cost to the policyholder. We work on contingency — we only get paid if we recover.</p>
+              <h3>Zero Upfront Cost</h3>
+              <p>No upfront cost to the policyholder. We work on contingency — we only get paid if we recover.</p>
             </div>
             <div className={styles.whyCard}>
               <div className={styles.whyCardIcon}>🤝</div>
-              <h3>PA-Friendly Partnership</h3>
+              <h3>PA-Friendly Approach</h3>
               <p>We don&apos;t replace PAs — we complement them. You handle the damage assessment and estimate. We handle the legal fight. Together, the policyholder wins.</p>
             </div>
             <div className={styles.whyCard}>
@@ -489,38 +444,9 @@ export default function PublicAdjusterResourcesPage() {
             <div className={styles.whyCard}>
               <div className={styles.whyCardIcon}>⚡</div>
               <h3>Fast Response</h3>
-              <p>Deadlines matter in property claims. We respond to PA referrals within 24 hours and can file emergency motions when carriers act in bad faith.</p>
+              <p>Deadlines matter in property claims. We respond within 24 hours and can file emergency motions when carriers act in bad faith.</p>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className={styles.testimonials}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionEyebrow}>★★★★★ PA Partner Results</div>
-          <h2 className={styles.sectionTitle}>What PAs Say About Working with Us</h2>
-          <p className={styles.sectionSubtitle}>Real results from PA-attorney partnerships across Florida.</p>
-          <div className={styles.testimonialsGrid}>
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className={styles.testimonialCard}>
-                <div className={styles.testimonialTop}>
-                  <div className={styles.testimonialAvatar}>{t.initial}</div>
-                  <div>
-                    <div className={styles.testimonialName}>{t.name}</div>
-                    <div className={styles.testimonialLocation}>{t.type}</div>
-                  </div>
-                  <div className={styles.outcomeBadge}>{t.outcome}</div>
-                </div>
-                <div className={styles.stars}>★★★★★</div>
-                <p className={styles.testimonialText}>&ldquo;{t.text}&rdquo;</p>
-              </div>
-            ))}
-          </div>
-          <p className={styles.testimonialDisclaimer}>* Results may vary by case.</p>
-          <a href={CTA_URL} className={styles.ctaSecondary} target="_blank" rel="noopener noreferrer">
-            Partner with Us — Submit a Policy for Review →
-          </a>
         </div>
       </section>
 
@@ -554,8 +480,11 @@ export default function PublicAdjusterResourcesPage() {
             so you can keep adjusting.{" "}
             <strong>No cost to the PA. No fee unless we win.</strong>
           </p>
-          <a href={CTA_URL} className={styles.ctaFinal} target="_blank" rel="noopener noreferrer">
+          <Link href="/case-law-updates#submit-policy" className={styles.ctaFinal}>
             Submit a Policy for Review — Free →
+          </Link>
+          <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerFinalCta}>
+            💬 Ask A Lawyer — Text Us Now
           </a>
           <p className={styles.finalCtaNote}>
             Available 24/7 · No Obligation · No Upfront Cost
