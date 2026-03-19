@@ -66,14 +66,12 @@ export async function POST(request) {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          body: {
-            fullName,
-            email,
-            phone,
-            message,
-            documents: docsText,
-            documentLinks: docsHtml,
-          },
+          fullName,
+          email,
+          phone,
+          message,
+          documents: docsText,
+          documentLinks: docsHtml,
         }),
       });
       if (!n8nRes.ok) {
