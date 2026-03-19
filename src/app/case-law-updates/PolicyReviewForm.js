@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import styles from "./caselaw.module.css";
 
 export default function PolicyReviewForm() {
@@ -10,11 +10,25 @@ export default function PolicyReviewForm() {
     phone: "",
     message: "",
   });
+  const [files, setFiles] = useState([]);
   const [status, setStatus] = useState("idle"); // idle | submitting | success | error
   const [errorMsg, setErrorMsg] = useState("");
+  const fileInputRef = useRef(null);
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleFileChange = (e) => {
+    const selected = Array.from(e.target.files || []);
+    // Max 5 files, 10MB each
+    const valid = selected.filter((f) => f.size <= 10 * 1024 * 1024).slice(0, 5);
+    setFiles(valid);
+  };
+
+  const removeFile = (index) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e) => {
@@ -23,21 +37,26 @@ export default function PolicyReviewForm() {
     setErrorMsg("");
 
     try {
-      const res = await fetch(
-        "https://n8n.louislawgroup.com/webhook/policy-review-submit",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const body = new FormData();
+      body.append("fullName", formData.fullName);
+      body.append("email", formData.email);
+      body.append("phone", formData.phone);
+      body.append("message", formData.message);
+      files.forEach((f) => body.append("files", f));
+
+      const res = await fetch("/api/policy-review", {
+        method: "POST",
+        body,
+      });
 
       if (res.ok) {
         setStatus("success");
         setFormData({ fullName: "", email: "", phone: "", message: "" });
+        setFiles([]);
       } else {
+        const data = await res.json().catch(() => ({}));
         setStatus("error");
-        setErrorMsg("Something went wrong. Please call us at 833-657-4812.");
+        setErrorMsg(data.error || "Something went wrong. Please call us at 833-657-4812.");
       }
     } catch {
       setStatus("error");
@@ -118,12 +137,38 @@ export default function PolicyReviewForm() {
           <textarea
             id="message"
             name="message"
-            rows={4}
+            rows={3}
             value={formData.message}
             onChange={handleChange}
             placeholder="Describe the claim, carrier involved, type of damage, and any relevant details..."
             className={styles.formTextarea}
           />
+        </div>
+        <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+          <label htmlFor="files" className={styles.formLabel}>
+            Upload Policy or Denial Letter (optional)
+          </label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            id="files"
+            name="files"
+            multiple
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.tiff,.tif"
+            onChange={handleFileChange}
+            className={styles.formFileInput}
+          />
+          <p className={styles.formHint}>PDF, DOC, DOCX, JPG, PNG, TIFF — max 10 MB per file, up to 5 files</p>
+          {files.length > 0 && (
+            <ul className={styles.fileList}>
+              {files.map((f, i) => (
+                <li key={i} className={styles.fileItem}>
+                  <span>{f.name} ({(f.size / 1024).toFixed(0)} KB)</span>
+                  <button type="button" onClick={() => removeFile(i)} className={styles.fileRemove}>Remove</button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
       {status === "error" && (
