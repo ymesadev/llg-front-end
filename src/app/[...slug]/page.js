@@ -90,14 +90,19 @@ function getRelatedLinks(slug, articleType) {
     { href: `/insurance-claim-denied-${state}`, label: `Insurance Claim Denied in ${stateName}? Your Rights` },
     { href: `/property-damage-attorney-${state}`, label: `Property Damage Attorney in ${stateName}` },
     { href: `/homeowners-insurance-claim-${state}`, label: `Homeowners Insurance Claim in ${stateName}` },
+    { href: `/water-damage-attorney-${state}`, label: `Water Damage Attorney in ${stateName}` },
   ] : [];
   const baseLinks = [
     { href: "/insurance-claim-denied-fl", label: "Insurance Claim Denied in Florida? Your Legal Rights" },
     { href: "/ten-tips-handling-allstate-claim-denials", label: "10 Tips for Handling Allstate Claim Denials" },
     { href: "/ten-tips-handling-usaa-insurance-claim-denials", label: "10 Tips for Handling USAA Claim Denials" },
+    { href: "/ten-tips-handling-state-farm-claim-denials", label: "10 Tips for Handling State Farm Claim Denials" },
+    { href: "/ten-tips-handling-nationwide-claim-denials", label: "10 Tips for Handling Nationwide Claim Denials" },
+    { href: "/ten-tips-handling-citizens-insurance-claim-denials", label: "10 Tips for Handling Citizens Insurance Denials" },
+    { href: "/tips-handling-claim-denials-progressive-select-insurance", label: "Progressive Select Claim Denied? 10 Ways to Win" },
+    { href: "/roof-leak-insurance-claim-florida", label: "Roof Leak Insurance Claim in Florida" },
     { href: "/underpaid-insurance-claim-florida", label: "Underpaid Insurance Claim? How to Fight Back" },
     { href: "/insurance-company-delayed-my-claim-florida", label: "Insurance Company Delaying Your Claim?" },
-    { href: "/tips-handling-claim-denials-progressive-select-insurance", label: "Progressive Select Claim Denied? 10 Ways to Win" },
   ];
   return { title: `Related Insurance Claim Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...baseLinks].slice(0, 8) };
 }
