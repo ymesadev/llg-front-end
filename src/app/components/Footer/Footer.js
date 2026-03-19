@@ -163,6 +163,11 @@ export default function Footer() {
                   SSDI Disability Lawyers
                 </Link>
               </li>
+              <li className={styles.navItem}>
+                <Link href="/public-adjuster-resources-florida" className={styles.navLink}>
+                  Public Adjuster Resources
+                </Link>
+              </li>
             </ul>
           </div>
 
