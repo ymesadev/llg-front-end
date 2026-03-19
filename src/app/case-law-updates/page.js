@@ -3,7 +3,7 @@ import styles from "./caselaw.module.css";
 import Link from "next/link";
 import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
-import Contact from "../components/Contact/ContactSection";
+import PolicyReviewForm from "./PolicyReviewForm";
 
 export const revalidate = 60;
 
@@ -232,9 +232,21 @@ export default async function CaseLawUpdatesPage({ searchParams }) {
         </div>
       </section>
 
+      {/* Policy Review Submission Form */}
+      <section className={styles.formSection} id="submit-policy">
+        <div className="container">
+          <h2 className={styles.formTitle}>Submit a Policy for Review</h2>
+          <p className={styles.formSubtitle}>
+            Have a complex claim or coverage question? Submit your policyholder&apos;s details
+            for a <strong>free review</strong> by our property damage attorneys. We&apos;ll analyze
+            the situation and advise on the best path forward.
+          </p>
+          <PolicyReviewForm />
+        </div>
+      </section>
+
       <Results />
       <Steps />
-      <Contact />
 
       {/* FAQ Schema */}
       <script
