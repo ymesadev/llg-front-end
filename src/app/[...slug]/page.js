@@ -995,14 +995,24 @@ export default async function Page(props) {
                 return <ArticleButtonsRow buttons={_btns} />;
               })()}
               {articleType === "case-law" ? (
-                <Link href="/case-law-updates#submit-policy" className={styles.caseLawTopCta}>
-                  <span className={styles.caseLawTopCtaIcon}>📋</span>
-                  <span className={styles.caseLawTopCtaText}>
-                    <strong>Submit a Policy or Denial Letter for Review</strong>{" "}
-                    Free review by our property damage attorneys — response within 24 hours.
-                  </span>
-                  <span className={styles.caseLawTopCtaBtn}>Submit for Review →</span>
-                </Link>
+                <>
+                  <Link href="/case-law-updates#submit-policy" className={styles.caseLawTopCta}>
+                    <span className={styles.caseLawTopCtaIcon}>📋</span>
+                    <span className={styles.caseLawTopCtaText}>
+                      <strong>Submit a Policy or Denial Letter for Review</strong>{" "}
+                      Free review by our property damage attorneys — response within 24 hours.
+                    </span>
+                    <span className={styles.caseLawTopCtaBtn}>Submit for Review →</span>
+                  </Link>
+                  <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerCta}>
+                    <span className={styles.askLawyerCtaIcon}>💬</span>
+                    <span className={styles.askLawyerCtaText}>
+                      <strong>Ask A Lawyer</strong>{" "}
+                      Text us directly with questions about your claim.
+                    </span>
+                    <span className={styles.askLawyerCtaBtn}>Text Us Now →</span>
+                  </a>
+                </>
               ) : (
                 <UrgencyBanner articleType={articleType} />
               )}
