@@ -168,6 +168,11 @@ export default function Footer() {
                   Public Adjuster Resources
                 </Link>
               </li>
+              <li className={styles.navItem}>
+                <Link href="/case-law-updates" className={styles.navLink}>
+                  Case Law Updates
+                </Link>
+              </li>
             </ul>
           </div>
 

@@ -100,6 +100,10 @@ public/*
 !src/app/public-adjuster-resources-florida/
 !src/app/public-adjuster-resources-florida/**
 
+# allow case law updates landing page
+!src/app/case-law-updates/
+!src/app/case-law-updates/**
+
 # allow package.json for nodemailer
 !package.json
 !package-lock.json
