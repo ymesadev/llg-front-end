@@ -1,21 +1,6 @@
 import { NextResponse } from "next/server";
-import { createHash, createCipheriv, randomBytes } from "crypto";
 
 const N8N_WEBHOOK_URL = "https://n8n.louislawgroup.com/webhook/policy-review-submit";
-const DOWNLOAD_SECRET = process.env.POLICY_DOWNLOAD_SECRET || "llg-policy-review-secret-2026-xK9m";
-const SITE_URL = "https://www.louislawgroup.com";
-
-// Encrypt file data with AES-256 and return token + encrypted payload
-function encryptFile(buffer, filename) {
-  const id = randomBytes(16).toString("hex");
-  const key = createHash("sha256").update(DOWNLOAD_SECRET).digest();
-  const iv = randomBytes(16);
-  const cipher = createCipheriv("aes-256-cbc", key, iv);
-  const encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
-  // Token = id:iv:filename (base64url encoded)
-  const meta = Buffer.from(JSON.stringify({ id, iv: iv.toString("hex"), name: filename })).toString("base64url");
-  return { id, meta, encrypted };
-}
 
 export async function POST(request) {
   try {
@@ -30,49 +15,30 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
 
-    // Process files: generate secure download links
-    const fileLinks = [];
-    const fileAttachments = [];
+    const fileNames = files.length > 0
+      ? files.map(f => `${f.name} (${(f.size / 1024).toFixed(1)} KB)`).join(", ")
+      : "None";
+
+    // Build multipart form for n8n (supports binary file uploads)
+    const n8nForm = new FormData();
+    n8nForm.append("fullName", fullName);
+    n8nForm.append("email", email);
+    n8nForm.append("phone", phone);
+    n8nForm.append("message", message);
+    n8nForm.append("documents", fileNames);
+
+    // Attach files as binary data
     for (const file of files) {
       const buffer = Buffer.from(await file.arrayBuffer());
-      // Create signed download token (HMAC with expiry)
-      const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
-      const fileId = randomBytes(16).toString("hex");
-      const payload = `${fileId}:${file.name}:${expiresAt}`;
-      const signature = createHash("sha256").update(payload + DOWNLOAD_SECRET).digest("hex").slice(0, 32);
-      const token = Buffer.from(JSON.stringify({
-        id: fileId,
-        name: file.name,
-        type: file.type,
-        exp: expiresAt,
-        sig: signature,
-        data: buffer.toString("base64"),
-      })).toString("base64url");
-
-      const downloadUrl = `${SITE_URL}/api/policy-review/download?token=${token}`;
-      fileLinks.push({ name: file.name, size: file.size, url: downloadUrl });
-      fileAttachments.push(`${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
+      const blob = new Blob([buffer], { type: file.type || "application/octet-stream" });
+      n8nForm.append("data", blob, file.name);
     }
 
-    // Build document links HTML for email
-    const docsHtml = fileLinks.length > 0
-      ? fileLinks.map(f => `<a href="${f.url}" style="color:#1a73e8;text-decoration:underline;">${f.name}</a> (${(f.size / 1024).toFixed(1)} KB)`).join("<br>")
-      : "None";
-    const docsText = fileAttachments.length > 0 ? fileAttachments.join(", ") : "None";
-
-    // Send to n8n webhook
+    // Send to n8n webhook as multipart/form-data
     try {
       const n8nRes = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          fullName,
-          email,
-          phone,
-          message,
-          documents: docsText,
-          documentLinks: docsHtml,
-        }),
+        body: n8nForm,
       });
       if (!n8nRes.ok) {
         console.error("[policy-review] n8n webhook returned:", n8nRes.status);
