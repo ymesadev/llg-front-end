@@ -106,63 +106,41 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
 
-    // 1. Create/find GHL contact
-    let contactId = null;
-    let ghlSent = false;
+    // 1. Send email to Pierre via relay (primary — reliable)
+    const relayUrl = process.env.EMAIL_RELAY_URL || "http://144.217.164.240:9090/send-email";
+    const relaySecret = process.env.EMAIL_RELAY_SECRET || "llg-relay-2026";
+    const fileNames = files.length > 0 ? files.map(f => `${f.name} (${(f.size / 1024).toFixed(1)} KB)`).join(", ") : "None";
     try {
-      contactId = await findOrCreateContact(name, email, phone);
+      await fetch(relayUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: relaySecret,
+          to: "pierre@louislawgroup.com",
+          subject: `Policy Review Request — ${name}`,
+          body: `Policy Review Request\n\nFull Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nDescription: ${message || "None"}\nDocuments attached: ${fileNames}\n\nSource: Case Law Updates — Policy Review Form`,
+        }),
+      });
+    } catch (relayErr) {
+      console.error("[policy-review] Email relay failed:", relayErr.message);
+    }
+
+    // 2. Track in GHL (background — don't block response)
+    try {
+      const contactId = await findOrCreateContact(name, email, phone);
       if (contactId) {
-        const conversationId = await getOrCreateEmailConversation(contactId);
-        if (conversationId) {
-          const attachmentUrls = [];
-          for (const file of files) {
-            const url = await uploadFileToGHL(file, conversationId, contactId);
-            if (url) attachmentUrls.push(url);
+        await addContactNote(contactId, `Policy Review Request\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}\nFiles: ${fileNames}`);
+        if (files.length > 0) {
+          const conversationId = await getOrCreateEmailConversation(contactId);
+          if (conversationId) {
+            for (const file of files) {
+              await uploadFileToGHL(file, conversationId, contactId);
+            }
           }
-
-          const fileListHtml = files.length > 0
-            ? `<ul>${files.map((f) => `<li>${f.name} (${(f.size / 1024).toFixed(1)} KB)</li>`).join("")}</ul>`
-            : "<p>No files attached</p>";
-
-          const html = `
-            <h2>Policy Review Request — Case Law</h2>
-            <table style="border-collapse:collapse;width:100%;max-width:600px;">
-              <tr style="background:#f8f9fa;"><td style="padding:12px;border:1px solid #dee2e6;font-weight:bold;">Full Name</td><td style="padding:12px;border:1px solid #dee2e6;">${name}</td></tr>
-              <tr><td style="padding:12px;border:1px solid #dee2e6;font-weight:bold;">Email</td><td style="padding:12px;border:1px solid #dee2e6;"><a href="mailto:${email}">${email}</a></td></tr>
-              <tr style="background:#f8f9fa;"><td style="padding:12px;border:1px solid #dee2e6;font-weight:bold;">Phone</td><td style="padding:12px;border:1px solid #dee2e6;"><a href="tel:${phone}">${phone}</a></td></tr>
-              <tr><td style="padding:12px;border:1px solid #dee2e6;font-weight:bold;">Description</td><td style="padding:12px;border:1px solid #dee2e6;">${message || "None provided"}</td></tr>
-              <tr style="background:#f8f9fa;"><td style="padding:12px;border:1px solid #dee2e6;font-weight:bold;">Documents</td><td style="padding:12px;border:1px solid #dee2e6;">${fileListHtml}</td></tr>
-            </table>
-            <p style="color:#666;font-size:12px;">Source: Case Law Updates — Policy Review Form</p>
-          `;
-
-          ghlSent = await sendEmailWithAttachments(conversationId, contactId, `Policy Review Request — ${name}`, html, attachmentUrls);
-          await addContactNote(contactId, `Policy Review Request\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nMessage: ${message}\nFiles: ${files.map(f => f.name).join(", ") || "None"}`);
         }
       }
     } catch (ghlErr) {
-      console.error("[policy-review] GHL error:", ghlErr.message);
-    }
-
-    // 2. Fallback: email relay
-    if (!ghlSent) {
-      const relayUrl = process.env.EMAIL_RELAY_URL || "http://144.217.164.240:9090/send-email";
-      const relaySecret = process.env.EMAIL_RELAY_SECRET || "llg-relay-2026";
-      try {
-        const relayRes = await fetch(relayUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            secret: relaySecret,
-            to: "pierre@louislawgroup.com",
-            subject: `Policy Review Request — ${name}`,
-            body: `Policy Review Request\n\nFull Name: ${name}\nEmail: ${email}\nPhone: ${phone}\nDescription: ${message || "None"}\nFiles attached: ${files.length > 0 ? files.map(f => f.name).join(", ") : "None"}\n\nSource: Case Law Updates — Policy Review Form`,
-          }),
-        });
-        if (relayRes.ok) ghlSent = true;
-      } catch (relayErr) {
-        console.error("[policy-review] Email relay failed:", relayErr.message);
-      }
+      console.error("[policy-review] GHL tracking error:", ghlErr.message);
     }
 
     return NextResponse.json({ success: true, message: "Your policy review request has been submitted. We will contact you within 24 hours." });
