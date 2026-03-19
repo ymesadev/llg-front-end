@@ -33,6 +33,7 @@ export default function PolicyReviewForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (status === "submitting") return; // prevent double submit
     setStatus("submitting");
     setErrorMsg("");
 
