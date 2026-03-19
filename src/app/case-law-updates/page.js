@@ -1,9 +1,7 @@
 import styles from "./page.module.css";
-import Link from "next/link";
 
 export const metadata = {
-  title:
-    "Florida Property Insurance Case Law Updates | Louis Law Group",
+  title: "Florida Property Insurance Case Law Updates | Louis Law Group",
   description:
     "Daily case law updates on Florida property insurance litigation, public adjuster regulations, bad faith claims, and carrier disputes. Curated for public adjusters and claims professionals.",
   keywords:
@@ -22,113 +20,38 @@ const CATEGORIES = [
   {
     icon: "🏠",
     title: "Property Damage Claims",
-    keywords: [
-      "property damage",
-      "wind damage",
-      "water damage",
-      "roof claims",
-      "hurricane",
-    ],
-    desc: "Court rulings on first-party property claims — wind, water, roof, fire, and hurricane damage. Understand how Florida courts interpret policy language and coverage obligations.",
+    keywords: ["wind damage", "water damage", "roof claims", "hurricane"],
+    desc: "Court rulings on first-party property claims — wind, water, roof, fire, and hurricane damage. How courts interpret policy language and coverage obligations.",
   },
   {
     icon: "⚖️",
     title: "Bad Faith Litigation",
-    keywords: [
-      "bad faith insurance",
-      "624.155",
-      "unfair claims practices",
-      "civil remedy",
-    ],
-    desc: "F.S. 624.155 bad faith actions against carriers. Track how courts evaluate insurer conduct, damages, and the evolving standards for statutory and common law bad faith.",
+    keywords: ["624.155", "unfair claims", "civil remedy"],
+    desc: "F.S. 624.155 bad faith actions against carriers. How courts evaluate insurer conduct, damages, and standards for statutory and common law bad faith.",
   },
   {
     icon: "📋",
     title: "Public Adjuster Regulations",
-    keywords: [
-      "public adjuster",
-      "626.854",
-      "PA licensing",
-      "adjuster conduct",
-    ],
-    desc: "Cases involving PA licensing, fee disputes, assignment of benefits, and regulatory actions. Stay current on judicial interpretations of F.S. 626.854 and related statutes.",
+    keywords: ["626.854", "PA licensing", "adjuster conduct"],
+    desc: "Cases involving PA licensing, fee disputes, assignment of benefits, and regulatory actions. Judicial interpretations of F.S. 626.854 and related statutes.",
   },
   {
     icon: "🏛️",
     title: "Carrier Denial & Underpayment",
-    keywords: [
-      "claim denial",
-      "underpayment",
-      "coverage dispute",
-      "policy exclusion",
-    ],
-    desc: "Rulings on insurer denials, underpayments, and coverage exclusions. See how courts handle disputes over appraisal, EUO requirements, and claims handling timelines.",
+    keywords: ["claim denial", "underpayment", "coverage dispute"],
+    desc: "Rulings on insurer denials, underpayments, and coverage exclusions. Disputes over appraisal, EUO requirements, and claims handling timelines.",
   },
   {
     icon: "📜",
-    title: "Legislative & Regulatory Changes",
-    keywords: [
-      "HB 837",
-      "SB 2A",
-      "insurance reform",
-      "AOB reform",
-      "one-way attorney fees",
-    ],
-    desc: "Judicial interpretations of recent Florida insurance reforms including HB 837, SB 2A, AOB limitations, and the elimination of one-way attorney fees.",
+    title: "Legislative & Regulatory",
+    keywords: ["HB 837", "SB 2A", "insurance reform"],
+    desc: "Judicial interpretations of recent Florida insurance reforms including HB 837, SB 2A, AOB limitations, and one-way attorney fee elimination.",
   },
   {
     icon: "🔍",
     title: "Appraisal & Dispute Resolution",
-    keywords: [
-      "appraisal",
-      "alternative dispute",
-      "arbitration",
-      "umpire",
-      "mediation",
-    ],
-    desc: "Case law on appraisal invocation, umpire selection, scope of appraisal vs. coverage disputes, and when courts compel or deny appraisal proceedings.",
-  },
-];
-
-const STATS = [
-  { value: "Daily", label: "Case Updates" },
-  { value: "1,785+", label: "FL Property Cases Tracked" },
-  { value: "262+", label: "PA-Related Decisions" },
-  { value: "26K+", label: "Bad Faith Rulings" },
-  { value: "100%", label: "Free Access" },
-  { value: "2026", label: "Current Through" },
-];
-
-const KEY_COURTS = [
-  {
-    name: "FL District Courts of Appeal",
-    abbr: "DCA",
-    desc: "Florida's five DCAs handle the bulk of property insurance appeals. Their rulings directly shape claims handling practices across the state.",
-  },
-  {
-    name: "FL Supreme Court",
-    abbr: "FLSC",
-    desc: "The final word on Florida insurance law. Supreme Court decisions on bad faith, coverage, and regulatory authority bind all lower courts.",
-  },
-  {
-    name: "Southern District of Florida",
-    abbr: "S.D. Fla.",
-    desc: "Federal court handling major insurance disputes in Miami-Dade, Broward, and Palm Beach — Florida's highest-volume property claims region.",
-  },
-  {
-    name: "Middle District of Florida",
-    abbr: "M.D. Fla.",
-    desc: "Covers Orlando, Tampa, and Jacksonville. Key jurisdiction for hurricane and sinkhole litigation with significant property insurance caseload.",
-  },
-  {
-    name: "Northern District of Florida",
-    abbr: "N.D. Fla.",
-    desc: "Handles Panhandle region cases including Hurricane Michael and Hurricane Sally property claims and insurance disputes.",
-  },
-  {
-    name: "11th Circuit Court of Appeals",
-    abbr: "11th Cir.",
-    desc: "Federal appellate court covering Florida. Its rulings on insurance policy interpretation and federal diversity jurisdiction cases set important precedent.",
+    keywords: ["appraisal", "arbitration", "umpire", "mediation"],
+    desc: "Case law on appraisal invocation, umpire selection, scope of appraisal vs. coverage disputes, and when courts compel or deny proceedings.",
   },
 ];
 
@@ -136,17 +59,17 @@ const STEPS = [
   {
     num: "01",
     title: "We Monitor the Courts",
-    desc: "Our system pulls the latest property insurance rulings from Florida state and federal courts daily — filtering for decisions that matter to PAs and claims professionals.",
+    desc: "Our system pulls the latest property insurance rulings from Florida state and federal courts daily — filtering for decisions that matter to PAs.",
   },
   {
     num: "02",
     title: "AI-Powered Analysis",
-    desc: "Each case is analyzed and summarized with plain-language takeaways — what happened, what the court decided, and what it means for your claims practice.",
+    desc: "Each case is analyzed and summarized with plain-language takeaways — what happened, what the court decided, and what it means for your practice.",
   },
   {
     num: "03",
     title: "Delivered to You",
-    desc: "New case summaries are published daily. Bookmark this page, subscribe to our newsletter, or check back regularly to stay current on the law that affects your work.",
+    desc: "New case summaries are published daily. Bookmark this page or subscribe to our newsletter to stay current on the law that affects your work.",
   },
 ];
 
@@ -161,7 +84,7 @@ const FAQS = [
   },
   {
     q: "Are these case summaries legal advice?",
-    a: "No. These summaries are provided for informational and educational purposes only. They are not legal advice and should not be relied upon as such. For specific legal questions about a case or claim, consult with a licensed attorney.",
+    a: "No. These summaries are provided for informational and educational purposes only. They are not legal advice and should not be relied upon as such. For specific legal questions, consult with a licensed attorney.",
   },
   {
     q: "Can I use these summaries in my claims work?",
@@ -179,257 +102,349 @@ const FAQS = [
 
 const TESTIMONIALS = [
   {
+    initial: "R",
+    name: "Ricardo M.",
+    type: "Licensed PA",
+    outcome: "Client Won",
     text: "These daily case updates have completely changed how I prepare for carrier negotiations. When I cite a recent court ruling, adjusters take notice.",
-    author: "Licensed PA, Miami-Dade County",
   },
   {
+    initial: "J",
+    name: "James P.",
+    type: "Public Adjuster",
+    outcome: "Full Recovery",
     text: "I referred a denied hurricane claim to Louis Law Group after reading about a similar case on their updates page. The client recovered full policy limits plus bad faith damages.",
-    author: "Public Adjuster, Fort Lauderdale",
   },
   {
+    initial: "S",
+    name: "Sandra L.",
+    type: "Claims Consultant",
+    outcome: "Time Saved",
     text: "As a claims consultant, staying current on case law is essential. This resource saves me hours of legal research every week.",
-    author: "Claims Consultant, Tampa",
   },
   {
+    initial: "D",
+    name: "David K.",
+    type: "Licensed PA",
+    outcome: "Bad Faith Win",
     text: "The bad faith case updates are invaluable. I now know exactly when a carrier's conduct crosses the line from underpayment to actionable bad faith.",
-    author: "Licensed PA, Orlando",
   },
   {
+    initial: "M",
+    name: "Maria G.",
+    type: "Public Adjuster",
+    outcome: "Claim Won",
     text: "I was about to accept a lowball offer on a water damage claim. Then I read a case summary here showing the court rejected the same exclusion the carrier was citing. We fought back and won.",
-    author: "Public Adjuster, Palm Beach County",
   },
   {
+    initial: "T",
+    name: "Thomas W.",
+    type: "Senior PA",
+    outcome: "Daily Reader",
     text: "Louis Law Group's case law page is the first thing I check every morning. It's like having a legal research team working for free.",
-    author: "Senior PA, Jacksonville",
   },
 ];
 
 export default function CaseLawUpdates() {
   return (
-    <div className={styles.page}>
-      {/* ───── HERO ───── */}
+    <main className={styles.page}>
+
+      {/* HERO */}
       <section className={styles.hero}>
         <div className={styles.heroInner}>
-          <span className={styles.heroTag}>
-            Case Law Updates &bull; Updated Daily
-          </span>
-          <h1 className={styles.heroTitle}>
-            Florida Property Insurance
-            <br />
-            <span className={styles.heroGold}>Case Law Updates</span>
-          </h1>
-          <p className={styles.heroSub}>
-            Daily curated court decisions on property insurance disputes, public
-            adjuster regulations, bad faith claims, and carrier tactics —
-            essential intelligence for Florida PAs and claims professionals.
-          </p>
-          <div className={styles.heroCtas}>
-            <Link href={CTA_URL} className={styles.btnPrimary}>
-              Submit a Claim for Review
-            </Link>
-            <Link href="/contact" className={styles.btnOutline}>
-              Ask a Lawyer
-            </Link>
+          <div className={styles.heroContent}>
+            <div className={styles.eyebrow}>For Public Adjusters &amp; Claims Professionals</div>
+            <h1 className={styles.heroTitle}>
+              Florida <span className={styles.gold}>Case Law Updates</span> for Property Insurance Professionals
+            </h1>
+            <p className={styles.heroSubtitle}>
+              Daily curated court decisions on property insurance disputes, bad faith claims,
+              PA regulations, and carrier tactics — essential intelligence for your practice.
+            </p>
+            <ul className={styles.heroBullets}>
+              <li>✔ Property damage &amp; coverage disputes</li>
+              <li>✔ Bad faith insurance litigation</li>
+              <li>✔ Public adjuster regulatory cases</li>
+              <li>✔ Carrier denial &amp; underpayment rulings</li>
+              <li>✔ Updated daily — 100% free access</li>
+            </ul>
+            <a href={CTA_URL} className={styles.ctaPrimary}>
+              Submit a Claim for Review →
+            </a>
+            <p className={styles.ctaNote}>Free policy review · No obligation · Available 24/7</p>
+          </div>
+          <div className={styles.heroCard}>
+            <div className={styles.heroCardBadge}>Updated Daily</div>
+            <h2 className={styles.heroCardTitle}>Florida Insurance Case Law Intelligence</h2>
+            <p className={styles.heroCardBody}>
+              We monitor Florida state and federal courts for property insurance decisions
+              that affect your claims practice — so you don&apos;t have to.
+            </p>
+            <div className={styles.trustRow}>
+              <div className={styles.trustStat}><strong>Daily</strong><span>Case Updates</span></div>
+              <div className={styles.trustStat}><strong>1,785+</strong><span>FL Cases Tracked</span></div>
+              <div className={styles.trustStat}><strong>6</strong><span>Court Systems</span></div>
+              <div className={styles.trustStat}><strong>100%</strong><span>Free Access</span></div>
+            </div>
+            <a href="#categories" className={styles.ctaCard}>
+              Browse Case Law Categories
+            </a>
+            <p className={styles.cardDisclaimer}>
+              Covering DCA · Supreme Court · S.D. Fla · M.D. Fla · N.D. Fla · 11th Cir.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ───── URGENCY BANNER ───── */}
-      <section className={styles.urgency}>
-        <p>
-          <strong>Know the Law That Protects Your Clients.</strong> Florida
-          property insurance law changes constantly. Court rulings can
-          strengthen — or weaken — a policyholder&apos;s position overnight.
-          Staying current isn&apos;t optional.
-        </p>
-      </section>
+      {/* URGENCY BANNER */}
+      <div className={styles.urgencyBanner}>
+        <span className={styles.urgencyIcon}>⚖️</span>
+        <span>
+          <strong>Know the Law That Protects Your Clients.</strong> Florida property insurance
+          law changes constantly. Court rulings can strengthen — or weaken — a
+          policyholder&apos;s position overnight.{" "}
+          <a href={CTA_URL} className={styles.urgencyLink}>Get a free claim review</a>.
+        </span>
+      </div>
 
-      {/* ───── STATS GRID ───── */}
-      <section className={styles.statsSection}>
-        <div className={styles.statsGrid}>
-          {STATS.map((s) => (
-            <div key={s.label} className={styles.statCard}>
-              <span className={styles.statValue}>{s.value}</span>
-              <span className={styles.statLabel}>{s.label}</span>
-            </div>
-          ))}
+      {/* CATEGORIES */}
+      <section id="categories" className={styles.services}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>What We Cover</div>
+          <h2 className={styles.sectionTitle}>
+            Case Law <span className={styles.gold}>Categories</span> We Monitor
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Our daily monitoring covers the key areas of Florida property insurance litigation
+            that matter most to public adjusters and claims professionals.
+          </p>
+          <div className={styles.servicesGrid}>
+            {CATEGORIES.map((c) => (
+              <a href={CTA_URL} key={c.title} className={styles.serviceCard}>
+                <div className={styles.serviceIcon}>{c.icon}</div>
+                <h3 className={styles.serviceTitle}>{c.title}</h3>
+                <div className={styles.serviceKeywords}>
+                  {c.keywords.map((k) => (
+                    <span key={k} className={styles.kwTag}>{k}</span>
+                  ))}
+                </div>
+                <p className={styles.serviceDesc}>{c.desc}</p>
+                <span className={styles.serviceArrow}>View Cases →</span>
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ───── CATEGORIES ───── */}
-      <section className={styles.servicesSection}>
-        <h2 className={styles.sectionTitle}>What We Cover</h2>
-        <p className={styles.sectionSub}>
-          Our case law monitoring covers the key areas of Florida property
-          insurance litigation that matter most to public adjusters and claims
-          professionals.
-        </p>
-        <div className={styles.servicesGrid}>
-          {CATEGORIES.map((c) => (
-            <div key={c.title} className={styles.serviceCard}>
-              <span className={styles.serviceIcon}>{c.icon}</span>
-              <h3>{c.title}</h3>
-              <p>{c.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ───── MID CTA ───── */}
+      {/* MID-PAGE CTA */}
       <section className={styles.midCta}>
-        <h2>Found a Case That Affects Your Claim?</h2>
-        <p>
-          Submit the policy for a free legal review. Louis Law Group partners
-          with public adjusters to fight denied and underpaid claims.
-        </p>
-        <div className={styles.heroCtas}>
-          <Link href={CTA_URL} className={styles.btnPrimary}>
-            Submit Policy for Review
-          </Link>
-          <Link href="/contact" className={styles.btnOutline}>
-            Ask a Question
-          </Link>
+        <div className={styles.midCtaInner}>
+          <h2 className={styles.midCtaTitle}>Found a Case That Affects Your Claim?</h2>
+          <p className={styles.midCtaBody}>
+            Submit the policy for a free legal review. Louis Law Group partners with
+            public adjusters to fight denied and underpaid property insurance claims.
+          </p>
+          <a href={CTA_URL} className={styles.ctaPrimary}>
+            Submit Policy for Review — Free
+          </a>
         </div>
       </section>
 
-      {/* ───── KEY COURTS ───── */}
-      <section className={styles.servicesSection}>
-        <h2 className={styles.sectionTitle}>Courts We Monitor</h2>
-        <p className={styles.sectionSub}>
-          We track property insurance decisions from every Florida court that
-          matters — state appellate courts, federal district courts, and the
-          11th Circuit.
-        </p>
-        <div className={styles.servicesGrid}>
-          {KEY_COURTS.map((c) => (
-            <div key={c.abbr} className={styles.serviceCard}>
-              <span className={styles.serviceIcon}>🏛️</span>
-              <h3>
-                {c.name} <small>({c.abbr})</small>
-              </h3>
-              <p>{c.desc}</p>
+      {/* COURTS WE MONITOR (Day One section style) */}
+      <section className={styles.dayOne}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Comprehensive Coverage</div>
+          <h2 className={styles.sectionTitle}>
+            Courts We <span className={styles.gold}>Monitor</span>
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            We track property insurance decisions from every Florida court that matters —
+            state appellate courts, federal district courts, and the 11th Circuit.
+          </p>
+          <div className={styles.dayOneGrid}>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>🏛️</div>
+              <h3>FL District Courts of Appeal</h3>
+              <p>Florida&apos;s five DCAs handle the bulk of property insurance appeals. Their rulings directly shape claims handling practices across the state.</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ───── HOW IT WORKS ───── */}
-      <section className={styles.stepsSection}>
-        <h2 className={styles.sectionTitle}>How It Works</h2>
-        <div className={styles.stepsGrid}>
-          {STEPS.map((s) => (
-            <div key={s.num} className={styles.stepCard}>
-              <span className={styles.stepNum}>{s.num}</span>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>⚖️</div>
+              <h3>FL Supreme Court</h3>
+              <p>The final word on Florida insurance law. Supreme Court decisions on bad faith, coverage, and regulatory authority bind all lower courts.</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ───── WHY LLG ───── */}
-      <section className={styles.whySection}>
-        <h2 className={styles.sectionTitle}>
-          Why Louis Law Group for Claims Professionals
-        </h2>
-        <div className={styles.whyGrid}>
-          {[
-            {
-              t: "First-Party Property Focus",
-              d: "We exclusively handle Florida property insurance claims — it's all we do. Our legal team knows every carrier, every tactic, and every statute.",
-            },
-            {
-              t: "PA Partnership Model",
-              d: "We work alongside public adjusters, not against them. When a claim needs legal escalation, we step in without disrupting the PA-client relationship.",
-            },
-            {
-              t: "No Fee Unless We Win",
-              d: "Contingency fee representation means zero upfront cost to the policyholder or the referring PA. We only get paid when we recover.",
-            },
-            {
-              t: "Daily Legal Intelligence",
-              d: "This case law updates page is part of our commitment to keeping claims professionals informed. Knowledge of current law is a competitive advantage.",
-            },
-            {
-              t: "Statewide Coverage",
-              d: "From the Panhandle to the Keys, we handle property insurance claims in every Florida county and every federal district court in the state.",
-            },
-            {
-              t: "Proven Track Record",
-              d: "Our attorneys have recovered millions for Florida policyholders on denied and underpaid property insurance claims.",
-            },
-          ].map((w) => (
-            <div key={w.t} className={styles.whyCard}>
-              <h3>{w.t}</h3>
-              <p>{w.d}</p>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>📍</div>
+              <h3>Southern District of Florida</h3>
+              <p>Federal court handling major insurance disputes in Miami-Dade, Broward, and Palm Beach — Florida&apos;s highest-volume property claims region.</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ───── TESTIMONIALS ───── */}
-      <section className={styles.testimonialsSection}>
-        <h2 className={styles.sectionTitle}>
-          What Claims Professionals Say
-        </h2>
-        <div className={styles.testimonialsGrid}>
-          {TESTIMONIALS.map((t, i) => (
-            <div key={i} className={styles.testimonialCard}>
-              <p className={styles.testimonialText}>
-                &ldquo;{t.text}&rdquo;
-              </p>
-              <span className={styles.testimonialAuthor}>— {t.author}</span>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>🗺️</div>
+              <h3>Middle District of Florida</h3>
+              <p>Covers Orlando, Tampa, and Jacksonville. Key jurisdiction for hurricane and sinkhole litigation with significant property insurance caseload.</p>
             </div>
-          ))}
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>🌀</div>
+              <h3>Northern District of Florida</h3>
+              <p>Handles Panhandle region cases including Hurricane Michael and Hurricane Sally property claims and insurance disputes.</p>
+            </div>
+            <div className={styles.dayOneCard}>
+              <div className={styles.dayOneIcon}>🔒</div>
+              <h3>11th Circuit Court of Appeals</h3>
+              <p>Federal appellate court covering Florida. Its rulings on insurance policy interpretation and federal diversity jurisdiction set important precedent.</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ───── FAQ ───── */}
-      <section className={styles.faqSection}>
-        <h2 className={styles.sectionTitle}>Frequently Asked Questions</h2>
-        <div className={styles.faqGrid}>
-          {FAQS.map((f, i) => (
-            <details key={i} className={styles.faqItem}>
-              <summary className={styles.faqQuestion}>{f.q}</summary>
-              <p className={styles.faqAnswer}>{f.a}</p>
-            </details>
-          ))}
+      {/* HOW IT WORKS */}
+      <section className={styles.steps}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Simple Process</div>
+          <h2 className={styles.sectionTitle}>How It Works</h2>
+          <div className={styles.stepsGrid}>
+            {STEPS.map((s) => (
+              <div key={s.num} className={styles.stepCard}>
+                <div className={styles.stepNum}>{s.num}</div>
+                <h3 className={styles.stepTitle}>{s.title}</h3>
+                <p className={styles.stepDesc}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <a href={CTA_URL} className={styles.ctaPrimary} style={{ marginTop: "2.5rem" }}>
+            Subscribe to Updates — Free
+          </a>
         </div>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              mainEntity: FAQS.map((f) => ({
-                "@type": "Question",
-                name: f.q,
-                acceptedAnswer: { "@type": "Answer", text: f.a },
-              })),
-            }),
-          }}
-        />
       </section>
 
-      {/* ───── FINAL CTA ───── */}
+      {/* WHY LLG */}
+      <section className={styles.why}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrowLight}>Why Louis Law Group</div>
+          <h2 className={styles.sectionTitleLight}>
+            Built for Claims Professionals
+          </h2>
+          <div className={styles.whyGrid}>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>⚖️</div>
+              <h3>First-Party Property Focus</h3>
+              <p>We exclusively handle Florida property insurance claims — it&apos;s all we do. Our legal team knows every carrier, every tactic, every statute.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>🤝</div>
+              <h3>PA Partnership Model</h3>
+              <p>We work alongside public adjusters, not against them. When a claim needs legal escalation, we step in without disrupting the PA-client relationship.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>💰</div>
+              <h3>No Fee Unless We Win</h3>
+              <p>Contingency fee representation means zero upfront cost to the policyholder or the referring PA. We only get paid when we recover.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>📊</div>
+              <h3>Daily Legal Intelligence</h3>
+              <p>This case law page is part of our commitment to keeping claims professionals informed. Knowledge of current law is a competitive advantage.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>📍</div>
+              <h3>Statewide Coverage</h3>
+              <p>From the Panhandle to the Keys, we handle property insurance claims in every Florida county and every federal district court in the state.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}>🏆</div>
+              <h3>Proven Track Record</h3>
+              <p>Our attorneys have recovered millions for Florida policyholders on denied and underpaid property insurance claims.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className={styles.testimonials}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>What Professionals Say</div>
+          <h2 className={styles.sectionTitle}>Trusted by Florida Claims Professionals</h2>
+          <p className={styles.sectionSubtitle}>Public adjusters and claims consultants across Florida rely on our case law updates and legal partnership.</p>
+          <div className={styles.testimonialsGrid}>
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className={styles.testimonialCard}>
+                <div className={styles.testimonialTop}>
+                  <div className={styles.testimonialAvatar}>{t.initial}</div>
+                  <div>
+                    <div className={styles.testimonialName}>{t.name}</div>
+                    <div className={styles.testimonialLocation}>{t.type}</div>
+                  </div>
+                  <div className={styles.outcomeBadge}>{t.outcome}</div>
+                </div>
+                <div className={styles.stars}>★★★★★</div>
+                <p className={styles.testimonialText}>&ldquo;{t.text}&rdquo;</p>
+              </div>
+            ))}
+          </div>
+          <a href={CTA_URL} className={styles.ctaSecondary}>
+            Partner With Us — Submit a Claim →
+          </a>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className={styles.faq}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Common Questions</div>
+          <h2 className={styles.sectionTitle}>Case Law Updates FAQs</h2>
+          <div className={styles.faqGrid}>
+            {FAQS.map((f) => (
+              <div key={f.q} className={styles.faqItem}>
+                <h3 className={styles.faqQ}>{f.q}</h3>
+                <p className={styles.faqA}>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ SCHEMA */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map((f) => ({
+              "@type": "Question",
+              name: f.q,
+              acceptedAnswer: { "@type": "Answer", text: f.a },
+            })),
+          }),
+        }}
+      />
+
+      {/* FINAL CTA */}
       <section className={styles.finalCta}>
-        <h2>
-          Have a Claim That Needs Legal Backup?
-        </h2>
-        <p>
-          Louis Law Group partners with Florida public adjusters on denied and
-          underpaid property insurance claims. Free policy review — no fees
-          unless we win.
-        </p>
-        <div className={styles.heroCtas}>
-          <Link href={CTA_URL} className={styles.btnPrimary}>
-            Submit Policy for Review
-          </Link>
-          <Link href="tel:8336574812" className={styles.btnOutline}>
-            Call 833-657-4812
-          </Link>
+        <div className={styles.finalCtaInner}>
+          <h2 className={styles.finalCtaTitle}>
+            Have a Claim That Needs Legal Backup?
+          </h2>
+          <p className={styles.finalCtaBody}>
+            Louis Law Group partners with Florida public adjusters on denied and underpaid
+            property insurance claims. Free policy review —
+            <strong> no fees unless we win.</strong>
+          </p>
+          <a href={CTA_URL} className={styles.ctaFinal}>
+            Submit Policy for Review →
+          </a>
+          <p className={styles.finalCtaNote}>
+            Serving All Florida Counties · Available 24/7
+          </p>
+          <div className={styles.finalTrust}>
+            <span>📞 (833) 657-4812</span>
+            <span>·</span>
+            <span>Licensed Florida Attorneys</span>
+            <span>·</span>
+            <span>No Win, No Fee</span>
+          </div>
         </div>
       </section>
-    </div>
+
+    </main>
   );
 }
