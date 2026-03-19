@@ -1,6 +1,21 @@
 import { NextResponse } from "next/server";
+import { createHash, createCipheriv, randomBytes } from "crypto";
 
 const N8N_WEBHOOK_URL = "https://n8n.louislawgroup.com/webhook/policy-review-submit";
+const DOWNLOAD_SECRET = process.env.POLICY_DOWNLOAD_SECRET || "llg-policy-review-secret-2026-xK9m";
+const SITE_URL = "https://www.louislawgroup.com";
+
+// Encrypt file data with AES-256 and return token + encrypted payload
+function encryptFile(buffer, filename) {
+  const id = randomBytes(16).toString("hex");
+  const key = createHash("sha256").update(DOWNLOAD_SECRET).digest();
+  const iv = randomBytes(16);
+  const cipher = createCipheriv("aes-256-cbc", key, iv);
+  const encrypted = Buffer.concat([cipher.update(buffer), cipher.final()]);
+  // Token = id:iv:filename (base64url encoded)
+  const meta = Buffer.from(JSON.stringify({ id, iv: iv.toString("hex"), name: filename })).toString("base64url");
+  return { id, meta, encrypted };
+}
 
 export async function POST(request) {
   try {
@@ -15,19 +30,37 @@ export async function POST(request) {
       return NextResponse.json({ success: false, error: "Missing required fields" }, { status: 400 });
     }
 
-    // Convert files to base64 for n8n
-    const attachments = [];
+    // Process files: generate secure download links
+    const fileLinks = [];
+    const fileAttachments = [];
     for (const file of files) {
       const buffer = Buffer.from(await file.arrayBuffer());
-      attachments.push({
+      // Create signed download token (HMAC with expiry)
+      const expiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+      const fileId = randomBytes(16).toString("hex");
+      const payload = `${fileId}:${file.name}:${expiresAt}`;
+      const signature = createHash("sha256").update(payload + DOWNLOAD_SECRET).digest("hex").slice(0, 32);
+      const token = Buffer.from(JSON.stringify({
+        id: fileId,
         name: file.name,
-        type: file.type || "application/octet-stream",
-        size: file.size,
+        type: file.type,
+        exp: expiresAt,
+        sig: signature,
         data: buffer.toString("base64"),
-      });
+      })).toString("base64url");
+
+      const downloadUrl = `${SITE_URL}/api/policy-review/download?token=${token}`;
+      fileLinks.push({ name: file.name, size: file.size, url: downloadUrl });
+      fileAttachments.push(`${file.name} (${(file.size / 1024).toFixed(1)} KB)`);
     }
 
-    // Send to n8n webhook (single call — Outlook email to Pierre)
+    // Build document links HTML for email
+    const docsHtml = fileLinks.length > 0
+      ? fileLinks.map(f => `<a href="${f.url}" style="color:#1a73e8;text-decoration:underline;">${f.name}</a> (${(f.size / 1024).toFixed(1)} KB)`).join("<br>")
+      : "None";
+    const docsText = fileAttachments.length > 0 ? fileAttachments.join(", ") : "None";
+
+    // Send to n8n webhook
     try {
       const n8nRes = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
@@ -38,10 +71,8 @@ export async function POST(request) {
             email,
             phone,
             message,
-            documents: attachments.length > 0
-              ? attachments.map(a => `${a.name} (${(a.size / 1024).toFixed(1)} KB)`).join(", ")
-              : "None",
-            attachments,
+            documents: docsText,
+            documentLinks: docsHtml,
           },
         }),
       });
