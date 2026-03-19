@@ -122,6 +122,8 @@ function getRelatedLinks(slug, articleType) {
 // Returns the correct href for the end-of-article CTA button
 function getEndCtaHref(slug) {
   const s = (slug || "").toLowerCase();
+  if (s.startsWith("case-law-"))
+    return "/case-law-updates#submit-policy";
   if (s.includes("american-home-shield") || s.startsWith("ahs-"))
     return "/american-home-shield-privacy-torts";
   if (s.includes("kin-insurance"))
@@ -1149,17 +1151,22 @@ export default async function Page(props) {
               {(() => {
                 const endCtaHref = getEndCtaHref(slug);
                 const isPrivacyTort = endCtaHref.includes("privacy-torts") || endCtaHref.includes("vuori");
+                const isCaseLaw = endCtaHref.includes("case-law-updates");
                 const isSms = endCtaHref.startsWith("sms:");
                 return (
                   <div className={styles.endCta}>
                     <h3 className={styles.endCtaTitle}>
-                      {isPrivacyTort ? "See If You Qualify — Free Eligibility Check" : "Ready to Fight Back? Get a Free Case Review."}
+                      {isCaseLaw ? "Submit a Policy or Denial Letter for Review" : isPrivacyTort ? "See If You Qualify — Free Eligibility Check" : "Ready to Fight Back? Get a Free Case Review."}
                     </h3>
-                    <p className={styles.endCtaSubtext}>No fees unless we win · 100% confidential · Same-day response</p>
+                    <p className={styles.endCtaSubtext}>
+                      {isCaseLaw ? "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential" : "No fees unless we win · 100% confidential · Same-day response"}
+                    </p>
                     {isSms ? (
                       <a href={endCtaHref} className={styles.endCtaBtn}>Start Your Free Review →</a>
                     ) : (
-                      <Link href={endCtaHref} className={styles.endCtaBtn}>Check Your Eligibility →</Link>
+                      <Link href={endCtaHref} className={styles.endCtaBtn}>
+                        {isCaseLaw ? "Submit Policy for Review →" : "Check Your Eligibility →"}
+                      </Link>
                     )}
                   </div>
                 );
