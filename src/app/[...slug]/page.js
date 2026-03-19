@@ -87,24 +87,36 @@ function getRelatedLinks(slug, articleType) {
 
   // property-damage
   const stateLinks = state ? [
-    { href: `/insurance-claim-denied-${state}`, label: `Insurance Claim Denied in ${stateName}? Your Rights` },
+    { href: `/insurance-claim-denied-${state === "florida" ? "fl" : state}`, label: `Insurance Claim Denied in ${stateName}? Your Rights` },
     { href: `/property-damage-attorney-${state}`, label: `Property Damage Attorney in ${stateName}` },
-    { href: `/homeowners-insurance-claim-${state}`, label: `Homeowners Insurance Claim in ${stateName}` },
     { href: `/water-damage-attorney-${state}`, label: `Water Damage Attorney in ${stateName}` },
+    { href: `/fire-damage-attorney-${state}`, label: `Fire Damage Attorney in ${stateName}` },
   ] : [];
-  const baseLinks = [
+  // Texas-specific links for Texas articles
+  const texasLinks = state === "texas" ? [
+    { href: "/state-farm-denied-roof-claim-texas", label: "State Farm Denied Your Roof Claim in Texas?" },
+    { href: "/home-warranty-claim-denied-texas", label: "Home Warranty Denied in Texas? Legal Guide" },
+    { href: "/insurance-company-denies-claim-texas", label: "Insurance Company Denied Your Claim in Texas?" },
+  ] : [];
+  // Florida-specific links for Florida articles
+  const floridaLinks = state === "florida" || !state ? [
     { href: "/insurance-claim-denied-fl", label: "Insurance Claim Denied in Florida? Your Legal Rights" },
+    { href: "/roof-leak-insurance-claim-florida", label: "Roof Leak Insurance Claim in Florida" },
+    { href: "/water-damage-attorney-florida", label: "Water Damage Attorney in Florida" },
+    { href: "/fire-damage-attorney-florida", label: "Fire Damage Attorney in Florida" },
+    { href: "/insurance-company-delayed-my-claim-florida", label: "Insurance Company Delaying Your Claim?" },
+    { href: "/appealing-insurance-denial-florida", label: "How to Appeal a Denied Insurance Claim in Florida" },
+  ] : [];
+  const carrierLinks = [
     { href: "/ten-tips-handling-allstate-claim-denials", label: "10 Tips for Handling Allstate Claim Denials" },
     { href: "/ten-tips-handling-usaa-insurance-claim-denials", label: "10 Tips for Handling USAA Claim Denials" },
     { href: "/ten-tips-handling-state-farm-claim-denials", label: "10 Tips for Handling State Farm Claim Denials" },
     { href: "/ten-tips-handling-nationwide-claim-denials", label: "10 Tips for Handling Nationwide Claim Denials" },
     { href: "/ten-tips-handling-citizens-insurance-claim-denials", label: "10 Tips for Handling Citizens Insurance Denials" },
+    { href: "/ten-tips-handling-hartford-casualty-insurance-claim-denials", label: "Hartford Denied Your Claim? 10 Tips to Fight Back" },
     { href: "/tips-handling-claim-denials-progressive-select-insurance", label: "Progressive Select Claim Denied? 10 Ways to Win" },
-    { href: "/roof-leak-insurance-claim-florida", label: "Roof Leak Insurance Claim in Florida" },
-    { href: "/underpaid-insurance-claim-florida", label: "Underpaid Insurance Claim? How to Fight Back" },
-    { href: "/insurance-company-delayed-my-claim-florida", label: "Insurance Company Delaying Your Claim?" },
   ];
-  return { title: `Related Insurance Claim Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...baseLinks].slice(0, 8) };
+  return { title: `Related Insurance Claim Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...texasLinks, ...floridaLinks, ...carrierLinks].slice(0, 8) };
 }
 
 // Returns the correct href for the end-of-article CTA button
