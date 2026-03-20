@@ -54,7 +54,7 @@ async function getCaseLawPosts(page = 1) {
     `filters[slug][$contains]=case-law&` +
     `fields[]=title&fields[]=slug&fields[]=description&fields[]=publishedAt&` +
     `publicationState=live&` +
-    `sort[0]=publishedAt:desc&` +
+    `sort[0]=id:desc&` +
     `pagination[page]=${page}&pagination[pageSize]=20&pagination[withCount]=true`;
 
   try {
