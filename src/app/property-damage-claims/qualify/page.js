@@ -250,7 +250,6 @@ export default function PropertyDamageQualify() {
 
   return (
     <div className={styles.wrapper}>
-      <UrgencyBanner />
       <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: `${progress}%` }} /></div>
 
       <div className={styles.card}>
