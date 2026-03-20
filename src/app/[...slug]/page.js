@@ -310,6 +310,70 @@ function extractFaqSchema(blocks) {
   };
 }
 
+// ✅ SEO: LegalService schema for property damage pages targeting specific cities
+const CITY_MAP = {
+  "fort-lauderdale": { name: "Fort Lauderdale", state: "FL", county: "Broward County" },
+  "miami": { name: "Miami", state: "FL", county: "Miami-Dade County" },
+  "orlando": { name: "Orlando", state: "FL", county: "Orange County" },
+  "tampa": { name: "Tampa", state: "FL", county: "Hillsborough County" },
+  "jacksonville": { name: "Jacksonville", state: "FL", county: "Duval County" },
+  "st-petersburg": { name: "St. Petersburg", state: "FL", county: "Pinellas County" },
+  "clearwater": { name: "Clearwater", state: "FL", county: "Pinellas County" },
+  "tallahassee": { name: "Tallahassee", state: "FL", county: "Leon County" },
+  "pensacola": { name: "Pensacola", state: "FL", county: "Escambia County" },
+  "naples": { name: "Naples", state: "FL", county: "Collier County" },
+  "sarasota": { name: "Sarasota", state: "FL", county: "Sarasota County" },
+  "houston": { name: "Houston", state: "TX", county: "Harris County" },
+  "dallas": { name: "Dallas", state: "TX", county: "Dallas County" },
+  "san-antonio": { name: "San Antonio", state: "TX", county: "Bexar County" },
+  "austin": { name: "Austin", state: "TX", county: "Travis County" },
+};
+
+function getCityFromSlug(slug) {
+  const s = (slug || "").toLowerCase();
+  for (const [key, info] of Object.entries(CITY_MAP)) {
+    if (s.includes(key)) return info;
+  }
+  return null;
+}
+
+function buildLegalServiceSchema(slug, title, city) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LegalService",
+    "name": "Louis Law Group",
+    "description": title,
+    "url": `https://www.louislawgroup.com/${slug}`,
+    "telephone": "+1-833-657-4812",
+    "priceRange": "Free Consultation",
+    "areaServed": {
+      "@type": "City",
+      "name": city.name,
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": `${city.county}, ${city.state}`
+      }
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": city.name,
+      "addressRegion": city.state,
+      "addressCountry": "US"
+    },
+    "geo": undefined,
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Property Damage Legal Services",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Insurance Claim Denial Appeals" }},
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Bad Faith Insurance Litigation" }},
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Hurricane & Storm Damage Claims" }},
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Water & Mold Damage Claims" }}
+      ]
+    }
+  };
+}
+
 // ✅ SEO: Dynamic meta titles, OG tags, and Twitter Cards per page
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -941,6 +1005,21 @@ export default async function Page(props) {
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
                   />
                 ) : null;
+              })()}
+              {/* LegalService schema for city-targeted property damage pages */}
+              {(() => {
+                if (articleType !== "property-damage") return null;
+                const city = getCityFromSlug(slug);
+                if (!city) return null;
+                const lsSchema = buildLegalServiceSchema(slug, page.title, city);
+                // Remove undefined keys
+                const clean = JSON.parse(JSON.stringify(lsSchema));
+                return (
+                  <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(clean) }}
+                  />
+                );
               })()}
             </>
           )}
