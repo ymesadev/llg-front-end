@@ -302,7 +302,7 @@ export default function PublicAdjusterResourcesPage() {
         <div className={styles.sectionInner}>
           <div className={styles.sectionEyebrow}>By the Numbers</div>
           <h2 className={styles.sectionTitle}>
-            Why PAs <span className={styles.gold}>Choose</span> Louis Law Group
+            Why PAs <span className={styles.gold}>Recommend</span> Louis Law Group
           </h2>
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
