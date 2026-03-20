@@ -8,15 +8,15 @@ import PolicyReviewForm from "./PolicyReviewForm";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Florida Property Insurance Case Law Updates | Louis Law Group",
+  title: "Case Law & Industry Insights | Louis Law Group",
   description:
-    "Daily case law updates on Florida property insurance litigation, public adjuster regulations, bad faith claims, and carrier disputes. Curated for public adjusters and claims professionals.",
+    "Daily case law and industry insights on Florida property insurance litigation, public adjuster regulations, bad faith claims, and carrier disputes. Curated for public adjusters and claims professionals.",
   keywords:
-    "florida property insurance case law, insurance litigation updates, public adjuster case law, bad faith insurance florida, property insurance court decisions",
+    "florida property insurance case law, insurance litigation updates, public adjuster case law, bad faith insurance florida, property insurance court decisions, industry insights",
   openGraph: {
-    title: "Florida Property Insurance Case Law Updates | Louis Law Group",
+    title: "Case Law & Industry Insights | Louis Law Group",
     description:
-      "Daily curated case law updates covering Florida property insurance disputes, PA regulations, bad faith claims, and carrier tactics.",
+      "Daily case law and industry insights covering Florida property insurance disputes, PA regulations, bad faith claims, and carrier tactics.",
     url: "https://www.louislawgroup.com/case-law-updates",
   },
 };
@@ -123,9 +123,9 @@ export default async function CaseLawUpdatesPage({ searchParams }) {
           {/* Header */}
           <div className={styles.header}>
             <span className={styles.eyebrow}>Updated Daily · For Claims Professionals</span>
-            <h1 className={styles.pageTitle}>Case Law Updates</h1>
+            <h1 className={styles.pageTitle}>Case Law and Industry Insights</h1>
             <p className={styles.pageSubtitle}>
-              Florida property insurance court decisions — curated daily for public adjusters
+              Florida property insurance court decisions and industry insights — curated daily for public adjusters
               and claims professionals.
             </p>
           </div>
@@ -185,7 +185,7 @@ export default async function CaseLawUpdatesPage({ searchParams }) {
             </div>
           ) : (
             <div className={styles.noPosts}>
-              <h2>Case law articles coming soon</h2>
+              <h2>Case law and industry insight articles coming soon</h2>
               <p>
                 Our daily monitoring system is pulling the latest Florida property insurance
                 decisions. Check back tomorrow for the first batch of case summaries.
@@ -255,9 +255,9 @@ export default async function CaseLawUpdatesPage({ searchParams }) {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "CollectionPage",
-            name: "Florida Property Insurance Case Law Updates",
+            name: "Florida Property Insurance Case Law & Industry Insights",
             description:
-              "Daily curated case law updates on Florida property insurance litigation for public adjusters and claims professionals.",
+              "Daily case law and industry insights on Florida property insurance litigation for public adjusters and claims professionals.",
             url: "https://www.louislawgroup.com/case-law-updates",
             publisher: {
               "@type": "LegalService",
