@@ -7,7 +7,7 @@ const OpenReplay = () => {
 
     import('@openreplay/tracker').then(({ default: Tracker }) => {
       const tracker = new Tracker({
-        projectKey: '2If29NBYmJMJsW3thc0Z',
+        projectKey: 'kgJJsFFSAPrUJEMcq4Qu',
         ingestPoint: 'https://marketing.aiagent.attorney/ingest',
         __DISABLE_SECURE_MODE: true,
       });
