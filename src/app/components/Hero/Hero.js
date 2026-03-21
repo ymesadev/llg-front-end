@@ -119,8 +119,36 @@ export default function Hero() {
                 Get a <span className={styles.free}>FREE</span> case evaluation
                 today.
               </p>
+              <p className={styles.evaluationSubtext}>
+                Select your case type to get started:
+              </p>
             </div>
-            <HeroForm />
+            <div className={styles.practiceButtons}>
+              <a href="/property-damage-claims/qualify" className={styles.practiceBtn}>
+                <span className={styles.practiceBtnIcon}>🏠</span>
+                <span className={styles.practiceBtnText}>
+                  <strong>Property Damage</strong>
+                  <small>Insurance claims, denied or underpaid</small>
+                </span>
+              </a>
+              <a href="/ssdi/qualify" className={styles.practiceBtn}>
+                <span className={styles.practiceBtnIcon}>⚖️</span>
+                <span className={styles.practiceBtnText}>
+                  <strong>Social Security Disability</strong>
+                  <small>SSDI &amp; SSI benefits claims</small>
+                </span>
+              </a>
+              <a href="/privacy-torts" className={styles.practiceBtn}>
+                <span className={styles.practiceBtnIcon}>🔒</span>
+                <span className={styles.practiceBtnText}>
+                  <strong>Privacy Torts</strong>
+                  <small>Data privacy &amp; consumer protection</small>
+                </span>
+              </a>
+            </div>
+            <p className={styles.phoneText}>
+              Or call us now: <a href="tel:8336574812" className={styles.phoneLink}>(833) 657-4812</a>
+            </p>
           </div>
         </div>
       </div>
