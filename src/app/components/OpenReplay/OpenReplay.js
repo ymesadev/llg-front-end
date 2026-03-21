@@ -50,6 +50,12 @@ const OpenReplay = () => {
         // ── Track initial page ──
         tracker.setMetadata('page', window.location.pathname);
 
+        // ── Capture visitor IP ──
+        fetch('https://api.ipify.org?format=json')
+          .then((r) => r.json())
+          .then((d) => { if (d.ip) tracker.setMetadata('ip', d.ip); })
+          .catch(() => { /* silent */ });
+
         // ── Track UTM / attribution from localStorage ──
         const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'page_source', 'campaign_type'];
         utmKeys.forEach((key) => {
