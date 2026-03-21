@@ -119,6 +119,13 @@ export default function FreeCaseEvaluationPage() {
       };
       const redirectTo = intakeRoutes[formData.caseType] || "/thank-you";
       setFormStatus("success");
+      // Identify user in OpenReplay
+      if (window.__or_identify) {
+        window.__or_identify(formData.email, { name: formData.name, phone: formData.phone, case_type: formData.caseType, zipcode: formData.zipcode });
+      }
+      if (window.__or_event) {
+        window.__or_event('form_submitted', { form: 'hero_form', case_type: formData.caseType, name: formData.name });
+      }
       setFormData({
         name: "",
         phone: "",

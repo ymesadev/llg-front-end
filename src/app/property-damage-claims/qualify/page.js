@@ -135,6 +135,13 @@ export default function PropertyDamageQualify() {
       });
     } catch {/* silent — still show result */}
     trackEvent("qualify_submitted", { case_type: "property-damage", score });
+    // Identify user in OpenReplay
+    if (window.__or_identify) {
+      window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'property-damage', score });
+    }
+    if (window.__or_event) {
+      window.__or_event('form_submitted', { form: 'pd_qualify', score, name: contact.name });
+    }
     setResult({ dq: false, score });
     setCur(TOTAL_STEPS + 1);
     setSubmitted(true);
