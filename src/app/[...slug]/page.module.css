@@ -908,3 +908,92 @@
     padding: 1.5rem 1rem;
   }
 }
+
+/* ── Quick Answer Box (AI citability) ── */
+.quickAnswer {
+  background: #f0f7ff;
+  border-left: 4px solid #1a56db;
+  padding: 20px 24px;
+  border-radius: 6px;
+  margin: 20px 0 24px;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: #1a2b49;
+}
+
+.quickAnswerLabel {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #1a56db;
+  margin-bottom: 8px;
+}
+
+.quickAnswer p {
+  margin: 0;
+  color: #333;
+}
+
+/* ── Visible FAQ Section (AI citability) ── */
+.visibleFaq {
+  margin: 40px 0;
+  border-top: 2px solid #e5e7eb;
+  padding-top: 24px;
+}
+
+.visibleFaq h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1a2b49;
+  margin-bottom: 16px;
+}
+
+.visibleFaqItem {
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px 0;
+}
+
+.visibleFaqItem h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #1a2b49;
+  margin: 0 0 8px;
+}
+
+.visibleFaqItem p {
+  font-size: 0.97rem;
+  line-height: 1.75;
+  color: #444;
+  margin: 0;
+}
+
+/* ── Sources Section (AI citability) ── */
+.sourcesSection {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin: 32px 0;
+  font-size: 0.9rem;
+}
+
+.sourcesSection h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a2b49;
+  margin: 0 0 12px;
+}
+
+.sourcesSection ul {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.8;
+}
+
+.sourcesSection a {
+  color: #1a56db;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}

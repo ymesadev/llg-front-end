@@ -310,6 +310,40 @@ function extractFaqSchema(blocks) {
   };
 }
 
+// ✅ AI Citability: Auto-link common SSDI/SSA statistics to authoritative sources
+const SSA_SOURCE_LINKS = [
+  { pattern: /67%\s*(?:of\s+)?(?:initial\s+)?(?:SSDI\s+)?claims?\s+(?:are\s+)?denied/gi, url: "https://www.ssa.gov/policy/docs/statcomps/di_asr/", label: "SSA Annual Statistical Report" },
+  { pattern: /\$1[,.]?620/g, url: "https://www.ssa.gov/oact/cola/sga.html", label: "SSA SGA Amounts" },
+  { pattern: /\$1[,.]?580/g, url: "https://www.ssa.gov/oact/cola/sga.html", label: "SSA SGA Amounts" },
+  { pattern: /\$7[,.]?200\s*(?:cap|fee|attorney)/gi, url: "https://www.ssa.gov/representation/", label: "SSA Representative Fee Information" },
+  { pattern: /25%\s*(?:of\s+)?past[- ]due\s+benefits/gi, url: "https://www.ssa.gov/representation/", label: "SSA Representative Fee Information" },
+  { pattern: /Blue\s+Book/gi, url: "https://www.ssa.gov/disability/professionals/bluebook/", label: "SSA Blue Book — Listing of Impairments" },
+  { pattern: /(?:Section|Listing)\s+(\d+\.\d+)/g, url: "https://www.ssa.gov/disability/professionals/bluebook/", label: "SSA Blue Book" },
+  { pattern: /Social\s+Security\s+Ruling\s+\d+-\d+p?/gi, url: "https://www.ssa.gov/policy/docs/rulings/", label: "SSA Rulings" },
+  { pattern: /SSA-561/g, url: "https://www.ssa.gov/forms/ssa-561.html", label: "SSA-561 Form" },
+  { pattern: /SSA-3373/g, url: "https://www.ssa.gov/forms/ssa-3373.html", label: "SSA-3373 Form" },
+  { pattern: /SSA-3441/g, url: "https://www.ssa.gov/forms/ssa-3441.html", label: "SSA-3441 Form" },
+  { pattern: /SSA-3368/g, url: "https://www.ssa.gov/forms/ssa-3368.html", label: "SSA-3368 Form" },
+  { pattern: /SSA-1696/g, url: "https://www.ssa.gov/forms/ssa-1696.html", label: "SSA-1696 Form" },
+  { pattern: /SSA-827/g, url: "https://www.ssa.gov/forms/ssa-827.html", label: "SSA-827 Form" },
+];
+
+// Collect unique sources found in article content for the Sources section
+function collectArticleSources(blocks) {
+  const found = new Map();
+  for (const block of blocks) {
+    if (block.__component !== "shared.rich-text") continue;
+    const body = block.body || "";
+    for (const rule of SSA_SOURCE_LINKS) {
+      const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
+      if (regex.test(body)) {
+        found.set(rule.url, rule.label);
+      }
+    }
+  }
+  return Array.from(found.entries()).map(([url, label]) => ({ url, label }));
+}
+
 // ✅ SEO: LegalService schema for property damage pages targeting specific cities
 const CITY_MAP = {
   "fort-lauderdale": { name: "Fort Lauderdale", state: "FL", county: "Broward County" },
@@ -1055,6 +1089,13 @@ export default async function Page(props) {
                 <span>{page.title}</span>
               </nav>
               <h1 className={styles.blogTitle}>{page.title}</h1>
+              {/* Quick Answer box — AI citability: concise answer near top for AI extraction */}
+              {page.description && (
+                <div className={styles.quickAnswer}>
+                  <span className={styles.quickAnswerLabel}>Quick Answer</span>
+                  <p>{page.description}</p>
+                </div>
+              )}
               <Script id="debug-article-buttons-present" strategy="afterInteractive"
                 dangerouslySetInnerHTML={{
                   __html: `
@@ -1148,13 +1189,14 @@ export default async function Page(props) {
                   <FaLinkedin className={styles.socialIcon} />
                 </a>
               </div>
-              {/* Article schema */}
+              {/* Article schema with speakable for AI voice assistants */}
               <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify({
                   "@context": "https://schema.org",
                   "@type": "Article",
                   headline: page.title,
+                  ...(page.description ? { description: page.description } : {}),
                   author: { "@type": "Person", name: "Pierre A. Louis, Esq.", url: "https://www.louislawgroup.com/pierre-a-louis-esq" },
                   publisher: { "@type": "Organization", name: "Louis Law Group", url: "https://www.louislawgroup.com" },
                   datePublished: page.createdAt,
@@ -1163,6 +1205,13 @@ export default async function Page(props) {
                     if (b.__component !== "shared.rich-text") return acc;
                     return acc + (b.body || "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
                   }, 0),
+                  about: articleType === "ssdi"
+                    ? { "@type": "Thing", name: "Social Security Disability Insurance", sameAs: "https://www.wikidata.org/wiki/Q7547166" }
+                    : { "@type": "Thing", name: "Property Damage Insurance Claims" },
+                  speakable: {
+                    "@type": "SpeakableSpecification",
+                    cssSelector: [".quickAnswer", ".blogTitle", ".visibleFaqItem"]
+                  },
                 }) }}
               />
               {page.cover?.url && (
@@ -1223,6 +1272,43 @@ export default async function Page(props) {
                   ));
                 })()}
               </div>
+              {/* Visible FAQ section — AI citability: render FAQs as visible HTML, not just JSON-LD */}
+              {(() => {
+                const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
+                const ssdiStaticFaq = !faqSchema && articleType === "ssdi" ? [
+                  { q: "How long does it take to get approved for SSDI?", a: "Most initial SSDI applications take 3\u20136 months for a decision. Appeals can take 12\u201324 months. Working with a disability attorney significantly improves your approval odds at every stage." },
+                  { q: "What should I do if my SSDI claim is denied?", a: "About 67% of initial SSDI claims are denied. You have 60 days to file a Request for Reconsideration. If denied again, request an ALJ hearing \u2014 this is where most claims are ultimately approved." },
+                  { q: "Does Louis Law Group handle SSDI cases?", a: "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency \u2014 you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }
+                ] : null;
+                const items = faqSchema?.mainEntity?.map(e => ({ q: e.name, a: e.acceptedAnswer?.text })) || ssdiStaticFaq;
+                if (!items || items.length === 0) return null;
+                return (
+                  <div className={styles.visibleFaq}>
+                    <h2>Frequently Asked Questions</h2>
+                    {items.map((item, i) => (
+                      <div key={i} className={styles.visibleFaqItem}>
+                        <h3>{item.q}</h3>
+                        <p>{item.a}</p>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+              {/* Sources section — AI citability: attribute statistics to authoritative .gov sources */}
+              {(() => {
+                const sources = page.blocks ? collectArticleSources(page.blocks) : [];
+                if (sources.length === 0) return null;
+                return (
+                  <div className={styles.sourcesSection}>
+                    <h3>Sources &amp; References</h3>
+                    <ul>
+                      {sources.map((s, i) => (
+                        <li key={i}><a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })()}
               {/* SSDI: Related Forms box — contextual internal links to SSA form pages */}
               {articleType === "ssdi" && !isSSAFormPage && (
                 <div style={{background:"#f0f7ff",borderLeft:"4px solid #1a56db",padding:"20px 24px",borderRadius:"4px",margin:"32px 0"}}>
