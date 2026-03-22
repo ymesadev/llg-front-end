@@ -66,6 +66,13 @@ const SERVICES = [
     desc: "Interactive dashboard with carrier performance, claims activity, litigation outcomes, and ADR trends — built from FL OIR Monthly MIR data.",
     link: "/reports/florida-insurance-market-january-2026",
   },
+  {
+    icon: "⚖️",
+    title: "Pre-Suit Notice Intelligence",
+    keywords: ["PIITIL", "pre-suit notices", "carrier disputes", "denial rates"],
+    desc: "29,624 pre-suit notices analyzed — carrier dispute patterns, denial rates, financial stakes, and geographic hotspots from FL DFS PIITIL data.",
+    link: "/reports/florida-presuit-notice-intelligence-report",
+  },
 ];
 
 const STATS = [

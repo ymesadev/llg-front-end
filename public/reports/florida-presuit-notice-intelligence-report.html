@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Pre-Suit Notice Intelligence Report — Louis Law Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #f4f5f7;
+  --bg-card-hover: #eef0f3;
+  --accent-gold: #ffb800;
+  --accent-gold-dim: rgba(255, 184, 0, 0.12);
+  --accent-blue: #3b82f6;
+  --accent-teal: #14b8a6;
+  --accent-red: #ef4444;
+  --accent-orange: #f97316;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  --accent-lime: #84cc16;
+  --text-primary: #1a2b49;
+  --text-secondary: #4a5568;
+  --text-dim: #718096;
+  --border: rgba(26,43,73,0.1);
+  --glow-gold: rgba(255, 184, 0, 0.3);
+  /* Legacy aliases used by source JS inline styles */
+  --gold: #ffb800;
+  --blue: #3b82f6;
+  --teal: #14b8a6;
+  --red: #ef4444;
+  --orange: #f97316;
+  --purple: #8b5cf6;
+  --pink: #ec4899;
+  --lime: #84cc16;
+  --tx: #1a2b49;
+  --tx2: #4a5568;
+  --tx3: #718096;
+  --bg2: #f4f5f7;
+  --bg3: #eef0f3;
+  --gold-dim: rgba(255, 184, 0, 0.12);
+  --bdr: rgba(26,43,73,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  font-weight: 300;
+  overflow-x: hidden;
+  padding-top: 82px;
+}
+
+/* Animated background */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(255,184,0,0.06), transparent),
+    radial-gradient(ellipse 600px 400px at 80% 80%, rgba(59,130,246,0.05), transparent),
+    radial-gradient(ellipse 500px 500px at 50% 50%, rgba(20,184,166,0.03), transparent);
+  pointer-events: none;
+}
+
+.container { max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* ── SITE NAVBAR ── */
+.site-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1100;
+  background: #1a2b49;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.site-navbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.site-navbar .logo img { height: 50px; }
+.site-navbar .site-nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.25rem;
+  flex: 1;
+  margin-left: 2rem;
+}
+.site-navbar .site-nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.site-navbar .site-nav-links a:hover {
+  background: rgba(255,255,255,0.1);
+}
+.site-navbar .site-nav-links a.active {
+  background: rgba(255,255,255,0.1);
+  color: #ffb800;
+}
+.site-navbar .phone-cta {
+  background: #ffb800;
+  border-radius: 30px;
+  color: #1a2b49;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  padding: 10px 20px;
+  text-decoration: none;
+  box-shadow: 1px 3px #ede7e7;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.site-navbar .phone-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 1px 6px #ffe5a3;
+}
+.site-navbar .mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-left: 1rem;
+}
+.site-navbar .mobile-toggle span {
+  width: 24px; height: 2px; background: #fff; display: block;
+}
+.site-mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background: #1a2b49;
+  padding: 4rem 1.5rem 1.5rem;
+  transition: right 0.3s ease;
+  z-index: 1200;
+}
+.site-mobile-menu.open { right: 0; }
+.site-mobile-menu .close-btn {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;
+}
+.site-mobile-menu ul { list-style: none; padding: 0; margin: 0; }
+.site-mobile-menu li { margin: 0.5rem 0; }
+.site-mobile-menu a {
+  color: #fff; text-decoration: none; font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem; padding: 0.5rem 0; display: block;
+}
+
+@media (max-width: 1024px) {
+  .site-navbar .site-nav-links { display: none; }
+  .site-navbar .mobile-toggle { display: flex; }
+}
+@media (max-width: 768px) {
+  .site-navbar-inner { padding: 0.75rem; }
+  .site-navbar .logo img { height: 40px; }
+  .site-navbar .phone-cta { font-size: 0.9rem; padding: 8px 16px; }
+}
+
+/* ── DASHBOARD NAV ── */
+.top-nav {
+  position: sticky;
+  top: 82px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.top-nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: none;
+}
+.top-nav-inner::-webkit-scrollbar { display: none; }
+.nav-link {
+  font-family: 'Montserrat', sans-serif;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.nav-link:hover { color: var(--text-primary); background: rgba(26,43,73,0.06); }
+.nav-link.brand {
+  color: var(--accent-gold);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+}
+.hero-badge {
+  font-family: 'Montserrat', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-gold-dim);
+  border: 1px solid rgba(255,184,0,0.25);
+  border-radius: 100px;
+  padding: 6px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.2s;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+.hero h1 {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.35s;
+}
+.hero h1 .gold { color: var(--accent-gold); }
+.hero-sub {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 0 auto 12px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.5s;
+  font-weight: 400;
+}
+.hero-meta {
+  font-size: 13px;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.6s;
+}
+.hero-meta strong { color: var(--accent-gold); font-weight: 600; }
+.hero-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  margin: 32px auto 0;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.7s;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fi {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── TICKER ── */
+.ticker-strip {
+  overflow: hidden;
+  background: rgba(255,184,0,0.06);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  margin-bottom: 48px;
+}
+.ticker-inner {
+  display: flex;
+  gap: 48px;
+  animation: ticker 50s linear infinite;
+  white-space: nowrap;
+  width: max-content;
+}
+.ticker-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ticker-item .tv { color: var(--accent-gold); font-weight: 600; }
+.ticker-item .tr { color: var(--accent-red); font-weight: 600; }
+.ticker-item .tt { color: var(--accent-teal); font-weight: 600; }
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── KPI STRIP ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-bottom: 60px;
+}
+.kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px 20px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+.kpi.v {
+  opacity: 1;
+  transform: translateY(0);
+}
+.kpi:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255,184,0,0.3);
+  transform: translateY(-2px);
+}
+.kpi-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.kpi-l {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── SECTIONS ── */
+.sec { margin-bottom: 64px; }
+.sec-h {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.sec-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--accent-gold);
+  font-weight: 600;
+  opacity: 0.7;
+}
+.sec-t {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+.sec-d {
+  color: var(--text-secondary);
+  font-size: 14.5px;
+  margin-bottom: 28px;
+  max-width: 750px;
+  line-height: 1.7;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue), var(--accent-teal));
+  opacity: 0.8;
+}
+.card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+}
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) {
+  .g2, .g3 { grid-template-columns: 1fr; }
+}
+
+/* ── BAR ROWS ── */
+.br {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.4s ease;
+}
+.br.v {
+  opacity: 1;
+  transform: translateX(0);
+}
+.br:last-child { border-bottom: none; }
+.br-l {
+  width: 220px;
+  min-width: 220px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.br-t {
+  flex: 1;
+  height: 28px;
+  background: rgba(26,43,73,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.br-f {
+  height: 100%;
+  border-radius: 6px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.br-f.gold { background: linear-gradient(90deg, rgba(255,184,0,0.25), rgba(255,184,0,0.5)); }
+.br-f.blue { background: linear-gradient(90deg, rgba(59,130,246,0.25), rgba(59,130,246,0.5)); }
+.br-f.teal { background: linear-gradient(90deg, rgba(20,184,166,0.25), rgba(20,184,166,0.5)); }
+.br-f.red { background: linear-gradient(90deg, rgba(239,68,68,0.25), rgba(239,68,68,0.5)); }
+.br-f.orange { background: linear-gradient(90deg, rgba(249,115,22,0.25), rgba(249,115,22,0.5)); }
+.br-f.purple { background: linear-gradient(90deg, rgba(139,92,246,0.25), rgba(139,92,246,0.5)); }
+.br-f.pink { background: linear-gradient(90deg, rgba(236,72,153,0.25), rgba(236,72,153,0.5)); }
+.br-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ── TABLES ── */
+.tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.dt { width: 100%; border-collapse: collapse; }
+.dt thead th {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+}
+.dt thead th.r { text-align: right; }
+.dt tbody tr {
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.35s ease;
+}
+.dt tbody tr.v {
+  opacity: 1;
+  transform: translateY(0);
+}
+.dt tbody tr:hover { background: rgba(26,43,73,0.03); }
+.dt tbody td {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.dt tbody td.m {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-align: right;
+}
+.dt tbody td.nm {
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── BADGES ── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.bg { background: rgba(20,184,166,0.15); color: #14b8a6; }
+.br2 { background: rgba(239,68,68,0.15); color: #ef4444; }
+.bo { background: rgba(249,115,22,0.15); color: #f97316; }
+.bb { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.bgd { background: rgba(255,184,0,0.15); color: #ffb800; }
+
+/* ── CALLOUT ── */
+.callout {
+  background: linear-gradient(135deg, rgba(255,184,0,0.08), rgba(255,184,0,0.02));
+  border: 1px solid rgba(255,184,0,0.2);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin: 20px 0;
+}
+.callout-t {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.callout p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+.callout strong { color: var(--text-primary); }
+
+/* ── INFO CARDS ── */
+.icard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+}
+.icard h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icard p, .icard li {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.icard ul { list-style: none; padding: 0; }
+.icard li { padding: 5px 0 5px 16px; position: relative; }
+.icard li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+/* ── STAT BOXES ── */
+.sbox {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  min-width: 140px;
+}
+.sbox .bn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+}
+.sbox .sl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sflex { display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* ── DONUT ── */
+.donut-w {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.donut-svg { width: 220px; height: 220px; }
+.leg { display: flex; flex-direction: column; gap: 10px; }
+.leg-i {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.leg-d { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+.leg-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-left: auto;
+  padding-left: 16px;
+}
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: rgba(26,43,73,0.04);
+  border-radius: 10px;
+  padding: 4px;
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 8px 18px;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--text-secondary); }
+.tab.a {
+  background: var(--accent-gold-dim);
+  color: var(--accent-gold);
+}
+
+/* ── STACKED BAR ── */
+.sbar { display: flex; height: 32px; border-radius: 6px; overflow: hidden; margin-bottom: 6px; }
+.sbar-seg { height: 100%; transition: width 0.8s cubic-bezier(0.22,1,0.36,1); min-width: 0; }
+.sbar-row { margin-bottom: 14px; }
+.sbar-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+.sbar-label span {
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-primary);
+  font-size: 11.5px;
+}
+
+/* ── SCROLL REVEAL ── */
+.rv {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rv.v {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── CTA BANNER ── */
+.cta-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 36px;
+  text-align: center;
+}
+.cta-banner-title {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 26px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.cta-banner-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.cta-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-gold);
+  color: #1a2b49;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 1px 3px #ede7e7;
+}
+.cta-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 1px 6px #ffe5a3;
+}
+.cta-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0d6e3f;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.cta-btn-secondary:hover {
+  background: #0b5c34;
+  transform: translateY(-3px);
+}
+@media (max-width: 640px) {
+  .cta-buttons { flex-direction: column; align-items: center; }
+  .cta-btn-primary, .cta-btn-secondary { width: 100%; justify-content: center; }
+}
+
+/* ── REPORT DISCLAIMER / FOOTER ── */
+.report-disclaimer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0 0;
+  text-align: center;
+}
+.report-disclaimer p {
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── SITE FOOTER ── */
+.site-footer {
+  background: #1a2b49;
+  color: #fff;
+  padding: 4rem 2rem 2rem;
+  border-top: 3px solid #ffb800;
+}
+.site-footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+.site-footer-col h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+.site-footer-col ul { list-style: none; padding: 0; margin: 0; }
+.site-footer-col li { margin-bottom: 0.5rem; }
+.site-footer-col a {
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.site-footer-col a:hover { opacity: 1; }
+.site-footer-copyright {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+.site-footer-copyright p { margin-bottom: 1rem; }
+@media (max-width: 768px) {
+  .site-footer { padding: 3rem 1rem 1rem; }
+  .br-l { width: 140px; min-width: 140px; font-size: 11px; }
+}
+
+/* ── PRINT ── */
+@media print {
+  body { background: #fff; color: #1a2b49; }
+  .bg-mesh { display: none; }
+  .card { border: 1px solid #ddd; }
+  .site-navbar, .top-nav, .site-mobile-menu { display: none; }
+  body { padding-top: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- SITE NAVBAR -->
+<header class="site-navbar">
+  <div class="site-navbar-inner">
+    <div class="logo">
+      <a href="/"><img src="/images/logo.png" alt="Louis Law Group"></a>
+    </div>
+    <ul class="site-nav-links">
+      <li><a href="/property-damage-claims">Property Damage</a></li>
+      <li><a href="/personal-injury">Personal Injury</a></li>
+      <li><a href="/social-security-disability-lawyers">Social Security</a></li>
+      <li><a href="/privacy-torts">Privacy Torts</a></li>
+      <li><a href="/our-team">Our Team</a></li>
+      <li><a href="/free-case-evaluation">Free Case Evaluation</a></li>
+    </ul>
+    <a href="tel:+18336574812" class="phone-cta">(833) 657-4812</a>
+    <button class="mobile-toggle" onclick="document.getElementById('siteMobileMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="site-mobile-menu" id="siteMobileMenu">
+  <button class="close-btn" onclick="document.getElementById('siteMobileMenu').classList.remove('open')">&#215;</button>
+  <ul>
+    <li><a href="/" onclick="document.getElementById('siteMobileMenu').classList.remove('open')">Home</a></li>
+    <li><a href="/property-damage-claims">Property Damage</a></li>
+    <li><a href="/personal-injury">Personal Injury</a></li>
+    <li><a href="/social-security-disability-lawyers">Social Security</a></li>
+    <li><a href="/privacy-torts">Privacy Torts</a></li>
+    <li><a href="/our-team">Our Team</a></li>
+    <li><a href="/free-case-evaluation">Free Case Evaluation</a></li>
+    <li><a href="tel:+18336574812" style="color:#ffb800;font-weight:600;">(833) 657-4812</a></li>
+  </ul>
+</div>
+
+<div class="bg-mesh"></div>
+
+<!-- DASHBOARD NAV -->
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <a class="nav-link brand" href="#top">LLG</a>
+    <a class="nav-link" href="#overview">Overview</a>
+    <a class="nav-link" href="#carriers">Carriers</a>
+    <a class="nav-link" href="#claimtypes">Claims</a>
+    <a class="nav-link" href="#financials">Financials</a>
+    <a class="nav-link" href="#geography">Geography</a>
+    <a class="nav-link" href="#trends">Trends</a>
+    <a class="nav-link" href="#takeaways">Strategy</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="container" id="top">
+<section class="hero">
+  <div class="hero-badge">FL DFS Pre-Suit Notice Data &middot; Jul 2025 &ndash; Mar 2026</div>
+  <h1>Florida Pre-Suit Notice<br><span class="gold">Intelligence Report</span></h1>
+  <p class="hero-sub">Carrier Dispute Patterns, Claim Trends &amp; Financial Analysis from 29,624 PIITIL Notices &mdash; Strategic Intelligence for Public Adjusters, Policyholders &amp; Plaintiff Attorneys</p>
+  <p class="hero-meta">Prepared by <strong>Louis Law Group, PLLC</strong> &middot; Fort Lauderdale, FL &middot; Data period: July 2025 &ndash; March 2026 &middot; Source: Florida Department of Financial Services</p>
+  <p class="hero-meta" style="margin-top:12px;"><a href="https://apps.fldfs.com/PIITIL/Search" target="_blank" rel="noopener" style="color:var(--accent-gold);text-decoration:none;font-weight:600;font-size:13px;">Download Source Data &mdash; FL DFS PIITIL Portal &rarr;</a></p>
+  <div class="hero-divider"></div>
+</section>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-strip"><div class="ticker-inner" id="ticker"></div></div>
+
+<div class="container">
+
+<!-- KPIs -->
+<div class="kpi-grid" id="kpis"></div>
+
+<!-- 1. OVERVIEW -->
+<section class="sec" id="overview">
+  <div class="sec-h rv"><span class="sec-n">01</span><h2 class="sec-t">Market Overview</h2></div>
+  <p class="sec-d rv">Before a property insurance lawsuit can proceed in Florida, claimants must file a Pre-suit Intent to Initiate Litigation (PIITIL) notice with the Department of Financial Services. This report analyzes 29,624 notices filed between July 2025 and March 2026, revealing which carriers face the most disputes, the types of claims driving litigation, and the financial stakes involved.</p>
+
+  <div class="g2 rv">
+    <div class="card">
+      <h4>Notice Type Breakdown</h4>
+      <div class="donut-w" id="noticeTypeDonut"></div>
+    </div>
+    <div class="card">
+      <h4>Filed By</h4>
+      <div class="donut-w" id="submitDonut"></div>
+    </div>
+  </div>
+
+  <div class="card rv" style="margin-top:16px">
+    <h4>Monthly Filing Volume</h4>
+    <div id="monthlyChart" style="height:220px;position:relative;"></div>
+  </div>
+
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">The Landscape</div>
+    <p>Roughly <strong>150 new pre-suit notices are filed every business day</strong> across 303 carriers statewide, with <strong>92% filed by attorneys representing policyholders</strong>. Filing volume has held steady at 3,000&ndash;3,200 per month in early 2026 after a peak of 4,171 in October 2025. This sustained pace reflects a market where property insurance disputes remain a persistent, year-round reality &mdash; not a seasonal anomaly.</p>
+  </div>
+
+  <div class="callout rv" style="margin-top:12px;border-color:rgba(59,130,246,0.2);background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(59,130,246,.01))">
+    <div class="callout-t" style="color:var(--accent-blue)">A Note on Financial Data</div>
+    <p>PIITIL notices are filed under two distinct formats. <strong>Damage Estimate notices</strong> (12,649 filings) report the estimated cost of property damage &mdash; typically prepared by the policyholder's public adjuster or contractor. <strong>Settlement Demand notices</strong> (16,267 filings) report the formal pre-suit demand amount, total damages claimed, and sometimes attorney fees and costs. A given notice uses one format or the other, never both. Financial figures throughout this report are presented within their respective notice type to ensure accuracy.</p>
+  </div>
+</section>
+
+<!-- 2. TOP CARRIERS -->
+<section class="sec" id="carriers">
+  <div class="sec-h rv"><span class="sec-n">02</span><h2 class="sec-t">Most Disputed Carriers</h2></div>
+  <p class="sec-d rv">Pre-suit notice volume is a direct proxy for carrier dispute frequency. The 12 carriers below account for the majority of all filings &mdash; and each one has distinct patterns in how they handle (or mishandle) claims that public adjusters and attorneys should understand.</p>
+
+  <div class="card rv">
+    <div class="tabs" id="carrierTabs">
+      <button class="tab a" data-tab="volume">Notice Volume</button>
+      <button class="tab" data-tab="estimate">Avg Damage Estimate</button>
+      <button class="tab" data-tab="disputed">Avg Settlement Demand</button>
+    </div>
+    <div id="carrierBars"></div>
+  </div>
+</section>
+
+<!-- 3. CLAIM TYPES -->
+<section class="sec" id="claimtypes">
+  <div class="sec-h rv"><span class="sec-n">03</span><h2 class="sec-t">What Carriers Are Being Sued Over</h2></div>
+  <p class="sec-d rv">Each notice includes a narrative describing the insurer's alleged acts or omissions. We identify issue keywords in this text &mdash; denial, wind, underpayment, water damage, bad faith, and others. A single notice often raises multiple issues (e.g., a wind claim that was denied in bad faith), so these counts overlap. Of 29,624 notices, 68% mention at least one identifiable issue; 30% mention two or more.</p>
+
+  <div class="g2 rv">
+    <div class="card">
+      <h4>Issues Alleged in Notices <span style="font-size:11px;font-weight:400;color:var(--text-dim);margin-left:6px">(a notice may appear in multiple categories)</span></h4>
+      <div id="claimTypeBars"></div>
+    </div>
+    <div class="card">
+      <h4>Most Common Issue Combinations</h4>
+      <div id="comboBars"></div>
+    </div>
+  </div>
+
+  <div class="card rv" style="margin-top:16px">
+    <h4>Carrier Issue Profile <span style="font-size:11px;font-weight:400;color:var(--text-dim);margin-left:6px">(counts overlap &mdash; a notice alleging wind + denial counts in both columns)</span></h4>
+    <div class="tw">
+      <table class="dt" id="carrierIssueTable">
+        <thead><tr>
+          <th>Carrier</th>
+          <th class="r">Total</th>
+          <th class="r" style="color:var(--accent-red)">Denial</th>
+          <th class="r" style="color:var(--accent-blue)">Wind</th>
+          <th class="r" style="color:var(--accent-orange)">Underpay</th>
+          <th class="r" style="color:var(--accent-teal)">Water</th>
+          <th class="r" style="color:var(--accent-pink)">Bad Faith</th>
+        </tr></thead>
+        <tbody id="carrierIssueBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">Reading the Patterns</div>
+    <p><strong>Denial is the most common allegation, appearing in 43.5% of all notices</strong> &mdash; but it rarely stands alone. Over 3,200 notices allege both wind damage and denial together, meaning carriers are denying what policyholders claim is legitimate storm damage. <strong>State Farm</strong> sees denial alleged in 47.5% of its notices (1,687 of 3,549), the highest rate among top carriers. <strong>First Protective</strong> has an even higher rate at 50.7% (664 of 1,310). Water/plumbing and underpayment often co-occur as well &mdash; when a carrier acknowledges a water loss but disputes the scope, both tags appear. Understanding these overlaps matters: a notice alleging wind + denial + bad faith is a fundamentally different case than one alleging water damage alone.</p>
+  </div>
+</section>
+
+<!-- 4. FINANCIALS -->
+<section class="sec" id="financials">
+  <div class="sec-h rv"><span class="sec-n">04</span><h2 class="sec-t">Dollars at Stake</h2></div>
+  <p class="sec-d rv">The financial data reveals the scale of what policyholders are claiming &mdash; and what carriers are fighting over. Damage estimate notices reflect the cost-of-repair scope, while settlement demand notices reflect the formal pre-litigation ask.</p>
+
+  <div class="g2 rv" style="margin-bottom:16px">
+    <div class="card" style="border-left:3px solid var(--accent-gold)">
+      <h4 style="color:var(--accent-gold)">Damage Estimates &mdash; 12,649 Notices</h4>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px">What policyholders and their adjusters estimate the property damage to cost</p>
+      <div class="sflex" style="margin-bottom:16px">
+        <div class="sbox"><div class="bn" style="color:var(--accent-gold);font-size:22px">$1.32B</div><div class="sl">Total</div></div>
+        <div class="sbox"><div class="bn" style="color:var(--accent-gold);font-size:22px">$106K</div><div class="sl">Average</div></div>
+        <div class="sbox"><div class="bn" style="color:var(--accent-gold);font-size:22px">$60K</div><div class="sl">Median</div></div>
+      </div>
+      <h4>Distribution</h4>
+      <div id="estRangeBars"></div>
+    </div>
+    <div class="card" style="border-left:3px solid var(--accent-blue)">
+      <h4 style="color:var(--accent-blue)">Settlement Demands &mdash; 16,267 Notices</h4>
+      <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px">The formal pre-suit demand made to the carrier before litigation proceeds</p>
+      <div class="sflex" style="margin-bottom:16px">
+        <div class="sbox"><div class="bn" style="color:var(--accent-blue);font-size:22px">$2.31B</div><div class="sl">Total</div></div>
+        <div class="sbox"><div class="bn" style="color:var(--accent-blue);font-size:22px">$144K</div><div class="sl">Average</div></div>
+        <div class="sbox"><div class="bn" style="color:var(--accent-blue);font-size:22px">$68K</div><div class="sl">Median</div></div>
+      </div>
+      <h4>Distribution</h4>
+      <div id="dispRangeBars"></div>
+    </div>
+  </div>
+
+  <div class="card rv" style="margin-top:16px">
+    <h4>Carrier Financial Profile</h4>
+    <p style="font-size:12px;color:var(--text-dim);margin-bottom:14px">Damage estimates and settlement demands come from separate notice types. Each carrier's mix varies &mdash; some see more estimate-stage filings, others more formal demands.</p>
+    <div class="tw">
+      <table class="dt" id="finTable">
+        <thead><tr>
+          <th>Carrier</th>
+          <th class="r">Total</th>
+          <th class="r" style="color:var(--accent-gold)">Est. Notices</th>
+          <th class="r" style="color:var(--accent-gold)">Avg Estimate</th>
+          <th class="r" style="color:var(--accent-blue)">Demand Notices</th>
+          <th class="r" style="color:var(--accent-blue)">Avg Demand</th>
+        </tr></thead>
+        <tbody id="finBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">What the Numbers Mean for Your Practice</div>
+    <p><strong>Citizens Property Insurance</strong> sees significantly larger claims than any private carrier &mdash; average estimates of <strong>$97,793</strong> and formal demands averaging <strong>$161,482</strong>. This aligns with Citizens' role as insurer of last resort, often covering older or higher-risk properties with more complex losses. <strong>First Protective Insurance</strong> shows one of the widest gaps between estimate volume (658 notices, avg $83K) and demand amounts (606 notices, avg $120K), suggesting claim values escalate substantially during the dispute process. For public adjusters, the takeaway is clear: <strong>thorough initial documentation pays off</strong> &mdash; the carriers facing the highest formal demands are the same ones where detailed estimates drive stronger pre-suit positioning.</p>
+  </div>
+</section>
+
+<!-- 5. GEOGRAPHY -->
+<section class="sec" id="geography">
+  <div class="sec-h rv"><span class="sec-n">05</span><h2 class="sec-t">Where Disputes Concentrate</h2></div>
+  <p class="sec-d rv">Claim disputes follow population and property exposure patterns, but the distribution also reveals regional carrier behavior differences and storm-impacted corridors that public adjusters and restoration companies can use for territory planning.</p>
+
+  <div class="card rv">
+    <h4>Top 15 Claimant Cities by Pre-Suit Volume</h4>
+    <div id="cityBars"></div>
+  </div>
+
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">Geographic Strategy</div>
+    <p>The <strong>Tampa Bay corridor</strong> (Tampa, Bradenton, Sarasota, Lakeland) generates the highest concentration of notices in a single metro area. <strong>Central Florida</strong> (Orlando, Kissimmee, Davenport, Ocala) is a close second. South Florida's volume is spread across Miami, Homestead, Miramar, and the Broward/Palm Beach counties. For practitioners building carrier-specific expertise, geographic focus compounds the advantage &mdash; the same carriers appear disproportionately in each market, and local familiarity with adjusters, repair standards, and permitting translates directly into stronger claim outcomes.</p>
+  </div>
+</section>
+
+<!-- 6. TRENDS -->
+<section class="sec" id="trends">
+  <div class="sec-h rv"><span class="sec-n">06</span><h2 class="sec-t">Filing Trends &amp; Momentum</h2></div>
+  <p class="sec-d rv">Monthly volumes track the pace of the dispute pipeline. Sustained filing rates signal ongoing carrier resistance, while dips often align with holidays and court schedules rather than a reduction in underlying disputes.</p>
+
+  <div class="card rv">
+    <h4>Monthly Filing Volume</h4>
+    <div class="tw">
+      <table class="dt" id="trendTable">
+        <thead><tr>
+          <th>Month</th>
+          <th class="r">Notices Filed</th>
+          <th class="r">Avg Damage Estimate</th>
+          <th class="r">Avg Disputed Amount</th>
+          <th>Volume</th>
+        </tr></thead>
+        <tbody id="trendBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">What the Trends Tell Us</div>
+    <p><strong>October 2025 marked the peak at 4,171 notices</strong>, likely reflecting a combination of post-storm activity and pre-year-end filing urgency. The November/December dip is seasonal &mdash; courts slow, offices close &mdash; but January and February 2026 rebounded to 3,000+ per month, confirming that underlying demand remains strong. March is partial (through 3/22) and on pace to exceed 2,800. The key insight for practitioners: <strong>this market is not cooling down.</strong> The 9-month trend shows a durable, high-volume dispute environment with no sign of carrier behavior changing course.</p>
+  </div>
+</section>
+
+<!-- 7. TAKEAWAYS -->
+<section class="sec" id="takeaways">
+  <div class="sec-h rv"><span class="sec-n">07</span><h2 class="sec-t">Strategic Takeaways</h2></div>
+  <p class="sec-d rv">Actionable intelligence drawn from this analysis &mdash; organized by audience.</p>
+
+  <div class="g3 rv">
+    <div class="icard">
+      <h4>For Public Adjusters</h4>
+      <ul>
+        <li><strong>State Farm, Citizens, Slide, and Universal P&amp;C</strong> generate over 40% of all pre-suit notices &mdash; deep carrier-specific expertise on these four pays disproportionate dividends</li>
+        <li>Wind and storm damage appears in 30% of notices, but <strong>denial allegations appear in 43%</strong> &mdash; and they frequently overlap. Adjusters who document beyond the damage and proactively address coverage arguments position their clients for stronger outcomes</li>
+        <li>Citizens claims carry the highest dollar values (avg estimate $98K, avg demand $161K) &mdash; invest the extra time in thorough scope documentation for Citizens losses</li>
+        <li>Water and plumbing losses (2,211 notices) require especially careful causation documentation &mdash; carriers aggressively contest origin and timeline on these claims</li>
+        <li>The <strong>Tampa Bay and Central Florida corridors</strong> generate the most filing volume &mdash; market density matters for building carrier adjuster familiarity and local expertise</li>
+      </ul>
+    </div>
+    <div class="icard">
+      <h4>For Plaintiff Attorneys</h4>
+      <ul>
+        <li><strong>43.5% of all notices allege denial</strong> &mdash; often paired with a specific peril like wind or water. Outright denials suggest carrier overreach that can be challenged on coverage grounds, bad faith, and statutory violations</li>
+        <li>Settlement demand notices average $144K, with 540 notices exceeding $250K and 363 exceeding $500K &mdash; <strong>the upper tier of disputes involves significant damages</strong> worth pursuing</li>
+        <li>Carrier-specific patterns matter: State Farm sees denial alleged in 47.5% of its notices; First Protective hits 50.7%; Citizens shows the largest dollar values per claim</li>
+        <li>92% of notices are attorney-filed, but <strong>roughly 2,200 substantive notices lack attorney representation</strong> &mdash; an underserved population with active disputes that may need counsel</li>
+        <li>Roughly 150 new disputes enter the pre-suit pipeline every business day &mdash; this is a durable, sustained case flow, not a temporary surge</li>
+      </ul>
+    </div>
+    <div class="icard">
+      <h4>For Restoration Companies</h4>
+      <ul>
+        <li><strong>$1.32 billion in damage estimates</strong> across 12,649 notices reflects the scale of contested repair work statewide &mdash; disputed claims are also repair opportunities</li>
+        <li>Median damage estimate of $60K means the typical dispute involves substantial restoration, not cosmetic repairs &mdash; <strong>these are mid-to-large scopes</strong></li>
+        <li>Mold claims carry the highest per-claim values and are growing &mdash; investing in certified mold assessment and remediation capabilities creates a premium service tier</li>
+        <li>Tampa, Orlando, Miami, and Jacksonville are the four largest markets &mdash; <strong>restoration companies near these metros are closest to the highest claim density</strong></li>
+        <li>Carrier dispute patterns affect authorization timelines: high-volume carriers like Citizens (3,007 notices) and Slide (2,883) may have longer approval cycles during active disputes</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="sec rv" style="margin-top:20px;">
+  <div class="cta-banner">
+    <h3 class="cta-banner-title">Submit a Policy or Denial Letter for Review</h3>
+    <p class="cta-banner-sub">Our property damage attorneys will review your case and respond within 24 hours. Free and confidential.</p>
+    <div class="cta-buttons">
+      <a href="/free-case-evaluation" class="cta-btn-primary">Submit Policy for Review &rarr;</a>
+      <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." class="cta-btn-secondary">Text a Lawyer &rarr;</a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- REPORT DISCLAIMER -->
+<div class="report-disclaimer">
+  <div class="container">
+    <p>This report is provided for informational purposes only and does not constitute legal advice. Data sourced from the Florida Department of Financial Services PIITIL Notice system, covering filings from July 2025 through March 22, 2026. Individual claimant and business identities have been excluded. For questions regarding specific claims or legal representation, contact our office.</p>
+  </div>
+</div>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-grid">
+      <div class="site-footer-col">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="/ada-compliance">ADA Compliance</a></li>
+          <li><a href="/terms-of-use-agreement">Terms of Use Agreement</a></li>
+          <li><a href="/privacy-policy">Privacy</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Practice Areas</h3>
+        <ul>
+          <li><a href="/property-damage-claims">Property Damage Claims</a></li>
+          <li><a href="/personal-injury">Personal Injury</a></li>
+          <li><a href="/social-security-disability-lawyers">SSDI Disability</a></li>
+          <li><a href="/privacy-torts">Privacy Torts</a></li>
+          <li><a href="/water-damage-restoration">Water Damage Claims</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="/resources">Blog</a></li>
+          <li><a href="/job-id-00001">Careers</a></li>
+          <li><a href="/ssdi-lawyers">SSDI Disability Lawyers</a></li>
+          <li><a href="/public-adjuster-resources-florida">Public Adjuster Resources</a></li>
+          <li><a href="/case-law-updates">Case Law Updates</a></li>
+          <li><a href="/reports/florida-insurance-market-january-2026">FL Insurance Market Report</a></li>
+          <li><a href="/reports/florida-presuit-notice-intelligence-report">FL Pre-Suit Notice Report</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="/abogados-florida">Abogados en Florida</a></li>
+          <li><a href="/abogado-discapacidad-florida">Abogado Discapacidad Florida</a></li>
+          <li><a href="/contact-us">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer-copyright">
+      <p>Copyright &copy; 2026 Louis Law Group</p>
+      <p>All rights reserved. This website and its content are protected by copyright law. No part of this website may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of Louis Law Group, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const D={
+carriers:[
+{name:"STATE FARM FLORIDA INS.",total:3549,denial:1687,wind:1210,underpay:457,water:301,bad_faith:179,est_n:1648,est_avg:66404,dem_n:1785,dem_avg:86296},
+{name:"CITIZENS PROPERTY INS.",total:3007,denial:1431,wind:656,water:360,underpay:157,bad_faith:77,est_n:2032,est_avg:97793,dem_n:852,dem_avg:161482},
+{name:"SLIDE INS. CO.",total:2883,denial:1338,wind:876,water:338,underpay:322,bad_faith:138,est_n:1372,est_avg:76085,dem_n:1408,dem_avg:100471},
+{name:"UNIVERSAL P&C",total:2705,denial:861,wind:671,underpay:455,water:348,bad_faith:179,est_n:616,est_avg:71016,dem_n:2009,dem_avg:82534},
+{name:"AMERICAN INTEGRITY INS.",total:1379,denial:579,wind:459,water:186,underpay:173,bad_faith:69,est_n:515,est_avg:70744,dem_n:816,dem_avg:80243},
+{name:"FIRST PROTECTIVE INS.",total:1310,denial:664,wind:434,underpay:167,water:121,bad_faith:73,est_n:658,est_avg:83035,dem_n:606,dem_avg:120197},
+{name:"HOMEOWNERS CHOICE P&C",total:871,denial:329,wind:256,underpay:156,water:117,bad_faith:49,est_n:194,est_avg:83841,dem_n:652,dem_avg:100023},
+{name:"KIN INTERINSURANCE",total:814,denial:309,wind:253,underpay:103,water:79,bad_faith:41,est_n:269,est_avg:78220,dem_n:510,dem_avg:111559},
+{name:"AMERICAN SECURITY INS.",total:806,denial:343,wind:196,water:116,underpay:64,bad_faith:38,est_n:355,est_avg:69276,dem_n:421,dem_avg:66410},
+{name:"FLORIDA PENINSULA INS.",total:728,denial:313,wind:234,underpay:111,water:70,bad_faith:28,est_n:301,est_avg:88904,dem_n:394,dem_avg:103828},
+{name:"TOWER HILL INS.",total:725,denial:307,wind:256,underpay:96,water:67,bad_faith:57,est_n:259,est_avg:88861,dem_n:446,dem_avg:103889},
+{name:"TYPTAP INS. CO.",total:720,denial:257,wind:233,underpay:124,water:85,bad_faith:51,est_n:189,est_avg:89923,dem_n:510,dem_avg:111099},
+],
+claimIssues:[
+{type:"Denial",count:12895,pct:43.5,color:"var(--accent-red)"},
+{type:"Wind/Storm",count:8909,pct:30.1,color:"var(--accent-blue)"},
+{type:"Underpayment",count:3697,pct:12.5,color:"var(--accent-orange)"},
+{type:"Water/Plumbing",count:3414,pct:11.5,color:"var(--accent-teal)"},
+{type:"Bad Faith",count:1556,pct:5.3,color:"var(--accent-pink)"},
+{type:"Delay",count:916,pct:3.1,color:"var(--accent-lime)"},
+{type:"Mold",count:430,pct:1.5,color:"var(--accent-purple)"},
+{type:"Fire/Smoke",count:208,pct:0.7,color:"#d97706"},
+{type:"Sinkhole/Structural",count:116,pct:0.4,color:"rgba(26,43,73,0.25)"},
+],
+topCombos:[
+{combo:"Denial + Wind/Storm",count:3286},
+{combo:"Denial + Water/Plumbing",count:1093},
+{combo:"Underpayment + Wind/Storm",count:593},
+{combo:"Denial + Water + Wind",count:565},
+{combo:"Bad Faith + Wind/Storm",count:231},
+{combo:"Denial + Underpay + Wind",count:200},
+{combo:"Bad Faith + Delay + Denial + Wind",count:197},
+{combo:"Underpayment + Water/Plumbing",count:195},
+],
+cities:[
+{name:"Tampa",count:1558},{name:"Orlando",count:1538},{name:"Miami",count:1124},
+{name:"Jacksonville",count:1084},{name:"Kissimmee",count:798},{name:"Sarasota",count:614},
+{name:"Bradenton",count:489},{name:"Lakeland",count:336},{name:"Ocala",count:332},
+{name:"Port St. Lucie",count:576},{name:"West Palm Beach",count:316},{name:"Lake Worth",count:302},
+{name:"Naples",count:287},{name:"The Villages",count:282},{name:"Lehigh Acres",count:260}
+],
+monthly:[
+{month:"Jul 2025",count:3877,avg_est:98500,avg_disp:138000},
+{month:"Aug 2025",count:3789,avg_est:102000,avg_disp:145000},
+{month:"Sep 2025",count:3818,avg_est:106200,avg_disp:152000},
+{month:"Oct 2025",count:4171,avg_est:108000,avg_disp:155000},
+{month:"Nov 2025",count:2998,avg_est:104000,avg_disp:148000},
+{month:"Dec 2025",count:2740,avg_est:100500,avg_disp:142000},
+{month:"Jan 2026",count:3023,avg_est:107000,avg_disp:151000},
+{month:"Feb 2026",count:3139,avg_est:105800,avg_disp:149000},
+{month:"Mar 2026*",count:2069,avg_est:103000,avg_disp:146000},
+],
+estRanges:[
+{range:"<$25K",count:1150},{range:"$25-50K",count:3900},{range:"$50-75K",count:2702},
+{range:"$75-100K",count:1659},{range:"$100-150K",count:1826},{range:"$150-250K",count:901},
+{range:"$250-500K",count:214},{range:"$500K+",count:124}
+],
+demandRanges:[
+{range:"<$25K",count:1336},{range:"$25-50K",count:4142},{range:"$50-75K",count:3432},
+{range:"$75-100K",count:2378},{range:"$100-150K",count:2447},{range:"$150-250K",count:1413},
+{range:"$250-500K",count:540},{range:"$500K+",count:363}
+],
+submit:{attorney_ri:27359,attorney_ff:63,no_role:2202}
+};
+
+function fmt(n){if(n>=1e9)return'$'+(n/1e9).toFixed(2)+'B';if(n>=1e6)return'$'+(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n.toLocaleString()}
+function fmtD(n){return'$'+n.toLocaleString()}
+function shortN(s){return s.replace(/ INSURANCE/g,' INS.').replace(/ COMPANY/g,' CO.').replace(/ CORPORATION/g,' CORP.')}
+
+// Ticker
+function buildTicker(){
+  const items=[
+    'PRE-SUIT NOTICES <span class="tv">29,624</span>',
+    'CARRIERS DISPUTED <span class="tv">303</span>',
+    'DAILY FILING PACE <span class="tv">~150/DAY</span>',
+    'ALLEGE DENIAL <span class="tr">43.5%</span>',
+    'ALLEGE WIND/STORM <span class="tv">30.1%</span>',
+    'ALLEGE UNDERPAYMENT <span class="tv">12.5%</span>',
+    'ALLEGE WATER DAMAGE <span class="tv">11.5%</span>',
+    'ALLEGE BAD FAITH <span class="tr">5.3%</span>',
+    'AVG DAMAGE ESTIMATE <span class="tv">$106K</span>',
+    'MEDIAN DAMAGE ESTIMATE <span class="tv">$60K</span>',
+    'AVG SETTLEMENT DEMAND <span class="tv">$144K</span>',
+  ];
+  const h=items.map(i=>'<span class="ticker-item">'+i+'</span>').join('');
+  document.getElementById('ticker').innerHTML=h+h;
+}
+
+// KPIs
+function buildKPIs(){
+  const ks=[
+    {v:'29,624',l:'Pre-Suit Notices Filed',c:'var(--accent-gold)'},
+    {v:'303',l:'Carriers Disputed',c:'var(--accent-teal)'},
+    {v:'~150/day',l:'Avg Daily Filings',c:'var(--accent-gold)'},
+    {v:'9 months',l:'Jul 2025 \u2013 Mar 2026',c:'var(--text-secondary)'},
+    {v:'43.5%',l:'Allege Denial',c:'var(--accent-red)'},
+    {v:'30.1%',l:'Allege Wind/Storm',c:'var(--accent-orange)'},
+    {v:'12.5%',l:'Allege Underpayment',c:'var(--accent-purple)'},
+    {v:'11.5%',l:'Allege Water Damage',c:'var(--accent-teal)'},
+  ];
+  const el=document.getElementById('kpis');
+  ks.forEach((k,i)=>{
+    const d=document.createElement('div');
+    d.className='kpi';
+    d.style.transitionDelay=i*.07+'s';
+    d.innerHTML='<div class="kpi-v" style="color:'+k.c+'">'+k.v+'</div><div class="kpi-l">'+k.l+'</div>';
+    el.appendChild(d);
+  });
+}
+
+// Bar builder
+function buildBars(id,data,valKey,colorCls,formatter){
+  const el=document.getElementById(id);
+  el.innerHTML='';
+  const mx=Math.max(...data.map(d=>d[valKey]));
+  data.forEach((d,i)=>{
+    const pct=(d[valKey]/mx*100).toFixed(1);
+    const row=document.createElement('div');
+    row.className='br';
+    row.style.transitionDelay=i*.05+'s';
+    row.innerHTML='<div class="br-l" title="'+(d.name||d.type||d.range)+'">'+(d.name||d.type||d.range)+'</div><div class="br-t"><div class="br-f '+colorCls+'" data-w="'+pct+'%"></div></div><div class="br-v">'+formatter(d[valKey])+'</div>';
+    el.appendChild(row);
+  });
+}
+
+// Carrier chart with tabs
+let cTab='volume';
+function buildCarrierChart(tab){
+  cTab=tab;
+  const map={volume:{key:'total',cls:'gold',fn:v=>v.toLocaleString()},estimate:{key:'est_avg',cls:'blue',fn:v=>'$'+v.toLocaleString()},disputed:{key:'dem_avg',cls:'red',fn:v=>v>0?'$'+v.toLocaleString():'N/A'}};
+  const m=map[tab];
+  buildBars('carrierBars',D.carriers,m.key,m.cls,m.fn);
+  setTimeout(()=>animBars('carrierBars'),50);
+}
+document.getElementById('carrierTabs').addEventListener('click',e=>{
+  if(e.target.classList.contains('tab')){
+    document.querySelectorAll('#carrierTabs .tab').forEach(b=>b.classList.remove('a'));
+    e.target.classList.add('a');
+    buildCarrierChart(e.target.dataset.tab);
+  }
+});
+
+function animBars(id){
+  document.querySelectorAll('#'+id+' .br').forEach((r,i)=>{
+    setTimeout(()=>{r.classList.add('v');const f=r.querySelector('.br-f');if(f)f.style.width=f.dataset.w;},i*50);
+  });
+}
+
+// Claim issue bars (overlapping)
+function buildClaimBars(){
+  const data = D.claimIssues.map(d=>({...d, label: d.type+' ('+d.pct+'%)'}));
+  const el=document.getElementById('claimTypeBars');
+  el.innerHTML='';
+  const mx=Math.max(...data.map(d=>d.count));
+  data.forEach((d,i)=>{
+    const pct=(d.count/mx*100).toFixed(1);
+    const row=document.createElement('div');
+    row.className='br';
+    row.style.transitionDelay=i*.05+'s';
+    row.innerHTML='<div class="br-l" title="'+d.type+'">'+d.type+'</div><div class="br-t"><div class="br-f" style="background:linear-gradient(90deg,'+d.color+'44,'+d.color+'99);" data-w="'+pct+'%"></div></div><div class="br-v">'+d.count.toLocaleString()+' <span style="color:var(--text-dim);font-size:10px">('+d.pct+'%)</span></div>';
+    el.appendChild(row);
+  });
+  // Combos
+  buildBars('comboBars',D.topCombos.map(d=>({name:d.combo,count:d.count})),'count','purple',v=>v.toLocaleString());
+}
+
+// Carrier issue table
+function buildCarrierIssueTable(){
+  const body=document.getElementById('carrierIssueBody');
+  body.innerHTML='';
+  D.carriers.forEach((c,i)=>{
+    const tr=document.createElement('tr');
+    tr.style.transitionDelay=i*.04+'s';
+    const dp=c.denial>0?(c.denial/c.total*100).toFixed(0)+'%':'\u2014';
+    const wp=c.wind>0?(c.wind/c.total*100).toFixed(0)+'%':'\u2014';
+    tr.innerHTML='<td class="nm">'+c.name+'</td><td class="m">'+c.total.toLocaleString()+'</td><td class="m">'+c.denial.toLocaleString()+' <span style="color:var(--text-dim);font-size:10px">('+dp+')</span></td><td class="m">'+c.wind.toLocaleString()+'</td><td class="m">'+c.underpay.toLocaleString()+'</td><td class="m">'+c.water.toLocaleString()+'</td><td class="m">'+c.bad_faith.toLocaleString()+'</td>';
+    body.appendChild(tr);
+  });
+}
+
+// Financial ranges
+function buildRanges(){
+  buildBars('estRangeBars',D.estRanges,'count','gold',v=>v.toLocaleString());
+  buildBars('dispRangeBars',D.demandRanges,'count','blue',v=>v.toLocaleString());
+}
+
+// Financial table
+function buildFinTable(){
+  const body=document.getElementById('finBody');
+  body.innerHTML='';
+  D.carriers.forEach((c,i)=>{
+    const tr=document.createElement('tr');
+    tr.style.transitionDelay=i*.04+'s';
+    tr.innerHTML='<td class="nm">'+c.name+'</td><td class="m">'+c.total.toLocaleString()+'</td><td class="m" style="color:var(--accent-gold)">'+c.est_n.toLocaleString()+'</td><td class="m">'+(c.est_avg>0?'$'+c.est_avg.toLocaleString():'\u2014')+'</td><td class="m" style="color:var(--accent-blue)">'+c.dem_n.toLocaleString()+'</td><td class="m">'+(c.dem_avg>0?'$'+c.dem_avg.toLocaleString():'\u2014')+'</td>';
+    body.appendChild(tr);
+  });
+}
+
+// Cities
+function buildCities(){
+  buildBars('cityBars',D.cities,'count','teal',v=>v.toLocaleString());
+}
+
+// Monthly trend table
+function buildTrend(){
+  const body=document.getElementById('trendBody');
+  body.innerHTML='';
+  const mx=Math.max(...D.monthly.map(m=>m.count));
+  D.monthly.forEach((m,i)=>{
+    const tr=document.createElement('tr');
+    tr.style.transitionDelay=i*.04+'s';
+    const pct=(m.count/mx*100).toFixed(0);
+    tr.innerHTML='<td class="nm">'+m.month+'</td><td class="m">'+m.count.toLocaleString()+'</td><td class="m">$'+m.avg_est.toLocaleString()+'</td><td class="m">$'+m.avg_disp.toLocaleString()+'</td><td><div style="display:flex;align-items:center;gap:8px"><div style="width:'+pct+'%;height:16px;background:linear-gradient(90deg,rgba(255,184,0,.2),rgba(255,184,0,.5));border-radius:3px;transition:width .8s ease"></div></div></td>';
+    body.appendChild(tr);
+  });
+}
+
+// Submit donut
+function buildSubmitDonut(){
+  const s=D.submit;
+  const total=s.attorney_ri+s.attorney_ff+s.no_role;
+  const items=[
+    {label:'Attorney (Rep. Insured)',value:s.attorney_ri,color:'var(--accent-gold)'},
+    {label:'No Role Designated',value:s.no_role,color:'var(--accent-blue)'},
+    {label:'First-Party Filing',value:s.attorney_ff,color:'var(--accent-teal)'},
+  ];
+  const r=80;const circ=2*Math.PI*r;
+  let cum=0;let paths='';
+  items.forEach((it,idx)=>{
+    const pct=it.value/total;
+    const da=pct*circ+' '+circ;
+    const offset=-(cum/total)*circ;
+    paths+='<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="'+it.color+'" stroke-width="24" stroke-dasharray="'+da+'" stroke-dashoffset="'+offset+'" style="opacity:0;animation:fi .5s ease forwards '+idx*.15+'s"/>';
+    cum+=it.value;
+  });
+  const legend=items.map(it=>'<div class="leg-i"><span class="leg-d" style="background:'+it.color+'"></span><span>'+it.label+'</span><span class="leg-v">'+it.value.toLocaleString()+' ('+(it.value/total*100).toFixed(1)+'%)</span></div>').join('');
+  document.getElementById('submitDonut').innerHTML=
+    '<svg class="donut-svg" viewBox="0 0 220 220" style="width:200px;height:200px">'+
+      '<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="rgba(26,43,73,0.08)" stroke-width="24"/>'+
+      paths+
+      '<text x="110" y="105" text-anchor="middle" fill="#1a2b49" font-family="JetBrains Mono" font-size="20" font-weight="700">'+(total/1000).toFixed(1)+'K</text>'+
+      '<text x="110" y="123" text-anchor="middle" fill="#718096" font-family="Work Sans" font-size="11">Filed By</text>'+
+    '</svg>'+
+    '<div class="leg">'+legend+'</div>';
+}
+
+// Notice type donut
+function buildNoticeTypeDonut(){
+  const items=[
+    {label:'Damage Estimate Notices',value:12649,color:'var(--accent-gold)'},
+    {label:'Settlement Demand Notices',value:16267,color:'var(--accent-blue)'},
+    {label:'No Financial Data',value:708,color:'rgba(26,43,73,0.2)'},
+  ];
+  const total=29624;
+  const r=80;const circ=2*Math.PI*r;
+  let cum=0;let paths='';
+  items.forEach((it,idx)=>{
+    const pct=it.value/total;
+    const da=pct*circ+' '+circ;
+    const offset=-(cum/total)*circ;
+    paths+='<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="'+it.color+'" stroke-width="24" stroke-dasharray="'+da+'" stroke-dashoffset="'+offset+'" style="opacity:0;animation:fi .5s ease forwards '+idx*.15+'s"/>';
+    cum+=it.value;
+  });
+  const legend=items.map(it=>'<div class="leg-i"><span class="leg-d" style="background:'+it.color+'"></span><span>'+it.label+'</span><span class="leg-v">'+it.value.toLocaleString()+' ('+(it.value/total*100).toFixed(1)+'%)</span></div>').join('');
+  document.getElementById('noticeTypeDonut').innerHTML=
+    '<svg class="donut-svg" viewBox="0 0 220 220" style="width:200px;height:200px">'+
+      '<circle cx="110" cy="110" r="'+r+'" fill="none" stroke="rgba(26,43,73,0.08)" stroke-width="24"/>'+
+      paths+
+      '<text x="110" y="105" text-anchor="middle" fill="#1a2b49" font-family="JetBrains Mono" font-size="20" font-weight="700">29,624</text>'+
+      '<text x="110" y="123" text-anchor="middle" fill="#718096" font-family="Work Sans" font-size="11">Total Notices</text>'+
+    '</svg>'+
+    '<div class="leg">'+legend+'</div>';
+}
+
+// Monthly mini chart
+function buildMonthlyChart(){
+  const el=document.getElementById('monthlyChart');
+  const data=D.monthly;
+  const mx=Math.max(...data.map(d=>d.count));
+  const mn=Math.min(...data.map(d=>d.count));
+  const w=el.offsetWidth||600;
+  const h=200;
+  const pad={t:20,r:10,b:40,l:50};
+  const cw=w-pad.l-pad.r;
+  const ch=h-pad.t-pad.b;
+  const step=cw/(data.length-1);
+
+  const points=data.map((d,i)=>{
+    const x=pad.l+i*step;
+    const y=pad.t+ch-(d.count-mn)/(mx-mn)*ch;
+    return{x,y,d};
+  });
+
+  const line=points.map((p,i)=>i===0?'M'+p.x+','+p.y:'L'+p.x+','+p.y).join(' ');
+  const area=line+' L'+points[points.length-1].x+','+(h-pad.b)+' L'+points[0].x+','+(h-pad.b)+' Z';
+
+  let svg='<svg viewBox="0 0 '+w+' '+h+'" style="width:100%;height:100%">'+
+    '<defs>'+
+      '<linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">'+
+        '<stop offset="0%" stop-color="var(--accent-gold)" stop-opacity="0.2"/>'+
+        '<stop offset="100%" stop-color="var(--accent-gold)" stop-opacity="0"/>'+
+      '</linearGradient>'+
+    '</defs>';
+  // Grid lines
+  for(let i=0;i<=4;i++){
+    const y=pad.t+ch/4*i;
+    const val=Math.round(mx-(mx-mn)/4*i);
+    svg+='<line x1="'+pad.l+'" y1="'+y+'" x2="'+(w-pad.r)+'" y2="'+y+'" stroke="rgba(26,43,73,0.06)" stroke-width="1"/>';
+    svg+='<text x="'+(pad.l-8)+'" y="'+(y+4)+'" text-anchor="end" fill="#718096" font-family="JetBrains Mono" font-size="10">'+(val/1000).toFixed(1)+'K</text>';
+  }
+  // Area
+  svg+='<path d="'+area+'" fill="url(#areaGrad)" style="opacity:0;animation:fi .8s ease forwards .3s"/>';
+  // Line
+  svg+='<path d="'+line+'" fill="none" stroke="var(--accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0;animation:fi .6s ease forwards .4s"/>';
+  // Dots and labels
+  points.forEach((p,i)=>{
+    svg+='<circle cx="'+p.x+'" cy="'+p.y+'" r="4" fill="#fff" stroke="var(--accent-gold)" stroke-width="2" style="opacity:0;animation:fi .4s ease forwards '+(.5+i*.08)+'s"/>';
+    svg+='<text x="'+p.x+'" y="'+(h-pad.b+16)+'" text-anchor="middle" fill="#718096" font-family="Work Sans" font-size="9" font-weight="600">'+p.d.month.replace(' 20','\'').replace('*','')+'</text>';
+  });
+  svg+='</svg>';
+  el.innerHTML=svg;
+}
+
+// Observer
+function setupObs(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('v');
+        e.target.querySelectorAll('.br').forEach((r,i)=>{setTimeout(()=>{r.classList.add('v');const f=r.querySelector('.br-f');if(f)f.style.width=f.dataset.w;},i*50)});
+        e.target.querySelectorAll('tbody tr').forEach((r,i)=>{setTimeout(()=>r.classList.add('v'),i*40)});
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.08});
+  document.querySelectorAll('.rv,.kpi').forEach(el=>obs.observe(el));
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildTicker();
+  buildKPIs();
+  buildSubmitDonut();
+  buildNoticeTypeDonut();
+  buildMonthlyChart();
+  buildCarrierChart('volume');
+  buildClaimBars();
+  buildCarrierIssueTable();
+  buildRanges();
+  buildFinTable();
+  buildCities();
+  buildTrend();
+  setupObs();
+  window.addEventListener('resize',buildMonthlyChart);
+});
+</script>
+</body>
+</html>

@@ -178,6 +178,11 @@ export default function Footer() {
                   FL Insurance Market Report
                 </a>
               </li>
+              <li className={styles.navItem}>
+                <a href="/reports/florida-presuit-notice-intelligence-report" className={styles.navLink}>
+                  FL Pre-Suit Notice Report
+                </a>
+              </li>
             </ul>
           </div>
 

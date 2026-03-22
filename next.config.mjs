@@ -52,6 +52,11 @@ const nextConfig = {
         source: '/reports/florida-insurance-market-january-2026',
         destination: '/reports/florida-insurance-market-january-2026.html',
       },
+      {
+        // Clean URL for Pre-Suit Notice Intelligence Report
+        source: '/reports/florida-presuit-notice-intelligence-report',
+        destination: '/reports/florida-presuit-notice-intelligence-report.html',
+      },
     ];
   },
 
