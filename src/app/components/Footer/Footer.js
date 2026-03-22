@@ -173,6 +173,11 @@ export default function Footer() {
                   Case Law Updates
                 </Link>
               </li>
+              <li className={styles.navItem}>
+                <Link href="/reports/florida-insurance-market-january-2026" className={styles.navLink}>
+                  FL Insurance Market Report
+                </Link>
+              </li>
             </ul>
           </div>
 

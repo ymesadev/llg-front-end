@@ -59,6 +59,13 @@ const SERVICES = [
     desc: "PA contract rules, advertising compliance, licensing updates, and the Homeowner Claims Bill of Rights — straight from the Florida DFS.",
     link: "https://myfloridacfo.com/division/agents/insurance-insights",
   },
+  {
+    icon: "📈",
+    title: "Monthly MIR Dashboard",
+    keywords: ["MIR data", "claims pending", "litigation trends"],
+    desc: "Interactive dashboard with carrier performance, claims activity, litigation outcomes, and ADR trends — built from FL OIR Monthly MIR data.",
+    link: "/reports/florida-insurance-market-january-2026",
+  },
 ];
 
 const STATS = [

@@ -47,6 +47,11 @@ const nextConfig = {
         source: '/sitemaps/:page.xml',
         destination: '/api/sitemap/:page',
       },
+      {
+        // Clean URL for MIR dashboard report
+        source: '/reports/florida-insurance-market-january-2026',
+        destination: '/reports/florida-insurance-market-january-2026.html',
+      },
     ];
   },
 

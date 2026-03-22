@@ -1,0 +1,1709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Property Insurance Market Intelligence — January 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #f4f5f7;
+  --bg-card-hover: #eef0f3;
+  --accent-gold: #ffb800;
+  --accent-gold-dim: rgba(255, 184, 0, 0.12);
+  --accent-blue: #3b82f6;
+  --accent-teal: #14b8a6;
+  --accent-red: #ef4444;
+  --accent-orange: #f97316;
+  --accent-purple: #8b5cf6;
+  --text-primary: #1a2b49;
+  --text-secondary: #4a5568;
+  --text-dim: #718096;
+  --border: rgba(26,43,73,0.1);
+  --glow-gold: rgba(255, 184, 0, 0.3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* Animated background */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(255,184,0,0.06), transparent),
+    radial-gradient(ellipse 600px 400px at 80% 80%, rgba(59,130,246,0.05), transparent),
+    radial-gradient(ellipse 500px 500px at 50% 50%, rgba(20,184,166,0.03), transparent);
+  pointer-events: none;
+}
+
+.container { max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* HERO */
+.hero {
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+}
+
+.hero-badge {
+  font-family: 'Montserrat', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-gold-dim);
+  border: 1px solid rgba(255,184,0,0.25);
+  border-radius: 100px;
+  padding: 6px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.2s;
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+
+.hero h1 {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.35s;
+}
+
+.hero h1 .gold { color: var(--accent-gold); }
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto 12px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.5s;
+  font-weight: 400;
+}
+
+.hero-meta {
+  font-size: 13px;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.6s;
+}
+
+.hero-meta strong { color: var(--accent-gold); font-weight: 600; }
+
+.hero-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  margin: 32px auto 0;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.7s;
+}
+
+/* KPI STRIP */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-bottom: 60px;
+}
+
+.kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px 20px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+.kpi.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.kpi:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255,184,0,0.3);
+  transform: translateY(-2px);
+}
+
+.kpi-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.kpi-value.gold { color: var(--accent-gold); }
+.kpi-value.blue { color: var(--accent-blue); }
+.kpi-value.teal { color: var(--accent-teal); }
+.kpi-value.red { color: var(--accent-red); }
+.kpi-value.orange { color: var(--accent-orange); }
+.kpi-value.purple { color: var(--accent-purple); }
+
+.kpi-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* SECTIONS */
+.section {
+  margin-bottom: 64px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--accent-gold);
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.section-title {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+
+.section-desc {
+  color: var(--text-secondary);
+  font-size: 14.5px;
+  margin-bottom: 28px;
+  max-width: 750px;
+  line-height: 1.7;
+}
+
+/* TAB NAVIGATION */
+.tab-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+  background: rgba(26,43,73,0.04);
+  border-radius: 10px;
+  padding: 4px;
+  overflow-x: auto;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 8px 18px;
+  border: none;
+  background: none;
+  color: var(--text-dim);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: var(--text-secondary); }
+
+.tab-btn.active {
+  background: var(--accent-gold-dim);
+  color: var(--accent-gold);
+}
+
+/* CHARTS */
+.chart-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue), var(--accent-teal));
+  opacity: 0.8;
+}
+
+/* BAR CHART */
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.4s ease;
+}
+
+.bar-row.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.bar-row:last-child { border-bottom: none; }
+
+.bar-label {
+  width: 220px;
+  min-width: 220px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: rgba(26,43,73,0.05);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.bar-fill.gold { background: linear-gradient(90deg, rgba(255,184,0,0.25), rgba(255,184,0,0.5)); }
+.bar-fill.blue { background: linear-gradient(90deg, rgba(59,130,246,0.25), rgba(59,130,246,0.5)); }
+.bar-fill.teal { background: linear-gradient(90deg, rgba(20,184,166,0.25), rgba(20,184,166,0.5)); }
+.bar-fill.red { background: linear-gradient(90deg, rgba(239,68,68,0.25), rgba(239,68,68,0.5)); }
+.bar-fill.orange { background: linear-gradient(90deg, rgba(249,115,22,0.25), rgba(249,115,22,0.5)); }
+.bar-fill.purple { background: linear-gradient(90deg, rgba(139,92,246,0.25), rgba(139,92,246,0.5)); }
+
+.bar-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* DATA TABLE */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead th {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+}
+
+.data-table thead th.right { text-align: right; }
+
+.data-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.35s ease;
+}
+
+.data-table tbody tr.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.data-table tbody tr:hover { background: rgba(26,43,73,0.03); }
+
+.data-table tbody td {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.data-table tbody td.mono {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-align: right;
+}
+
+.data-table tbody td.name {
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* BADGES */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.badge-green { background: rgba(20,184,166,0.15); color: #14b8a6; }
+.badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+.badge-orange { background: rgba(249,115,22,0.15); color: #f97316; }
+.badge-gold { background: rgba(255,184,0,0.15); color: #ffb800; }
+.badge-blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+
+/* GRID CARDS */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+@media (max-width: 900px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .bar-label { width: 140px; min-width: 140px; font-size: 11px; }
+}
+
+.info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+}
+
+.info-card h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-card p, .info-card li {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.info-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-card li {
+  padding: 5px 0;
+  padding-left: 16px;
+  position: relative;
+}
+
+.info-card li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+/* PIE / DONUT */
+.donut-wrap {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.donut-svg { width: 220px; height: 220px; }
+
+.donut-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legend-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-left: auto;
+  padding-left: 16px;
+}
+
+/* INSIGHT CALLOUT */
+.callout {
+  background: linear-gradient(135deg, rgba(255,184,0,0.08), rgba(255,184,0,0.02));
+  border: 1px solid rgba(255,184,0,0.2);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin: 20px 0;
+}
+
+.callout-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.callout p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+.callout strong { color: var(--text-primary); }
+
+/* FOOTER */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 40px 0 60px;
+  text-align: center;
+}
+
+.footer-brand {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 20px;
+  color: var(--accent-gold);
+  margin-bottom: 8px;
+}
+
+.footer-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes countUp {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* PRINT */
+@media print {
+  body { background: #fff; color: #1a2b49; }
+  .bg-mesh { display: none; }
+  .chart-container { border: 1px solid #ddd; }
+}
+
+/* Ticker animation */
+.ticker-strip {
+  overflow: hidden;
+  background: rgba(255,184,0,0.06);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 0;
+  margin-bottom: 48px;
+}
+
+.ticker-inner {
+  display: flex;
+  gap: 48px;
+  animation: ticker 40s linear infinite;
+  white-space: nowrap;
+  width: max-content;
+}
+
+.ticker-item {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ticker-item .t-val { color: var(--accent-gold); font-weight: 600; }
+.ticker-item .t-red { color: var(--accent-red); font-weight: 600; }
+.ticker-item .t-teal { color: var(--accent-teal); font-weight: 600; }
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Responsive table wrapper */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Section anchor offset */
+.section-anchor { scroll-margin-top: 20px; }
+
+/* NAV */
+.top-nav {
+  position: sticky;
+  top: 82px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+
+.top-nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: none;
+}
+
+.top-nav-inner::-webkit-scrollbar { display: none; }
+
+.nav-link {
+  font-family: 'Montserrat', sans-serif;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.nav-link:hover { color: var(--text-primary); background: rgba(26,43,73,0.06); }
+
+.nav-link.brand {
+  color: var(--accent-gold);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+/* Stat comparison row */
+.stat-compare {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.stat-box {
+  flex: 1;
+  min-width: 200px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-box .big-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.stat-box .label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* CTA BANNER */
+.cta-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 36px;
+  text-align: center;
+}
+
+.cta-banner-title {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 26px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.cta-banner-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-gold);
+  color: #1a2b49;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 1px 3px #ede7e7;
+}
+
+.cta-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 1px 6px #ffe5a3;
+}
+
+.cta-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0d6e3f;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.cta-btn-secondary:hover {
+  background: #0b5c34;
+  transform: translateY(-3px);
+}
+
+@media (max-width: 640px) {
+  .cta-buttons { flex-direction: column; align-items: center; }
+  .cta-btn-primary, .cta-btn-secondary { width: 100%; justify-content: center; }
+}
+
+/* ── SITE NAVBAR ── */
+.site-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1100;
+  background: #1a2b49;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.site-navbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.site-navbar .logo img { height: 50px; }
+.site-navbar .site-nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.25rem;
+  flex: 1;
+  margin-left: 2rem;
+}
+.site-navbar .site-nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.site-navbar .site-nav-links a:hover {
+  background: rgba(255,255,255,0.1);
+}
+.site-navbar .site-nav-links a.active {
+  background: rgba(255,255,255,0.1);
+  color: #ffb800;
+}
+.site-navbar .phone-cta {
+  background: #ffb800;
+  border-radius: 30px;
+  color: #1a2b49;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  padding: 10px 20px;
+  text-decoration: none;
+  box-shadow: 1px 3px #ede7e7;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.site-navbar .phone-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 1px 6px #ffe5a3;
+}
+/* Mobile hamburger */
+.site-navbar .mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-left: 1rem;
+}
+.site-navbar .mobile-toggle span {
+  width: 24px; height: 2px; background: #fff; display: block;
+}
+.site-mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background: #1a2b49;
+  padding: 4rem 1.5rem 1.5rem;
+  transition: right 0.3s ease;
+  z-index: 1200;
+}
+.site-mobile-menu.open { right: 0; }
+.site-mobile-menu .close-btn {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;
+}
+.site-mobile-menu ul { list-style: none; padding: 0; margin: 0; }
+.site-mobile-menu li { margin: 0.5rem 0; }
+.site-mobile-menu a {
+  color: #fff; text-decoration: none; font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem; padding: 0.5rem 0; display: block;
+}
+
+@media (max-width: 1024px) {
+  .site-navbar .site-nav-links { display: none; }
+  .site-navbar .mobile-toggle { display: flex; }
+}
+@media (max-width: 768px) {
+  .site-navbar-inner { padding: 0.75rem; }
+  .site-navbar .logo img { height: 40px; }
+  .site-navbar .phone-cta { font-size: 0.9rem; padding: 8px 16px; }
+}
+
+/* Offset body for fixed site navbar */
+body { padding-top: 82px; }
+
+/* ── SITE FOOTER ── */
+.site-footer {
+  background: #1a2b49;
+  color: #fff;
+  padding: 4rem 2rem 2rem;
+  border-top: 3px solid #ffb800;
+}
+.site-footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+.site-footer-col h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+.site-footer-col ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.site-footer-col li {
+  margin-bottom: 0.5rem;
+}
+.site-footer-col a {
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.site-footer-col a:hover { opacity: 1; }
+.site-footer-copyright {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+.site-footer-copyright p { margin-bottom: 1rem; }
+@media (max-width: 768px) {
+  .site-footer { padding: 3rem 1rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- SITE NAVBAR -->
+<header class="site-navbar">
+  <div class="site-navbar-inner">
+    <div class="logo">
+      <a href="/"><img src="/images/logo.png" alt="Louis Law Group"></a>
+    </div>
+    <ul class="site-nav-links">
+      <li><a href="/property-damage-claims">Property Damage</a></li>
+      <li><a href="/social-security-disability-lawyers">Social Security</a></li>
+      <li><a href="/privacy-torts">Privacy Torts</a></li>
+      <li><a href="/case-law-updates" class="active">Case Law Updates</a></li>
+      <li><a href="/resources">Resources</a></li>
+      <li><a href="/free-case-evaluation">Free Case Evaluation</a></li>
+    </ul>
+    <a href="tel:8336574812" class="phone-cta">(833) 657-4812</a>
+    <button class="mobile-toggle" onclick="document.getElementById('siteMobileMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="site-mobile-menu" id="siteMobileMenu">
+  <button class="close-btn" onclick="document.getElementById('siteMobileMenu').classList.remove('open')">×</button>
+  <ul>
+    <li><a href="/" onclick="document.getElementById('siteMobileMenu').classList.remove('open')">Home</a></li>
+    <li><a href="/property-damage-claims">Property Damage</a></li>
+    <li><a href="/social-security-disability-lawyers">Social Security</a></li>
+    <li><a href="/privacy-torts">Privacy Torts</a></li>
+    <li><a href="/case-law-updates">Case Law Updates</a></li>
+    <li><a href="/resources">Resources</a></li>
+    <li><a href="/free-case-evaluation">Free Case Evaluation</a></li>
+    <li><a href="tel:8336574812" style="color:#ffb800;font-weight:600;">(833) 657-4812</a></li>
+  </ul>
+</div>
+
+<div class="bg-mesh"></div>
+
+<!-- STICKY NAV -->
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <a class="nav-link brand" href="#top">LLG</a>
+    <a class="nav-link" href="#market">Market</a>
+    <a class="nav-link" href="#carriers">Carriers</a>
+    <a class="nav-link" href="#cancellations">Cancellations</a>
+    <a class="nav-link" href="#claims">Claims</a>
+    <a class="nav-link" href="#litigation">Litigation</a>
+    <a class="nav-link" href="#adr">ADR</a>
+    <a class="nav-link" href="#wind">Wind</a>
+    <a class="nav-link" href="#takeaways">Takeaways</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="container" id="top">
+<section class="hero">
+  <div class="hero-badge">Florida OIR Data · January 2026</div>
+  <h1>Florida Property Insurance<br><span class="gold">Market Intelligence Report</span></h1>
+  <p class="hero-sub">Monthly MIR Statewide Summary — Carrier Performance, Claims Activity, Litigation Trends & Strategic Insights for Public Adjusters and Restoration Partners</p>
+  <p class="hero-meta">Prepared by <strong>Louis Law Group, PLLC</strong> · Data period: January 1–31, 2026 · Source: FL Office of Insurance Regulation · Pulled March 16, 2026</p>
+  <p class="hero-meta" style="margin-top:12px;"><a href="/reports/florida-mir-january-2026-data.xlsx" download style="color:var(--accent-gold);text-decoration:none;font-weight:600;font-size:13px;">📥 Download Source Data (XLSX)</a></p>
+  <div class="hero-divider"></div>
+</section>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-strip">
+  <div class="ticker-inner" id="ticker"></div>
+</div>
+
+<div class="container">
+
+<!-- KPI STRIP -->
+<div class="kpi-strip" id="kpiStrip"></div>
+
+<!-- 1. MARKET OVERVIEW -->
+<section class="section section-anchor" id="market">
+  <div class="section-header reveal"><span class="section-num">01</span><h2 class="section-title">Market Overview</h2></div>
+  <p class="section-desc reveal">A top-level view of Florida's residential property insurance market across 163 reporting carriers. The data captures over 15.2 million active policies totaling $8.1 trillion in insured exposure — the single largest state property insurance market in the United States.</p>
+
+  <div class="grid-2 reveal">
+    <div class="chart-container">
+      <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">Policy Distribution by Type</h4>
+      <div id="policyTypeChart"></div>
+    </div>
+    <div class="chart-container">
+      <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">Premium Volume by Type</h4>
+      <div id="premiumTypeChart"></div>
+    </div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:24px;">
+    <div class="callout-title">Key Market Signal</div>
+    <p><strong>302,082 new policies were written</strong> in January 2026 while <strong>241,710 were canceled</strong> and <strong>59,610 were nonrenewed</strong> — resulting in a net positive policy movement. However, the churn rate (cancellations + nonrenewals vs. policies in force) of ~1.98% in a single month is worth monitoring for your clients' coverage stability.</p>
+  </div>
+</section>
+
+<!-- 2. TOP CARRIERS -->
+<section class="section section-anchor" id="carriers">
+  <div class="section-header reveal"><span class="section-num">02</span><h2 class="section-title">Top Carriers by Market Share</h2></div>
+  <p class="section-desc reveal">The 12 largest carriers by policies in force dominate the market. Understanding which carriers write the most policies helps public adjusters and restoration companies prioritize carrier-specific claim strategies.</p>
+
+  <div class="chart-container reveal">
+    <div class="tab-nav" id="carrierTabs">
+      <button class="tab-btn active" data-tab="policies">Policies in Force</button>
+      <button class="tab-btn" data-tab="premium">Premium Volume</button>
+      <button class="tab-btn" data-tab="pending">Pending Claims</button>
+    </div>
+    <div id="carrierChart"></div>
+  </div>
+</section>
+
+<!-- 3. CANCELLATIONS & NONRENEWALS -->
+<section class="section section-anchor" id="cancellations">
+  <div class="section-header reveal"><span class="section-num">03</span><h2 class="section-title">Cancellations & Nonrenewals</h2></div>
+  <p class="section-desc reveal">Cancellations and nonrenewals directly impact policyholders' ability to maintain coverage and file claims. These metrics are critical for identifying which carriers are shedding risk and which policyholders may need new coverage — and potentially have unresolved claims.</p>
+
+  <div class="grid-2 reveal">
+    <div class="chart-container">
+      <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">Highest Cancellation Rates (Carriers with 1,000+ Policies)</h4>
+      <div id="cancelRateChart"></div>
+    </div>
+    <div class="chart-container">
+      <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">Top Nonrenewal Volume</h4>
+      <div id="nonrenewChart"></div>
+    </div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:24px;">
+    <div class="callout-title">Actionable Insight — Cancellations</div>
+    <p><strong>Praetorian Insurance</strong> leads cancellation rates at 11.19% — meaning roughly 1 in 9 policyholders lost coverage in a single month. They also top nonrenewals at <strong>9,865 policies</strong>. <strong>Public adjusters should be aware:</strong> policyholders being shed from high-cancellation carriers often have open or unreported claims that need prompt attention before coverage termination takes effect.</p>
+  </div>
+</section>
+
+<!-- 4. CLAIMS ACTIVITY -->
+<section class="section section-anchor" id="claims">
+  <div class="section-header reveal"><span class="section-num">04</span><h2 class="section-title">Claims Activity</h2></div>
+  <p class="section-desc reveal">January 2026 saw 63,826 new claims opened, 68,750 closed, and 141,378 remaining pending statewide. The pending-to-closed ratio indicates significant claim backlogs at many carriers — representing ongoing opportunities for policyholder advocacy.</p>
+
+  <div class="stat-compare reveal" style="margin-bottom:24px;">
+    <div class="stat-box">
+      <div class="big-num" style="color:var(--accent-blue);">63,826</div>
+      <div class="label">Claims Opened</div>
+    </div>
+    <div class="stat-box">
+      <div class="big-num" style="color:var(--accent-teal);">68,750</div>
+      <div class="label">Claims Closed</div>
+    </div>
+    <div class="stat-box">
+      <div class="big-num" style="color:var(--accent-orange);">141,378</div>
+      <div class="label">Claims Pending</div>
+    </div>
+  </div>
+
+  <div class="chart-container reveal">
+    <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">Top 10 Carriers by Pending Claims</h4>
+    <div id="claimsChart"></div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:24px;">
+    <div class="callout-title">Claim Backlog Alert</div>
+    <p><strong>Citizens Property Insurance</strong> carries the heaviest claim burden with <strong>13,640 pending claims</strong> — more than double any private carrier. <strong>Slide Insurance</strong> shows an interesting pattern: 3,749 claims opened vs. 3,964 closed, yet still carrying 4,848 pending — indicating a persistent backlog. For restoration companies, carriers with high pending counts often mean delayed authorization and slower supplement processing.</p>
+  </div>
+</section>
+
+<!-- 5. LITIGATION LANDSCAPE -->
+<section class="section section-anchor" id="litigation">
+  <div class="section-header reveal"><span class="section-num">05</span><h2 class="section-title">Litigation Landscape</h2></div>
+  <p class="section-desc reveal">49,594 open lawsuits at month-end, with 3,856 new suits filed and 5,906 resolved in January. Of resolved lawsuits, 63.1% closed with consideration for the consumer — a strong indicator that disputed claims have merit when taken to litigation.</p>
+
+  <div class="stat-compare reveal" style="margin-bottom:24px;">
+    <div class="stat-box">
+      <div class="big-num" style="color:var(--accent-red);">49,594</div>
+      <div class="label">Open Lawsuits (EOM)</div>
+    </div>
+    <div class="stat-box">
+      <div class="big-num" style="color:var(--accent-orange);">3,856</div>
+      <div class="label">New Lawsuits Filed</div>
+    </div>
+    <div class="stat-box">
+      <div class="big-num" style="color:var(--accent-teal);">63.1%</div>
+      <div class="label">Closed w/ Consumer Consideration</div>
+    </div>
+  </div>
+
+  <div class="chart-container reveal">
+    <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">Carrier Litigation Profile — Open Lawsuits & Consumer Outcomes</h4>
+    <div class="table-wrap">
+      <table class="data-table" id="lawsuitTable">
+        <thead>
+          <tr>
+            <th>Carrier</th>
+            <th class="right">Open Lawsuits</th>
+            <th class="right">New Filed</th>
+            <th class="right">Closed</th>
+            <th class="right">Consumer Win %</th>
+          </tr>
+        </thead>
+        <tbody id="lawsuitBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:24px;">
+    <div class="callout-title">Litigation Intelligence</div>
+    <p><strong>Citizens Property Insurance</strong> has the most open lawsuits (6,936) but a relatively low consumer-favorable outcome rate of <strong>44%</strong>. In contrast, <strong>Security First</strong> (95%), <strong>TypTap</strong> (89%), and <strong>Slide</strong> (88%) show dramatically higher consumer-favorable closure rates — meaning disputed claims from these carriers have strong litigation outcomes. <strong>State Farm Florida</strong> carries 3,416 open suits with 84% closing favorably for consumers.</p>
+  </div>
+</section>
+
+<!-- 6. ADR & APPRAISAL -->
+<section class="section section-anchor" id="adr">
+  <div class="section-header reveal"><span class="section-num">06</span><h2 class="section-title">Alternative Dispute Resolution & Appraisal</h2></div>
+  <p class="section-desc reveal">ADR mechanisms — particularly appraisal — remain a critical tool for resolving disputed property claims. In January 2026, 5,416 ADR proceedings were invoked statewide, with mediation and appraisal being the most utilized paths.</p>
+
+  <div class="grid-2 reveal">
+    <div class="chart-container">
+      <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">ADR Methods Invoked (January 2026)</h4>
+      <div class="donut-wrap" id="adrDonut"></div>
+    </div>
+    <div class="chart-container">
+      <h4 style="font-size:14px;font-weight:700;color:var(--text-secondary);margin-bottom:18px;">Top Carriers — Appraisal Invoked</h4>
+      <div id="appraisalChart"></div>
+    </div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:24px;">
+    <div class="callout-title">ADR Opportunity</div>
+    <p><strong>Mediation (2,294) and appraisal (1,792)</strong> remain the dominant ADR tools. For public adjusters, appraisal is often the fastest path to resolving valuation disputes, especially with carriers showing high denial or underpayment patterns. Carriers with high appraisal volumes typically indicate systematic undervaluation practices that benefit from professional adjustment.</p>
+  </div>
+</section>
+
+<!-- 7. WIND COVERAGE -->
+<section class="section section-anchor" id="wind">
+  <div class="section-header reveal"><span class="section-num">07</span><h2 class="section-title">Wind Coverage Analysis</h2></div>
+  <p class="section-desc reveal">Wind coverage remains the defining risk factor in Florida property insurance. The data reveals how the market handles this critical peril across policy types.</p>
+
+  <div class="chart-container reveal">
+    <div class="donut-wrap" id="windDonut"></div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:24px;">
+    <div class="callout-title">Wind Coverage Insight</div>
+    <p>Of the 15.24 million active policies, <strong>96.2% (14.67M) include wind coverage</strong> while only 3.8% (579K) exclude it. Notably, <strong>zero cancellations were attributed to hurricane risk</strong> in January 2026, and only <strong>576 nonrenewals cited hurricane risk</strong>. This suggests carriers are currently maintaining wind exposure rather than actively shedding it — though nonrenewal patterns should be watched seasonally as hurricane season approaches.</p>
+  </div>
+</section>
+
+<!-- 8. TAKEAWAYS -->
+<section class="section section-anchor" id="takeaways">
+  <div class="section-header reveal"><span class="section-num">08</span><h2 class="section-title">Strategic Takeaways</h2></div>
+  <p class="section-desc reveal">Key intelligence from this month's data to inform your practice and client relationships.</p>
+
+  <div class="grid-3 reveal">
+    <div class="info-card">
+      <h4>⚡ For Public Adjusters</h4>
+      <ul>
+        <li><strong>141,378 pending claims</strong> represent active advocacy opportunities across the state</li>
+        <li>Citizens, State Farm FL, and Slide carry the heaviest claim inventories — focus carrier expertise here</li>
+        <li>Appraisal remains a power tool: 1,792 invoked in January alone</li>
+        <li>63% of litigated claims close favorably for consumers — don't hesitate to escalate underpayments</li>
+        <li>Watch Praetorian's 11% cancellation rate — their policyholders may have unreported damage</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>🔨 For Restoration Companies</h4>
+      <ul>
+        <li>High pending claims at Citizens (13,640) and Slide (4,848) mean delayed approvals — plan cash flow accordingly</li>
+        <li>State Farm FL's 4,861 pending claims with 84% litigation-favorable closure rate suggests supplement opportunities</li>
+        <li>302,082 new policies written = new property owners likely needing inspection & maintenance services</li>
+        <li>96% of policies include wind coverage — hurricane preparedness services remain in demand</li>
+        <li>Carriers with high nonrenewal volumes create policyholders seeking new coverage and fresh inspections</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4>📋 Market Dynamics</h4>
+      <ul>
+        <li>Net positive policy growth: new written (302K) outpaces cancellations (242K) + nonrenewals (60K)</li>
+        <li>$45.8B in total premium volume reflects the scale of the FL property market</li>
+        <li>$8.1 trillion in insured exposure underscores the financial stakes for all parties</li>
+        <li>163 active carriers provide competitive options for displaced policyholders</li>
+        <li>Zero hurricane-risk cancellations signals carrier confidence — for now</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="section reveal" style="margin-top:20px;">
+  <div class="cta-banner">
+    <h3 class="cta-banner-title">Submit a Policy or Denial Letter for Review</h3>
+    <p class="cta-banner-sub">Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential</p>
+    <div class="cta-buttons">
+      <a href="/case-law-updates#submit-policy" class="cta-btn-primary">📋 Submit Policy for Review →</a>
+      <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." class="cta-btn-secondary">💬 Text a Lawyer →</a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- REPORT DISCLAIMER -->
+<div class="footer" style="padding:24px 0 0;">
+  <div class="container">
+    <p class="footer-sub" style="font-size:12px;color:var(--text-dim);text-align:center;max-width:800px;margin:0 auto;">This report is provided for informational purposes only and does not constitute legal advice. Data sourced from the Florida Office of Insurance Regulation Monthly MIR Statewide Summary for January 2026 (pulled March 16, 2026).</p>
+  </div>
+</div>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-grid">
+      <div class="site-footer-col">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="/ada-compliance">ADA Compliance</a></li>
+          <li><a href="/terms-of-use-agreement">Terms of Use Agreement</a></li>
+          <li><a href="/privacy-policy">Privacy</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Practice Areas</h3>
+        <ul>
+          <li><a href="/property-damage-claims">Property Damage Claims</a></li>
+          <li><a href="/social-security-disability-lawyers">SSDI Disability</a></li>
+          <li><a href="/privacy-torts">Privacy Torts</a></li>
+          <li><a href="/water-damage-restoration">Water Damage Claims</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="/resources">Blog</a></li>
+          <li><a href="/job-id-00001">Careers</a></li>
+          <li><a href="/ssdi-lawyers">SSDI Disability Lawyers</a></li>
+          <li><a href="/public-adjuster-resources-florida">Public Adjuster Resources</a></li>
+          <li><a href="/case-law-updates">Case Law Updates</a></li>
+          <li><a href="/reports/florida-insurance-market-january-2026">FL Insurance Market Report</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="/abogados-florida">Abogados en Florida</a></li>
+          <li><a href="/abogado-discapacidad-florida">Abogado Discapacidad Florida</a></li>
+          <li><a href="/contact-us">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer-copyright">
+      <p>Copyright &copy; 2026 Louis Law Group</p>
+      <p>All rights reserved. This website and its content are protected by copyright law. No part of this website may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of Louis Law Group, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// === DATA ===
+const DATA = {
+  top12: [
+    {name:"STATE FARM FLORIDA INS. CO.",policies:653453,premium:1293823819,canceled:7982,nonrenewed:4002,claims_pending:4861,claims_opened:1398,claims_closed:1876,lawsuits_open:3416,lawsuits_opened:359,lawsuits_closed:447,lawsuits_consumer:374,cancel_rate:1.22,lawsuit_rate:52.3},
+    {name:"UNIVERSAL PROPERTY & CASUALTY",policies:559331,premium:1547874411,canceled:4434,nonrenewed:2329,claims_pending:2932,claims_opened:3191,claims_closed:3322,lawsuits_open:614,lawsuits_opened:70,lawsuits_closed:91,lawsuits_consumer:51,cancel_rate:0.79,lawsuit_rate:11.0},
+    {name:"SLIDE INSURANCE CO.",policies:481008,premium:1927316598,canceled:6114,nonrenewed:743,claims_pending:4848,claims_opened:3749,claims_closed:3964,lawsuits_open:1502,lawsuits_opened:96,lawsuits_closed:99,lawsuits_consumer:87,cancel_rate:1.27,lawsuit_rate:31.2},
+    {name:"TOWER HILL INS. EXCHANGE",policies:401268,premium:1206776344,canceled:5858,nonrenewed:650,claims_pending:1017,claims_opened:1161,claims_closed:1223,lawsuits_open:568,lawsuits_opened:47,lawsuits_closed:79,lawsuits_consumer:35,cancel_rate:1.46,lawsuit_rate:14.2},
+    {name:"AMERICAN INTEGRITY INS. CO.",policies:391976,premium:938978880,canceled:4899,nonrenewed:487,claims_pending:1864,claims_opened:1076,claims_closed:1080,lawsuits_open:670,lawsuits_opened:59,lawsuits_closed:92,lawsuits_consumer:0,cancel_rate:1.25,lawsuit_rate:17.1},
+    {name:"CITIZENS PROPERTY INS. CORP.",policies:389631,premium:1076784317,canceled:7210,nonrenewed:2289,claims_pending:13640,claims_opened:5328,claims_closed:6448,lawsuits_open:6936,lawsuits_opened:315,lawsuits_closed:964,lawsuits_consumer:428,cancel_rate:1.85,lawsuit_rate:178.0},
+    {name:"FIRST PROTECTIVE INS. CO.",policies:300615,premium:1119201789,canceled:3479,nonrenewed:471,claims_pending:4315,claims_opened:1024,claims_closed:1073,lawsuits_open:1445,lawsuits_opened:79,lawsuits_closed:85,lawsuits_consumer:66,cancel_rate:1.16,lawsuit_rate:48.1},
+    {name:"AMERICAN BANKERS INS. CO. FL",policies:285032,premium:52163853,canceled:11774,nonrenewed:25,claims_pending:122,claims_opened:275,claims_closed:272,lawsuits_open:1,lawsuits_opened:0,lawsuits_closed:1,lawsuits_consumer:0,cancel_rate:4.13,lawsuit_rate:0.0},
+    {name:"MANATEE INS. EXCHANGE",policies:209492,premium:678031185,canceled:3109,nonrenewed:558,claims_pending:1908,claims_opened:642,claims_closed:557,lawsuits_open:506,lawsuits_opened:33,lawsuits_closed:48,lawsuits_consumer:18,cancel_rate:1.48,lawsuit_rate:24.2},
+    {name:"FLORIDA PENINSULA INS. CO.",policies:199431,premium:825323304,canceled:2551,nonrenewed:308,claims_pending:1120,claims_opened:629,claims_closed:685,lawsuits_open:515,lawsuits_opened:38,lawsuits_closed:45,lawsuits_consumer:30,cancel_rate:1.28,lawsuit_rate:25.8},
+    {name:"CASTLE KEY INDEMNITY CO.",policies:183656,premium:296968538,canceled:1909,nonrenewed:1,claims_pending:1387,claims_opened:517,claims_closed:529,lawsuits_open:450,lawsuits_opened:58,lawsuits_closed:76,lawsuits_consumer:67,cancel_rate:1.04,lawsuit_rate:24.5},
+    {name:"KIN INTERINSURANCE NETWORK",policies:163604,premium:475023418,canceled:1880,nonrenewed:462,claims_pending:1619,claims_opened:563,claims_closed:575,lawsuits_open:195,lawsuits_opened:23,lawsuits_closed:23,lawsuits_consumer:16,cancel_rate:1.15,lawsuit_rate:11.9},
+  ],
+  cancel_rate: [
+    {name:"PRAETORIAN INS. CO.",rate:11.19,canceled:4437,policies:39637},
+    {name:"AMERICAN SECURITY INS. CO.",rate:7.25,canceled:7620,policies:105162},
+    {name:"PROGRESSIVE AMERICAN INS.",rate:5.68,canceled:1336,policies:23530},
+    {name:"TRISURA INS. CO.",rate:4.91,canceled:2195,policies:44699},
+    {name:"LEMONADE INS. CO.",rate:4.79,canceled:3371,policies:70342},
+    {name:"AMERICAN MODERN HOME INS.",rate:4.39,canceled:5431,policies:123849},
+    {name:"AMERICAN BANKERS INS. FL",rate:4.13,canceled:11774,policies:285032},
+    {name:"AMERICAN NATIONAL P&C",rate:3.26,canceled:382,policies:11724},
+    {name:"ASI PREFERRED INS. CORP.",rate:3.17,canceled:3631,policies:114464},
+    {name:"HOMESITE INS. CO.",rate:2.89,canceled:2970,policies:102794},
+  ],
+  nonrenew: [
+    {name:"PRAETORIAN INS. CO.",nonrenewed:9865,policies:39637,rate:24.89},
+    {name:"UNIVERSAL PROPERTY & CASUALTY",nonrenewed:2329,policies:559331,rate:0.42},
+    {name:"CITIZENS PROPERTY INS. CORP.",nonrenewed:2289,policies:389631,rate:0.59},
+    {name:"SOUTHERN OAK INS. CO.",nonrenewed:1288,policies:33805,rate:3.81},
+    {name:"MONARCH NATIONAL INS. CO.",nonrenewed:1157,policies:26879,rate:4.30},
+    {name:"AMERICAN TRADITIONS INS.",nonrenewed:1073,policies:48193,rate:2.23},
+    {name:"MARKEL INS. CO.",nonrenewed:1073,policies:5159,rate:20.80},
+    {name:"CYPRESS PROPERTY & CASUALTY",nonrenewed:1001,policies:21543,rate:4.65},
+    {name:"MANGROVE PROPERTY INS. CO.",nonrenewed:757,policies:6437,rate:11.76},
+    {name:"SLIDE INS. CO.",nonrenewed:743,policies:481008,rate:0.15},
+  ],
+  lawsuits: [
+    {name:"CITIZENS PROPERTY INS. CORP.",open:6936,opened:315,closed:964,consumer_pct:44},
+    {name:"STATE FARM FLORIDA INS. CO.",open:3416,opened:359,closed:447,consumer_pct:84},
+    {name:"SLIDE INS. CO.",open:1502,opened:96,closed:99,consumer_pct:88},
+    {name:"FIRST PROTECTIVE INS. CO.",open:1445,opened:79,closed:85,consumer_pct:78},
+    {name:"SECURITY FIRST INS. CO.",open:1100,opened:22,closed:56,consumer_pct:95},
+    {name:"HOMEOWNERS CHOICE P&C",open:1081,opened:54,closed:68,consumer_pct:66},
+    {name:"TYPTAP INS. CO.",open:957,opened:48,closed:61,consumer_pct:89},
+    {name:"PEOPLE'S TRUST INS. CO.",open:736,opened:29,closed:37,consumer_pct:76},
+    {name:"AMERICAN INTEGRITY INS. CO.",open:670,opened:59,closed:92,consumer_pct:0},
+    {name:"UNIVERSAL PROPERTY & CASUALTY",open:614,opened:70,closed:91,consumer_pct:56},
+    {name:"TOWER HILL INS. EXCHANGE",open:568,opened:47,closed:79,consumer_pct:44},
+    {name:"FLORIDA PENINSULA INS. CO.",open:515,opened:38,closed:45,consumer_pct:67},
+  ],
+  claims: [
+    {name:"CITIZENS PROPERTY INS.",pending:13640,opened:5328,closed:6448},
+    {name:"STATE FARM FLORIDA INS.",pending:4861,opened:1398,closed:1876},
+    {name:"SLIDE INS. CO.",pending:4848,opened:3749,closed:3964},
+    {name:"FIRST PROTECTIVE INS.",pending:4315,opened:1024,closed:1073},
+    {name:"UNIVERSAL P&C",pending:2932,opened:3191,closed:3322},
+    {name:"USAA",pending:2147,opened:1234,closed:1090},
+    {name:"HOMEOWNERS CHOICE P&C",pending:1929,opened:535,closed:564},
+    {name:"MANATEE INS. EXCHANGE",pending:1908,opened:642,closed:557},
+    {name:"AMERICAN INTEGRITY INS.",pending:1864,opened:1076,closed:1080},
+    {name:"KIN INTERINSURANCE",pending:1619,opened:563,closed:575},
+  ],
+  policy_types: [
+    {name:"Homeowners (Owner Occ.)",policies:4149877,premium:15485829791,claims:105226,canceled:113430},
+    {name:"Tenants",policies:1142529,premium:240378413,claims:1504,canceled:43878},
+    {name:"Condo Unit Owners",policies:928646,premium:1644690167,claims:8459,canceled:25199},
+    {name:"Dwelling/Fire",policies:792991,premium:2179648945,claims:10027,canceled:25680},
+    {name:"Mobile Homeowners",policies:262862,premium:499660198,claims:4483,canceled:8236},
+    {name:"Allied Lines",policies:158877,premium:573462485,claims:2654,canceled:5036},
+    {name:"HO Wind Only",policies:67567,premium:311160118,claims:2078,canceled:3013},
+    {name:"Other Types",policies:5741569,premium:24861469009,claims:6947,canceled:17238},
+  ],
+  adr: {mediation:2294,appraisal:1792,arbitration:68,settlement_conference:920,sinkhole:3,other:339},
+  appraisal_carriers: [
+    {name:"CITIZENS PROPERTY INS.",count:508},
+    {name:"SLIDE INS. CO.",count:267},
+    {name:"STATE FARM FLORIDA INS.",count:110},
+    {name:"UNIVERSAL P&C",count:90},
+    {name:"AMERICAN INTEGRITY INS.",count:78},
+    {name:"FIRST PROTECTIVE INS.",count:74},
+    {name:"MANATEE INS. EXCHANGE",count:62},
+    {name:"SECURITY FIRST INS.",count:55},
+  ],
+  market: {
+    total_policies:15244918,total_exposure:8124822919024,total_premium:45796298926,
+    total_claims_opened:63826,total_claims_closed:68750,total_claims_pending:141378,
+    total_canceled:241710,total_nonrenewed:59610,new_written:302082,
+    lawsuits_open:49594,lawsuits_opened:3856,lawsuits_closed:5906,lawsuits_consumer:3726,
+    wind_incl:14666072,wind_excl:578846,companies:163,adr_total:5416
+  }
+};
+
+// === UTILITIES ===
+function fmt(n) {
+  if (n >= 1e12) return '$' + (n/1e12).toFixed(1) + 'T';
+  if (n >= 1e9) return '$' + (n/1e9).toFixed(1) + 'B';
+  if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+  if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+  return n.toLocaleString();
+}
+
+function fmtD(n) { return '$' + fmt(n).replace('$',''); }
+
+function shortName(name) {
+  return name.replace(' INSURANCE', ' INS.').replace(' COMPANY', ' CO.')
+    .replace(' CORPORATION', ' CORP.').replace(' PROPERTY', ' PROP.')
+    .replace(' CASUALTY', ' CAS.');
+}
+
+// === TICKER ===
+function buildTicker() {
+  const m = DATA.market;
+  const items = [
+    `POLICIES IN FORCE <span class="t-val">${fmt(m.total_policies)}</span>`,
+    `TOTAL PREMIUM <span class="t-val">${fmtD(m.total_premium)}</span>`,
+    `TOTAL EXPOSURE <span class="t-val">${fmtD(m.total_exposure)}</span>`,
+    `CLAIMS OPENED <span class="t-val">${fmt(m.total_claims_opened)}</span>`,
+    `CLAIMS PENDING <span class="t-red">${fmt(m.total_claims_pending)}</span>`,
+    `CANCELLATIONS <span class="t-red">${fmt(m.total_canceled)}</span>`,
+    `NONRENEWALS <span class="t-red">${fmt(m.total_nonrenewed)}</span>`,
+    `NEW WRITTEN <span class="t-teal">${fmt(m.new_written)}</span>`,
+    `OPEN LAWSUITS <span class="t-red">${fmt(m.lawsuits_open)}</span>`,
+    `ADR INVOKED <span class="t-val">${fmt(m.adr_total)}</span>`,
+    `REPORTING CARRIERS <span class="t-val">${m.companies}</span>`,
+  ];
+  const html = items.map(i => `<span class="ticker-item">${i}</span>`).join('');
+  document.getElementById('ticker').innerHTML = html + html;
+}
+
+// === KPI STRIP ===
+function buildKPIs() {
+  const m = DATA.market;
+  const kpis = [
+    {val: fmt(m.total_policies), label: 'Policies in Force', cls: 'gold'},
+    {val: fmtD(m.total_premium), label: 'Total Premium', cls: 'blue'},
+    {val: fmt(m.total_claims_pending), label: 'Claims Pending', cls: 'orange'},
+    {val: fmt(m.total_canceled), label: 'Cancellations', cls: 'red'},
+    {val: fmt(m.lawsuits_open), label: 'Open Lawsuits', cls: 'red'},
+    {val: '63.1%', label: 'Lawsuits Pro-Consumer', cls: 'teal'},
+    {val: fmt(m.new_written), label: 'New Policies Written', cls: 'teal'},
+    {val: fmt(m.adr_total), label: 'ADR Proceedings', cls: 'purple'},
+  ];
+  const strip = document.getElementById('kpiStrip');
+  kpis.forEach((k, i) => {
+    const div = document.createElement('div');
+    div.className = 'kpi';
+    div.style.transitionDelay = `${i * 0.08}s`;
+    div.innerHTML = `<div class="kpi-value ${k.cls}">${k.val}</div><div class="kpi-label">${k.label}</div>`;
+    strip.appendChild(div);
+  });
+}
+
+// === BAR CHART BUILDER ===
+function buildBars(container, data, valueKey, colorClass, formatter) {
+  const el = document.getElementById(container);
+  el.innerHTML = '';
+  const maxVal = Math.max(...data.map(d => d[valueKey]));
+  data.forEach((d, i) => {
+    const pct = (d[valueKey] / maxVal * 100).toFixed(1);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.style.transitionDelay = `${i * 0.06}s`;
+    row.innerHTML = `
+      <div class="bar-label" title="${d.name}">${d.name}</div>
+      <div class="bar-track"><div class="bar-fill ${colorClass}" data-width="${pct}%"></div></div>
+      <div class="bar-val">${formatter(d[valueKey])}</div>
+    `;
+    el.appendChild(row);
+  });
+}
+
+// === CARRIER TAB CHART ===
+let currentTab = 'policies';
+function buildCarrierChart(tab) {
+  currentTab = tab;
+  const keyMap = {policies: 'policies', premium: 'premium', pending: 'claims_pending'};
+  const colorMap = {policies: 'gold', premium: 'blue', pending: 'orange'};
+  const fmtMap = {
+    policies: v => v.toLocaleString(),
+    premium: v => '$' + (v/1e9).toFixed(2) + 'B',
+    pending: v => v.toLocaleString()
+  };
+  buildBars('carrierChart', DATA.top12, keyMap[tab], colorMap[tab], fmtMap[tab]);
+  // animate after build
+  setTimeout(() => animateBars('carrierChart'), 50);
+}
+
+document.getElementById('carrierTabs').addEventListener('click', e => {
+  if (e.target.classList.contains('tab-btn')) {
+    document.querySelectorAll('#carrierTabs .tab-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    buildCarrierChart(e.target.dataset.tab);
+  }
+});
+
+// === ANIMATE BARS ===
+function animateBars(containerId) {
+  const rows = document.querySelectorAll(`#${containerId} .bar-row`);
+  rows.forEach((row, i) => {
+    setTimeout(() => {
+      row.classList.add('visible');
+      const fill = row.querySelector('.bar-fill');
+      if (fill) fill.style.width = fill.dataset.width;
+    }, i * 60);
+  });
+}
+
+// === CANCEL RATE & NONRENEW CHARTS ===
+function buildCancelChart() {
+  buildBars('cancelRateChart', DATA.cancel_rate, 'rate', 'red', v => v.toFixed(1) + '%');
+}
+
+function buildNonrenewChart() {
+  buildBars('nonrenewChart', DATA.nonrenew, 'nonrenewed', 'orange', v => v.toLocaleString());
+}
+
+// === CLAIMS CHART ===
+function buildClaimsChart() {
+  const el = document.getElementById('claimsChart');
+  el.innerHTML = '';
+  const maxVal = Math.max(...DATA.claims.map(d => d.pending));
+  DATA.claims.forEach((d, i) => {
+    const pct = (d.pending / maxVal * 100).toFixed(1);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.style.transitionDelay = `${i * 0.06}s`;
+    row.innerHTML = `
+      <div class="bar-label" title="${d.name}">${d.name}</div>
+      <div class="bar-track"><div class="bar-fill orange" data-width="${pct}%"></div></div>
+      <div class="bar-val">${d.pending.toLocaleString()}</div>
+    `;
+    el.appendChild(row);
+  });
+}
+
+// === LAWSUIT TABLE ===
+function buildLawsuitTable() {
+  const body = document.getElementById('lawsuitBody');
+  body.innerHTML = '';
+  DATA.lawsuits.forEach((d, i) => {
+    const tr = document.createElement('tr');
+    tr.style.transitionDelay = `${i * 0.05}s`;
+    const badgeCls = d.consumer_pct >= 80 ? 'badge-green' : d.consumer_pct >= 60 ? 'badge-gold' : d.consumer_pct >= 40 ? 'badge-orange' : 'badge-red';
+    tr.innerHTML = `
+      <td class="name">${d.name}</td>
+      <td class="mono">${d.open.toLocaleString()}</td>
+      <td class="mono">${d.opened.toLocaleString()}</td>
+      <td class="mono">${d.closed.toLocaleString()}</td>
+      <td class="mono"><span class="badge ${badgeCls}">${d.consumer_pct}%</span></td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+// === ADR DONUT ===
+function buildAdrDonut() {
+  const adr = DATA.adr;
+  const items = [
+    {label: 'Mediation', value: adr.mediation, color: '#ffb800'},
+    {label: 'Appraisal', value: adr.appraisal, color: '#3b82f6'},
+    {label: 'Settlement Conf.', value: adr.settlement_conference, color: '#14b8a6'},
+    {label: 'Other ADR', value: adr.other, color: '#8b5cf6'},
+    {label: 'Arbitration', value: adr.arbitration, color: '#f97316'},
+  ];
+  const total = items.reduce((s, i) => s + i.value, 0);
+  let cumulative = 0;
+  const radius = 80;
+  const circumference = 2 * Math.PI * radius;
+
+  let svgPaths = '';
+  items.forEach((item, idx) => {
+    const pct = item.value / total;
+    const dashArray = `${pct * circumference} ${circumference}`;
+    const dashOffset = -(cumulative / total) * circumference;
+    svgPaths += `<circle cx="110" cy="110" r="${radius}" fill="none" stroke="${item.color}" stroke-width="24" stroke-dasharray="${dashArray}" stroke-dashoffset="${dashOffset}" style="opacity:0;animation:fadeIn 0.5s ease forwards ${idx*0.15}s;"/>`;
+    cumulative += item.value;
+  });
+
+  let legendHtml = items.map(i => `
+    <div class="legend-item">
+      <span class="legend-dot" style="background:${i.color}"></span>
+      <span>${i.label}</span>
+      <span class="legend-val">${i.value.toLocaleString()}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('adrDonut').innerHTML = `
+    <svg class="donut-svg" viewBox="0 0 220 220">
+      <circle cx="110" cy="110" r="${radius}" fill="none" stroke="rgba(26,43,73,0.08)" stroke-width="24"/>
+      ${svgPaths}
+      <text x="110" y="105" text-anchor="middle" fill="#1a2b49" font-family="JetBrains Mono" font-size="22" font-weight="700">${total.toLocaleString()}</text>
+      <text x="110" y="125" text-anchor="middle" fill="#718096" font-family="Work Sans" font-size="11">Total ADR</text>
+    </svg>
+    <div class="donut-legend">${legendHtml}</div>
+  `;
+}
+
+// === APPRAISAL CHART ===
+function buildAppraisalChart() {
+  buildBars('appraisalChart', DATA.appraisal_carriers, 'count', 'blue', v => v.toLocaleString());
+}
+
+// === WIND DONUT ===
+function buildWindDonut() {
+  const m = DATA.market;
+  const total = m.wind_incl + m.wind_excl;
+  const inclPct = m.wind_incl / total;
+  const radius = 80;
+  const circ = 2 * Math.PI * radius;
+
+  document.getElementById('windDonut').innerHTML = `
+    <svg class="donut-svg" viewBox="0 0 220 220">
+      <circle cx="110" cy="110" r="${radius}" fill="none" stroke="rgba(26,43,73,0.08)" stroke-width="24"/>
+      <circle cx="110" cy="110" r="${radius}" fill="none" stroke="#14b8a6" stroke-width="24" stroke-dasharray="${inclPct*circ} ${circ}" stroke-dashoffset="0" style="opacity:0;animation:fadeIn 0.6s ease forwards 0.1s;"/>
+      <circle cx="110" cy="110" r="${radius}" fill="none" stroke="#ef4444" stroke-width="24" stroke-dasharray="${(1-inclPct)*circ} ${circ}" stroke-dashoffset="${-inclPct*circ}" style="opacity:0;animation:fadeIn 0.6s ease forwards 0.3s;"/>
+      <text x="110" y="105" text-anchor="middle" fill="#1a2b49" font-family="JetBrains Mono" font-size="22" font-weight="700">96.2%</text>
+      <text x="110" y="125" text-anchor="middle" fill="#718096" font-family="Work Sans" font-size="11">Include Wind</text>
+    </svg>
+    <div class="donut-legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#14b8a6"></span><span>Include Wind Coverage</span><span class="legend-val">${fmt(m.wind_incl)}</span></div>
+      <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span><span>Exclude Wind Coverage</span><span class="legend-val">${fmt(m.wind_excl)}</span></div>
+      <div class="legend-item" style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(26,43,73,0.1);"><span class="legend-dot" style="background:transparent"></span><span style="color:var(--text-dim);">Hurricane Risk Cancellations</span><span class="legend-val" style="color:#14b8a6;">0</span></div>
+      <div class="legend-item"><span class="legend-dot" style="background:transparent"></span><span style="color:var(--text-dim);">Hurricane Risk Nonrenewals</span><span class="legend-val" style="color:#f97316;">576</span></div>
+    </div>
+  `;
+}
+
+// === POLICY TYPE CHARTS ===
+function buildPolicyTypeChart() {
+  buildBars('policyTypeChart', DATA.policy_types, 'policies', 'gold', v => fmt(v));
+}
+
+function buildPremiumTypeChart() {
+  buildBars('premiumTypeChart', DATA.policy_types, 'premium', 'blue', v => '$'+(v/1e9).toFixed(1)+'B');
+}
+
+// === SCROLL OBSERVER ===
+function setupObserver() {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        // Animate bars within
+        const bars = entry.target.querySelectorAll('.bar-row');
+        bars.forEach((row, i) => {
+          setTimeout(() => {
+            row.classList.add('visible');
+            const fill = row.querySelector('.bar-fill');
+            if (fill) fill.style.width = fill.dataset.width;
+          }, i * 60);
+        });
+        // Animate table rows
+        const trs = entry.target.querySelectorAll('tbody tr');
+        trs.forEach((tr, i) => {
+          setTimeout(() => tr.classList.add('visible'), i * 50);
+        });
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.1});
+
+  document.querySelectorAll('.reveal, .kpi').forEach(el => observer.observe(el));
+}
+
+// === CSS ANIMATION FOR SVG ===
+const style = document.createElement('style');
+style.textContent = `@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }`;
+document.head.appendChild(style);
+
+// === INIT ===
+document.addEventListener('DOMContentLoaded', () => {
+  buildTicker();
+  buildKPIs();
+  buildCarrierChart('policies');
+  buildCancelChart();
+  buildNonrenewChart();
+  buildClaimsChart();
+  buildLawsuitTable();
+  buildAdrDonut();
+  buildAppraisalChart();
+  buildWindDonut();
+  buildPolicyTypeChart();
+  buildPremiumTypeChart();
+  setupObserver();
+});
+</script>
+</body>
+</html>

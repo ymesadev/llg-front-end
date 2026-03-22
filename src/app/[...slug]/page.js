@@ -19,6 +19,9 @@ import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA";
 import Testimonials from "../components/Testimonials/Testimonials";
+import { getSeoOverride } from "../utils/seoOverrides";
+import { getFaqOverride } from "../utils/faqOverrides";
+import ArticlePageMarker from "../components/ArticlePageMarker";
 
 
 function getArticleType(slug) {
@@ -26,13 +29,18 @@ function getArticleType(slug) {
   const parts = s.split('-');
   // Case law detection
   if (s.startsWith("case-law-")) return "case-law";
-  // Privacy tort detection (must come before generic checks)
-  if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("ahs-")) return "ahs";
-  if (s.includes("vuori")) return "vuori";
-  if (s.includes("kin-insurance") || s.includes("kin-ins")) return "kin";
-  if (s.includes("slide-insurance") || (s.includes("slide") && s.includes("insurance"))) return "slide";
-  if (s.includes("tower-hill")) return "tower-hill";
-  if (s.includes("american-integrity")) return "american-integrity";
+  // Privacy tort detection — ONLY if slug contains privacy/torts/pixel keywords
+  const isPrivacy = s.includes("privacy") || s.includes("torts") || s.includes("pixel");
+  if (isPrivacy) {
+    if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("ahs-")) return "ahs";
+    if (s.includes("vuori")) return "vuori";
+    if (s.includes("kin-insurance") || s.includes("kin-ins")) return "kin";
+    if (s.includes("slide-insurance") || (s.includes("slide") && s.includes("insurance"))) return "slide";
+    if (s.includes("tower-hill")) return "tower-hill";
+    if (s.includes("american-integrity")) return "american-integrity";
+    // Generic privacy tort (no specific brand)
+    return "privacy-tort";
+  }
   // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
@@ -121,25 +129,20 @@ function getRelatedLinks(slug, articleType) {
   return { title: `Related Insurance Claim Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...texasLinks, ...floridaLinks, ...carrierLinks].slice(0, 8) };
 }
 
-// Returns the correct href for the end-of-article CTA button
-function getEndCtaHref(slug) {
-  const s = (slug || "").toLowerCase();
-  if (s.startsWith("case-law-"))
-    return "/case-law-updates#submit-policy";
-  if (s.includes("american-home-shield") || s.startsWith("ahs-"))
-    return "/american-home-shield-privacy-torts";
-  if (s.includes("kin-insurance"))
-    return "/kin-insurance-privacy-torts";
-  if (s.includes("tower-hill"))
-    return "/tower-hill-insurance-privacy-torts";
-  if (s.includes("slide-insurance"))
-    return "/slide-insurance-privacy-torts";
-  if (s.includes("american-integrity"))
-    return "/american-integrity-insurance-privacy-torts";
-  if (s.includes("vuori"))
-    return "/vuori-privacy-torts";
-  // SSDI and property damage → SMS
-  return "sms:8336574812";
+// Returns the correct intake href based on articleType (determined by getArticleType)
+function getIntakeHref(slug, articleType) {
+  switch (articleType) {
+    case "case-law":        return "/case-law-updates#submit-policy";
+    case "ahs":             return "/american-home-shield-privacy-torts/qualify";
+    case "kin":             return "/kin-insurance-privacy-torts/qualify";
+    case "tower-hill":      return "/tower-hill-insurance-privacy-torts/qualify";
+    case "slide":           return "/slide-insurance-privacy-torts/qualify";
+    case "american-integrity": return "/american-integrity-insurance-privacy-torts/qualify";
+    case "vuori":           return "/vuori-privacy-torts/qualify";
+    case "privacy-tort":    return "/privacy-torts";
+    case "ssdi":            return "/ssdi/qualify";
+    default:                return "/property-damage-claims/qualify";
+  }
 }
 
 // ISR: serve from cache, regenerate in background every hour
@@ -417,6 +420,11 @@ export async function generateMetadata({ params }) {
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
 
+  // Static report pages are served from /public — skip Strapi lookup
+  if (slug.startsWith("reports/")) {
+    return { title: "Florida Insurance Market Report | Louis Law Group" };
+  }
+
   if (slug === "thank-you") {
     return { robots: { index: false, follow: false } };
   }
@@ -441,25 +449,27 @@ export async function generateMetadata({ params }) {
           const imageUrl = article.cover?.url
             ? `https://login.louislawgroup.com${article.cover.url}`
             : defaultImage;
-          const description =
+          const seoOverride = getSeoOverride(slug);
+          const finalTitle = seoOverride?.title || article.title;
+          const description = seoOverride?.description ||
             article.description ||
             "Contact Louis Law Group for a free case evaluation. Florida\'s trusted property damage attorneys.";
           return {
-            title: `${article.title} | Louis Law Group`,
+            title: `${finalTitle} | Louis Law Group`,
             description,
             alternates: { canonical: canonicalUrl },
             ...(isDupSlug && { robots: { index: false, follow: true } }),
             openGraph: {
-              title: `${article.title} | Louis Law Group`,
+              title: `${finalTitle} | Louis Law Group`,
               description,
               url: `${siteUrl}/${slug}`,
               siteName: "Louis Law Group",
-              images: [{ url: imageUrl, width: 1200, height: 630, alt: article.title }],
+              images: [{ url: imageUrl, width: 1200, height: 630, alt: finalTitle }],
               type: "article",
             },
             twitter: {
               card: "summary_large_image",
-              title: `${article.title} | Louis Law Group`,
+              title: `${finalTitle} | Louis Law Group`,
               description,
               images: [imageUrl],
             },
@@ -888,6 +898,7 @@ export default async function Page(props) {
   // -- RENDER LOGIC BELOW, UNCHANGED --
   return (
     <Layout>
+      <ArticlePageMarker />
       {isJobPage ? (
         <>
           <section className={styles.jobHero}>
@@ -1020,10 +1031,16 @@ export default async function Page(props) {
                   }}
                 />
               )}
-              {/* FAQPage schema — extracted from content or static SSDI fallback */}
+              {/* FAQPage schema — extracted from content, slug-specific override, or static SSDI fallback */}
               {(() => {
                 const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
-                const ssdiStaticFaq = !faqSchema && articleType === "ssdi" ? {
+                const faqOverride = !faqSchema ? getFaqOverride(slug) : null;
+                const overrideSchema = faqOverride ? {
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": faqOverride.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+                } : null;
+                const ssdiStaticFaq = !faqSchema && !overrideSchema && articleType === "ssdi" ? {
                   "@context": "https://schema.org",
                   "@type": "FAQPage",
                   "mainEntity": [
@@ -1032,7 +1049,7 @@ export default async function Page(props) {
                     { "@type": "Question", "name": "Does Louis Law Group handle SSDI cases?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency — you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }}
                   ]
                 } : null;
-                const schema = faqSchema || ssdiStaticFaq;
+                const schema = faqSchema || overrideSchema || ssdiStaticFaq;
                 return schema ? (
                   <script
                     type="application/ld+json"
@@ -1148,7 +1165,7 @@ export default async function Page(props) {
                     Pierre A. Louis, Esq.
                   </Link>
                   <span className={styles.authorCredential}>
-                    Florida Bar Member · Louis Law Group
+                    Louis Law Group
                   </span>
                 </div>
               </div>
@@ -1275,12 +1292,13 @@ export default async function Page(props) {
               {/* Visible FAQ section — AI citability: render FAQs as visible HTML, not just JSON-LD */}
               {(() => {
                 const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
-                const ssdiStaticFaq = !faqSchema && articleType === "ssdi" ? [
+                const faqOverride = !faqSchema ? getFaqOverride(slug) : null;
+                const ssdiStaticFaq = !faqSchema && !faqOverride && articleType === "ssdi" ? [
                   { q: "How long does it take to get approved for SSDI?", a: "Most initial SSDI applications take 3\u20136 months for a decision. Appeals can take 12\u201324 months. Working with a disability attorney significantly improves your approval odds at every stage." },
                   { q: "What should I do if my SSDI claim is denied?", a: "About 67% of initial SSDI claims are denied. You have 60 days to file a Request for Reconsideration. If denied again, request an ALJ hearing \u2014 this is where most claims are ultimately approved." },
                   { q: "Does Louis Law Group handle SSDI cases?", a: "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency \u2014 you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }
                 ] : null;
-                const items = faqSchema?.mainEntity?.map(e => ({ q: e.name, a: e.acceptedAnswer?.text })) || ssdiStaticFaq;
+                const items = faqSchema?.mainEntity?.map(e => ({ q: e.name, a: e.acceptedAnswer?.text })) || faqOverride || ssdiStaticFaq;
                 if (!items || items.length === 0) return null;
                 return (
                   <div className={styles.visibleFaq}>
@@ -1337,25 +1355,28 @@ export default async function Page(props) {
               })()}
               {/* End-of-article CTA */}
               {(() => {
-                const endCtaHref = getEndCtaHref(slug);
-                const isPrivacyTort = endCtaHref.includes("privacy-torts") || endCtaHref.includes("vuori");
-                const isCaseLaw = endCtaHref.includes("case-law-updates");
-                const isSms = endCtaHref.startsWith("sms:");
+                const intakeHref = getIntakeHref(slug, articleType);
+                const isCaseLaw = articleType === "case-law";
+                const isSSDI = articleType === "ssdi";
+                const ctaTitle = isCaseLaw
+                  ? "Submit a Policy or Denial Letter for Review"
+                  : isSSDI
+                    ? "Find Out If You Qualify for SSDI Benefits"
+                    : "Find Out If You Qualify — Free Case Review";
                 return (
                   <div className={styles.endCta}>
-                    <h3 className={styles.endCtaTitle}>
-                      {isCaseLaw ? "Submit a Policy or Denial Letter for Review" : isPrivacyTort ? "See If You Qualify — Free Eligibility Check" : "Ready to Fight Back? Get a Free Case Review."}
-                    </h3>
+                    <h3 className={styles.endCtaTitle}>{ctaTitle}</h3>
                     <p className={styles.endCtaSubtext}>
                       {isCaseLaw ? "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential" : "No fees unless we win · 100% confidential · Same-day response"}
                     </p>
-                    {isSms ? (
-                      <a href={endCtaHref} className={styles.endCtaBtn}>Start Your Free Review →</a>
-                    ) : (
-                      <Link href={endCtaHref} className={styles.endCtaBtn}>
-                        {isCaseLaw ? "Submit Policy for Review →" : "Check Your Eligibility →"}
+                    <div style={{display:"flex",gap:"12px",flexWrap:"wrap",justifyContent:"center"}}>
+                      <Link href={intakeHref} className={styles.endCtaBtn}>
+                        Check Your Eligibility →
                       </Link>
-                    )}
+                      <Link href={intakeHref} className={styles.endCtaBtnSecondary}>
+                        See If You Qualify →
+                      </Link>
+                    </div>
                   </div>
                 );
               })()}
@@ -1371,7 +1392,7 @@ export default async function Page(props) {
                     <Link href="/pierre-a-louis-esq">Pierre A. Louis, Esq.</Link>
                   </p>
                   <p className={styles.authorCardBio}>
-                    Pierre A. Louis is a Florida-licensed attorney and founder of Louis Law Group, specializing in property damage insurance claims and Social Security disability (SSDI/SSI). He has recovered over $200 million for clients against major insurance companies.
+                    Pierre A. Louis is an attorney and founder of Louis Law Group, specializing in property damage insurance claims and Social Security disability (SSDI/SSI). He has recovered over $200 million for clients against major insurance companies.
                   </p>
                 </div>
               </div>
@@ -1384,10 +1405,10 @@ export default async function Page(props) {
             </div>
           </section>
           )}
-          {/* Sticky mobile CTA */}
+          {/* Sticky mobile CTA — routes to correct intake form per article type */}
           <div className={styles.stickyMobileCta}>
-            <a href="tel:8336574812" className={styles.stickyCall}>📞 (833) 657-4812</a>
-            <Link href="/#contact" className={styles.stickyReview}>Free Case Review →</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyCall}>Check Your Eligibility</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>See If You Qualify →</Link>
           </div>
           <Testimonials />
           <Steps />

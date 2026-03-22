@@ -9,6 +9,8 @@ public/*
 !public/images/**
 !public/sitemap*.xml
 !public/robots.txt
+!public/reports/
+!public/reports/**
 
 # allow dynamic sitemap route
 !src/app/sitemap.xml/
