@@ -506,6 +506,11 @@ export default async function Page(props) {
   const slugArray = params.slug || [];
   const slug = slugArray.join("/");
 
+  // Static report pages are served from /public — skip Strapi entirely
+  if (slug.startsWith("reports/")) {
+    return null;
+  }
+
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
   let apiUrl;
   let isAttorneyPage = false;
