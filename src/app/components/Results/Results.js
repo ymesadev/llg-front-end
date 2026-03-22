@@ -1,6 +1,7 @@
-"use client";
+"use client"; // This file needs to be a client component for hooks
 import styles from "./Results.module.css";
-import Image from "next/image";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 function AccordionItem({ amount, company, details }) {
   return (
@@ -67,14 +68,10 @@ export default function Results() {
           <div className={`column-2a blueBg ${styles.resultsCont}`}>
             {/* Left Column: Image */}
             <div className={styles.imageColumn}>
-              <Image
+              <img
                 src="/images/100-dollar-bill.jpg"
                 alt="Pierre Louis Florida Property Damage Attorney"
                 className={styles.resultsImage}
-                width={600}
-                height={400}
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 50vw"
               />
             </div>
             {/* Right Column: Static Accordion with results */}

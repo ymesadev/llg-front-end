@@ -11,8 +11,6 @@ public/*
 !public/robots.txt
 !public/reports/
 !public/reports/**
-!public/scripts/
-!public/scripts/**
 
 # allow dynamic sitemap route
 !src/app/sitemap.xml/

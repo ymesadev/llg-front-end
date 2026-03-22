@@ -1,15 +1,13 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { ReactLenis } from "lenis/react";
 import Hero from "./components/Hero/Hero";
-
-const Results = dynamic(() => import("./components/Results/Results"));
-const Testimonials = dynamic(() => import("./components/Testimonials/Testimonials"));
-const WhyChooseUs = dynamic(() => import("./components/WhyChooseUs/WhyChooseUs"));
-const Services = dynamic(() => import("./components/Services/Services"));
-const Steps = dynamic(() => import("./components/Steps/Steps"), { ssr: false });
-const ContactSection = dynamic(() => import("./components/Contact/ContactSection"), { ssr: false });
+import Results from "./components/Results/Results";
+import Testimonials from "./components/Testimonials/Testimonials";
+import WhyChooseUs from "./components/WhyChooseUs/WhyChooseUs";
+import Services from "./components/Services/Services";
+import Steps from "./components/Steps/Steps";
+import ContactSection from "./components/Contact/ContactSection";
 
 export default function HomePage() {
   return (

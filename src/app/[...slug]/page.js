@@ -13,7 +13,6 @@ import parse from "html-react-parser";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 import Link from "next/link";
-import Image from "next/image";
 import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
 import safeMediaUrl from '../../lib/media';
@@ -1161,13 +1160,10 @@ export default async function Page(props) {
               )}
               {/* Author byline */}
               <div className={styles.authorByline}>
-                <Image
+                <img
                   src="https://login.louislawgroup.com/uploads/pierre_louis_new_003bb95e9b.jpg"
                   alt="Pierre A. Louis, Esq."
                   className={styles.authorPhoto}
-                  width={48}
-                  height={48}
-                  loading="lazy"
                 />
                 <div className={styles.authorInfo}>
                   <Link href="/pierre-a-louis-esq" className={styles.authorName}>
@@ -1241,14 +1237,11 @@ export default async function Page(props) {
                 }) }}
               />
               {page.cover?.url && (
-                <Image
+                <img
                   src={safeMediaUrl(page.cover.url)}
                   alt={page.title}
                   className={styles.blogImage}
-                  width={1200}
-                  height={630}
-                  sizes="(max-width: 768px) 100vw, 800px"
-                  priority
+                  fetchPriority="high"
                 />
               )}
               {/* Table of Contents */}
@@ -1394,13 +1387,10 @@ export default async function Page(props) {
               })()}
               {/* Author bio card */}
               <div className={styles.authorCard}>
-                <Image
+                <img
                   src="https://login.louislawgroup.com/uploads/pierre_louis_new_003bb95e9b.jpg"
                   alt="Pierre A. Louis, Esq."
                   className={styles.authorCardPhoto}
-                  width={48}
-                  height={48}
-                  loading="lazy"
                 />
                 <div>
                   <p className={styles.authorCardName}>
@@ -1443,7 +1433,6 @@ export default async function Page(props) {
                     }
                     alt={page.Image?.Alt || "Attorney"}
                     className={styles.teamImage}
-                    loading="lazy"
                   />
                   <h1 className={styles.attorneyTitle}>{page.title}</h1>
                 </div>

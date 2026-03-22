@@ -1,17 +1,19 @@
 import "./globals.css";
-import { Anton, Montserrat, Work_Sans } from "next/font/google";
-import Script from "next/script";
+import { Anton, Montserrat, Work_Sans, Inter } from "next/font/google";
 import CookieConsent from "./components/CookieConsent/CookieConsent";
 import TrackingScripts from "./components/TrackingScripts/TrackingScripts";
 import ConditionalPopup from "./components/ConditionalPopup/ConditionalPopup";
 import ConditionalNavbar from "./components/ConditionalNavbar/ConditionalNavbar";
 import ConditionalFooter from "./components/ConditionalFooter/ConditionalFooter";
-import ClientDynamics from "./components/ClientDynamics/ClientDynamics";
+// import ChatbotPopup from "./components/ChatBot/ChatBot";
+import AIChatBot from "./components/AIChatBot/AIChatBot";
 import { Analytics } from "@vercel/analytics/next";
+import OpenReplay from "./components/OpenReplay/OpenReplay";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], display: "swap", variable: "--font-anton" });
 const montserrat = Montserrat({ subsets: ["latin"], display: "swap", variable: "--font-montserrat" });
 const workSans = Work_Sans({ subsets: ["latin"], display: "swap", variable: "--font-work-sans" });
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 
 
 
@@ -45,18 +47,17 @@ const legalServiceSchema = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${anton.variable} ${montserrat.variable} ${workSans.variable}`}>
+    <html lang="en" className={`${anton.variable} ${montserrat.variable} ${workSans.variable} ${inter.variable}`}>
       <head>
-        <link rel="preconnect" href="https://login.louislawgroup.com" />
-        <link rel="dns-prefetch" href="https://login.louislawgroup.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://us.i.posthog.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(legalServiceSchema) }}
         />
+        {/* PostHog Analytics — product analytics, session replay, page tracking */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+          posthog.init('POSTHOG_PROJECT_API_KEY', {api_host:'https://us.i.posthog.com', person_profiles: 'identified_only'})
+        `}} />
       </head>
       <body>
         <ConditionalNavbar />
@@ -65,12 +66,195 @@ export default function RootLayout({ children }) {
         {children}
         <ConditionalFooter />
         
-        <Script id="posthog" strategy="afterInteractive" dangerouslySetInnerHTML={{ __html: `!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);posthog.init('POSTHOG_PROJECT_API_KEY',{api_host:'https://us.i.posthog.com',person_profiles:'identified_only'})` }} />
-        <Script src="/scripts/lead-attribution.js" strategy="lazyOnload" />
-        <Script src="/scripts/visitor-beacon.js" strategy="lazyOnload" />
-        <ClientDynamics />
+        {/* Global Lead Attribution Tracking - Before Chat Bot */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              /* =========================================
+                 GLOBAL LEAD ATTRIBUTION TRACKING
+              ========================================= */
+              (function () {
+                try {
+                  console.log('[Lead Attribution] Script initialized');
+                  
+                  const UTM_KEYS = [
+                    'utm_source',
+                    'utm_medium',
+                    'utm_campaign',
+                    'utm_content',
+                    'utm_term'
+                  ];
+
+                  // Landing page configuration mapping
+                  const LANDING_PAGE_CONFIG = {
+                    // Meta Ads Landing Pages
+                    'warranty-case-evaluation': { page_source: 'meta_warranty_01', campaign_type: 'meta' },
+                    // Add more Meta landing pages here as needed
+                    
+                    // Google Ads Landing Pages
+                    'american-integrity-claims-attorneys': { page_source: 'google_warranty_01', campaign_type: 'google' },
+                    'social-security-disability-attorneys': { page_source: 'google_ssdi_01', campaign_type: 'google' },
+                    'property-damage-claims-attorneys': { page_source: 'google_property_damage_01', campaign_type: 'google' },
+                  };
+
+                  function setPageIdentifier() {
+                    try {
+                      // Get current pathname (remove leading slash and query params)
+                      const pathname = window.location.pathname.replace(/^\\//, '').split('?')[0];
+                      
+                      // Check if this is a landing page
+                      const config = LANDING_PAGE_CONFIG[pathname];
+                      
+                      if (config) {
+                        localStorage.setItem('page_source', config.page_source);
+                        localStorage.setItem('campaign_type', config.campaign_type);
+                        console.log('[Lead Attribution] Set page identifier:', {
+                          page_source: config.page_source,
+                          campaign_type: config.campaign_type,
+                          pathname: pathname
+                        });
+                      }
+                    } catch (error) {
+                      console.error('[Lead Attribution] Error setting page identifier:', error);
+                    }
+                  }
+
+                  function setOrganicFallback() {
+                    try {
+                      /* =========================================
+                         ORGANIC FALLBACK
+                      ========================================= */
+                      if (!localStorage.getItem('page_source')) {
+                        localStorage.setItem('page_source', 'organic_site');
+                        localStorage.setItem('campaign_type', 'organic');
+                        console.log('[Lead Attribution] Set organic fallback:', {
+                          page_source: 'organic_site',
+                          campaign_type: 'organic'
+                        });
+                      }
+                    } catch (error) {
+                      console.error('[Lead Attribution] Error setting organic fallback:', error);
+                    }
+                  }
+
+                  function captureAttribution() {
+                    try {
+                      console.log('[Lead Attribution] Capturing attribution data...');
+                      
+                      // Set page identifier first
+                      setPageIdentifier();
+                      
+                      // Set organic fallback if no page_source exists
+                      setOrganicFallback();
+                      
+                      // Capture UTMs once per session
+                      const params = new URLSearchParams(window.location.search);
+                      const capturedUTMs = {};
+                      
+                      UTM_KEYS.forEach(key => {
+                        const value = params.get(key);
+                        if (value && !localStorage.getItem(key)) {
+                          localStorage.setItem(key, value);
+                          capturedUTMs[key] = value;
+                          console.log('[Lead Attribution] Captured UTM:', key, '=', value);
+                        } else if (localStorage.getItem(key)) {
+                          console.log('[Lead Attribution] UTM already stored:', key, '=', localStorage.getItem(key));
+                        }
+                      });
+
+                      // Capture referrer once
+                      if (!localStorage.getItem('referrer')) {
+                        const referrer = document.referrer || '';
+                        localStorage.setItem('referrer', referrer);
+                        console.log('[Lead Attribution] Captured referrer:', referrer || '(empty)');
+                      } else {
+                        console.log('[Lead Attribution] Referrer already stored:', localStorage.getItem('referrer'));
+                      }
+
+                      // Always update current page URL
+                      const currentUrl = window.location.href;
+                      localStorage.setItem('page_url', currentUrl);
+                      console.log('[Lead Attribution] Updated page_url:', currentUrl);
+                      
+                      // Log all stored values
+                      const storedData = {
+                        page_url: localStorage.getItem('page_url'),
+                        referrer: localStorage.getItem('referrer'),
+                        page_source: localStorage.getItem('page_source'),
+                        campaign_type: localStorage.getItem('campaign_type'),
+                        utm_source: localStorage.getItem('utm_source'),
+                        utm_medium: localStorage.getItem('utm_medium'),
+                        utm_campaign: localStorage.getItem('utm_campaign'),
+                        utm_content: localStorage.getItem('utm_content'),
+                        utm_term: localStorage.getItem('utm_term')
+                      };
+                      console.log('[Lead Attribution] All stored values:', storedData);
+                    } catch (error) {
+                      console.error('[Lead Attribution] Error in captureAttribution:', error);
+                    }
+                  }
+
+                  // Run immediately if DOM is ready, otherwise wait
+                  if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', captureAttribution);
+                  } else {
+                    captureAttribution();
+                  }
+
+                  // Listen for route changes (works with Next.js App Router)
+                  if (typeof window !== 'undefined') {
+                    // Listen to popstate for browser back/forward
+                    window.addEventListener('popstate', function() {
+                      console.log('[Lead Attribution] Route change detected (popstate)');
+                      captureAttribution();
+                    });
+                    
+                    // Intercept pushState/replaceState for Next.js client-side navigation
+                    const originalPushState = history.pushState;
+                    const originalReplaceState = history.replaceState;
+                    
+                    history.pushState = function() {
+                      originalPushState.apply(history, arguments);
+                      console.log('[Lead Attribution] Route change detected (pushState)');
+                      setTimeout(captureAttribution, 0);
+                    };
+                    
+                    history.replaceState = function() {
+                      originalReplaceState.apply(history, arguments);
+                      console.log('[Lead Attribution] Route change detected (replaceState)');
+                      setTimeout(captureAttribution, 0);
+                    };
+                  }
+                } catch (error) {
+                  console.error('[Lead Attribution] Script initialization error:', error);
+                }
+              })();
+            `,
+          }}
+        />
+        
+        <OpenReplay />
+        <AIChatBot />
         <CookieConsent />
+        {/* Vercel Analytics — cookieless, fires for ALL visitors regardless of consent */}
         <Analytics />
+        {/* Real-time visitor beacon — fires on every page load */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){
+            try {
+              fetch('https://www.louislawgroup.com/api/hit', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({
+                  path: window.location.pathname,
+                  referrer: document.referrer || '',
+                  ua: navigator.userAgent
+                }),
+                keepalive: true
+              });
+            } catch(e) {}
+          })();
+        `}} />
       </body>
     </html>
   );
