@@ -1,5 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
+  images: {
+    formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'login.louislawgroup.com' },
+    ],
+  },
   async redirects() {
     return [
       // ── AHS consolidation (2,568 thin city pages → 1 hub) ──

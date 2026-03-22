@@ -11,6 +11,8 @@ public/*
 !public/robots.txt
 !public/reports/
 !public/reports/**
+!public/scripts/
+!public/scripts/**
 
 # allow dynamic sitemap route
 !src/app/sitemap.xml/
@@ -55,6 +57,7 @@ public/*
 
 # allow layout/globals/components perf fixes
 !src/app/layout.js
+!src/app/page.js
 !src/app/globals.css
 !src/app/components/
 !src/app/components/Footer/
@@ -72,6 +75,14 @@ public/*
 !src/app/components/Popup/
 !src/app/components/Popup/**
 
+# allow Results component
+!src/app/components/Results/
+!src/app/components/Results/**
+
+# allow TrackingScripts component
+!src/app/components/TrackingScripts/
+!src/app/components/TrackingScripts/**
+
 # allow ServicesCarousel clickable cards
 !src/app/components/ServicesCarousel/
 !src/app/components/ServicesCarousel/**
@@ -79,6 +90,10 @@ public/*
 # allow OpenReplay session tracking
 !src/app/components/OpenReplay/
 !src/app/components/OpenReplay/**
+
+# allow ClientDynamics wrapper
+!src/app/components/ClientDynamics/
+!src/app/components/ClientDynamics/**
 
 # allow water damage restoration landing page
 !src/app/water-damage-restoration/
