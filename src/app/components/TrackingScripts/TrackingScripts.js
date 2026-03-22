@@ -1,8 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import Script from "next/script";
-import { Analytics } from "@vercel/analytics/next";
-import BehaviorTracking from "../BehaviorTracking/BehaviorTracking";
+import dynamic from "next/dynamic";
+
+const BehaviorTracking = dynamic(
+  () => import("../BehaviorTracking/BehaviorTracking"),
+  { ssr: false }
+);
 
 const CLARITY_PROJECT_ID = "3219271935026135";
 
@@ -64,10 +68,10 @@ export default function TrackingScripts() {
         }}
       />
 
-      {/* Facebook Pixel */}
+      {/* Facebook Pixel — deferred to lazyOnload */}
       <Script
         id="facebook-pixel"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             !function(f,b,e,v,n,t,s){
@@ -92,10 +96,10 @@ export default function TrackingScripts() {
         }}
       />
 
-      {/* TikTok Pixel */}
+      {/* TikTok Pixel — deferred to lazyOnload */}
       <Script
         id="tiktok-pixel"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
             !function (w, d, t) {
@@ -129,11 +133,11 @@ export default function TrackingScripts() {
         />
       </noscript>
 
-      {/* Microsoft Clarity — session recordings + heatmaps */}
+      {/* Microsoft Clarity — deferred to lazyOnload */}
       {CLARITY_PROJECT_ID && (
         <Script
           id="microsoft-clarity"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `
               (function(c,l,a,r,i,t,y){
@@ -145,9 +149,6 @@ export default function TrackingScripts() {
           }}
         />
       )}
-
-      {/* Vercel Web Analytics — consent-gated, fires after terms + cookie accept */}
-      <Analytics />
 
       {/* Deep behavior tracking — scroll, time, exit intent, rage clicks, form events */}
       <BehaviorTracking />
