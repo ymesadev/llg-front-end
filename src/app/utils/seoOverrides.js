@@ -5,10 +5,55 @@
  */
 
 const SEO_OVERRIDES = {
-  "ssdi-reconsideration-texas-2026-5": {
-    title: "SSDI Reconsideration in Texas: How to Win Your Appeal (2026)",
-    description: "Denied SSDI in Texas? Learn how to file a Request for Reconsideration, what evidence to include, and how Louis Law Group helps Texans win disability appeals.",
+  // === HIGH-IMPRESSION, LOW-CTR FIXES (2026-03-23) ===
+
+  // #1: Progressive Select claim — 12,704 imps, 0.13% CTR, pos 9.8
+  "how-to-file-a-claim-with-progressive-select-insurance-company": {
+    title: "How to File a Progressive Select Claim (2026)",
+    description: "Step-by-step guide to filing a Progressive Select Insurance claim. Deadlines, required docs, and what to do if denied. Free attorney help: (833) 657-4812.",
   },
+
+  // #2: SSDI Reconsideration Texas — 12,063 imps, 0.11% CTR, pos 10.8
+  // Override both canonical and dedup variant
+  "ssdi-reconsideration-texas-2026": {
+    title: "SSDI Reconsideration Texas: Win Your Appeal (2026)",
+    description: "Denied SSDI in Texas? 67% of initial claims are denied. Learn how to file a winning reconsideration with the right evidence. Free attorney help: (833) 657-4812.",
+  },
+  "ssdi-reconsideration-texas-2026-5": {
+    title: "SSDI Reconsideration Texas: Win Your Appeal (2026)",
+    description: "Denied SSDI in Texas? 67% of initial claims are denied. Learn how to file a winning reconsideration with the right evidence. Free attorney help: (833) 657-4812.",
+  },
+
+  // #3: SSDI Approval Timeline Illinois — 7,833 imps, 0.20% CTR, pos 9.9
+  "ssdi-approval-timeline-illinois-2026": {
+    title: "SSDI Approval Timeline Illinois 2026: Wait Times",
+    description: "Illinois SSDI approval takes 4-7 months on average. See wait times for each stage, how to speed up your claim, and when to hire a disability attorney.",
+  },
+
+  // #4: SSDI Application Missouri — 5,744 imps, 0.03% CTR, pos 2.5 (MOST URGENT — high position, almost zero clicks)
+  "ssdi-application-online-missouri-missouri-guide": {
+    title: "Apply for SSDI Online in Missouri (2026 Guide)",
+    description: "How to apply for SSDI online in Missouri. Eligibility, required documents, SSA office locations, and what to do if denied. Free consultation: (833) 657-4812.",
+  },
+
+  // #5: Average SSDI Payment California — 5,373 imps, 0.35% CTR, pos 4.0
+  "average-ssdi-payment-california-2026": {
+    title: "Average SSDI Payment California 2026: $1,580/Mo",
+    description: "California SSDI payments average $1,580/month in 2026. See what you should receive and find out if you are underpaid. Free disability attorney consultation.",
+  },
+
+  // #6: SSDI ALJ Hearing Tips — 4,601 imps, 0.07% CTR, pos 3.5
+  // Override both canonical and dedup variant
+  "ssdi-alj-hearing-tips-2026": {
+    title: "SSDI ALJ Hearing Tips: How to Win (2026)",
+    description: "Expert tips for your SSDI ALJ hearing. What to say, what to wear, and mistakes to avoid. Claimants with attorneys win more often. Free consult: (833) 657-4812.",
+  },
+  "ssdi-alj-hearing-tips-2026-171": {
+    title: "SSDI ALJ Hearing Tips New York (2026)",
+    description: "Preparing for an SSDI hearing in New York? What judges look for, how to present your case, and why hiring an attorney boosts your approval odds. Free consult.",
+  },
+
+  // === EXISTING OVERRIDES ===
   "ssdi-approval-timeline-oregon-2026-13": {
     title: "SSDI Approval Timeline in Oregon: Processing Times & What to Expect (2026)",
     description: "How long does SSDI take in Oregon? Average processing is 4-6 months for initial claims. Learn each stage's timeline and how to speed up your approval.",
