@@ -78,6 +78,68 @@ const SEO_OVERRIDES = {
     title: "Florida Minimum Wage & Employment Law Guide for Miami Workers (2026)",
     description: "Miami's minimum wage is $13/hour in 2026. Know your rights under Florida employment law — overtime, discrimination, wrongful termination. Free consultation.",
   },
+
+  // === PAGE 2-3 KEYWORD OPTIMIZATION (2026-03-23) ===
+
+  // #1: Miami Disability Lawyer — "disability lawyer" pos 5.9, 199 imps
+  "miami-disability-lawyer-2026-2": {
+    title: "Miami Disability Lawyer: Free SSDI Consultation (2026)",
+    description: "Top-rated Miami disability lawyer helping Floridians win SSDI benefits. 3,000+ cases won, no fee unless you win. Call (844) 853-8996 for a free evaluation.",
+  },
+
+  // #2: Miami Disability Lawyer v2 — "social security disability lawyer" pos 15.4, 58 imps + "ssdi attorney" pos 5.4
+  "miami-disability-lawyer-2026-1": {
+    title: "Social Security Disability Lawyer Miami | Louis Law Group",
+    description: "Experienced Social Security disability lawyer in Miami. We handle SSDI claims, appeals, and hearings. $200M+ recovered. Free consultation: (844) 853-8996.",
+  },
+
+  // #3: SSDI Attorney Indianapolis — "ssdi attorney near me" pos 16.3, 67 imps
+  "ssdi-attorney-near-me-indianapolis-2026": {
+    title: "SSDI Attorney Indianapolis: Win Your Disability Claim (2026)",
+    description: "Indianapolis SSDI attorney helping you win disability benefits. We handle applications, denials, and appeals. No fee unless we win. Free consult: (844) 853-8996.",
+  },
+
+  // #4: SSDI Attorney Pittsburgh — "disability attorney near me" pos 9.3, 19 imps
+  "ssdi-attorney-near-me-pittsburgh-2026": {
+    title: "Disability Attorney Pittsburgh: SSDI Help Near You (2026)",
+    description: "Pittsburgh disability attorney for SSDI claims and appeals. Get expert help with your application or denial. Free consultation: (844) 853-8996.",
+  },
+
+  // #5: Disability Lawyer Tampa — "disability attorneys near me" pos 18.2, 16 imps
+  "disability-lawyer-near-tampa-2026": {
+    title: "Tampa Disability Lawyer: SSDI Claims & Appeals (2026)",
+    description: "Tampa Bay disability lawyer fighting for your SSDI benefits. Denied? We can help with appeals and hearings. No fee unless you win. Call (844) 853-8996.",
+  },
+
+  // #6: Disability Lawyer Chicago — "disability lawyers near me" pos 15.7, 14 imps
+  "disability-lawyer-near-chicago-2026": {
+    title: "Chicago Disability Lawyer: SSDI Benefits Help (2026)",
+    description: "Chicago disability lawyer specializing in SSDI claims. We handle applications, denials, and ALJ hearings. 3,000+ cases won. Free consult: (844) 853-8996.",
+  },
+
+  // #7: Renters Insurance Flood FAQ — 2,000+ imps at pos 25 (MASSIVE opportunity)
+  "faq-water-damage-does-renters-insurance-cover-flooding": {
+    title: "Does Renters Insurance Cover Flooding? What You Need to Know",
+    description: "Standard renters insurance does NOT cover floods. Learn what is and isn't covered, how to get flood insurance, and your legal options if your claim is denied.",
+  },
+
+  // #8: Miramar Personal Injury — "personal injury lawyer near me" pos 5.2
+  "personal-injury-attorneys-near-me-miramar-florida": {
+    title: "Personal Injury Lawyer Miramar FL: Free Case Review (2026)",
+    description: "Miramar personal injury lawyer handling car accidents, slip & falls, and insurance claims. No fee unless we win your case. Call (844) 853-8996 today.",
+  },
+
+  // #9: Charlotte SSDI Attorney — "best disability attorney near me" pos 6.7
+  "best-ssdi-attorney-charlotte-2026": {
+    title: "Best SSDI Attorney Charlotte NC: Win Your Claim (2026)",
+    description: "Charlotte's top-rated SSDI attorney. We fight denied disability claims and handle appeals. No fee unless you win. Free evaluation: (844) 853-8996.",
+  },
+
+  // #10: Nashville Disability Lawyer — "disability lawyers near me" pos 10.2
+  "disability-lawyer-near-nashville-2026-1": {
+    title: "Nashville Disability Lawyer: SSDI Claims & Appeals (2026)",
+    description: "Nashville disability lawyer helping you get SSDI benefits. Expert help with applications, denials, and hearings. Free consultation: (844) 853-8996.",
+  },
 };
 
 export function getSeoOverride(slug) {

@@ -31,6 +31,10 @@ public/*
 !src/lib/media.js
 !src/app/sitemap.xml/chunked-helpers.js
 
+# allow SEO overrides utility
+!src/app/utils/
+!src/app/utils/seoOverrides.js
+
 # allow case landing pages
 !src/
 !src/app/
