@@ -117,6 +117,12 @@ const SEO_OVERRIDES = {
     description: "Chicago disability lawyer specializing in SSDI claims. We handle applications, denials, and ALJ hearings. 3,000+ cases won. Free consult: (844) 853-8996.",
   },
 
+  // Chances of Winning Disability With a Lawyer — trending query pos 36.9→20.7
+  "chances-of-winning-disability-with-a-lawyer": {
+    title: "Chances of Winning Disability With a Lawyer (2026 Data)",
+    description: "SSDI approval rates jump from 34% to 62% with attorney representation. See the data on why hiring a disability lawyer improves your chances of winning.",
+  },
+
   // #7: Renters Insurance Flood FAQ — 2,000+ imps at pos 25 (MASSIVE opportunity)
   "faq-water-damage-does-renters-insurance-cover-flooding": {
     title: "Does Renters Insurance Cover Flooding? What You Need to Know",
