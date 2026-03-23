@@ -146,6 +146,22 @@ const SEO_OVERRIDES = {
     title: "Nashville Disability Lawyer: SSDI Claims & Appeals (2026)",
     description: "Nashville disability lawyer helping you get SSDI benefits. Expert help with applications, denials, and hearings. Free consultation: (844) 853-8996.",
   },
+
+  // === CANNIBALIZATION FIX: Fort Lauderdale Hurricane Pages (2026-03-23) ===
+  // Two pages competing for "hurricane claims attorney" — differentiate titles/descriptions
+  // so each targets a distinct keyword cluster and stops splitting authority.
+
+  // PRIMARY page — position 1.7, 29 imps → lock in "hurricane claims attorney fort lauderdale"
+  "hurricane-damage-attorney-fort-lauderdale-2026": {
+    title: "Hurricane Claims Attorney Fort Lauderdale",
+    description: "Fort Lauderdale hurricane claims attorney with $200M+ recovered. We fight denied hurricane insurance claims. Free consultation: (844) 853-8996.",
+  },
+
+  // SECONDARY page — position 4.5, 28 imps → pivot to "hurricane insurance claim lawyer"
+  "hurricane-damage-attorney-fort-lauderdale-2026-2": {
+    title: "Hurricane Insurance Claim Lawyer Fort Lauderdale (2026)",
+    description: "Denied hurricane insurance claim in Fort Lauderdale? Our attorneys handle roof damage, water intrusion, and wind damage claims. No fee unless we win.",
+  },
 };
 
 export function getSeoOverride(slug) {
