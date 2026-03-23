@@ -162,6 +162,31 @@ const SEO_OVERRIDES = {
     title: "Hurricane Insurance Claim Lawyer Fort Lauderdale (2026)",
     description: "Denied hurricane insurance claim in Fort Lauderdale? Our attorneys handle roof damage, water intrusion, and wind damage claims. No fee unless we win.",
   },
+
+  // === ROOF LEAK RANKING RECOVERY (2026-03-23) ===
+  // "roof leak" query dropped -15.7 positions — optimize top pages to recover
+
+  // #1: Houston roof leak — 674 imps, pos 21.6, 0.15% CTR (PRIMARY target)
+  // Old title: "Houston Roof Leak Repair: Costs, Insurance Coverage & When to Call a Lawyer"
+  // Problem: Title too long/generic, doesn't match "roof leak repair" query intent
+  "roof-leak-repair-houston-texas": {
+    title: "Roof Leak Repair Houston TX: Costs & Insurance (2026)",
+    description: "Houston roof leak repair costs $350-$1,500 on average. Learn what insurance covers, how to file a claim, and when to hire a property damage attorney. Free consult: (833) 657-4812.",
+  },
+
+  // #2: West Palm Beach roof leak — 292 imps, pos 22.1, 0.34% CTR
+  // Old title: "Roof Leak Repair in West Palm Beach, Florida: A Homeowner's Guide"
+  "roof-leak-repair-west-palm-beach-florida": {
+    title: "Roof Leak Repair West Palm Beach FL: Guide & Costs (2026)",
+    description: "West Palm Beach roof leak? Get repair costs, insurance claim tips, and legal help for denied claims. Florida property damage attorneys. Call (833) 657-4812.",
+  },
+
+  // #3: FAQ - Does homeowners insurance cover roof leaks — 40 imps, pos 45.7
+  // Old title: "Does homeowners insurance cover roof leaks?"
+  "faq-property-damage-does-homeowners-insurance-cover-roof-leaks": {
+    title: "Does Homeowners Insurance Cover Roof Leaks? (2026 Guide)",
+    description: "Yes, homeowners insurance covers roof leaks from storms and sudden damage — but NOT wear and tear. Learn what's covered, common denials, and your legal options.",
+  },
 };
 
 export function getSeoOverride(slug) {
