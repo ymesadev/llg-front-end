@@ -479,6 +479,48 @@ export async function generateMetadata({ params }) {
     }
   } catch (e) {}
 
+  // Fallback: check pages content type (service pages, practice areas, etc.)
+  try {
+    const childSlug = slugArray[slugArray.length - 1];
+    const pageRes = await fetch(
+      `${strapiURL}/api/pages?filters[Slug][$eq]=${encodeURIComponent(childSlug)}&fields[0]=Title&fields[1]=Slug&populate[0]=Hero`,
+      { cache: "no-store" }
+    );
+    if (pageRes.ok) {
+      const pageData = await pageRes.json();
+      if (pageData.data && pageData.data.length > 0) {
+        const pg = pageData.data[0]?.attributes || pageData.data[0];
+        const pageTitle = pg.Hero?.title || pg.Title || pg.title;
+        if (pageTitle) {
+          const heroIntro = Array.isArray(pg.Hero?.intro)
+            ? pg.Hero.intro.map(b => b.children?.[0]?.text || "").join(" ").trim()
+            : "";
+          const pageDesc = heroIntro.slice(0, 160) ||
+            `${pageTitle} — Louis Law Group provides expert legal representation. Free consultation: (833) 657-4812.`;
+          return {
+            title: `${pageTitle} | Louis Law Group`,
+            description: pageDesc,
+            alternates: { canonical: `${siteUrl}/${slug}` },
+            openGraph: {
+              title: `${pageTitle} | Louis Law Group`,
+              description: pageDesc,
+              url: `${siteUrl}/${slug}`,
+              siteName: "Louis Law Group",
+              images: [{ url: defaultImage, width: 1200, height: 630, alt: pageTitle }],
+              type: "website",
+            },
+            twitter: {
+              card: "summary_large_image",
+              title: `${pageTitle} | Louis Law Group`,
+              description: pageDesc,
+              images: [defaultImage],
+            },
+          };
+        }
+      }
+    }
+  } catch (e) {}
+
   return {
     title: "Louis Law Group | Florida Property Damage Attorneys",
     description:
@@ -1285,10 +1327,18 @@ export default async function Page(props) {
                 {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} />}
                 {(() => {
                   // articleType computed above via getArticleType(slug)
+                  // Demote H1 in article body to H2 (page template already has the H1)
+                  const demoteH1 = (body) => {
+                    if (!body) return body;
+                    return body
+                      .replace(/<h1(\s|>)/gi, '<h2$1')
+                      .replace(/<\/h1>/gi, '</h2>')
+                      .replace(/^#\s+/gm, '## ');
+                  };
                   return (page.blocks || []).map((block, index) => (
                     <div key={index}>
                       {block.__component === "shared.rich-text" && (() => {
-                        const body = block.body || "";
+                        const body = demoteH1(block.body || "");
                         const isHtml = body.trimStart().startsWith("<");
                         return (
                           <div className={styles.blogText}>
@@ -1297,6 +1347,7 @@ export default async function Page(props) {
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
                                 urlTransform={mdUrlTransform}
+                                components={{ h1: 'h2' }}
                               >{body}</ReactMarkdown>
                             )}
                           </div>
