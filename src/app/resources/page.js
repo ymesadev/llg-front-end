@@ -9,6 +9,12 @@ import Contact from "../components/Contact/ContactSection";
 
 export const revalidate = 60; // ISR: refresh every 60 seconds
 
+export const metadata = {
+  title: "Legal Resources & Blog | Louis Law Group",
+  description: "Browse articles on property damage insurance claims, SSDI disability benefits, denied claims, and legal guides from Louis Law Group attorneys.",
+  alternates: { canonical: "https://www.louislawgroup.com/resources" },
+};
+
 // ─── Pagination helper: [1, 2, …, 9, 10, 11, …, 101, 102] ──────────────────
 function getPaginationRange({ totalPages, currentPage, siblingCount = 1, boundaryCount = 2 }) {
   // create a range of numbers from start to end

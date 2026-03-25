@@ -1090,6 +1090,28 @@ export default async function Page(props) {
                 <div className={styles.blogContent}>
                   <div className={styles.blogText}>
                     <p>{page.description}</p>
+                  </div>
+                  {/* Render rich-text blocks for expanded FAQ content */}
+                  {(page.blocks || []).map((block, index) => (
+                    <div key={`faq-block-${index}`}>
+                      {block.__component === "shared.rich-text" && (() => {
+                        const body = block.body || "";
+                        const isHtml = body.trimStart().startsWith("<");
+                        return (
+                          <div className={styles.blogText}>
+                            {isHtml ? parse(body) : (
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                                urlTransform={mdUrlTransform}
+                              >{body}</ReactMarkdown>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  ))}
+                  <div className={styles.blogText}>
                     <p>Have questions about your legal rights? <Link href="/#contact">Contact Louis Law Group</Link> for a free case evaluation.</p>
                   </div>
                 </div>
@@ -1356,6 +1378,39 @@ export default async function Page(props) {
                       {relLinks.map((l, i) => <li key={i}><a href={l.href}>{l.label}</a></li>)}
                     </ul>
                   </div>
+                );
+              })()}
+              {/* Cross-practice area links — boost internal linking */}
+              {(() => {
+                const crossLinks = articleType === "ssdi" ? [
+                  { href: "/property-damage-insurance-claim", label: "Property Damage Insurance Claims" },
+                  { href: "/insurance-claim-denied-fl", label: "Insurance Claim Denied in Florida?" },
+                  { href: "/water-damage-attorney-florida", label: "Water Damage Attorney in Florida" },
+                  { href: "/case-law-updates", label: "Latest Case Law Updates" },
+                  { href: "/faq", label: "Legal FAQ — Common Questions" },
+                  { href: "/resources", label: "All Legal Resources & Guides" },
+                ] : articleType === "case-law" ? [
+                  { href: "/property-damage-insurance-claim", label: "Property Damage Claims Guide" },
+                  { href: "/social-security-disability", label: "SSDI Benefits Guide" },
+                  { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI" },
+                  { href: "/faq", label: "Legal FAQ — Common Questions" },
+                  { href: "/resources", label: "All Legal Resources & Guides" },
+                  { href: "/team", label: "Meet Our Attorneys" },
+                ] : [
+                  { href: "/social-security-disability", label: "SSDI Benefits — Are You Eligible?" },
+                  { href: "/how-long-does-ssdi-approval-take", label: "How Long Does SSDI Approval Take?" },
+                  { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI" },
+                  { href: "/case-law-updates", label: "Latest Case Law Updates" },
+                  { href: "/faq", label: "Legal FAQ — Common Questions" },
+                  { href: "/resources", label: "All Legal Resources & Guides" },
+                ];
+                return (
+                  <nav style={{borderTop:"1px solid #e5e7eb",paddingTop:"20px",margin:"16px 0 32px"}} aria-label="More resources">
+                    <h3 style={{marginTop:0,marginBottom:"10px",color:"#374151",fontSize:"0.95rem"}}>More from Louis Law Group</h3>
+                    <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.9",columns:2,columnGap:"24px"}}>
+                      {crossLinks.map((l, i) => <li key={i}><a href={l.href}>{l.label}</a></li>)}
+                    </ul>
+                  </nav>
                 );
               })()}
               {/* End-of-article CTA */}

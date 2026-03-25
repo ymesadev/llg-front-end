@@ -73,7 +73,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Legal</h1>
+                <h2>Legal</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
@@ -99,7 +99,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Practice Areas</h1>
+                <h2>Practice Areas</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
@@ -139,7 +139,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Resources</h1>
+                <h2>Resources</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
@@ -190,7 +190,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Español</h1>
+                <h2>Español</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
