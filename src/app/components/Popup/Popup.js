@@ -94,14 +94,7 @@ const Popup = () => {
                   <p>Talk to a Lawyer</p>
                   <ChatUsPopup className={styles.icon} />
                 </a>
-                <a
-                  href="sms:8336574812"
-                  className={styles.textUs}
-                  onClick={() => trackEvent("consultation_sms_clicked")}
-                >
-                  <p>Text Us</p>
-                  <TextUsPopup className={styles.textUsIcon} />
-                </a>
+               
               </div>
             </div>
           </div>
