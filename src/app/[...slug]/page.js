@@ -1249,20 +1249,6 @@ export default async function Page(props) {
               ) : (
                 <UrgencyBanner articleType={articleType} />
               )}
-              {/* YouTube video embed */}
-              <div style={{ maxWidth: 350, margin: "20px auto", textAlign: "center" }}>
-                <iframe
-                  loading="lazy"
-                  width="315"
-                  height="560"
-                  src="https://www.youtube.com/embed/UGM8fhBQ3Pk?rel=0"
-                  title="SSDI Help Video"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  style={{ maxWidth: "100%", borderRadius: 12 }}
-                />
-              </div>
               {/* Author byline */}
               <div className={styles.authorByline}>
                 <img
@@ -1382,6 +1368,20 @@ export default async function Page(props) {
               })()}
               <div className={styles.blogContent}>
                 {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} />}
+                {/* YouTube video embed — below qualify box */}
+                <div style={{ maxWidth: 350, margin: "20px auto", textAlign: "center" }}>
+                  <iframe
+                    loading="lazy"
+                    width="315"
+                    height="560"
+                    src="https://www.youtube.com/embed/UGM8fhBQ3Pk?rel=0"
+                    title="SSDI Help Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ maxWidth: "100%", borderRadius: 12 }}
+                  />
+                </div>
                 {(() => {
                   // articleType computed above via getArticleType(slug)
                   // Demote H1 in article body to H2 (page template already has the H1)
