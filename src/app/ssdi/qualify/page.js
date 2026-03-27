@@ -124,6 +124,13 @@ export default function SSDIQualify() {
         body: JSON.stringify({ ...contact, answers, score }),
       });
     } catch {/* silent */}
+    // Identify user in OpenReplay
+    if (window.__or_identify) {
+      window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'ssdi', score });
+    }
+    if (window.__or_event) {
+      window.__or_event('form_submitted', { form: 'ssdi_qualify', score, name: contact.name });
+    }
     setResult({ dq: false, score });
     setCur("result");
     setSubmitting(false);

@@ -1,7 +1,5 @@
-"use client"; // This file needs to be a client component for hooks
+"use client";
 import styles from "./Results.module.css";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 function AccordionItem({ amount, company, details }) {
   return (
@@ -72,6 +70,7 @@ export default function Results() {
                 src="/images/100-dollar-bill.jpg"
                 alt="Pierre Louis Florida Property Damage Attorney"
                 className={styles.resultsImage}
+                loading="lazy"
               />
             </div>
             {/* Right Column: Static Accordion with results */}

@@ -195,6 +195,14 @@ const AIChatBot = () => {
       });
     }
 
+    // Track chatbot interaction in OpenReplay
+    if (typeof window !== 'undefined' && window.__or_event) {
+      window.__or_event('chatbot_message', {
+        page: window.location.pathname,
+        message_length: messageText.trim().length,
+      });
+    }
+
     try {
       // Get attribution data from localStorage
       const attributionData = {

@@ -73,7 +73,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Legal</h1>
+                <h2>Legal</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
@@ -99,7 +99,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Practice Areas</h1>
+                <h2>Practice Areas</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
@@ -139,7 +139,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Resources</h1>
+                <h2>Resources</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
@@ -163,6 +163,26 @@ export default function Footer() {
                   SSDI Disability Lawyers
                 </Link>
               </li>
+              <li className={styles.navItem}>
+                <Link href="/public-adjuster-resources-florida" className={styles.navLink}>
+                  Public Adjuster Resources
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/case-law-updates" className={styles.navLink}>
+                  Case Law Updates
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <a href="/reports/florida-insurance-market-january-2026" className={styles.navLink}>
+                  FL Insurance Market Report
+                </a>
+              </li>
+              <li className={styles.navItem}>
+                <a href="/reports/florida-presuit-notice-intelligence-report" className={styles.navLink}>
+                  FL Pre-Suit Notice Report
+                </a>
+              </li>
             </ul>
           </div>
 
@@ -170,7 +190,7 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h1>Español</h1>
+                <h2>Español</h2>
               </Link>
             </div>
             <ul className={styles.navList}>

@@ -19,18 +19,28 @@ import safeMediaUrl from '../../lib/media';
 import Script from "next/script";
 import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA";
 import Testimonials from "../components/Testimonials/Testimonials";
+import { getSeoOverride } from "../utils/seoOverrides";
+import { getFaqOverride } from "../utils/faqOverrides";
+import ArticlePageMarker from "../components/ArticlePageMarker";
 
 
 function getArticleType(slug) {
   const s = (slug || "").toLowerCase();
   const parts = s.split('-');
-  // Privacy tort detection (must come before generic checks)
-  if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("ahs-")) return "ahs";
-  if (s.includes("vuori")) return "vuori";
-  if (s.includes("kin-insurance") || s.includes("kin-ins")) return "kin";
-  if (s.includes("slide-insurance") || (s.includes("slide") && s.includes("insurance"))) return "slide";
-  if (s.includes("tower-hill")) return "tower-hill";
-  if (s.includes("american-integrity")) return "american-integrity";
+  // Case law detection
+  if (s.startsWith("case-law-")) return "case-law";
+  // Privacy tort detection — ONLY if slug contains privacy/torts/pixel keywords
+  const isPrivacy = s.includes("privacy") || s.includes("torts") || s.includes("pixel");
+  if (isPrivacy) {
+    if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("ahs-")) return "ahs";
+    if (s.includes("vuori")) return "vuori";
+    if (s.includes("kin-insurance") || s.includes("kin-ins")) return "kin";
+    if (s.includes("slide-insurance") || (s.includes("slide") && s.includes("insurance"))) return "slide";
+    if (s.includes("tower-hill")) return "tower-hill";
+    if (s.includes("american-integrity")) return "american-integrity";
+    // Generic privacy tort (no specific brand)
+    return "privacy-tort";
+  }
   // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
@@ -87,38 +97,52 @@ function getRelatedLinks(slug, articleType) {
 
   // property-damage
   const stateLinks = state ? [
-    { href: `/insurance-claim-denied-${state}`, label: `Insurance Claim Denied in ${stateName}? Your Rights` },
+    { href: `/insurance-claim-denied-${state === "florida" ? "fl" : state}`, label: `Insurance Claim Denied in ${stateName}? Your Rights` },
     { href: `/property-damage-attorney-${state}`, label: `Property Damage Attorney in ${stateName}` },
-    { href: `/homeowners-insurance-claim-${state}`, label: `Homeowners Insurance Claim in ${stateName}` },
+    { href: `/water-damage-attorney-${state}`, label: `Water Damage Attorney in ${stateName}` },
+    { href: `/fire-damage-attorney-${state}`, label: `Fire Damage Attorney in ${stateName}` },
   ] : [];
-  const baseLinks = [
+  // Texas-specific links for Texas articles
+  const texasLinks = state === "texas" ? [
+    { href: "/state-farm-denied-roof-claim-texas", label: "State Farm Denied Your Roof Claim in Texas?" },
+    { href: "/home-warranty-claim-denied-texas", label: "Home Warranty Denied in Texas? Legal Guide" },
+    { href: "/insurance-company-denies-claim-texas", label: "Insurance Company Denied Your Claim in Texas?" },
+  ] : [];
+  // Florida-specific links for Florida articles
+  const floridaLinks = state === "florida" || !state ? [
     { href: "/insurance-claim-denied-fl", label: "Insurance Claim Denied in Florida? Your Legal Rights" },
+    { href: "/roof-leak-insurance-claim-florida", label: "Roof Leak Insurance Claim in Florida" },
+    { href: "/water-damage-attorney-florida", label: "Water Damage Attorney in Florida" },
+    { href: "/fire-damage-attorney-florida", label: "Fire Damage Attorney in Florida" },
+    { href: "/insurance-company-delayed-my-claim-florida", label: "Insurance Company Delaying Your Claim?" },
+    { href: "/appealing-insurance-denial-florida", label: "How to Appeal a Denied Insurance Claim in Florida" },
+  ] : [];
+  const carrierLinks = [
     { href: "/ten-tips-handling-allstate-claim-denials", label: "10 Tips for Handling Allstate Claim Denials" },
     { href: "/ten-tips-handling-usaa-insurance-claim-denials", label: "10 Tips for Handling USAA Claim Denials" },
-    { href: "/underpaid-insurance-claim-florida", label: "Underpaid Insurance Claim? How to Fight Back" },
-    { href: "/insurance-company-delayed-my-claim-florida", label: "Insurance Company Delaying Your Claim?" },
+    { href: "/ten-tips-handling-state-farm-claim-denials", label: "10 Tips for Handling State Farm Claim Denials" },
+    { href: "/ten-tips-handling-nationwide-claim-denials", label: "10 Tips for Handling Nationwide Claim Denials" },
+    { href: "/ten-tips-handling-citizens-insurance-claim-denials", label: "10 Tips for Handling Citizens Insurance Denials" },
+    { href: "/ten-tips-handling-hartford-casualty-insurance-claim-denials", label: "Hartford Denied Your Claim? 10 Tips to Fight Back" },
     { href: "/tips-handling-claim-denials-progressive-select-insurance", label: "Progressive Select Claim Denied? 10 Ways to Win" },
   ];
-  return { title: `Related Insurance Claim Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...baseLinks].slice(0, 8) };
+  return { title: `Related Insurance Claim Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...texasLinks, ...floridaLinks, ...carrierLinks].slice(0, 8) };
 }
 
-// Returns the correct href for the end-of-article CTA button
-function getEndCtaHref(slug) {
-  const s = (slug || "").toLowerCase();
-  if (s.includes("american-home-shield") || s.startsWith("ahs-"))
-    return "/american-home-shield-privacy-torts";
-  if (s.includes("kin-insurance"))
-    return "/kin-insurance-privacy-torts";
-  if (s.includes("tower-hill"))
-    return "/tower-hill-insurance-privacy-torts";
-  if (s.includes("slide-insurance"))
-    return "/slide-insurance-privacy-torts";
-  if (s.includes("american-integrity"))
-    return "/american-integrity-insurance-privacy-torts";
-  if (s.includes("vuori"))
-    return "/vuori-privacy-torts";
-  // SSDI and property damage → SMS
-  return "sms:8336574812";
+// Returns the correct intake href based on articleType (determined by getArticleType)
+function getIntakeHref(slug, articleType) {
+  switch (articleType) {
+    case "case-law":        return "/case-law-updates#submit-policy";
+    case "ahs":             return "/american-home-shield-privacy-torts/qualify";
+    case "kin":             return "/kin-insurance-privacy-torts/qualify";
+    case "tower-hill":      return "/tower-hill-insurance-privacy-torts/qualify";
+    case "slide":           return "/slide-insurance-privacy-torts/qualify";
+    case "american-integrity": return "/american-integrity-insurance-privacy-torts/qualify";
+    case "vuori":           return "/vuori-privacy-torts/qualify";
+    case "privacy-tort":    return "/privacy-torts";
+    case "ssdi":            return "/ssdi/qualify";
+    default:                return "/property-damage-claims/qualify";
+  }
 }
 
 // ISR: serve from cache, regenerate in background every hour
@@ -289,6 +313,104 @@ function extractFaqSchema(blocks) {
   };
 }
 
+// ✅ AI Citability: Auto-link common SSDI/SSA statistics to authoritative sources
+const SSA_SOURCE_LINKS = [
+  { pattern: /67%\s*(?:of\s+)?(?:initial\s+)?(?:SSDI\s+)?claims?\s+(?:are\s+)?denied/gi, url: "https://www.ssa.gov/policy/docs/statcomps/di_asr/", label: "SSA Annual Statistical Report" },
+  { pattern: /\$1[,.]?620/g, url: "https://www.ssa.gov/oact/cola/sga.html", label: "SSA SGA Amounts" },
+  { pattern: /\$1[,.]?580/g, url: "https://www.ssa.gov/oact/cola/sga.html", label: "SSA SGA Amounts" },
+  { pattern: /\$7[,.]?200\s*(?:cap|fee|attorney)/gi, url: "https://www.ssa.gov/representation/", label: "SSA Representative Fee Information" },
+  { pattern: /25%\s*(?:of\s+)?past[- ]due\s+benefits/gi, url: "https://www.ssa.gov/representation/", label: "SSA Representative Fee Information" },
+  { pattern: /Blue\s+Book/gi, url: "https://www.ssa.gov/disability/professionals/bluebook/", label: "SSA Blue Book — Listing of Impairments" },
+  { pattern: /(?:Section|Listing)\s+(\d+\.\d+)/g, url: "https://www.ssa.gov/disability/professionals/bluebook/", label: "SSA Blue Book" },
+  { pattern: /Social\s+Security\s+Ruling\s+\d+-\d+p?/gi, url: "https://www.ssa.gov/policy/docs/rulings/", label: "SSA Rulings" },
+  { pattern: /SSA-561/g, url: "https://www.ssa.gov/forms/ssa-561.html", label: "SSA-561 Form" },
+  { pattern: /SSA-3373/g, url: "https://www.ssa.gov/forms/ssa-3373.html", label: "SSA-3373 Form" },
+  { pattern: /SSA-3441/g, url: "https://www.ssa.gov/forms/ssa-3441.html", label: "SSA-3441 Form" },
+  { pattern: /SSA-3368/g, url: "https://www.ssa.gov/forms/ssa-3368.html", label: "SSA-3368 Form" },
+  { pattern: /SSA-1696/g, url: "https://www.ssa.gov/forms/ssa-1696.html", label: "SSA-1696 Form" },
+  { pattern: /SSA-827/g, url: "https://www.ssa.gov/forms/ssa-827.html", label: "SSA-827 Form" },
+];
+
+// Collect unique sources found in article content for the Sources section
+function collectArticleSources(blocks) {
+  const found = new Map();
+  for (const block of blocks) {
+    if (block.__component !== "shared.rich-text") continue;
+    const body = block.body || "";
+    for (const rule of SSA_SOURCE_LINKS) {
+      const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
+      if (regex.test(body)) {
+        found.set(rule.url, rule.label);
+      }
+    }
+  }
+  return Array.from(found.entries()).map(([url, label]) => ({ url, label }));
+}
+
+// ✅ SEO: LegalService schema for property damage pages targeting specific cities
+const CITY_MAP = {
+  "fort-lauderdale": { name: "Fort Lauderdale", state: "FL", county: "Broward County" },
+  "miami": { name: "Miami", state: "FL", county: "Miami-Dade County" },
+  "orlando": { name: "Orlando", state: "FL", county: "Orange County" },
+  "tampa": { name: "Tampa", state: "FL", county: "Hillsborough County" },
+  "jacksonville": { name: "Jacksonville", state: "FL", county: "Duval County" },
+  "st-petersburg": { name: "St. Petersburg", state: "FL", county: "Pinellas County" },
+  "clearwater": { name: "Clearwater", state: "FL", county: "Pinellas County" },
+  "tallahassee": { name: "Tallahassee", state: "FL", county: "Leon County" },
+  "pensacola": { name: "Pensacola", state: "FL", county: "Escambia County" },
+  "naples": { name: "Naples", state: "FL", county: "Collier County" },
+  "sarasota": { name: "Sarasota", state: "FL", county: "Sarasota County" },
+  "houston": { name: "Houston", state: "TX", county: "Harris County" },
+  "dallas": { name: "Dallas", state: "TX", county: "Dallas County" },
+  "san-antonio": { name: "San Antonio", state: "TX", county: "Bexar County" },
+  "austin": { name: "Austin", state: "TX", county: "Travis County" },
+};
+
+function getCityFromSlug(slug) {
+  const s = (slug || "").toLowerCase();
+  for (const [key, info] of Object.entries(CITY_MAP)) {
+    if (s.includes(key)) return info;
+  }
+  return null;
+}
+
+function buildLegalServiceSchema(slug, title, city) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LegalService",
+    "name": "Louis Law Group",
+    "description": title,
+    "url": `https://www.louislawgroup.com/${slug}`,
+    "telephone": "+1-833-657-4812",
+    "priceRange": "Free Consultation",
+    "areaServed": {
+      "@type": "City",
+      "name": city.name,
+      "containedInPlace": {
+        "@type": "AdministrativeArea",
+        "name": `${city.county}, ${city.state}`
+      }
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": city.name,
+      "addressRegion": city.state,
+      "addressCountry": "US"
+    },
+    "geo": undefined,
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Property Damage Legal Services",
+      "itemListElement": [
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Insurance Claim Denial Appeals" }},
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Bad Faith Insurance Litigation" }},
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Hurricane & Storm Damage Claims" }},
+        { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Water & Mold Damage Claims" }}
+      ]
+    }
+  };
+}
+
 // ✅ SEO: Dynamic meta titles, OG tags, and Twitter Cards per page
 export async function generateMetadata({ params }) {
   const resolvedParams = await params;
@@ -297,6 +419,11 @@ export async function generateMetadata({ params }) {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
+
+  // Static report pages are served from /public — skip Strapi lookup
+  if (slug.startsWith("reports/")) {
+    return { title: "Florida Insurance Market Report | Louis Law Group" };
+  }
 
   if (slug === "thank-you") {
     return { robots: { index: false, follow: false } };
@@ -322,27 +449,71 @@ export async function generateMetadata({ params }) {
           const imageUrl = article.cover?.url
             ? `https://login.louislawgroup.com${article.cover.url}`
             : defaultImage;
-          const description =
+          const seoOverride = getSeoOverride(slug);
+          const finalTitle = seoOverride?.title || article.title;
+          const description = seoOverride?.description ||
             article.description ||
             "Contact Louis Law Group for a free case evaluation. Florida\'s trusted property damage attorneys.";
           return {
-            title: `${article.title} | Louis Law Group`,
+            title: `${finalTitle} | Louis Law Group`,
             description,
             alternates: { canonical: canonicalUrl },
             ...(isDupSlug && { robots: { index: false, follow: true } }),
             openGraph: {
-              title: `${article.title} | Louis Law Group`,
+              title: `${finalTitle} | Louis Law Group`,
               description,
               url: `${siteUrl}/${slug}`,
               siteName: "Louis Law Group",
-              images: [{ url: imageUrl, width: 1200, height: 630, alt: article.title }],
+              images: [{ url: imageUrl, width: 1200, height: 630, alt: finalTitle }],
               type: "article",
             },
             twitter: {
               card: "summary_large_image",
-              title: `${article.title} | Louis Law Group`,
+              title: `${finalTitle} | Louis Law Group`,
               description,
               images: [imageUrl],
+            },
+          };
+        }
+      }
+    }
+  } catch (e) {}
+
+  // Fallback: check pages content type (service pages, practice areas, etc.)
+  try {
+    const childSlug = slugArray[slugArray.length - 1];
+    const pageRes = await fetch(
+      `${strapiURL}/api/pages?filters[Slug][$eq]=${encodeURIComponent(childSlug)}&fields[0]=Title&fields[1]=Slug&populate[0]=Hero`,
+      { cache: "no-store" }
+    );
+    if (pageRes.ok) {
+      const pageData = await pageRes.json();
+      if (pageData.data && pageData.data.length > 0) {
+        const pg = pageData.data[0]?.attributes || pageData.data[0];
+        const pageTitle = pg.Hero?.title || pg.Title || pg.title;
+        if (pageTitle) {
+          const heroIntro = Array.isArray(pg.Hero?.intro)
+            ? pg.Hero.intro.map(b => b.children?.[0]?.text || "").join(" ").trim()
+            : "";
+          const pageDesc = heroIntro.slice(0, 160) ||
+            `${pageTitle} — Louis Law Group provides expert legal representation. Free consultation: (833) 657-4812.`;
+          return {
+            title: `${pageTitle} | Louis Law Group`,
+            description: pageDesc,
+            alternates: { canonical: `${siteUrl}/${slug}` },
+            openGraph: {
+              title: `${pageTitle} | Louis Law Group`,
+              description: pageDesc,
+              url: `${siteUrl}/${slug}`,
+              siteName: "Louis Law Group",
+              images: [{ url: defaultImage, width: 1200, height: 630, alt: pageTitle }],
+              type: "website",
+            },
+            twitter: {
+              card: "summary_large_image",
+              title: `${pageTitle} | Louis Law Group`,
+              description: pageDesc,
+              images: [defaultImage],
             },
           };
         }
@@ -376,6 +547,11 @@ export default async function Page(props) {
   const params = await props.params;
   const slugArray = params.slug || [];
   const slug = slugArray.join("/");
+
+  // Static report pages are served from /public — skip Strapi entirely
+  if (slug.startsWith("reports/")) {
+    return null;
+  }
 
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
   let apiUrl;
@@ -769,6 +945,7 @@ export default async function Page(props) {
   // -- RENDER LOGIC BELOW, UNCHANGED --
   return (
     <Layout>
+      <ArticlePageMarker />
       {isJobPage ? (
         <>
           <section className={styles.jobHero}>
@@ -901,10 +1078,16 @@ export default async function Page(props) {
                   }}
                 />
               )}
-              {/* FAQPage schema — extracted from content or static SSDI fallback */}
+              {/* FAQPage schema — extracted from content, slug-specific override, or static SSDI fallback */}
               {(() => {
                 const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
-                const ssdiStaticFaq = !faqSchema && articleType === "ssdi" ? {
+                const faqOverride = !faqSchema ? getFaqOverride(slug) : null;
+                const overrideSchema = faqOverride ? {
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  "mainEntity": faqOverride.map(f => ({ "@type": "Question", "name": f.q, "acceptedAnswer": { "@type": "Answer", "text": f.a } }))
+                } : null;
+                const ssdiStaticFaq = !faqSchema && !overrideSchema && articleType === "ssdi" ? {
                   "@context": "https://schema.org",
                   "@type": "FAQPage",
                   "mainEntity": [
@@ -913,13 +1096,28 @@ export default async function Page(props) {
                     { "@type": "Question", "name": "Does Louis Law Group handle SSDI cases?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency — you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }}
                   ]
                 } : null;
-                const schema = faqSchema || ssdiStaticFaq;
+                const schema = faqSchema || overrideSchema || ssdiStaticFaq;
                 return schema ? (
                   <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
                   />
                 ) : null;
+              })()}
+              {/* LegalService schema for city-targeted property damage pages */}
+              {(() => {
+                if (articleType !== "property-damage") return null;
+                const city = getCityFromSlug(slug);
+                if (!city) return null;
+                const lsSchema = buildLegalServiceSchema(slug, page.title, city);
+                // Remove undefined keys
+                const clean = JSON.parse(JSON.stringify(lsSchema));
+                return (
+                  <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(clean) }}
+                  />
+                );
               })()}
             </>
           )}
@@ -934,6 +1132,28 @@ export default async function Page(props) {
                 <div className={styles.blogContent}>
                   <div className={styles.blogText}>
                     <p>{page.description}</p>
+                  </div>
+                  {/* Render rich-text blocks for expanded FAQ content */}
+                  {(page.blocks || []).map((block, index) => (
+                    <div key={`faq-block-${index}`}>
+                      {block.__component === "shared.rich-text" && (() => {
+                        const body = block.body || "";
+                        const isHtml = body.trimStart().startsWith("<");
+                        return (
+                          <div className={styles.blogText}>
+                            {isHtml ? parse(body) : (
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
+                                urlTransform={mdUrlTransform}
+                              >{body}</ReactMarkdown>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </div>
+                  ))}
+                  <div className={styles.blogText}>
                     <p>Have questions about your legal rights? <Link href="/#contact">Contact Louis Law Group</Link> for a free case evaluation.</p>
                   </div>
                 </div>
@@ -948,13 +1168,20 @@ export default async function Page(props) {
               <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
                 <Link href="/">Home</Link>
                 <span aria-hidden="true"> › </span>
-                <Link href={articleType === "ssdi" ? "/social-security-disability" : "/property-damage-insurance-claim"}>
-                  {articleType === "ssdi" ? "SSDI" : "Property Damage"}
+                <Link href={articleType === "case-law" ? "/case-law-updates" : articleType === "ssdi" ? "/social-security-disability" : "/property-damage-insurance-claim"}>
+                  {articleType === "case-law" ? "Case Law Updates" : articleType === "ssdi" ? "SSDI" : "Property Damage"}
                 </Link>
                 <span aria-hidden="true"> › </span>
                 <span>{page.title}</span>
               </nav>
               <h1 className={styles.blogTitle}>{page.title}</h1>
+              {/* Quick Answer box — AI citability: concise answer near top for AI extraction */}
+              {page.description && (
+                <div className={styles.quickAnswer}>
+                  <span className={styles.quickAnswerLabel}>Quick Answer</span>
+                  <p>{page.description}</p>
+                </div>
+              )}
               <Script id="debug-article-buttons-present" strategy="afterInteractive"
                 dangerouslySetInnerHTML={{
                   __html: `
@@ -973,7 +1200,28 @@ export default async function Page(props) {
                 if (typeof window !== 'undefined') { try { console.log('🧪 Buttons resolved (top):', _btns); } catch(e){} }
                 return <ArticleButtonsRow buttons={_btns} />;
               })()}
-              <UrgencyBanner articleType={articleType} />
+              {articleType === "case-law" ? (
+                <>
+                  <Link href="/case-law-updates#submit-policy" className={styles.caseLawTopCta}>
+                    <span className={styles.caseLawTopCtaIcon}>📋</span>
+                    <span className={styles.caseLawTopCtaText}>
+                      <strong>Submit a Policy or Denial Letter for Review</strong>{" "}
+                      Free review by our property damage attorneys — response within 24 hours.
+                    </span>
+                    <span className={styles.caseLawTopCtaBtn}>Submit for Review →</span>
+                  </Link>
+                  <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerCta}>
+                    <span className={styles.askLawyerCtaIcon}>💬</span>
+                    <span className={styles.askLawyerCtaText}>
+                      <strong>Ask A Lawyer</strong>{" "}
+                      Text us directly with questions about your claim.
+                    </span>
+                    <span className={styles.askLawyerCtaBtn}>Text Us Now →</span>
+                  </a>
+                </>
+              ) : (
+                <UrgencyBanner articleType={articleType} />
+              )}
               {/* Author byline */}
               <div className={styles.authorByline}>
                 <img
@@ -986,7 +1234,7 @@ export default async function Page(props) {
                     Pierre A. Louis, Esq.
                   </Link>
                   <span className={styles.authorCredential}>
-                    Florida Bar Member · Louis Law Group
+                    Louis Law Group
                   </span>
                 </div>
               </div>
@@ -1027,13 +1275,14 @@ export default async function Page(props) {
                   <FaLinkedin className={styles.socialIcon} />
                 </a>
               </div>
-              {/* Article schema */}
+              {/* Article schema with speakable for AI voice assistants */}
               <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify({
                   "@context": "https://schema.org",
                   "@type": "Article",
                   headline: page.title,
+                  ...(page.description ? { description: page.description } : {}),
                   author: { "@type": "Person", name: "Pierre A. Louis, Esq.", url: "https://www.louislawgroup.com/pierre-a-louis-esq" },
                   publisher: { "@type": "Organization", name: "Louis Law Group", url: "https://www.louislawgroup.com" },
                   datePublished: page.createdAt,
@@ -1042,6 +1291,13 @@ export default async function Page(props) {
                     if (b.__component !== "shared.rich-text") return acc;
                     return acc + (b.body || "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
                   }, 0),
+                  about: articleType === "ssdi"
+                    ? { "@type": "Thing", name: "Social Security Disability Insurance", sameAs: "https://www.wikidata.org/wiki/Q7547166" }
+                    : { "@type": "Thing", name: "Property Damage Insurance Claims" },
+                  speakable: {
+                    "@type": "SpeakableSpecification",
+                    cssSelector: [".quickAnswer", ".blogTitle", ".visibleFaqItem"]
+                  },
                 }) }}
               />
               {page.cover?.url && (
@@ -1068,13 +1324,21 @@ export default async function Page(props) {
                 );
               })()}
               <div className={styles.blogContent}>
-                <DocumentUploadCTA articleType={articleType} />
+                {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} />}
                 {(() => {
                   // articleType computed above via getArticleType(slug)
+                  // Demote H1 in article body to H2 (page template already has the H1)
+                  const demoteH1 = (body) => {
+                    if (!body) return body;
+                    return body
+                      .replace(/<h1(\s|>)/gi, '<h2$1')
+                      .replace(/<\/h1>/gi, '</h2>')
+                      .replace(/^#\s+/gm, '## ');
+                  };
                   return (page.blocks || []).map((block, index) => (
                     <div key={index}>
                       {block.__component === "shared.rich-text" && (() => {
-                        const body = block.body || "";
+                        const body = demoteH1(block.body || "");
                         const isHtml = body.trimStart().startsWith("<");
                         return (
                           <div className={styles.blogText}>
@@ -1083,6 +1347,7 @@ export default async function Page(props) {
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
                                 urlTransform={mdUrlTransform}
+                                components={{ h1: 'h2' }}
                               >{body}</ReactMarkdown>
                             )}
                           </div>
@@ -1102,6 +1367,44 @@ export default async function Page(props) {
                   ));
                 })()}
               </div>
+              {/* Visible FAQ section — AI citability: render FAQs as visible HTML, not just JSON-LD */}
+              {(() => {
+                const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
+                const faqOverride = !faqSchema ? getFaqOverride(slug) : null;
+                const ssdiStaticFaq = !faqSchema && !faqOverride && articleType === "ssdi" ? [
+                  { q: "How long does it take to get approved for SSDI?", a: "Most initial SSDI applications take 3\u20136 months for a decision. Appeals can take 12\u201324 months. Working with a disability attorney significantly improves your approval odds at every stage." },
+                  { q: "What should I do if my SSDI claim is denied?", a: "About 67% of initial SSDI claims are denied. You have 60 days to file a Request for Reconsideration. If denied again, request an ALJ hearing \u2014 this is where most claims are ultimately approved." },
+                  { q: "Does Louis Law Group handle SSDI cases?", a: "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency \u2014 you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }
+                ] : null;
+                const items = faqSchema?.mainEntity?.map(e => ({ q: e.name, a: e.acceptedAnswer?.text })) || faqOverride || ssdiStaticFaq;
+                if (!items || items.length === 0) return null;
+                return (
+                  <div className={styles.visibleFaq}>
+                    <h2>Frequently Asked Questions</h2>
+                    {items.map((item, i) => (
+                      <div key={i} className={styles.visibleFaqItem}>
+                        <h3>{item.q}</h3>
+                        <p>{item.a}</p>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
+              {/* Sources section — AI citability: attribute statistics to authoritative .gov sources */}
+              {(() => {
+                const sources = page.blocks ? collectArticleSources(page.blocks) : [];
+                if (sources.length === 0) return null;
+                return (
+                  <div className={styles.sourcesSection}>
+                    <h3>Sources &amp; References</h3>
+                    <ul>
+                      {sources.map((s, i) => (
+                        <li key={i}><a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a></li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              })()}
               {/* SSDI: Related Forms box — contextual internal links to SSA form pages */}
               {articleType === "ssdi" && !isSSAFormPage && (
                 <div style={{background:"#f0f7ff",borderLeft:"4px solid #1a56db",padding:"20px 24px",borderRadius:"4px",margin:"32px 0"}}>
@@ -1128,22 +1431,63 @@ export default async function Page(props) {
                   </div>
                 );
               })()}
+              {/* Cross-practice area links — boost internal linking */}
+              {(() => {
+                const crossLinks = articleType === "ssdi" ? [
+                  { href: "/property-damage-insurance-claim", label: "Property Damage Insurance Claims" },
+                  { href: "/insurance-claim-denied-fl", label: "Insurance Claim Denied in Florida?" },
+                  { href: "/water-damage-attorney-florida", label: "Water Damage Attorney in Florida" },
+                  { href: "/case-law-updates", label: "Latest Case Law Updates" },
+                  { href: "/faq", label: "Legal FAQ — Common Questions" },
+                  { href: "/resources", label: "All Legal Resources & Guides" },
+                ] : articleType === "case-law" ? [
+                  { href: "/property-damage-insurance-claim", label: "Property Damage Claims Guide" },
+                  { href: "/social-security-disability", label: "SSDI Benefits Guide" },
+                  { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI" },
+                  { href: "/faq", label: "Legal FAQ — Common Questions" },
+                  { href: "/resources", label: "All Legal Resources & Guides" },
+                  { href: "/team", label: "Meet Our Attorneys" },
+                ] : [
+                  { href: "/social-security-disability", label: "SSDI Benefits — Are You Eligible?" },
+                  { href: "/how-long-does-ssdi-approval-take", label: "How Long Does SSDI Approval Take?" },
+                  { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI" },
+                  { href: "/case-law-updates", label: "Latest Case Law Updates" },
+                  { href: "/faq", label: "Legal FAQ — Common Questions" },
+                  { href: "/resources", label: "All Legal Resources & Guides" },
+                ];
+                return (
+                  <nav style={{borderTop:"1px solid #e5e7eb",paddingTop:"20px",margin:"16px 0 32px"}} aria-label="More resources">
+                    <h3 style={{marginTop:0,marginBottom:"10px",color:"#374151",fontSize:"0.95rem"}}>More from Louis Law Group</h3>
+                    <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.9",columns:2,columnGap:"24px"}}>
+                      {crossLinks.map((l, i) => <li key={i}><a href={l.href}>{l.label}</a></li>)}
+                    </ul>
+                  </nav>
+                );
+              })()}
               {/* End-of-article CTA */}
               {(() => {
-                const endCtaHref = getEndCtaHref(slug);
-                const isPrivacyTort = endCtaHref.includes("privacy-torts") || endCtaHref.includes("vuori");
-                const isSms = endCtaHref.startsWith("sms:");
+                const intakeHref = getIntakeHref(slug, articleType);
+                const isCaseLaw = articleType === "case-law";
+                const isSSDI = articleType === "ssdi";
+                const ctaTitle = isCaseLaw
+                  ? "Submit a Policy or Denial Letter for Review"
+                  : isSSDI
+                    ? "Find Out If You Qualify for SSDI Benefits"
+                    : "Find Out If You Qualify — Free Case Review";
                 return (
                   <div className={styles.endCta}>
-                    <h3 className={styles.endCtaTitle}>
-                      {isPrivacyTort ? "See If You Qualify — Free Eligibility Check" : "Ready to Fight Back? Get a Free Case Review."}
-                    </h3>
-                    <p className={styles.endCtaSubtext}>No fees unless we win · 100% confidential · Same-day response</p>
-                    {isSms ? (
-                      <a href={endCtaHref} className={styles.endCtaBtn}>Start Your Free Review →</a>
-                    ) : (
-                      <Link href={endCtaHref} className={styles.endCtaBtn}>Check Your Eligibility →</Link>
-                    )}
+                    <h3 className={styles.endCtaTitle}>{ctaTitle}</h3>
+                    <p className={styles.endCtaSubtext}>
+                      {isCaseLaw ? "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential" : "No fees unless we win · 100% confidential · Same-day response"}
+                    </p>
+                    <div style={{display:"flex",gap:"12px",flexWrap:"wrap",justifyContent:"center"}}>
+                      <Link href={intakeHref} className={styles.endCtaBtn}>
+                        Check Your Eligibility →
+                      </Link>
+                      <Link href={intakeHref} className={styles.endCtaBtnSecondary}>
+                        See If You Qualify →
+                      </Link>
+                    </div>
                   </div>
                 );
               })()}
@@ -1159,7 +1503,7 @@ export default async function Page(props) {
                     <Link href="/pierre-a-louis-esq">Pierre A. Louis, Esq.</Link>
                   </p>
                   <p className={styles.authorCardBio}>
-                    Pierre A. Louis is a Florida-licensed attorney and founder of Louis Law Group, specializing in property damage insurance claims and Social Security disability (SSDI/SSI). He has recovered over $200 million for clients against major insurance companies.
+                    Pierre A. Louis is an attorney and founder of Louis Law Group, specializing in property damage insurance claims and Social Security disability (SSDI/SSI). He has recovered over $200 million for clients against major insurance companies.
                   </p>
                 </div>
               </div>
@@ -1172,10 +1516,10 @@ export default async function Page(props) {
             </div>
           </section>
           )}
-          {/* Sticky mobile CTA */}
+          {/* Sticky mobile CTA — routes to correct intake form per article type */}
           <div className={styles.stickyMobileCta}>
-            <a href="tel:8336574812" className={styles.stickyCall}>📞 (833) 657-4812</a>
-            <Link href="/#contact" className={styles.stickyReview}>Free Case Review →</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyCall}>Check Your Eligibility</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>See If You Qualify →</Link>
           </div>
           <Testimonials />
           <Steps />

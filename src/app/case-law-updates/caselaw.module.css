@@ -1,0 +1,420 @@
+.page {
+  padding-top: 8rem;
+  padding-bottom: 4rem;
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 2rem;
+}
+
+.eyebrow {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #ffb800;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.pageTitle {
+  text-align: left;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  color: #1a2b49;
+  font-family: "Montserrat", sans-serif;
+}
+
+.pageSubtitle {
+  text-align: left;
+  font-size: 18px;
+  color: #3a4a6a;
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+/* ── Filter Bar ── */
+.filterBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #e0e4ef;
+}
+
+.filterLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1a2b49;
+  margin-right: 0.25rem;
+}
+
+.filterTag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border-radius: 20px;
+  background: #f8f9fa;
+  border: 1px solid #e0e4ef;
+  color: #3a4a6a;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filterTag:first-of-type {
+  background: #1a2b49;
+  color: #fff;
+  border-color: #1a2b49;
+}
+
+.filterTag:hover {
+  background: #1a2b49;
+  color: #fff;
+  border-color: #1a2b49;
+}
+
+/* ── Article Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.postCard {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.postCard:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 20px rgba(26, 43, 73, 0.1);
+}
+
+.postImage {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.postContent {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.postMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.postTag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  border: 1px solid;
+  white-space: nowrap;
+}
+
+.postDate {
+  font-size: 0.78rem;
+  color: #6b7a99;
+}
+
+.postTitle {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-family: "Montserrat", serif !important;
+  color: #1a2b49;
+  line-height: 1.3;
+}
+
+.postExcerpt {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.readMore {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffb800;
+  margin-top: 0.75rem;
+  letter-spacing: 0.03em;
+}
+
+/* ── No Posts ── */
+.noPosts {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e0e4ef;
+  margin: 2rem 0;
+}
+
+.noPosts h2 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.5rem;
+  color: #1a2b49;
+  margin-bottom: 0.75rem;
+}
+
+.noPosts p {
+  font-size: 1rem;
+  color: #3a4a6a;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Pagination ── */
+.pagination {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.paginationLink {
+  background-color: #1a2b49;
+  color: #ffffff;
+  padding: 8px 16px;
+  margin: 0 4px;
+  border-radius: 10px;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.paginationLink:hover {
+  background-color: #16253a;
+}
+
+.paginationLink.active {
+  background-color: #16253a;
+}
+
+.paginationDots {
+  padding: 8px 4px;
+  color: #6b7a99;
+}
+
+/* ── Policy Review Form Section ── */
+.formSection {
+  background: #1a2b49;
+  padding: 4rem 0;
+  margin-top: 2rem;
+}
+
+.formTitle {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.formSubtitle {
+  font-size: 1rem;
+  color: #c0c8d8;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.formSubtitle strong {
+  color: #ffb800;
+}
+
+.form {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.formGroupFull {
+  grid-column: 1 / -1;
+}
+
+.formLabel {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #c0c8d8;
+  margin-bottom: 0.35rem;
+}
+
+.required {
+  color: #ffb800;
+}
+
+.formInput,
+.formTextarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid #2d3f5e;
+  border-radius: 6px;
+  background: #0f1b2e;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: #5a6a88;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: #ffb800;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.formError {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.formButton {
+  display: block;
+  width: 100%;
+  margin-top: 1.5rem;
+  padding: 0.9rem 2rem;
+  background: #ffb800;
+  color: #1a2b49;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: "Montserrat", sans-serif;
+}
+
+.formButton:hover {
+  background: #e5a600;
+}
+
+.formButton:disabled {
+  background: #8a7a40;
+  cursor: not-allowed;
+}
+
+.formFileInput {
+  width: 100%;
+  padding: 0.6rem;
+  background: #0c1524;
+  border: 1px solid #2d3f5e;
+  border-radius: 8px;
+  color: #e0e6ef;
+  font-size: 0.9rem;
+}
+.formFileInput::file-selector-button {
+  background: #c9a84c;
+  color: #fff;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 0.75rem;
+}
+.formHint {
+  font-size: 0.78rem;
+  color: #7a8599;
+  margin-top: 0.3rem;
+}
+.fileList {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0;
+}
+.fileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem;
+  background: #0c1524;
+  border: 1px solid #2d3f5e;
+  border-radius: 6px;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+  color: #c0c8d8;
+}
+.fileRemove {
+  background: none;
+  border: none;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.formSuccess {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 2rem;
+  background: #0f1b2e;
+  border-radius: 12px;
+  border: 1px solid #2d3f5e;
+}
+
+.formSuccess h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.4rem;
+  color: #ffb800;
+  margin-bottom: 0.75rem;
+}
+
+.formSuccess p {
+  color: #c0c8d8;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+}
