@@ -490,12 +490,14 @@ export async function generateMetadata({ params }) {
       const pageData = await pageRes.json();
       if (pageData.data && pageData.data.length > 0) {
         const pg = pageData.data[0]?.attributes || pageData.data[0];
-        const pageTitle = pg.Hero?.title || pg.Title || pg.title;
-        if (pageTitle) {
+        const rawPageTitle = pg.Hero?.title || pg.Title || pg.title;
+        if (rawPageTitle) {
+          const pageSeoOverride = getSeoOverride(slug);
+          const pageTitle = pageSeoOverride?.title || rawPageTitle;
           const heroIntro = Array.isArray(pg.Hero?.intro)
             ? pg.Hero.intro.map(b => b.children?.[0]?.text || "").join(" ").trim()
             : "";
-          const pageDesc = heroIntro.slice(0, 160) ||
+          const pageDesc = pageSeoOverride?.description || heroIntro.slice(0, 160) ||
             `${pageTitle} — Louis Law Group provides expert legal representation. Free consultation: (833) 657-4812.`;
           return {
             title: `${pageTitle} | Louis Law Group`,
@@ -520,6 +522,31 @@ export async function generateMetadata({ params }) {
       }
     }
   } catch (e) {}
+
+  // Final fallback: check seoOverrides for slugs not found in Strapi (articles or pages)
+  const fallbackOverride = getSeoOverride(slug);
+  if (fallbackOverride) {
+    return {
+      title: `${fallbackOverride.title} | Louis Law Group`,
+      description: fallbackOverride.description,
+      alternates: { canonical: canonicalUrl },
+      ...(isDupSlug && { robots: { index: false, follow: true } }),
+      openGraph: {
+        title: `${fallbackOverride.title} | Louis Law Group`,
+        description: fallbackOverride.description,
+        url: `${siteUrl}/${slug}`,
+        siteName: "Louis Law Group",
+        images: [{ url: defaultImage, width: 1200, height: 630, alt: fallbackOverride.title }],
+        type: "article",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${fallbackOverride.title} | Louis Law Group`,
+        description: fallbackOverride.description,
+        images: [defaultImage],
+      },
+    };
+  }
 
   return {
     title: "Louis Law Group | Florida Property Damage Attorneys",
@@ -1222,6 +1249,20 @@ export default async function Page(props) {
               ) : (
                 <UrgencyBanner articleType={articleType} />
               )}
+              {/* YouTube video embed */}
+              <div style={{ maxWidth: 350, margin: "20px auto", textAlign: "center" }}>
+                <iframe
+                  loading="lazy"
+                  width="315"
+                  height="560"
+                  src="https://www.youtube.com/embed/UGM8fhBQ3Pk?rel=0"
+                  title="SSDI Help Video"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ maxWidth: "100%", borderRadius: 12 }}
+                />
+              </div>
               {/* Author byline */}
               <div className={styles.authorByline}>
                 <img
@@ -1307,6 +1348,22 @@ export default async function Page(props) {
                   className={styles.blogImage}
                   fetchPriority="high"
                 />
+              )}
+              {/* YouTube Video Embed — lazy-loaded facade for performance */}
+              {[
+                "ten-tips-handling-usaa-insurance-claim-denials",
+                "was-your-hurricane-claim-denied-by-united-services-automobile-association-usaa",
+              ].includes(slug) && (
+                <div className={styles.youtubeEmbed}>
+                  <iframe
+                    src="https://www.youtube.com/embed/u1G4M7bdV_g"
+                    title="Louis Law Group — Property Damage Claims"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    loading="lazy"
+                    className={styles.youtubeIframe}
+                  />
+                </div>
               )}
               {/* Table of Contents */}
               {(() => {
