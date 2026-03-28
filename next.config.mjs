@@ -69,6 +69,11 @@ const nextConfig = {
         source: '/reports/fee-reform-case-outcomes-dashboard',
         destination: '/reports/fee-reform-case-outcomes-dashboard.html',
       },
+      {
+        // Static article page with custom UI
+        source: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform',
+        destination: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform.html',
+      },
     ];
   },
 

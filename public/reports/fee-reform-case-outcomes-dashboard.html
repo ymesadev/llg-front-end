@@ -853,12 +853,49 @@ table.dt { width: 100%; border-collapse: collapse; }
   transform: translateY(0);
 }
 
+/* ── LANGUAGE TOGGLE ── */
+.lang-toggle {
+  display: inline-flex;
+  gap: 2px;
+  margin-left: 4px;
+  margin-right: 10px;
+  background: rgba(26,43,73,0.06);
+  border-radius: 20px;
+  padding: 2px;
+}
+.lang-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 16px;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.lang-btn:hover {
+  color: var(--text-primary);
+  background: rgba(26,43,73,0.06);
+}
+.lang-btn.active {
+  background: var(--accent-gold);
+  color: #1a2b49;
+  border-color: var(--accent-gold);
+  box-shadow: 0 1px 4px rgba(255,184,0,0.3);
+}
+
 /* ── PRINT ── */
 @media print {
   body { background: #fff; color: #1a2b49; }
   .bg-mesh { display: none; }
   .card { border: 1px solid #ddd; }
-  .site-navbar, .top-nav, .site-mobile-menu { display: none; }
+  .site-navbar, .top-nav, .site-mobile-menu, .lang-toggle { display: none; }
   body { padding-top: 0; }
 }
 </style>
@@ -907,23 +944,28 @@ table.dt { width: 100%; border-collapse: collapse; }
 <nav class="top-nav">
   <div class="top-nav-inner">
     <a class="nav-link brand" href="#top">LLG</a>
-    <a class="nav-link" href="#reform">The Reform</a>
-    <a class="nav-link" href="#compare">Pre vs Post</a>
-    <a class="nav-link" href="#hurricanes">Hurricanes</a>
-    <a class="nav-link" href="#carriers">Carriers</a>
-    <a class="nav-link" href="#speed">Speed</a>
-    <a class="nav-link" href="#geography">Geography</a>
-    <a class="nav-link" href="#strategy">Strategy</a>
+    <div class="lang-toggle" id="langToggle">
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
+      <button class="lang-btn" data-lang="ht" onclick="setLang('ht')">HT</button>
+    </div>
+    <a class="nav-link" href="#reform" data-i18n="nav_reform">The Reform</a>
+    <a class="nav-link" href="#compare" data-i18n="nav_compare">Pre vs Post</a>
+    <a class="nav-link" href="#hurricanes" data-i18n="nav_hurricanes">Hurricanes</a>
+    <a class="nav-link" href="#carriers" data-i18n="nav_carriers">Carriers</a>
+    <a class="nav-link" href="#speed" data-i18n="nav_speed">Speed</a>
+    <a class="nav-link" href="#geography" data-i18n="nav_geography">Geography</a>
+    <a class="nav-link" href="#strategy" data-i18n="nav_strategy">Strategy</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="container" id="top">
 <section class="hero">
-  <div class="hero-badge">Louis Law Group &middot; Fee Reform Impact Analysis</div>
-  <h1>Your Claim Is<br><span class="gold">Still Worth Fighting For</span></h1>
-  <p class="hero-sub">Florida's 2022 reform changed how attorneys get paid &mdash; but did it change whether policyholders get paid? We compared three years of outcomes on each side of the reform. The answer is clear.</p>
-  <p class="hero-meta">Based on <strong>Louis Law Group case outcomes</strong> &middot; 3-year apples-to-apples comparison &middot; Prepared March 2026</p>
+  <div class="hero-badge" data-i18n="hero_badge">Louis Law Group &middot; Fee Reform Impact Analysis</div>
+  <h1 data-i18n="hero_h1">Your Claim Is<br><span class="gold">Still Worth Fighting For</span></h1>
+  <p class="hero-sub" data-i18n="hero_sub">Florida's 2022 reform changed how attorneys get paid &mdash; but did it change whether policyholders get paid? We compared three years of outcomes on each side of the reform. The answer is clear.</p>
+  <p class="hero-meta" data-i18n="hero_meta">Based on <strong>Louis Law Group case outcomes</strong> &middot; 3-year apples-to-apples comparison &middot; Prepared March 2026</p>
   <div class="hero-divider"></div>
 </section>
 </div>
@@ -936,34 +978,34 @@ table.dt { width: 100%; border-collapse: collapse; }
 <!-- HIGHLIGHT -->
 <div class="highlight rv">
   <div class="big">75.4% vs 75.7%</div>
-  <div class="sub">Post-reform payment rate vs. pre-reform payment rate &mdash; <strong>virtually identical</strong>.<br>The law changed how attorneys get paid. It did not change whether carriers pay claims.</div>
+  <div class="sub" data-i18n="highlight_sub">Post-reform payment rate vs. pre-reform payment rate &mdash; <strong>virtually identical</strong>.<br>The law changed how attorneys get paid. It did not change whether carriers pay claims.</div>
 </div>
 
 <!-- 01 REFORM -->
 <section class="sec rv" id="reform">
-  <div class="sec-h"><span class="sec-n">01</span><h2 class="sec-t">What Changed &mdash; And What Didn't</h2></div>
-  <p class="sec-d">On December 16, 2022, SB 2-A eliminated one-way statutory attorney's fees under &sect;627.428. Previously, if a policyholder prevailed, the carrier paid their attorney's fees on top of the recovery. Now, attorney compensation comes from a percentage of the damages recovered. This report compares the 3 years before the reform (DOL 12/16/2019&ndash;12/15/2022) against the post-reform period (DOL 12/16/2022&ndash;present).</p>
+  <div class="sec-h"><span class="sec-n">01</span><h2 class="sec-t" data-i18n="sec01_title">What Changed &mdash; And What Didn't</h2></div>
+  <p class="sec-d" data-i18n="sec01_desc">On December 16, 2022, SB 2-A eliminated one-way statutory attorney's fees under &sect;627.428. Previously, if a policyholder prevailed, the carrier paid their attorney's fees on top of the recovery. Now, attorney compensation comes from a percentage of the damages recovered. This report compares the 3 years before the reform (DOL 12/16/2019&ndash;12/15/2022) against the post-reform period (DOL 12/16/2022&ndash;present).</p>
   <div class="callout">
-    <div class="callout-t">Why 3-Year Windows Matter</div>
-    <p>Comparing all historical cases against a shorter post-reform period would skew the data &mdash; older pre-reform cases had more time to close, and including distant hurricane years inflates pre-reform averages. By using matching 3-year windows centered on the reform date, both periods include comparable mixes of hurricane and routine claims, and similar maturation time for resolution.</p>
+    <div class="callout-t" data-i18n="callout01_title">Why 3-Year Windows Matter</div>
+    <p data-i18n="callout01_body">Comparing all historical cases against a shorter post-reform period would skew the data &mdash; older pre-reform cases had more time to close, and including distant hurricane years inflates pre-reform averages. By using matching 3-year windows centered on the reform date, both periods include comparable mixes of hurricane and routine claims, and similar maturation time for resolution.</p>
   </div>
 </section>
 
 <!-- 02 COMPARISON -->
 <section class="sec rv" id="compare">
-  <div class="sec-h"><span class="sec-n">02</span><h2 class="sec-t">The 3-Year Comparison</h2></div>
-  <p class="sec-d">Pre-reform: DOL 12/16/2019&ndash;12/15/2022. Post-reform: DOL 12/16/2022&ndash;present. Payment rate = percentage of cases where the carrier paid any amount (indemnity, fees, or both).</p>
+  <div class="sec-h"><span class="sec-n">02</span><h2 class="sec-t" data-i18n="sec02_title">The 3-Year Comparison</h2></div>
+  <p class="sec-d" data-i18n="sec02_desc">Pre-reform: DOL 12/16/2019&ndash;12/15/2022. Post-reform: DOL 12/16/2022&ndash;present. Payment rate = percentage of cases where the carrier paid any amount (indemnity, fees, or both).</p>
   <div class="cmp rv" id="cmpBox"></div>
   <div class="callout rv" style="margin-top:20px">
-    <div class="callout-t">The Headline</div>
-    <p><strong>Payment rates are virtually identical &mdash; 75.7% pre-reform vs. 75.4% post-reform.</strong> Three out of four cases result in the carrier paying, regardless of fee structure. Average gross per recovered case is lower ($17,467 vs $24,163) &mdash; reflecting the shift from carrier-paid statutory fees to percentage-based fees. But the tradeoff is speed: <strong>median resolution dropped from 12.7 months to 6.4 months</strong> &mdash; policyholders get paid in roughly half the time.</p>
+    <div class="callout-t" data-i18n="callout02_title">The Headline</div>
+    <p data-i18n="callout02_body"><strong>Payment rates are virtually identical &mdash; 75.7% pre-reform vs. 75.4% post-reform.</strong> Three out of four cases result in the carrier paying, regardless of fee structure. Average gross per recovered case is lower ($17,467 vs $24,163) &mdash; reflecting the shift from carrier-paid statutory fees to percentage-based fees. But the tradeoff is speed: <strong>median resolution dropped from 12.7 months to 6.4 months</strong> &mdash; policyholders get paid in roughly half the time.</p>
   </div>
 </section>
 
 <!-- 03 HURRICANES -->
 <section class="sec rv" id="hurricanes">
-  <div class="sec-h"><span class="sec-n">03</span><h2 class="sec-t">Hurricanes vs. Everyday Claims</h2></div>
-  <p class="sec-d">Hurricane and routine claims must be compared separately. Each 3-year window contains one major hurricane: Ian (pre-reform) and Helene (post-reform), enabling a direct comparison.</p>
+  <div class="sec-h"><span class="sec-n">03</span><h2 class="sec-t" data-i18n="sec03_title">Hurricanes vs. Everyday Claims</h2></div>
+  <p class="sec-d" data-i18n="sec03_desc">Hurricane and routine claims must be compared separately. Each 3-year window contains one major hurricane: Ian (pre-reform) and Helene (post-reform), enabling a direct comparison.</p>
   <div class="g2 rv">
     <div class="qbox" id="q_hurr_pre"></div>
     <div class="qbox" id="q_hurr_post"></div>
@@ -971,15 +1013,15 @@ table.dt { width: 100%; border-collapse: collapse; }
     <div class="qbox" id="q_daily_post"></div>
   </div>
   <div class="callout rv" style="margin-top:20px">
-    <div class="callout-t">Hurricane Insight</div>
-    <p>Post-reform hurricane claims (Helene) show an <strong>83.3% payment rate &mdash; higher than pre-reform Ian at 69.3%</strong>. Average gross is lower ($20,256 vs $34,179), consistent with the fee structure change, but the core result is definitive: hurricane claims are still being paid at strong rates. For daily claims, the comparison is similarly stable: <strong>72.8% post vs 76.6% pre</strong>, with median resolution dropping from 12.9 months to 6.9 months &mdash; nearly half the time.</p>
+    <div class="callout-t" data-i18n="callout03_title">Hurricane Insight</div>
+    <p data-i18n="callout03_body">Post-reform hurricane claims (Helene) show an <strong>83.3% payment rate &mdash; higher than pre-reform Ian at 69.3%</strong>. Average gross is lower ($20,256 vs $34,179), consistent with the fee structure change, but the core result is definitive: hurricane claims are still being paid at strong rates. For daily claims, the comparison is similarly stable: <strong>72.8% post vs 76.6% pre</strong>, with median resolution dropping from 12.9 months to 6.9 months &mdash; nearly half the time.</p>
   </div>
 </section>
 
 <!-- 04 CARRIERS -->
 <section class="sec rv" id="carriers">
-  <div class="sec-h"><span class="sec-n">04</span><h2 class="sec-t">Which Carriers Pay Post-Reform</h2></div>
-  <p class="sec-d">Post-reform payment rates by carrier, sorted highest to lowest. Payment rate = percentage of cases where the carrier paid any gross recovery.</p>
+  <div class="sec-h"><span class="sec-n">04</span><h2 class="sec-t" data-i18n="sec04_title">Which Carriers Pay Post-Reform</h2></div>
+  <p class="sec-d" data-i18n="sec04_desc">Post-reform payment rates by carrier, sorted highest to lowest. Payment rate = percentage of cases where the carrier paid any gross recovery.</p>
   <div class="card rv">
     <div class="tw">
       <table class="dt">
@@ -989,23 +1031,23 @@ table.dt { width: 100%; border-collapse: collapse; }
     </div>
   </div>
   <div class="callout rv" style="margin-top:20px">
-    <div class="callout-t">Carrier Intelligence</div>
-    <p><strong>TypTap, Vyrd, Castle Key, and Homeowners Choice</strong> show 100% payment rates post-reform. Heritage and Florida Peninsula pay on 92&ndash;93%. Among higher-volume carriers, <strong>American Integrity reaches 81&ndash;89%</strong>, Slide and Tower Hill at 79%. The highest average gross post-reform: <strong>Olympus at $35,536</strong> and Castle Key at $24,555. Even carriers with lower rates like Citizens (60%) and State Farm (54%) still produce recoveries &mdash; and those rates will improve as recent cases mature.</p>
+    <div class="callout-t" data-i18n="callout04_title">Carrier Intelligence</div>
+    <p data-i18n="callout04_body"><strong>TypTap, Vyrd, Castle Key, and Homeowners Choice</strong> show 100% payment rates post-reform. Heritage and Florida Peninsula pay on 92&ndash;93%. Among higher-volume carriers, <strong>American Integrity reaches 81&ndash;89%</strong>, Slide and Tower Hill at 79%. The highest average gross post-reform: <strong>Olympus at $35,536</strong> and Castle Key at $24,555. Even carriers with lower rates like Citizens (60%) and State Farm (54%) still produce recoveries &mdash; and those rates will improve as recent cases mature.</p>
   </div>
 </section>
 
 <!-- 05 SPEED -->
 <section class="sec rv" id="speed">
-  <div class="sec-h"><span class="sec-n">05</span><h2 class="sec-t">Cases Resolve Faster</h2></div>
-  <p class="sec-d">Without statutory fee disputes adding complexity, cases move through the system significantly faster post-reform.</p>
-  <div class="sflex rv" style="margin-bottom:20px">
-    <div class="sbox"><div class="bn" style="color:var(--text-dim)">15.5 mo</div><div class="sl">Pre-Reform Avg</div></div>
-    <div class="sbox"><div class="bn" style="color:var(--accent-teal)">11.3 mo</div><div class="sl">Post-Reform Avg</div></div>
-    <div class="sbox"><div class="bn" style="color:var(--accent-teal)">6.4 mo</div><div class="sl">Post-Reform Median</div></div>
-    <div class="sbox"><div class="bn" style="color:var(--accent-gold)">27%</div><div class="sl">Faster (Avg)</div></div>
+  <div class="sec-h"><span class="sec-n">05</span><h2 class="sec-t" data-i18n="sec05_title">Cases Resolve Faster</h2></div>
+  <p class="sec-d" data-i18n="sec05_desc">Without statutory fee disputes adding complexity, cases move through the system significantly faster post-reform.</p>
+  <div class="sflex rv" style="margin-bottom:20px" id="speedStats">
+    <div class="sbox"><div class="bn" style="color:var(--text-dim)">15.5 mo</div><div class="sl" data-i18n="speed_pre_avg">Pre-Reform Avg</div></div>
+    <div class="sbox"><div class="bn" style="color:var(--accent-teal)">11.3 mo</div><div class="sl" data-i18n="speed_post_avg">Post-Reform Avg</div></div>
+    <div class="sbox"><div class="bn" style="color:var(--accent-teal)">6.4 mo</div><div class="sl" data-i18n="speed_post_median">Post-Reform Median</div></div>
+    <div class="sbox"><div class="bn" style="color:var(--accent-gold)">27%</div><div class="sl" data-i18n="speed_faster">Faster (Avg)</div></div>
   </div>
   <div class="card rv">
-    <h4>Year-by-Year Outcomes</h4>
+    <h4 data-i18n="year_card_title">Year-by-Year Outcomes</h4>
     <div class="tw">
       <table class="dt">
         <thead><tr><th>DOL Year</th><th class="r">Payment Rate</th><th class="r">Avg Gross</th><th class="r">Avg Duration</th><th>Regime</th></tr></thead>
@@ -1014,51 +1056,51 @@ table.dt { width: 100%; border-collapse: collapse; }
     </div>
   </div>
   <div class="callout rv" style="margin-top:20px">
-    <div class="callout-t">What Faster Means</div>
-    <p>Post-reform <strong>median resolution is 6.4 months</strong> vs. 12.7 months pre-reform &mdash; half the time. For daily claims specifically, 6.9 months vs 12.9. Faster resolution means repairs happen sooner, policyholders return to normal faster, and the claim doesn't hang over their lives for over a year.</p>
+    <div class="callout-t" data-i18n="callout05_title">What Faster Means</div>
+    <p data-i18n="callout05_body">Post-reform <strong>median resolution is 6.4 months</strong> vs. 12.7 months pre-reform &mdash; half the time. For daily claims specifically, 6.9 months vs 12.9. Faster resolution means repairs happen sooner, policyholders return to normal faster, and the claim doesn't hang over their lives for over a year.</p>
   </div>
 </section>
 
 <!-- 06 GEOGRAPHY -->
 <section class="sec rv" id="geography">
-  <div class="sec-h"><span class="sec-n">06</span><h2 class="sec-t">Recovery by Market</h2></div>
-  <p class="sec-d">Average gross recovery varies by market &mdash; reflecting different housing stock, carrier mixes, and loss severity.</p>
+  <div class="sec-h"><span class="sec-n">06</span><h2 class="sec-t" data-i18n="sec06_title">Recovery by Market</h2></div>
+  <p class="sec-d" data-i18n="sec06_desc">Average gross recovery varies by market &mdash; reflecting different housing stock, carrier mixes, and loss severity.</p>
   <div class="card rv"><div id="cityBars"></div></div>
 </section>
 
 <!-- 07 STRATEGY -->
 <section class="sec rv" id="strategy">
-  <div class="sec-h"><span class="sec-n">07</span><h2 class="sec-t">What This Means for You</h2></div>
-  <p class="sec-d rv">Actionable intelligence drawn from this analysis &mdash; organized by audience.</p>
+  <div class="sec-h"><span class="sec-n">07</span><h2 class="sec-t" data-i18n="sec07_title">What This Means for You</h2></div>
+  <p class="sec-d rv" data-i18n="sec07_desc">Actionable intelligence drawn from this analysis &mdash; organized by audience.</p>
   <div class="g3 rv">
-    <div class="icard">
-      <h4>For Policyholders</h4>
+    <div class="icard" id="icard_policyholder">
+      <h4 data-i18n="icard_ph_title">For Policyholders</h4>
       <ul>
-        <li><strong>75.4% of post-reform cases result in the carrier paying</strong> &mdash; virtually the same as pre-reform (75.7%)</li>
-        <li>The law changed how your attorney gets paid, not your right to recover damages</li>
-        <li>Cases resolve in a median of 6.4 months vs 12.7 &mdash; you get paid faster</li>
-        <li>Hurricane claims pay at even higher rates post-reform (83.3% vs 69.3%)</li>
-        <li>Don't let the "no attorney fees" narrative stop you &mdash; the data says otherwise</li>
+        <li data-i18n="icard_ph_1"><strong>75.4% of post-reform cases result in the carrier paying</strong> &mdash; virtually the same as pre-reform (75.7%)</li>
+        <li data-i18n="icard_ph_2">The law changed how your attorney gets paid, not your right to recover damages</li>
+        <li data-i18n="icard_ph_3">Cases resolve in a median of 6.4 months vs 12.7 &mdash; you get paid faster</li>
+        <li data-i18n="icard_ph_4">Hurricane claims pay at even higher rates post-reform (83.3% vs 69.3%)</li>
+        <li data-i18n="icard_ph_5">Don't let the "no attorney fees" narrative stop you &mdash; the data says otherwise</li>
       </ul>
     </div>
-    <div class="icard">
-      <h4>For Attorneys</h4>
+    <div class="icard" id="icard_attorney">
+      <h4 data-i18n="icard_att_title">For Attorneys</h4>
       <ul>
-        <li>Payment rates are stable at 75% &mdash; the reform did not reduce carrier willingness to settle</li>
-        <li>Fee-to-indemnity ratio shifted from 64.6% to 42.0% &mdash; but with median resolution cut in half, case velocity compensates</li>
-        <li>Daily claims post-reform: 72.8% payment rate with 6.9 month median &mdash; sustainable, high-turnover practice</li>
-        <li>Carrier-specific knowledge is more valuable than ever: TypTap, Castle Key, Heritage all pay 90%+</li>
-        <li>The 3-year comparison controls for hurricane mix and case maturation &mdash; methodologically sound</li>
+        <li data-i18n="icard_att_1">Payment rates are stable at 75% &mdash; the reform did not reduce carrier willingness to settle</li>
+        <li data-i18n="icard_att_2">Fee-to-indemnity ratio shifted from 64.6% to 42.0% &mdash; but with median resolution cut in half, case velocity compensates</li>
+        <li data-i18n="icard_att_3">Daily claims post-reform: 72.8% payment rate with 6.9 month median &mdash; sustainable, high-turnover practice</li>
+        <li data-i18n="icard_att_4">Carrier-specific knowledge is more valuable than ever: TypTap, Castle Key, Heritage all pay 90%+</li>
+        <li data-i18n="icard_att_5">The 3-year comparison controls for hurricane mix and case maturation &mdash; methodologically sound</li>
       </ul>
     </div>
-    <div class="icard">
-      <h4>For Public Adjusters</h4>
+    <div class="icard" id="icard_pa">
+      <h4 data-i18n="icard_pa_title">For Public Adjusters</h4>
       <ul>
-        <li>Your role is <strong>more critical post-reform</strong> &mdash; recovery determines the fee, so documentation drives everything</li>
-        <li>Carriers paying 80%+ (TypTap, Castle Key, American Integrity, Heritage) are where quality estimates convert best</li>
-        <li>Faster resolution (6.4 month median) means your clients get repairs done sooner</li>
-        <li>Hurricane claims remain strong &mdash; Helene shows 83.3% payment rate under the new fee structure</li>
-        <li>The data proves the pipeline is viable &mdash; refer with confidence</li>
+        <li data-i18n="icard_pa_1">Your role is <strong>more critical post-reform</strong> &mdash; recovery determines the fee, so documentation drives everything</li>
+        <li data-i18n="icard_pa_2">Carriers paying 80%+ (TypTap, Castle Key, American Integrity, Heritage) are where quality estimates convert best</li>
+        <li data-i18n="icard_pa_3">Faster resolution (6.4 month median) means your clients get repairs done sooner</li>
+        <li data-i18n="icard_pa_4">Hurricane claims remain strong &mdash; Helene shows 83.3% payment rate under the new fee structure</li>
+        <li data-i18n="icard_pa_5">The data proves the pipeline is viable &mdash; refer with confidence</li>
       </ul>
     </div>
   </div>
@@ -1067,11 +1109,11 @@ table.dt { width: 100%; border-collapse: collapse; }
 <!-- CTA SECTION -->
 <section class="sec rv" style="margin-top:20px;">
   <div class="cta-banner">
-    <h3 class="cta-banner-title">Have a Property Damage Claim?</h3>
-    <p class="cta-banner-sub">Our property damage attorneys will review your case and respond within 24 hours. Free and confidential.</p>
+    <h3 class="cta-banner-title" data-i18n="cta_title">Have a Property Damage Claim?</h3>
+    <p class="cta-banner-sub" data-i18n="cta_sub">Our property damage attorneys will review your case and respond within 24 hours. Free and confidential.</p>
     <div class="cta-buttons">
-      <a href="/property-damage-claims/qualify" class="cta-btn-primary">Free Case Evaluation &rarr;</a>
-      <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." class="cta-btn-secondary">Text a Lawyer &rarr;</a>
+      <a href="/property-damage-claims/qualify" class="cta-btn-primary" data-i18n="cta_btn_primary">Free Case Evaluation &rarr;</a>
+      <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." class="cta-btn-secondary" data-i18n="cta_btn_secondary">Text a Lawyer &rarr;</a>
     </div>
   </div>
 </section>
@@ -1081,7 +1123,7 @@ table.dt { width: 100%; border-collapse: collapse; }
 <!-- REPORT DISCLAIMER -->
 <div class="report-disclaimer">
   <div class="container">
-    <p>This analysis is for informational purposes only and does not constitute legal advice. Based on Louis Law Group case outcomes comparing 3-year windows before and after Florida's December 2022 insurance reform (SB 2-A). Past results do not guarantee future outcomes. Contact our office for a case evaluation.</p>
+    <p data-i18n="disclaimer">This analysis is for informational purposes only and does not constitute legal advice. Based on Louis Law Group case outcomes comparing 3-year windows before and after Florida's December 2022 insurance reform (SB 2-A). Past results do not guarantee future outcomes. Contact our office for a case evaluation.</p>
   </div>
 </div>
 
@@ -1090,48 +1132,48 @@ table.dt { width: 100%; border-collapse: collapse; }
   <div class="site-footer-inner">
     <div class="site-footer-grid">
       <div class="site-footer-col">
-        <h3>Legal</h3>
+        <h3 data-i18n="footer_legal">Legal</h3>
         <ul>
-          <li><a href="/ada-compliance">ADA Compliance</a></li>
-          <li><a href="/terms-of-use-agreement">Terms of Use Agreement</a></li>
-          <li><a href="/privacy-policy">Privacy</a></li>
+          <li><a href="/ada-compliance" data-i18n="footer_ada">ADA Compliance</a></li>
+          <li><a href="/terms-of-use-agreement" data-i18n="footer_terms">Terms of Use Agreement</a></li>
+          <li><a href="/privacy-policy" data-i18n="footer_privacy">Privacy</a></li>
         </ul>
       </div>
       <div class="site-footer-col">
-        <h3>Practice Areas</h3>
+        <h3 data-i18n="footer_practice">Practice Areas</h3>
         <ul>
-          <li><a href="/property-damage-claims">Property Damage Claims</a></li>
-          <li><a href="/personal-injury">Personal Injury</a></li>
-          <li><a href="/social-security-disability-lawyers">SSDI Disability</a></li>
-          <li><a href="/privacy-torts">Privacy Torts</a></li>
-          <li><a href="/water-damage-restoration">Water Damage Claims</a></li>
+          <li><a href="/property-damage-claims" data-i18n="footer_prop_damage">Property Damage Claims</a></li>
+          <li><a href="/personal-injury" data-i18n="footer_pi">Personal Injury</a></li>
+          <li><a href="/social-security-disability-lawyers" data-i18n="footer_ssdi">SSDI Disability</a></li>
+          <li><a href="/privacy-torts" data-i18n="footer_privacy_torts">Privacy Torts</a></li>
+          <li><a href="/water-damage-restoration" data-i18n="footer_water">Water Damage Claims</a></li>
         </ul>
       </div>
       <div class="site-footer-col">
-        <h3>Resources</h3>
+        <h3 data-i18n="footer_resources">Resources</h3>
         <ul>
-          <li><a href="/resources">Blog</a></li>
-          <li><a href="/job-id-00001">Careers</a></li>
-          <li><a href="/ssdi-lawyers">SSDI Disability Lawyers</a></li>
-          <li><a href="/public-adjuster-resources-florida">Public Adjuster Resources</a></li>
-          <li><a href="/case-law-updates">Case Law Updates</a></li>
-          <li><a href="/reports/florida-insurance-market-january-2026">FL Insurance Market Report</a></li>
-          <li><a href="/reports/florida-presuit-notice-intelligence-report">FL Pre-Suit Notice Report</a></li>
-          <li><a href="/reports/fee-reform-case-outcomes-dashboard">Fee Reform Case Outcomes</a></li>
+          <li><a href="/resources" data-i18n="footer_blog">Blog</a></li>
+          <li><a href="/job-id-00001" data-i18n="footer_careers">Careers</a></li>
+          <li><a href="/ssdi-lawyers" data-i18n="footer_ssdi_lawyers">SSDI Disability Lawyers</a></li>
+          <li><a href="/public-adjuster-resources-florida" data-i18n="footer_pa_resources">Public Adjuster Resources</a></li>
+          <li><a href="/case-law-updates" data-i18n="footer_case_law">Case Law Updates</a></li>
+          <li><a href="/reports/florida-insurance-market-january-2026" data-i18n="footer_market_report">FL Insurance Market Report</a></li>
+          <li><a href="/reports/florida-presuit-notice-intelligence-report" data-i18n="footer_presuit_report">FL Pre-Suit Notice Report</a></li>
+          <li><a href="/reports/fee-reform-case-outcomes-dashboard" data-i18n="footer_fee_reform">Fee Reform Case Outcomes</a></li>
         </ul>
       </div>
       <div class="site-footer-col">
-        <h3>Contacto</h3>
+        <h3 data-i18n="footer_contacto">Contacto</h3>
         <ul>
-          <li><a href="/abogados-florida">Abogados en Florida</a></li>
-          <li><a href="/abogado-discapacidad-florida">Abogado Discapacidad Florida</a></li>
-          <li><a href="/contact-us">Contact Us</a></li>
+          <li><a href="/abogados-florida" data-i18n="footer_abogados">Abogados en Florida</a></li>
+          <li><a href="/abogado-discapacidad-florida" data-i18n="footer_abogado_disc">Abogado Discapacidad Florida</a></li>
+          <li><a href="/contact-us" data-i18n="footer_contact">Contact Us</a></li>
         </ul>
       </div>
     </div>
     <div class="site-footer-copyright">
-      <p>Copyright &copy; 2026 Louis Law Group</p>
-      <p>All rights reserved. This website and its content are protected by copyright law. No part of this website may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of Louis Law Group, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.</p>
+      <p data-i18n="footer_copyright">Copyright &copy; 2026 Louis Law Group</p>
+      <p data-i18n="footer_rights">All rights reserved. This website and its content are protected by copyright law. No part of this website may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of Louis Law Group, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.</p>
     </div>
   </div>
 </footer>
@@ -1197,40 +1239,396 @@ const CITIES = [
   { c: 'Fort Lauderdale', ag: 22858 },
 ];
 
+/* ── CURRENT LANGUAGE ── */
+var currentLang = 'en';
+
+/* ── TRANSLATIONS ── */
+var TRANSLATIONS = {
+  es: {
+    /* Nav */
+    nav_reform: 'La Reforma',
+    nav_compare: 'Pre vs Post',
+    nav_hurricanes: 'Huracanes',
+    nav_carriers: 'Aseguradoras',
+    nav_speed: 'Velocidad',
+    nav_geography: 'Geograf\u00eda',
+    nav_strategy: 'Estrategia',
+    /* Hero */
+    hero_badge: 'Louis Law Group &middot; An\u00e1lisis del Impacto de la Reforma de Honorarios',
+    hero_h1: 'Su Reclamaci\u00f3n<br><span class="gold">Todav\u00eda Vale la Pena</span>',
+    hero_sub: 'La reforma de Florida de 2022 cambi\u00f3 c\u00f3mo se les paga a los abogados &mdash; pero \u00bfcambi\u00f3 si a los asegurados se les paga? Comparamos tres a\u00f1os de resultados a cada lado de la reforma. La respuesta es clara.',
+    hero_meta: 'Basado en <strong>resultados de casos de Louis Law Group</strong> &middot; Comparaci\u00f3n directa de 3 a\u00f1os &middot; Preparado marzo 2026',
+    /* Highlight */
+    highlight_sub: 'Tasa de pago post-reforma vs. tasa de pago pre-reforma &mdash; <strong>pr\u00e1cticamente id\u00e9nticas</strong>.<br>La ley cambi\u00f3 c\u00f3mo se les paga a los abogados. No cambi\u00f3 si las aseguradoras pagan los reclamos.',
+    /* Section 01 */
+    sec01_title: 'Qu\u00e9 Cambi\u00f3 &mdash; Y Qu\u00e9 No',
+    sec01_desc: 'El 16 de diciembre de 2022, el SB 2-A elimin\u00f3 los honorarios legales estatutarios unidireccionales bajo &sect;627.428. Anteriormente, si un asegurado prevalec\u00eda, la aseguradora pagaba los honorarios de su abogado adem\u00e1s de la recuperaci\u00f3n. Ahora, la compensaci\u00f3n del abogado proviene de un porcentaje de los da\u00f1os recuperados. Este informe compara los 3 a\u00f1os anteriores a la reforma (DOL 16/12/2019&ndash;15/12/2022) contra el per\u00edodo post-reforma (DOL 16/12/2022&ndash;presente).',
+    callout01_title: 'Por Qu\u00e9 Importan las Ventanas de 3 A\u00f1os',
+    callout01_body: 'Comparar todos los casos hist\u00f3ricos contra un per\u00edodo post-reforma m\u00e1s corto sesgar\u00eda los datos &mdash; los casos pre-reforma m\u00e1s antiguos tuvieron m\u00e1s tiempo para cerrarse, e incluir a\u00f1os de huracanes distantes infla los promedios pre-reforma. Al usar ventanas de 3 a\u00f1os equivalentes centradas en la fecha de reforma, ambos per\u00edodos incluyen mezclas comparables de reclamos por hurac\u00e1n y rutinarios, y tiempo de maduraci\u00f3n similar para la resoluci\u00f3n.',
+    /* Section 02 */
+    sec02_title: 'La Comparaci\u00f3n de 3 A\u00f1os',
+    sec02_desc: 'Pre-reforma: DOL 16/12/2019&ndash;15/12/2022. Post-reforma: DOL 16/12/2022&ndash;presente. Tasa de pago = porcentaje de casos donde la aseguradora pag\u00f3 cualquier monto (indemnizaci\u00f3n, honorarios, o ambos).',
+    callout02_title: 'El Titular',
+    callout02_body: '<strong>Las tasas de pago son pr\u00e1cticamente id\u00e9nticas &mdash; 75.7% pre-reforma vs. 75.4% post-reforma.</strong> Tres de cada cuatro casos resultan en que la aseguradora paga, independientemente de la estructura de honorarios. El promedio bruto por caso recuperado es menor ($17,467 vs $24,163) &mdash; reflejando el cambio de honorarios estatutarios pagados por la aseguradora a honorarios basados en porcentaje. Pero la compensaci\u00f3n es la velocidad: <strong>la mediana de resoluci\u00f3n baj\u00f3 de 12.7 meses a 6.4 meses</strong> &mdash; los asegurados reciben su pago en aproximadamente la mitad del tiempo.',
+    /* Section 03 */
+    sec03_title: 'Huracanes vs. Reclamos Diarios',
+    sec03_desc: 'Los reclamos por hurac\u00e1n y los rutinarios deben compararse por separado. Cada ventana de 3 a\u00f1os contiene un hurac\u00e1n importante: Ian (pre-reforma) y Helene (post-reforma), lo que permite una comparaci\u00f3n directa.',
+    callout03_title: 'Perspectiva de Huracanes',
+    callout03_body: 'Los reclamos por hurac\u00e1n post-reforma (Helene) muestran una <strong>tasa de pago del 83.3% &mdash; superior al 69.3% de Ian pre-reforma</strong>. El promedio bruto es menor ($20,256 vs $34,179), consistente con el cambio en la estructura de honorarios, pero el resultado central es definitivo: los reclamos por hurac\u00e1n siguen pag\u00e1ndose a tasas s\u00f3lidas. Para reclamos diarios, la comparaci\u00f3n es igualmente estable: <strong>72.8% post vs 76.6% pre</strong>, con la mediana de resoluci\u00f3n bajando de 12.9 meses a 6.9 meses &mdash; casi la mitad del tiempo.',
+    /* Section 04 */
+    sec04_title: 'Qu\u00e9 Aseguradoras Pagan Post-Reforma',
+    sec04_desc: 'Tasas de pago post-reforma por aseguradora, ordenadas de mayor a menor. Tasa de pago = porcentaje de casos donde la aseguradora pag\u00f3 cualquier recuperaci\u00f3n bruta.',
+    callout04_title: 'Inteligencia de Aseguradoras',
+    callout04_body: '<strong>TypTap, Vyrd, Castle Key y Homeowners Choice</strong> muestran tasas de pago del 100% post-reforma. Heritage y Florida Peninsula pagan entre 92&ndash;93%. Entre las aseguradoras de mayor volumen, <strong>American Integrity alcanza 81&ndash;89%</strong>, Slide y Tower Hill al 79%. El promedio bruto m\u00e1s alto post-reforma: <strong>Olympus con $35,536</strong> y Castle Key con $24,555. Incluso aseguradoras con tasas m\u00e1s bajas como Citizens (60%) y State Farm (54%) a\u00fan producen recuperaciones &mdash; y esas tasas mejorar\u00e1n a medida que los casos recientes maduren.',
+    /* Section 05 */
+    sec05_title: 'Los Casos Se Resuelven M\u00e1s R\u00e1pido',
+    sec05_desc: 'Sin disputas de honorarios estatutarios a\u00f1adiendo complejidad, los casos avanzan por el sistema significativamente m\u00e1s r\u00e1pido post-reforma.',
+    callout05_title: 'Qu\u00e9 Significa M\u00e1s R\u00e1pido',
+    callout05_body: 'La <strong>mediana de resoluci\u00f3n post-reforma es de 6.4 meses</strong> vs. 12.7 meses pre-reforma &mdash; la mitad del tiempo. Para reclamos diarios espec\u00edficamente, 6.9 meses vs 12.9. Una resoluci\u00f3n m\u00e1s r\u00e1pida significa que las reparaciones ocurren antes, los asegurados vuelven a la normalidad m\u00e1s r\u00e1pido, y el reclamo no pesa sobre sus vidas durante m\u00e1s de un a\u00f1o.',
+    /* Section 06 */
+    sec06_title: 'Recuperaci\u00f3n por Mercado',
+    sec06_desc: 'La recuperaci\u00f3n bruta promedio var\u00eda por mercado &mdash; reflejando diferentes tipos de vivienda, mezclas de aseguradoras y severidad de p\u00e9rdidas.',
+    /* Section 07 */
+    sec07_title: 'Qu\u00e9 Significa Esto para Usted',
+    sec07_desc: 'Inteligencia procesable extra\u00edda de este an\u00e1lisis &mdash; organizada por audiencia.',
+    /* Info cards */
+    icard_ph_title: 'Para Asegurados',
+    icard_ph_1: '<strong>El 75.4% de los casos post-reforma resultan en que la aseguradora paga</strong> &mdash; pr\u00e1cticamente igual que pre-reforma (75.7%)',
+    icard_ph_2: 'La ley cambi\u00f3 c\u00f3mo se le paga a su abogado, no su derecho a recuperar da\u00f1os',
+    icard_ph_3: 'Los casos se resuelven en una mediana de 6.4 meses vs 12.7 &mdash; le pagan m\u00e1s r\u00e1pido',
+    icard_ph_4: 'Los reclamos por hurac\u00e1n pagan a tasas a\u00fan m\u00e1s altas post-reforma (83.3% vs 69.3%)',
+    icard_ph_5: 'No deje que la narrativa de "sin honorarios de abogado" lo detenga &mdash; los datos dicen lo contrario',
+    icard_att_title: 'Para Abogados',
+    icard_att_1: 'Las tasas de pago son estables al 75% &mdash; la reforma no redujo la disposici\u00f3n de las aseguradoras a llegar a acuerdos',
+    icard_att_2: 'El ratio honorarios/indemnizaci\u00f3n cambi\u00f3 de 64.6% a 42.0% &mdash; pero con la mediana de resoluci\u00f3n reducida a la mitad, la velocidad de casos compensa',
+    icard_att_3: 'Reclamos diarios post-reforma: tasa de pago del 72.8% con mediana de 6.9 meses &mdash; pr\u00e1ctica sostenible y de alta rotaci\u00f3n',
+    icard_att_4: 'El conocimiento espec\u00edfico por aseguradora es m\u00e1s valioso que nunca: TypTap, Castle Key, Heritage pagan 90%+',
+    icard_att_5: 'La comparaci\u00f3n de 3 a\u00f1os controla la mezcla de huracanes y la maduraci\u00f3n de casos &mdash; metodol\u00f3gicamente s\u00f3lida',
+    icard_pa_title: 'Para Ajustadores P\u00fablicos',
+    icard_pa_1: 'Su rol es <strong>m\u00e1s cr\u00edtico post-reforma</strong> &mdash; la recuperaci\u00f3n determina el honorario, as\u00ed que la documentaci\u00f3n lo impulsa todo',
+    icard_pa_2: 'Las aseguradoras que pagan 80%+ (TypTap, Castle Key, American Integrity, Heritage) son donde los estimados de calidad convierten mejor',
+    icard_pa_3: 'Una resoluci\u00f3n m\u00e1s r\u00e1pida (mediana de 6.4 meses) significa que sus clientes obtienen reparaciones m\u00e1s pronto',
+    icard_pa_4: 'Los reclamos por hurac\u00e1n siguen fuertes &mdash; Helene muestra una tasa de pago del 83.3% bajo la nueva estructura de honorarios',
+    icard_pa_5: 'Los datos prueban que el flujo de trabajo es viable &mdash; ref\u00e9ralos con confianza',
+    /* CTA */
+    cta_title: '\u00bfTiene un Reclamo por Da\u00f1os a la Propiedad?',
+    cta_sub: 'Nuestros abogados de da\u00f1os a la propiedad revisar\u00e1n su caso y responder\u00e1n dentro de 24 horas. Gratis y confidencial.',
+    cta_btn_primary: 'Evaluaci\u00f3n Gratuita de Caso &rarr;',
+    cta_btn_secondary: 'Env\u00ede un Texto a un Abogado &rarr;',
+    /* Disclaimer */
+    disclaimer: 'Este an\u00e1lisis es solo para fines informativos y no constituye asesoramiento legal. Basado en los resultados de casos de Louis Law Group comparando ventanas de 3 a\u00f1os antes y despu\u00e9s de la reforma de seguros de Florida de diciembre de 2022 (SB 2-A). Los resultados pasados no garantizan resultados futuros. Cont\u00e1ctenos para una evaluaci\u00f3n de caso.',
+    /* Stat boxes */
+    speed_pre_avg: 'Promedio Pre-Reforma',
+    speed_post_avg: 'Promedio Post-Reforma',
+    speed_post_median: 'Mediana Post-Reforma',
+    speed_faster: 'M\u00e1s R\u00e1pido (Prom)',
+    year_card_title: 'Resultados A\u00f1o por A\u00f1o',
+    /* Dynamic label keys (used by build functions) */
+    kpi_post_pay: 'Tasa de Pago Post-Reforma',
+    kpi_pre_pay: 'Tasa de Pago Pre-Reforma',
+    kpi_post_median: 'Mediana Resoluci\u00f3n Post',
+    kpi_pre_median: 'Mediana Resoluci\u00f3n Pre',
+    kpi_hurr_post: 'Pago Hurac\u00e1n (Post)',
+    kpi_daily_post: 'Pago Diario (Post)',
+    kpi_faster: 'Resoluci\u00f3n M\u00e1s R\u00e1pida',
+    kpi_window: 'Cada Ventana',
+    cmp_pre_label: 'Pre-Reforma 3 a\u00f1os (2020\u20132022)',
+    cmp_post_label: 'Post-Reforma (2023\u2013presente)',
+    cmp_payment_rate: 'Tasa de Pago',
+    cmp_avg_gross: 'Promedio Bruto Recuperado',
+    cmp_median_gross: 'Mediana Bruta',
+    cmp_avg_duration: 'Duraci\u00f3n Promedio',
+    cmp_median_duration: 'Mediana Duraci\u00f3n',
+    cmp_fee_ratio: 'Ratio Honorarios / Indemnizaci\u00f3n',
+    cmp_months: 'meses',
+    quad_hurr_pre: 'Hurac\u00e1n \u00b7 Pre-Reforma',
+    quad_hurr_post: 'Hurac\u00e1n \u00b7 Post-Reforma',
+    quad_daily_pre: 'Reclamos Diarios \u00b7 Pre-Reforma',
+    quad_daily_post: 'Reclamos Diarios \u00b7 Post-Reforma',
+    quad_payment_rate: 'Tasa de Pago',
+    quad_avg_gross: 'Promedio Bruto',
+    quad_median_gross: 'Mediana Bruta',
+    quad_avg_duration: 'Duraci\u00f3n Promedio',
+    quad_median_duration: 'Mediana Duraci\u00f3n',
+    carrier_th: 'Aseguradora',
+    carrier_th_rate: 'Tasa de Pago',
+    carrier_th_avg: 'Promedio Bruto',
+    year_th_dol: 'A\u00f1o DOL',
+    year_th_rate: 'Tasa de Pago',
+    year_th_avg: 'Promedio Bruto',
+    year_th_dur: 'Duraci\u00f3n Promedio',
+    year_th_regime: 'R\u00e9gimen',
+    year_pre: 'Pre-Reforma',
+    year_post: 'Post-Reforma',
+    year_split: 'Dividido',
+    year_days: 'd\u00edas',
+    city_avg: 'prom',
+    mo: 'me',
+    /* Footer */
+    footer_legal: 'Legal',
+    footer_ada: 'Cumplimiento ADA',
+    footer_terms: 'Acuerdo de T\u00e9rminos de Uso',
+    footer_privacy: 'Privacidad',
+    footer_practice: '\u00c1reas de Pr\u00e1ctica',
+    footer_prop_damage: 'Reclamaciones por Da\u00f1os a la Propiedad',
+    footer_pi: 'Lesiones Personales',
+    footer_ssdi: 'Discapacidad SSDI',
+    footer_privacy_torts: 'Agravios de Privacidad',
+    footer_water: 'Reclamaciones por Da\u00f1os de Agua',
+    footer_resources: 'Recursos',
+    footer_blog: 'Blog',
+    footer_careers: 'Carreras',
+    footer_ssdi_lawyers: 'Abogados de Discapacidad SSDI',
+    footer_pa_resources: 'Recursos para Ajustadores P\u00fablicos',
+    footer_case_law: 'Actualizaciones de Jurisprudencia',
+    footer_market_report: 'Informe del Mercado de Seguros de FL',
+    footer_presuit_report: 'Informe de Aviso Pre-Demanda de FL',
+    footer_fee_reform: 'Resultados de Casos de Reforma de Honorarios',
+    footer_contacto: 'Contacto',
+    footer_abogados: 'Abogados en Florida',
+    footer_abogado_disc: 'Abogado Discapacidad Florida',
+    footer_contact: 'Cont\u00e1ctenos',
+    footer_copyright: 'Derechos de Autor &copy; 2026 Louis Law Group',
+    footer_rights: 'Todos los derechos reservados. Este sitio web y su contenido est\u00e1n protegidos por la ley de derechos de autor. Ninguna parte de este sitio web puede ser reproducida, distribuida o transmitida de ninguna forma ni por ning\u00fan medio, incluyendo fotocopias, grabaciones u otros m\u00e9todos electr\u00f3nicos o mec\u00e1nicos, sin el permiso previo por escrito de Louis Law Group, excepto en el caso de citas breves incluidas en rese\u00f1as cr\u00edticas y ciertos otros usos no comerciales permitidos por la ley de derechos de autor.'
+  },
+  ht: {
+    /* Nav */
+    nav_reform: 'Ref\u00f2m nan',
+    nav_compare: 'Anvan vs Apre',
+    nav_hurricanes: 'Sikl\u00f2n',
+    nav_carriers: 'Konpayi Asirans',
+    nav_speed: 'Vit\u00e8s',
+    nav_geography: 'Jewografi',
+    nav_strategy: 'Estrat\u00e8ji',
+    /* Hero */
+    hero_badge: 'Louis Law Group &middot; Analiz Enpak Ref\u00f2m Fr\u00e8',
+    hero_h1: 'Reklamasyon Ou<br><span class="gold">Toujou V\u00f2 Lapenn Batay</span>',
+    hero_sub: 'Ref\u00f2m Florida 2022 a chanje fason avoka yo touche &mdash; men \u00e8ske li chanje si moun ki gen asirans yo touche? Nou konpare twa zan rezilta chak b\u00f2 ref\u00f2m nan. Repons lan kl\u00e8.',
+    hero_meta: 'Baze sou <strong>rezilta ka Louis Law Group</strong> &middot; Konparezon dirk\u00e8k 3 zan &middot; Prepare mas 2026',
+    /* Highlight */
+    highlight_sub: 'To peman apre ref\u00f2m vs. to peman anvan ref\u00f2m &mdash; <strong>pratiknman menm bagay</strong>.<br>Lwa a chanje jan avoka yo touche. Li pa chanje si konpayi asirans yo peye reklamasyon.',
+    /* Section 01 */
+    sec01_title: 'Kisa ki Chanje &mdash; E Kisa ki Pa Chanje',
+    sec01_desc: 'Nan dat 16 desanm 2022, SB 2-A te elimine frais avoka estatit\u00e8 yon s\u00e8l direksyon anba &sect;627.428. Anvan, si yon moun ki gen asirans te genyen, konpayi asirans lan te peye frais avoka li a anplis de rekip\u00e8rasyon an. Kounye a, konpansasyon avoka a soti nan yon pous\u00e0ntaj domaj ki rekipere. Rap\u00f2 sa a konpare 3 zan anvan ref\u00f2m nan (DOL 16/12/2019&ndash;15/12/2022) ak pery\u00f2d apre ref\u00f2m nan (DOL 16/12/2022&ndash;prezan).',
+    callout01_title: 'Poukisa Fen\u00e8t 3 Zan yo Enp\u00f2tan',
+    callout01_body: 'Konpare tout ka istorik ak yon pery\u00f2d apre ref\u00f2m pi k\u00f2t ta devye done yo &mdash; ka anvan ref\u00f2m ki pi ansyen te gen plis tan pou f\u00e8men, e mete ane sikl\u00f2n ki lwen gonfle mwayenn anvan ref\u00f2m yo. L\u00e8 nou itilize fen\u00e8t 3 zan ki koresponn santre sou dat ref\u00f2m nan, tou de pery\u00f2d yo gen melanj konparab reklamasyon sikl\u00f2n ak woutinye, ak tan matirasyon simil\u00e8 pou rezolisyon.',
+    /* Section 02 */
+    sec02_title: 'Konparezon 3 Zan an',
+    sec02_desc: 'Anvan ref\u00f2m: DOL 16/12/2019&ndash;15/12/2022. Apre ref\u00f2m: DOL 16/12/2022&ndash;prezan. To peman = pous\u00e0ntaj ka kote konpayi asirans lan te peye n\u00e8np\u00f2t montan (endemnite, frais, oswa tou l\u00e8 de).',
+    callout02_title: 'Tit Prensipal',
+    callout02_body: '<strong>To peman yo pratiknman idantik &mdash; 75.7% anvan ref\u00f2m vs. 75.4% apre ref\u00f2m.</strong> Twa sou kat ka rezilte nan konpayi asirans lan peye, kèlkeswa estrikti frais la. Mwayèn bri pa ka rekipere pi ba ($17,467 vs $24,163) &mdash; sa reflete chanjman soti nan frais estatit\u00e8 peye pa konpayi asirans al frais ki baze sou pous\u00e0ntaj. Men konpansasyon an se vit\u00e8s: <strong>medyann rezolisyon desann soti 12.7 mwa rive 6.4 mwa</strong> &mdash; moun ki gen asirans yo touche nan anviwon mwatye tan an.',
+    /* Section 03 */
+    sec03_title: 'Sikl\u00f2n vs. Reklamasyon Chak Jou',
+    sec03_desc: 'Reklamasyon sikl\u00f2n ak woutinye dwe konpare apa. Chak fen\u00e8t 3 zan gen yon gwo sikl\u00f2n: Ian (anvan ref\u00f2m) ak Helene (apre ref\u00f2m), sa p\u00e8m\u00e8t yon konparezon dir\u00e8k.',
+    callout03_title: 'Apesi sou Sikl\u00f2n',
+    callout03_body: 'Reklamasyon sikl\u00f2n apre ref\u00f2m (Helene) montre yon <strong>to peman 83.3% &mdash; pi wo pase Ian anvan ref\u00f2m nan a 69.3%</strong>. Mway\u00e8n bri pi ba ($20,256 vs $34,179), konsistan ak chanjman estrikti frais la, men rezilta santral la definitif: reklamasyon sikl\u00f2n toujou ap peye nan to solid. Pou reklamasyon chak jou, konparezon an simil\u00e8man estab: <strong>72.8% apre vs 76.6% anvan</strong>, ak medyann rezolisyon desann soti 12.9 mwa rive 6.9 mwa &mdash; preske mwatye tan an.',
+    /* Section 04 */
+    sec04_title: 'Ki Konpayi Asirans ki Peye Apre Ref\u00f2m',
+    sec04_desc: 'To peman apre ref\u00f2m pa konpayi asirans, klase soti pi wo rive pi ba. To peman = pous\u00e0ntaj ka kote konpayi asirans lan te peye n\u00e8np\u00f2t rekip\u00e8rasyon bri.',
+    callout04_title: 'Ent\u00e8lijans Konpayi Asirans',
+    callout04_body: '<strong>TypTap, Vyrd, Castle Key, ak Homeowners Choice</strong> montre to peman 100% apre ref\u00f2m. Heritage ak Florida Peninsula peye nan 92&ndash;93%. Pami konpayi asirans gwo volim, <strong>American Integrity rive nan 81&ndash;89%</strong>, Slide ak Tower Hill nan 79%. Mway\u00e8n bri pi wo apre ref\u00f2m: <strong>Olympus ak $35,536</strong> ak Castle Key ak $24,555. Menm konpayi asirans ki gen to pi ba tankou Citizens (60%) ak State Farm (54%) toujou pwodui rekip\u00e8rasyon &mdash; e to sa yo ap amelyore l\u00e8 ka resan yo mi.',
+    /* Section 05 */
+    sec05_title: 'Ka yo Rezoud Pi Vit',
+    sec05_desc: 'San konfli frais estatit\u00e8 k ap ajoute konplikasyon, ka yo avanse nan sist\u00e8m nan siyifikativman pi vit apre ref\u00f2m.',
+    callout05_title: 'Kisa Pi Vit Vle Di',
+    callout05_body: '<strong>Medyann rezolisyon apre ref\u00f2m se 6.4 mwa</strong> vs. 12.7 mwa anvan ref\u00f2m &mdash; mwatye tan an. Pou reklamasyon chak jou espesifikman, 6.9 mwa vs 12.9. Rezolisyon pi vit vle di reparasyon rive pi bonè, moun ki gen asirans tounen nan n\u00f2mal pi vit, e reklamasyon an pa rete sou t\u00e8t yo pandan plis ke yon ane.',
+    /* Section 06 */
+    sec06_title: 'Rekip\u00e8rasyon pa Mache',
+    sec06_desc: 'Mway\u00e8n rekip\u00e8rasyon bri varye pa mache &mdash; sa reflete diferan tip kay, melanj konpayi asirans, ak gravite p\u00e8t.',
+    /* Section 07 */
+    sec07_title: 'Kisa Sa Vle Di pou Ou',
+    sec07_desc: 'Ent\u00e8lijans aksyonab ki soti nan analiz sa a &mdash; \u00f2ganize pa odyans.',
+    /* Info cards */
+    icard_ph_title: 'Pou Moun ki gen Asirans',
+    icard_ph_1: '<strong>75.4% ka apre ref\u00f2m rezilte nan konpayi asirans lan peye</strong> &mdash; pratiknman menm ak anvan ref\u00f2m (75.7%)',
+    icard_ph_2: 'Lwa a chanje fason avoka ou touche, pa dwa ou pou rekipere domaj',
+    icard_ph_3: 'Ka yo rezoud nan yon medyann 6.4 mwa vs 12.7 &mdash; ou touche pi vit',
+    icard_ph_4: 'Reklamasyon sikl\u00f2n peye nan to pi wo toujou apre ref\u00f2m (83.3% vs 69.3%)',
+    icard_ph_5: 'Pa kite nar\u00e8syon "pa gen frais avoka" kanpe ou &mdash; done yo di otreman',
+    icard_att_title: 'Pou Avoka',
+    icard_att_1: 'To peman yo estab nan 75% &mdash; ref\u00f2m nan pa redui volonte konpayi asirans yo pou negosye',
+    icard_att_2: 'Rasyo frais/endemnite chanje soti 64.6% rive 42.0% &mdash; men ak medyann rezolisyon koupe an mwatye, vit\u00e8s ka konpanse',
+    icard_att_3: 'Reklamasyon chak jou apre ref\u00f2m: to peman 72.8% ak medyann 6.9 mwa &mdash; pratik dirab ak wotasyon wo',
+    icard_att_4: 'Konesans espesifik pa konpayi asirans gen plis val\u00e8 pase janm: TypTap, Castle Key, Heritage tout peye 90%+',
+    icard_att_5: 'Konparezon 3 zan an kontwole pou melanj sikl\u00f2n ak matirasyon ka &mdash; metod\u00f2lojikman solid',
+    icard_pa_title: 'Pou Ajist\u00e8 Piblik',
+    icard_pa_1: 'W\u00f2l ou <strong>pi kritik apre ref\u00f2m</strong> &mdash; rekip\u00e8rasyon det\u00e8mine frais la, donk dokimantasyon kondui tout bagay',
+    icard_pa_2: 'Konpayi asirans ki peye 80%+ (TypTap, Castle Key, American Integrity, Heritage) se kote estimasyon kalite konv\u00e8ti pi byen',
+    icard_pa_3: 'Rezolisyon pi vit (medyann 6.4 mwa) vle di kliyan ou yo f\u00e8 reparasyon pi bonè',
+    icard_pa_4: 'Reklamasyon sikl\u00f2n rete f\u00f2 &mdash; Helene montre to peman 83.3% anba nouvo estrikti frais la',
+    icard_pa_5: 'Done yo pwouve pipeline lan vyab &mdash; ref\u00e8re ak konfyans',
+    /* CTA */
+    cta_title: '\u00c8ske Ou Gen yon Reklamasyon Domaj Pwopwiyete?',
+    cta_sub: 'Avoka domaj pwopwiyete nou yo ap revize ka ou e reponn nan 24 \u00e8dtan. Gratis e konfidansy\u00e8l.',
+    cta_btn_primary: 'Evalyasyon Ka Gratis &rarr;',
+    cta_btn_secondary: 'Voye Teks bay yon Avoka &rarr;',
+    /* Disclaimer */
+    disclaimer: 'Analiz sa a se pou enf\u00f2masyon s\u00e8lman e li pa konstitiye konsèy legal. Baze sou rezilta ka Louis Law Group ki konpare fen\u00e8t 3 zan anvan ak apre ref\u00f2m asirans Florida desanm 2022 (SB 2-A). Rezilta pase pa garanti rezilta fiti. Kontakte biwo nou pou yon evalyasyon ka.',
+    /* Stat boxes */
+    speed_pre_avg: 'Mway\u00e8n Anvan Ref\u00f2m',
+    speed_post_avg: 'Mway\u00e8n Apre Ref\u00f2m',
+    speed_post_median: 'Medyann Apre Ref\u00f2m',
+    speed_faster: 'Pi Vit (Mway\u00e8n)',
+    year_card_title: 'Rezilta Ane pa Ane',
+    /* Dynamic label keys (used by build functions) */
+    kpi_post_pay: 'To Peman Apre Ref\u00f2m',
+    kpi_pre_pay: 'To Peman Anvan Ref\u00f2m',
+    kpi_post_median: 'Medyann Rezolisyon Apre',
+    kpi_pre_median: 'Medyann Rezolisyon Anvan',
+    kpi_hurr_post: 'Peman Sikl\u00f2n (Apre)',
+    kpi_daily_post: 'Peman Chak Jou (Apre)',
+    kpi_faster: 'Rezolisyon Pi Vit',
+    kpi_window: 'Chak Fen\u00e8t',
+    cmp_pre_label: 'Anvan Ref\u00f2m 3 zan (2020\u20132022)',
+    cmp_post_label: 'Apre Ref\u00f2m (2023\u2013prezan)',
+    cmp_payment_rate: 'To Peman',
+    cmp_avg_gross: 'Mway\u00e8n Bri Rekipere',
+    cmp_median_gross: 'Medyann Bri',
+    cmp_avg_duration: 'Dire Mway\u00e8n',
+    cmp_median_duration: 'Medyann Dire',
+    cmp_fee_ratio: 'Rasyo Frais / Endemnite',
+    cmp_months: 'mwa',
+    quad_hurr_pre: 'Sikl\u00f2n \u00b7 Anvan Ref\u00f2m',
+    quad_hurr_post: 'Sikl\u00f2n \u00b7 Apre Ref\u00f2m',
+    quad_daily_pre: 'Reklamasyon Chak Jou \u00b7 Anvan Ref\u00f2m',
+    quad_daily_post: 'Reklamasyon Chak Jou \u00b7 Apre Ref\u00f2m',
+    quad_payment_rate: 'To Peman',
+    quad_avg_gross: 'Mway\u00e8n Bri',
+    quad_median_gross: 'Medyann Bri',
+    quad_avg_duration: 'Dire Mway\u00e8n',
+    quad_median_duration: 'Medyann Dire',
+    carrier_th: 'Konpayi Asirans',
+    carrier_th_rate: 'To Peman',
+    carrier_th_avg: 'Mway\u00e8n Bri',
+    year_th_dol: 'Ane DOL',
+    year_th_rate: 'To Peman',
+    year_th_avg: 'Mway\u00e8n Bri',
+    year_th_dur: 'Dire Mway\u00e8n',
+    year_th_regime: 'Rejim',
+    year_pre: 'Anvan Ref\u00f2m',
+    year_post: 'Apre Ref\u00f2m',
+    year_split: 'Divize',
+    year_days: 'jou',
+    city_avg: 'mwayenn',
+    mo: 'mw',
+    /* Footer */
+    footer_legal: 'Legal',
+    footer_ada: 'Konf\u00f2mite ADA',
+    footer_terms: 'Ak\u00f2 Kondisyon Itilizasyon',
+    footer_privacy: 'Enfòmasyon Prive',
+    footer_practice: 'Dom\u00e8n Pratik',
+    footer_prop_damage: 'Reklamasyon Domaj Pwopwiyete',
+    footer_pi: 'Blesi P\u00e8son\u00e8l',
+    footer_ssdi: 'Andikap SSDI',
+    footer_privacy_torts: 'Tort Prive',
+    footer_water: 'Reklamasyon Domaj Dlo',
+    footer_resources: 'Res\u00f2s',
+    footer_blog: 'Blog',
+    footer_careers: 'Kary\u00e8',
+    footer_ssdi_lawyers: 'Avoka Andikap SSDI',
+    footer_pa_resources: 'Res\u00f2s pou Ajist\u00e8 Piblik',
+    footer_case_law: 'Miz a Jou Jirispridans',
+    footer_market_report: 'Rap\u00f2 Mache Asirans FL',
+    footer_presuit_report: 'Rap\u00f2 Avi Anvan-Pouswit FL',
+    footer_fee_reform: 'Rezilta Ka Ref\u00f2m Fr\u00e8',
+    footer_contacto: 'Kontak',
+    footer_abogados: 'Avoka nan Florida',
+    footer_abogado_disc: 'Avoka Andikap Florida',
+    footer_contact: 'Kontakte Nou',
+    footer_copyright: 'Dwa dot\u00e8 &copy; 2026 Louis Law Group',
+    footer_rights: 'Tout dwa rezève. Sit ent\u00e8n\u00e8t sa a ak kontni li yo pwoteje pa lwa dwa dot\u00e8. Okenn pati nan sit ent\u00e8n\u00e8t sa a pa ka repwodui, distribye, oswa transmèt nan okenn f\u00f2m oswa pa okenn mwayen, ki gen ladan fotokopi, anrejistreman, oswa l\u00f2t metòd elektwonik oswa mekanik, san p\u00e8misyon alekri alavans Louis Law Group, eksepte nan ka sitasyon kout ki nan revizyon kritik ak s\u00e8ten l\u00f2t itilizasyon ki pa kom\u00e8syal ki p\u00e8m\u00e8t pa lwa dwa dot\u00e8.'
+  }
+};
+
+/* English defaults for dynamic label keys (used when lang === 'en') */
+var EN_LABELS = {
+  kpi_post_pay: 'Post-Reform Pay Rate',
+  kpi_pre_pay: 'Pre-Reform Pay Rate',
+  kpi_post_median: 'Post Median Resolution',
+  kpi_pre_median: 'Pre Median Resolution',
+  kpi_hurr_post: 'Hurricane Pay (Post)',
+  kpi_daily_post: 'Daily Pay (Post)',
+  kpi_faster: 'Faster Resolution',
+  kpi_window: 'Each Window',
+  cmp_pre_label: 'Pre-Reform 3yr (2020\u20132022)',
+  cmp_post_label: 'Post-Reform (2023\u2013present)',
+  cmp_payment_rate: 'Payment Rate',
+  cmp_avg_gross: 'Avg Gross Recovery',
+  cmp_median_gross: 'Median Gross',
+  cmp_avg_duration: 'Avg Duration',
+  cmp_median_duration: 'Median Duration',
+  cmp_fee_ratio: 'Fee / Indemnity Ratio',
+  cmp_months: 'months',
+  quad_hurr_pre: 'Hurricane \u00b7 Pre-Reform',
+  quad_hurr_post: 'Hurricane \u00b7 Post-Reform',
+  quad_daily_pre: 'Daily Claims \u00b7 Pre-Reform',
+  quad_daily_post: 'Daily Claims \u00b7 Post-Reform',
+  quad_payment_rate: 'Payment Rate',
+  quad_avg_gross: 'Avg Gross',
+  quad_median_gross: 'Median Gross',
+  quad_avg_duration: 'Avg Duration',
+  quad_median_duration: 'Median Duration',
+  carrier_th: 'Carrier',
+  carrier_th_rate: 'Payment Rate',
+  carrier_th_avg: 'Avg Gross',
+  year_th_dol: 'DOL Year',
+  year_th_rate: 'Payment Rate',
+  year_th_avg: 'Avg Gross',
+  year_th_dur: 'Avg Duration',
+  year_th_regime: 'Regime',
+  year_pre: 'Pre-Reform',
+  year_post: 'Post-Reform',
+  year_split: 'Split',
+  year_days: 'days',
+  city_avg: 'avg',
+  mo: 'mo'
+};
+
+/** Get a translated label. Falls back to English default. */
+function t(key, lang) {
+  if (!lang) lang = currentLang;
+  if (lang === 'en') return EN_LABELS[key] || key;
+  return (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) || EN_LABELS[key] || key;
+}
+
 /* ── BUILD FUNCTIONS ── */
 
-function buildKPIs() {
-  const ks = [
-    { v: '75.4%', l: 'Post-Reform Pay Rate', c: 'var(--accent-teal)' },
-    { v: '75.7%', l: 'Pre-Reform Pay Rate', c: 'var(--text-dim)' },
-    { v: '6.4 mo', l: 'Post Median Resolution', c: 'var(--accent-teal)' },
-    { v: '12.7 mo', l: 'Pre Median Resolution', c: 'var(--text-dim)' },
-    { v: '83.3%', l: 'Hurricane Pay (Post)', c: 'var(--accent-orange)' },
-    { v: '72.8%', l: 'Daily Pay (Post)', c: 'var(--accent-teal)' },
-    { v: '27%', l: 'Faster Resolution', c: 'var(--accent-gold)' },
-    { v: '3 yrs', l: 'Each Window', c: 'var(--text-dim)' },
+function buildKPIs(lang) {
+  if (!lang) lang = currentLang;
+  var ks = [
+    { v: '75.4%', lk: 'kpi_post_pay', c: 'var(--accent-teal)' },
+    { v: '75.7%', lk: 'kpi_pre_pay', c: 'var(--text-dim)' },
+    { v: '6.4 ' + t('mo', lang), lk: 'kpi_post_median', c: 'var(--accent-teal)' },
+    { v: '12.7 ' + t('mo', lang), lk: 'kpi_pre_median', c: 'var(--text-dim)' },
+    { v: '83.3%', lk: 'kpi_hurr_post', c: 'var(--accent-orange)' },
+    { v: '72.8%', lk: 'kpi_daily_post', c: 'var(--accent-teal)' },
+    { v: '27%', lk: 'kpi_faster', c: 'var(--accent-gold)' },
+    { v: '3 ' + (lang === 'es' ? 'a\u00f1os' : lang === 'ht' ? 'zan' : 'yrs'), lk: 'kpi_window', c: 'var(--text-dim)' },
   ];
-  const el = document.getElementById('kpis');
-  ks.forEach((k, i) => {
-    const d = document.createElement('div');
+  var el = document.getElementById('kpis');
+  el.innerHTML = '';
+  ks.forEach(function(k, i) {
+    var d = document.createElement('div');
     d.className = 'kpi';
     d.style.transitionDelay = i * 0.07 + 's';
-    d.innerHTML = '<div class="kpi-v" style="color:' + k.c + '">' + k.v + '</div><div class="kpi-l">' + k.l + '</div>';
+    d.innerHTML = '<div class="kpi-v" style="color:' + k.c + '">' + k.v + '</div><div class="kpi-l">' + t(k.lk, lang) + '</div>';
     el.appendChild(d);
   });
 }
 
-function buildCmp() {
-  const rows = [
-    ['Payment Rate', P.apr + '%', Q.apr + '%'],
-    ['Avg Gross Recovery', '$' + P.ag.toLocaleString(), '$' + Q.ag.toLocaleString()],
-    ['Median Gross', '$' + P.mg.toLocaleString(), '$' + Q.mg.toLocaleString()],
-    ['Avg Duration', Math.round(P.ad / 30) + ' months', Math.round(Q.ad / 30) + ' months'],
-    ['Median Duration', Math.round(P.md / 30) + ' months', Math.round(Q.md / 30) + ' months'],
-    ['Fee / Indemnity Ratio', P.fr + '%', Q.fr + '%']
+function buildCmp(lang) {
+  if (!lang) lang = currentLang;
+  var mo = t('cmp_months', lang);
+  var rows = [
+    [t('cmp_payment_rate', lang), P.apr + '%', Q.apr + '%'],
+    [t('cmp_avg_gross', lang), '$' + P.ag.toLocaleString(), '$' + Q.ag.toLocaleString()],
+    [t('cmp_median_gross', lang), '$' + P.mg.toLocaleString(), '$' + Q.mg.toLocaleString()],
+    [t('cmp_avg_duration', lang), Math.round(P.ad / 30) + ' ' + mo, Math.round(Q.ad / 30) + ' ' + mo],
+    [t('cmp_median_duration', lang), Math.round(P.md / 30) + ' ' + mo, Math.round(Q.md / 30) + ' ' + mo],
+    [t('cmp_fee_ratio', lang), P.fr + '%', Q.fr + '%']
   ];
-  var a = '<div class="cmp-label"><span class="dot" style="background:var(--text-dim)"></span>Pre-Reform 3yr (2020\u20132022)</div>';
-  var b = '<div class="cmp-label"><span class="dot" style="background:var(--accent-teal)"></span>Post-Reform (2023\u2013present)</div>';
+  var a = '<div class="cmp-label"><span class="dot" style="background:var(--text-dim)"></span>' + t('cmp_pre_label', lang) + '</div>';
+  var b = '<div class="cmp-label"><span class="dot" style="background:var(--accent-teal)"></span>' + t('cmp_post_label', lang) + '</div>';
   rows.forEach(function(r) {
     a += '<div class="cmp-r"><span class="l">' + r[0] + '</span><span class="v" style="color:var(--text-dim)">' + r[1] + '</span></div>';
     b += '<div class="cmp-r"><span class="l">' + r[0] + '</span><span class="v" style="color:var(--accent-teal)">' + r[2] + '</span></div>';
@@ -1238,45 +1636,72 @@ function buildCmp() {
   document.getElementById('cmpBox').innerHTML = '<div class="cmp-s pre">' + a + '</div><div class="cmp-s pst">' + b + '</div>';
 }
 
-function buildQuads() {
+function buildQuads(lang) {
+  if (!lang) lang = currentLang;
+  var labelMap = {
+    'q_hurr_pre': 'quad_hurr_pre',
+    'q_hurr_post': 'quad_hurr_post',
+    'q_daily_pre': 'quad_daily_pre',
+    'q_daily_post': 'quad_daily_post'
+  };
+  var moLabel = t('mo', lang);
   QUADS.forEach(function(q) {
     var c = q.post ? 'var(--accent-teal)' : 'var(--text-dim)';
     var el = document.getElementById(q.id);
+    var lbl = t(labelMap[q.id], lang);
     el.innerHTML =
-      '<div class="qbox-t" style="color:' + c + '">' + q.label + '</div>' +
+      '<div class="qbox-t" style="color:' + c + '">' + lbl + '</div>' +
       '<div class="qbox-sub">' + q.sub + '</div>' +
-      '<div class="qr"><span class="ql">Payment Rate</span><span class="qv" style="color:' + (q.apr >= 75 ? 'var(--accent-teal)' : q.apr >= 60 ? 'var(--accent-gold)' : 'var(--accent-orange)') + '">' + q.apr + '%</span></div>' +
-      '<div class="qr"><span class="ql">Avg Gross</span><span class="qv">$' + q.ag.toLocaleString() + '</span></div>' +
-      '<div class="qr"><span class="ql">Median Gross</span><span class="qv">$' + q.mg.toLocaleString() + '</span></div>' +
-      '<div class="qr"><span class="ql">Avg Duration</span><span class="qv">' + Math.round(q.ad / 30) + ' mo</span></div>' +
-      '<div class="qr"><span class="ql">Median Duration</span><span class="qv">' + Math.round(q.md / 30) + ' mo</span></div>';
+      '<div class="qr"><span class="ql">' + t('quad_payment_rate', lang) + '</span><span class="qv" style="color:' + (q.apr >= 75 ? 'var(--accent-teal)' : q.apr >= 60 ? 'var(--accent-gold)' : 'var(--accent-orange)') + '">' + q.apr + '%</span></div>' +
+      '<div class="qr"><span class="ql">' + t('quad_avg_gross', lang) + '</span><span class="qv">$' + q.ag.toLocaleString() + '</span></div>' +
+      '<div class="qr"><span class="ql">' + t('quad_median_gross', lang) + '</span><span class="qv">$' + q.mg.toLocaleString() + '</span></div>' +
+      '<div class="qr"><span class="ql">' + t('quad_avg_duration', lang) + '</span><span class="qv">' + Math.round(q.ad / 30) + ' ' + moLabel + '</span></div>' +
+      '<div class="qr"><span class="ql">' + t('quad_median_duration', lang) + '</span><span class="qv">' + Math.round(q.md / 30) + ' ' + moLabel + '</span></div>';
   });
 }
 
-function buildCarriers() {
+function buildCarriers(lang) {
+  if (!lang) lang = currentLang;
+  /* Update table headers */
+  var thead = document.querySelector('#carriers .dt thead tr');
+  if (thead) {
+    thead.innerHTML = '<th>' + t('carrier_th', lang) + '</th><th class="r">' + t('carrier_th_rate', lang) + '</th><th class="r">' + t('carrier_th_avg', lang) + '</th>';
+  }
   var b = document.getElementById('carrTb');
+  b.innerHTML = '';
   CARRIERS.forEach(function(c, i) {
-    var t = document.createElement('tr');
-    t.style.transitionDelay = i * 0.04 + 's';
+    var tr = document.createElement('tr');
+    tr.style.transitionDelay = i * 0.04 + 's';
     var rc = c.apr >= 90 ? 'bg' : c.apr >= 70 ? 'bgd' : c.apr >= 50 ? 'bo' : 'brd';
-    t.innerHTML = '<td class="nm">' + c.nm + '</td><td class="m"><span class="badge ' + rc + '">' + c.apr + '%</span></td><td class="m">' + (c.ag > 0 ? '$' + c.ag.toLocaleString() : '\u2014') + '</td>';
-    b.appendChild(t);
+    tr.innerHTML = '<td class="nm">' + c.nm + '</td><td class="m"><span class="badge ' + rc + '">' + c.apr + '%</span></td><td class="m">' + (c.ag > 0 ? '$' + c.ag.toLocaleString() : '\u2014') + '</td>';
+    b.appendChild(tr);
   });
 }
 
-function buildYears() {
+function buildYears(lang) {
+  if (!lang) lang = currentLang;
+  /* Update table headers */
+  var thead = document.querySelector('#speed .dt thead tr');
+  if (thead) {
+    thead.innerHTML = '<th>' + t('year_th_dol', lang) + '</th><th class="r">' + t('year_th_rate', lang) + '</th><th class="r">' + t('year_th_avg', lang) + '</th><th class="r">' + t('year_th_dur', lang) + '</th><th>' + t('year_th_regime', lang) + '</th>';
+  }
   var b = document.getElementById('yrTb');
+  b.innerHTML = '';
+  var daysLabel = t('year_days', lang);
   YEARS.forEach(function(y, i) {
-    var t = document.createElement('tr');
-    t.style.transitionDelay = i * 0.04 + 's';
-    var r = y.y >= 2023 ? 'Post-Reform' : y.y <= 2021 ? 'Pre-Reform' : 'Split';
-    var pc = r === 'Post-Reform' ? 'pill-post' : r === 'Split' ? 'pill-split' : 'pill-pre';
-    t.innerHTML = '<td class="nm">' + y.y + '</td><td class="m"><span class="badge ' + (y.apr >= 75 ? 'bg' : y.apr >= 60 ? 'bgd' : 'bo') + '">' + y.apr + '%</span></td><td class="m">' + (y.ag > 0 ? '$' + y.ag.toLocaleString() : '\u2014') + '</td><td class="m">' + y.ad + ' days</td><td><span class="pill ' + pc + '">' + r + '</span></td>';
-    b.appendChild(t);
+    var tr = document.createElement('tr');
+    tr.style.transitionDelay = i * 0.04 + 's';
+    var r = y.y >= 2023 ? t('year_post', lang) : y.y <= 2021 ? t('year_pre', lang) : t('year_split', lang);
+    var rEn = y.y >= 2023 ? 'Post-Reform' : y.y <= 2021 ? 'Pre-Reform' : 'Split';
+    var pc = rEn === 'Post-Reform' ? 'pill-post' : rEn === 'Split' ? 'pill-split' : 'pill-pre';
+    tr.innerHTML = '<td class="nm">' + y.y + '</td><td class="m"><span class="badge ' + (y.apr >= 75 ? 'bg' : y.apr >= 60 ? 'bgd' : 'bo') + '">' + y.apr + '%</span></td><td class="m">' + (y.ag > 0 ? '$' + y.ag.toLocaleString() : '\u2014') + '</td><td class="m">' + y.ad + ' ' + daysLabel + '</td><td><span class="pill ' + pc + '">' + r + '</span></td>';
+    b.appendChild(tr);
   });
 }
 
-function buildCities() {
+function buildCities(lang) {
+  if (!lang) lang = currentLang;
+  var avgLabel = t('city_avg', lang);
   var el = document.getElementById('cityBars');
   el.innerHTML = '';
   var sorted = CITIES.slice().sort(function(a, b) { return b.ag - a.ag; });
@@ -1286,7 +1711,7 @@ function buildCities() {
     var row = document.createElement('div');
     row.className = 'br';
     row.style.transitionDelay = i * 0.05 + 's';
-    row.innerHTML = '<div class="br-l">' + d.c + '</div><div class="br-t"><div class="br-f" style="background:linear-gradient(90deg,rgba(255,184,0,0.25),rgba(255,184,0,0.55))" data-w="' + pct + '%"></div></div><div class="br-v">$' + (d.ag / 1000).toFixed(1) + 'K avg</div>';
+    row.innerHTML = '<div class="br-l">' + d.c + '</div><div class="br-t"><div class="br-f" style="background:linear-gradient(90deg,rgba(255,184,0,0.25),rgba(255,184,0,0.55))" data-w="' + pct + '%"></div></div><div class="br-v">$' + (d.ag / 1000).toFixed(1) + 'K ' + avgLabel + '</div>';
     el.appendChild(row);
   });
 }
@@ -1314,15 +1739,84 @@ function setupObs() {
   document.querySelectorAll('.rv,.kpi').forEach(function(el) { obs.observe(el); });
 }
 
+/* ── setLang ── */
+function setLang(lang) {
+  currentLang = lang;
+
+  /* Update <html lang> attribute */
+  document.documentElement.setAttribute('lang', lang);
+
+  /* Store preference */
+  try { localStorage.setItem('llg_dash_lang', lang); } catch(e) {}
+
+  /* Update toggle button active states */
+  document.querySelectorAll('#langToggle .lang-btn').forEach(function(btn) {
+    if (btn.getAttribute('data-lang') === lang) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  });
+
+  /* Update all elements with data-i18n attributes */
+  if (lang === 'en') {
+    /* Restore original English content from stored data */
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (el._origHTML) {
+        el.innerHTML = el._origHTML;
+      }
+    });
+  } else {
+    var dict = TRANSLATIONS[lang];
+    if (!dict) return;
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (dict[key] !== undefined) {
+        el.innerHTML = dict[key];
+      }
+    });
+  }
+
+  /* Rebuild dynamic components with translated labels */
+  buildKPIs(lang);
+  buildCmp(lang);
+  buildQuads(lang);
+  buildCarriers(lang);
+  buildYears(lang);
+  buildCities(lang);
+
+  /* Re-setup observer for the newly built elements */
+  setupObs();
+}
+
+/* ── Store original English HTML for all i18n elements ── */
+function storeOriginals() {
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    el._origHTML = el.innerHTML;
+  });
+}
+
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', function() {
-  buildKPIs();
-  buildCmp();
-  buildQuads();
-  buildCarriers();
-  buildYears();
-  buildCities();
+  /* Build everything in English first */
+  buildKPIs('en');
+  buildCmp('en');
+  buildQuads('en');
+  buildCarriers('en');
+  buildYears('en');
+  buildCities('en');
   setupObs();
+
+  /* Store original English HTML for data-i18n elements */
+  storeOriginals();
+
+  /* Check localStorage for saved language preference */
+  var savedLang = null;
+  try { savedLang = localStorage.getItem('llg_dash_lang'); } catch(e) {}
+  if (savedLang && (savedLang === 'es' || savedLang === 'ht')) {
+    setLang(savedLang);
+  }
 });
 </script>
 </body>
