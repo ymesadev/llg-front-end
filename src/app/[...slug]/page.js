@@ -23,6 +23,24 @@ import { getSeoOverride } from "../utils/seoOverrides";
 import { getFaqOverride } from "../utils/faqOverrides";
 import ArticlePageMarker from "../components/ArticlePageMarker";
 
+// Resilient fetch: retry once after a short delay on network/server errors
+async function resilientFetch(url, options = {}, retries = 1) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok || attempt === retries) return res;
+      // Server error (5xx) — wait and retry
+      if (res.status >= 500) {
+        await new Promise(r => setTimeout(r, 800));
+        continue;
+      }
+      return res; // 4xx — don't retry, it's a real not-found
+    } catch (e) {
+      if (attempt === retries) throw e;
+      await new Promise(r => setTimeout(r, 800));
+    }
+  }
+}
 
 function getArticleType(slug) {
   const s = (slug || "").toLowerCase();
@@ -437,7 +455,7 @@ export async function generateMetadata({ params }) {
   const canonicalUrl = `${siteUrl}/${canonicalSlug}`;
 
   try {
-    const res = await fetch(
+    const res = await resilientFetch(
       `${strapiURL}/api/articles?filters[slug][$eq]=${slug}&fields[0]=title&fields[1]=description&populate[0]=cover`,
       { cache: "no-store" }
     );
@@ -482,7 +500,7 @@ export async function generateMetadata({ params }) {
   // Fallback: check pages content type (service pages, practice areas, etc.)
   try {
     const childSlug = slugArray[slugArray.length - 1];
-    const pageRes = await fetch(
+    const pageRes = await resilientFetch(
       `${strapiURL}/api/pages?filters[Slug][$eq]=${encodeURIComponent(childSlug)}&fields[0]=Title&fields[1]=Slug&populate[0]=Hero`,
       { cache: "no-store" }
     );
@@ -594,10 +612,10 @@ export default async function Page(props) {
     const encSlug = encodeURIComponent(slug);
 
     const [articleCheckRes, attorneyCheckRes, jobCheckRes, faqsCheckRes] = await Promise.allSettled([
-      fetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
-      fetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
-      fetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
-      fetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
+      resilientFetch(`${strapiURL}/api/articles?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
+      resilientFetch(`${strapiURL}/api/team-pages?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      resilientFetch(`${strapiURL}/api/jobs?filters[Slug][$eq]=${encSlug}&fields[0]=Slug`, { next: { revalidate: 60 } }),
+      resilientFetch(`${strapiURL}/api/faqs-and-legals?filters[slug][$eq]=${encSlug}&fields[0]=slug`, { next: { revalidate: 60 } }),
     ]);
 
     const getOkJson = async (s) => (s.status === 'fulfilled' && s.value.ok) ? s.value.json() : null;
@@ -648,10 +666,10 @@ export default async function Page(props) {
   }
 
   console.log("🔍 Fetching page for slug:", slug, "API:", apiUrl);
-  // Single fetch (stable)
+  // Resilient fetch with 1 retry on failure
   let res;
   try {
-    res = await fetch(apiUrl, { next: { revalidate: 60 } });
+    res = await resilientFetch(apiUrl, { next: { revalidate: 60 } });
   } catch (e) {
     console.error('❌ Fetch failed for', apiUrl, e);
   }
