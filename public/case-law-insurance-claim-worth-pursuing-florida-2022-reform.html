@@ -135,8 +135,9 @@ body{font-family:'Manrope',sans-serif;background:var(--bg);color:var(--tx);line-
 /* ── LANGUAGE TOGGLE ── */
 .lang-bar { text-align: center; padding: 12px 24px; border-bottom: 1px solid var(--bdr); }
 .lang-toggle { display: inline-flex; gap: 4px; background: var(--bg2); border-radius: 8px; padding: 3px; }
-.lang-btn { font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; padding: 5px 14px; border: none; border-radius: 6px; cursor: pointer; background: transparent; color: var(--tx3); transition: all 0.2s; }
-.lang-btn.active { background: var(--gold); color: #1a2b49; }
+.lang-btn { font-size: 18px; padding: 4px 8px; border: 2px solid transparent; border-radius: 6px; cursor: pointer; background: transparent; transition: all 0.2s; opacity: 0.5; line-height: 1; }
+.lang-btn:hover { opacity: 0.8; background: rgba(26,43,73,0.06); }
+.lang-btn.active { opacity: 1; background: rgba(255,184,0,0.15); border-color: var(--gold); box-shadow: 0 1px 4px rgba(255,184,0,0.3); }
 
 /* ── ARTICLE ── */
 article{max-width:780px;margin:0 auto;padding:60px 24px 80px;position:relative;z-index:1}
@@ -289,9 +290,9 @@ article li::before{content:'\203A';position:absolute;left:0;color:var(--gold);fo
 <!-- LANGUAGE TOGGLE -->
 <div class="lang-bar">
   <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" onclick="setLang('es')">ES</button>
-    <button class="lang-btn" onclick="setLang('ht')">HT</button>
+    <button class="lang-btn active" onclick="setLang('en')" title="English">🇺🇸</button>
+    <button class="lang-btn" onclick="setLang('es')" title="Español">🇪🇸</button>
+    <button class="lang-btn" onclick="setLang('ht')" title="Kreyòl Ayisyen">🇭🇹</button>
   </div>
 </div>
 

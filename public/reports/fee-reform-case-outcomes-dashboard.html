@@ -864,28 +864,24 @@ table.dt { width: 100%; border-collapse: collapse; }
   padding: 2px;
 }
 .lang-btn {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 4px 10px;
-  border: 1px solid transparent;
+  font-size: 18px;
+  padding: 4px 8px;
+  border: 2px solid transparent;
   border-radius: 16px;
   background: transparent;
-  color: var(--text-dim);
   cursor: pointer;
   transition: all 0.25s ease;
-  line-height: 1.4;
+  line-height: 1;
   white-space: nowrap;
+  opacity: 0.5;
 }
 .lang-btn:hover {
-  color: var(--text-primary);
+  opacity: 0.8;
   background: rgba(26,43,73,0.06);
 }
 .lang-btn.active {
-  background: var(--accent-gold);
-  color: #1a2b49;
+  opacity: 1;
+  background: rgba(255,184,0,0.15);
   border-color: var(--accent-gold);
   box-shadow: 0 1px 4px rgba(255,184,0,0.3);
 }
@@ -945,9 +941,9 @@ table.dt { width: 100%; border-collapse: collapse; }
   <div class="top-nav-inner">
     <a class="nav-link brand" href="#top">LLG</a>
     <div class="lang-toggle" id="langToggle">
-      <button class="lang-btn active" data-lang="en" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" data-lang="es" onclick="setLang('es')">ES</button>
-      <button class="lang-btn" data-lang="ht" onclick="setLang('ht')">HT</button>
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en')" title="English">🇺🇸</button>
+      <button class="lang-btn" data-lang="es" onclick="setLang('es')" title="Español">🇪🇸</button>
+      <button class="lang-btn" data-lang="ht" onclick="setLang('ht')" title="Kreyòl Ayisyen">🇭🇹</button>
     </div>
     <a class="nav-link" href="#reform" data-i18n="nav_reform">The Reform</a>
     <a class="nav-link" href="#compare" data-i18n="nav_compare">Pre vs Post</a>
