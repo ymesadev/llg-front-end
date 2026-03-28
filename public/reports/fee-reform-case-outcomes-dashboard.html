@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Florida Insurance Fee Reform Case Outcomes — Louis Law Group</title>
+<meta name="description" content="Data-driven analysis of Florida insurance fee reform case outcomes. Comparing 3 years of pre-reform vs post-reform results: payment rates, resolution speed, carrier performance, and hurricane claim data from Louis Law Group.">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700&family=Work+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-card: #f4f5f7;
+  --bg-card-hover: #eef0f3;
+  --accent-gold: #ffb800;
+  --accent-gold-dim: rgba(255, 184, 0, 0.12);
+  --accent-blue: #3b82f6;
+  --accent-teal: #14b8a6;
+  --accent-red: #ef4444;
+  --accent-orange: #f97316;
+  --accent-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  --accent-lime: #84cc16;
+  --text-primary: #1a2b49;
+  --text-secondary: #4a5568;
+  --text-dim: #718096;
+  --border: rgba(26,43,73,0.1);
+  --glow-gold: rgba(255, 184, 0, 0.3);
+  /* Legacy aliases for JS inline styles */
+  --gold: #ffb800;
+  --blue: #3b82f6;
+  --teal: #14b8a6;
+  --red: #ef4444;
+  --orange: #f97316;
+  --purple: #8b5cf6;
+  --tx: #1a2b49;
+  --tx2: #4a5568;
+  --tx3: #718096;
+  --bg2: #f4f5f7;
+  --bg3: #eef0f3;
+  --gold-dim: rgba(255, 184, 0, 0.12);
+  --bdr: rgba(26,43,73,0.1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Work Sans', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  letter-spacing: 0.5px;
+  font-weight: 300;
+  overflow-x: hidden;
+  padding-top: 82px;
+}
+
+/* Animated background */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 800px 600px at 20% 10%, rgba(255,184,0,0.06), transparent),
+    radial-gradient(ellipse 600px 400px at 80% 80%, rgba(59,130,246,0.05), transparent),
+    radial-gradient(ellipse 500px 500px at 50% 50%, rgba(20,184,166,0.03), transparent);
+  pointer-events: none;
+}
+
+.container { max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+/* ── SITE NAVBAR ── */
+.site-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1100;
+  background: #1a2b49;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.site-navbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.site-navbar .logo img { height: 50px; }
+.site-navbar .site-nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.25rem;
+  flex: 1;
+  margin-left: 2rem;
+}
+.site-navbar .site-nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  border-radius: 1.5rem;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.site-navbar .site-nav-links a:hover {
+  background: rgba(255,255,255,0.1);
+}
+.site-navbar .site-nav-links a.active {
+  background: rgba(255,255,255,0.1);
+  color: #ffb800;
+}
+.site-navbar .phone-cta {
+  background: #ffb800;
+  border-radius: 30px;
+  color: #1a2b49;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  padding: 10px 20px;
+  text-decoration: none;
+  box-shadow: 1px 3px #ede7e7;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+.site-navbar .phone-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 1px 6px #ffe5a3;
+}
+.site-navbar .mobile-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  margin-left: 1rem;
+}
+.site-navbar .mobile-toggle span {
+  width: 24px; height: 2px; background: #fff; display: block;
+}
+.site-mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80%;
+  max-width: 300px;
+  height: 100vh;
+  background: #1a2b49;
+  padding: 4rem 1.5rem 1.5rem;
+  transition: right 0.3s ease;
+  z-index: 1200;
+}
+.site-mobile-menu.open { right: 0; }
+.site-mobile-menu .close-btn {
+  position: absolute; top: 1rem; right: 1rem;
+  background: none; border: none; color: #fff; font-size: 1.5rem; cursor: pointer;
+}
+.site-mobile-menu ul { list-style: none; padding: 0; margin: 0; }
+.site-mobile-menu li { margin: 0.5rem 0; }
+.site-mobile-menu a {
+  color: #fff; text-decoration: none; font-family: 'Montserrat', sans-serif;
+  font-size: 1.1rem; padding: 0.5rem 0; display: block;
+}
+
+@media (max-width: 1024px) {
+  .site-navbar .site-nav-links { display: none; }
+  .site-navbar .mobile-toggle { display: flex; }
+}
+@media (max-width: 768px) {
+  .site-navbar-inner { padding: 0.75rem; }
+  .site-navbar .logo img { height: 40px; }
+  .site-navbar .phone-cta { font-size: 0.9rem; padding: 8px 16px; }
+}
+
+/* ── DASHBOARD NAV ── */
+.top-nav {
+  position: sticky;
+  top: 82px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.top-nav-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scrollbar-width: none;
+}
+.top-nav-inner::-webkit-scrollbar { display: none; }
+.nav-link {
+  font-family: 'Montserrat', sans-serif;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.nav-link:hover { color: var(--text-primary); background: rgba(26,43,73,0.06); }
+.nav-link.brand {
+  color: var(--accent-gold);
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 14px;
+  margin-right: 12px;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 80px 0 60px;
+  text-align: center;
+  position: relative;
+}
+.hero-badge {
+  font-family: 'Montserrat', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-gold-dim);
+  border: 1px solid rgba(255,184,0,0.25);
+  border-radius: 100px;
+  padding: 6px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.2s;
+}
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-gold);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.5); }
+}
+.hero h1 {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 1.15;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.35s;
+}
+.hero h1 .gold { color: var(--accent-gold); }
+.hero-sub {
+  font-size: 17px;
+  color: var(--text-secondary);
+  max-width: 760px;
+  margin: 0 auto 12px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.5s;
+  font-weight: 400;
+}
+.hero-meta {
+  font-size: 13px;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.6s;
+}
+.hero-meta strong { color: var(--accent-gold); font-weight: 600; }
+.hero-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+  margin: 32px auto 0;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.7s;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fi {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── KPI STRIP ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-bottom: 60px;
+}
+.kpi {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px 20px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+.kpi.v {
+  opacity: 1;
+  transform: translateY(0);
+}
+.kpi:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255,184,0,0.3);
+  transform: translateY(-2px);
+}
+.kpi-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.kpi-l {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── SECTIONS ── */
+.sec { margin-bottom: 64px; }
+.sec-h {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.sec-n {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--accent-gold);
+  font-weight: 600;
+  opacity: 0.7;
+}
+.sec-t {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 28px;
+  color: var(--text-primary);
+}
+.sec-d {
+  color: var(--text-secondary);
+  font-size: 14.5px;
+  margin-bottom: 28px;
+  max-width: 750px;
+  line-height: 1.7;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-blue), var(--accent-teal));
+  opacity: 0.8;
+}
+.card h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: 18px;
+}
+
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+@media (max-width: 900px) {
+  .g2, .g3 { grid-template-columns: 1fr; }
+}
+
+/* ── BAR ROWS ── */
+.br {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.4s ease;
+}
+.br.v {
+  opacity: 1;
+  transform: translateX(0);
+}
+.br:last-child { border-bottom: none; }
+.br-l {
+  width: 220px;
+  min-width: 220px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.br-t {
+  flex: 1;
+  height: 28px;
+  background: rgba(26,43,73,0.06);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.br-f {
+  height: 100%;
+  border-radius: 6px;
+  width: 0;
+  transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.br-v {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  min-width: 80px;
+  text-align: right;
+}
+
+/* ── TABLES ── */
+.tw { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table.dt { width: 100%; border-collapse: collapse; }
+.dt thead th {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+}
+.dt thead th.r { text-align: right; }
+.dt tbody tr {
+  border-bottom: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.35s ease;
+}
+.dt tbody tr.v {
+  opacity: 1;
+  transform: translateY(0);
+}
+.dt tbody tr:hover { background: rgba(26,43,73,0.03); }
+.dt tbody td {
+  padding: 12px 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+.dt tbody td.m {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  text-align: right;
+}
+.dt tbody td.nm {
+  font-weight: 600;
+  color: var(--text-primary);
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── BADGES ── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.bg { background: rgba(20,184,166,0.15); color: #14b8a6; }
+.brd { background: rgba(239,68,68,0.15); color: #ef4444; }
+.bo { background: rgba(249,115,22,0.15); color: #f97316; }
+.bgd { background: rgba(255,184,0,0.15); color: #ffb800; }
+
+/* ── PILLS ── */
+.pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+.pill-pre { background: rgba(26,43,73,0.08); color: var(--text-dim); }
+.pill-post { background: rgba(20,184,166,0.12); color: var(--accent-teal); }
+.pill-split { background: rgba(249,115,22,0.12); color: var(--accent-orange); }
+
+/* ── CALLOUT ── */
+.callout {
+  background: linear-gradient(135deg, rgba(255,184,0,0.08), rgba(255,184,0,0.02));
+  border: 1px solid rgba(255,184,0,0.2);
+  border-radius: 20px;
+  padding: 24px 28px;
+  margin: 20px 0;
+}
+.callout-t {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.callout p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+.callout strong { color: var(--text-primary); }
+
+/* ── HIGHLIGHT BOX (teal accent) ── */
+.highlight {
+  background: linear-gradient(135deg, rgba(20,184,166,0.08), rgba(20,184,166,0.02));
+  border: 1px solid rgba(20,184,166,0.2);
+  border-radius: 20px;
+  padding: 32px;
+  margin: 0 0 48px;
+  text-align: center;
+}
+.highlight .big {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--accent-teal);
+}
+.highlight .sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 10px;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+}
+.highlight .sub strong { color: var(--text-primary); }
+
+/* ── COMPARISON BOX ── */
+.cmp {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.cmp-s { padding: 28px; }
+.cmp-s.pre {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+}
+.cmp-s.pst {
+  background: linear-gradient(135deg, rgba(20,184,166,0.04), rgba(20,184,166,0.01));
+}
+.cmp-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+}
+.cmp-label .dot { width: 8px; height: 8px; border-radius: 50%; }
+.cmp-r {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.cmp-r:last-child { border-bottom: none; }
+.cmp-r .l { font-size: 13px; color: var(--text-dim); }
+.cmp-r .v { font-family: 'JetBrains Mono', monospace; font-size: 16px; font-weight: 700; }
+
+/* ── QUAD BOXES ── */
+.qbox {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 22px;
+}
+.qbox-t {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.qbox-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.qr {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+}
+.qr:last-child { border-bottom: none; }
+.qr .ql { color: var(--text-dim); }
+.qr .qv { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 13px; color: var(--text-primary); }
+
+/* ── STAT BOXES ── */
+.sbox {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  flex: 1;
+  min-width: 140px;
+}
+.sbox .bn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 700;
+}
+.sbox .sl {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.sflex { display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* ── INFO CARDS ── */
+.icard {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px;
+}
+.icard h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.icard p, .icard li {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.icard ul { list-style: none; padding: 0; }
+.icard li { padding: 5px 0 5px 16px; position: relative; }
+.icard li::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+/* ── CTA BANNER ── */
+.cta-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 36px;
+  text-align: center;
+}
+.cta-banner-title {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  font-size: 26px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.cta-banner-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 28px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.cta-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent-gold);
+  color: #1a2b49;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 1px 3px #ede7e7;
+}
+.cta-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 1px 6px #ffe5a3;
+}
+.cta-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #0d6e3f;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 14px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.cta-btn-secondary:hover {
+  background: #0b5c34;
+  transform: translateY(-3px);
+}
+@media (max-width: 640px) {
+  .cta-buttons { flex-direction: column; align-items: center; }
+  .cta-btn-primary, .cta-btn-secondary { width: 100%; justify-content: center; }
+}
+
+/* ── REPORT DISCLAIMER ── */
+.report-disclaimer {
+  border-top: 1px solid var(--border);
+  padding: 24px 0 0;
+  text-align: center;
+}
+.report-disclaimer p {
+  font-size: 12px;
+  color: var(--text-dim);
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* ── SITE FOOTER ── */
+.site-footer {
+  background: #1a2b49;
+  color: #fff;
+  padding: 4rem 2rem 2rem;
+  border-top: 3px solid #ffb800;
+}
+.site-footer-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.site-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+.site-footer-col h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+.site-footer-col ul { list-style: none; padding: 0; margin: 0; }
+.site-footer-col li { margin-bottom: 0.5rem; }
+.site-footer-col a {
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+.site-footer-col a:hover { opacity: 1; }
+.site-footer-copyright {
+  border-top: 1px solid rgba(255,255,255,0.1);
+  padding-top: 2rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  opacity: 0.7;
+}
+.site-footer-copyright p { margin-bottom: 1rem; }
+@media (max-width: 768px) {
+  .site-footer { padding: 3rem 1rem 1rem; }
+  .br-l { width: 140px; min-width: 140px; font-size: 11px; }
+  .cmp { grid-template-columns: 1fr; }
+  .cmp-s.pre { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+/* ── SCROLL REVEAL ── */
+.rv {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rv.v {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── PRINT ── */
+@media print {
+  body { background: #fff; color: #1a2b49; }
+  .bg-mesh { display: none; }
+  .card { border: 1px solid #ddd; }
+  .site-navbar, .top-nav, .site-mobile-menu { display: none; }
+  body { padding-top: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- SITE NAVBAR -->
+<header class="site-navbar">
+  <div class="site-navbar-inner">
+    <div class="logo">
+      <a href="/"><img src="/images/logo.png" alt="Louis Law Group"></a>
+    </div>
+    <ul class="site-nav-links">
+      <li><a href="/property-damage-claims">Property Damage</a></li>
+      <li><a href="/personal-injury">Personal Injury</a></li>
+      <li><a href="/social-security-disability-lawyers">Social Security</a></li>
+      <li><a href="/privacy-torts">Privacy Torts</a></li>
+      <li><a href="/our-team">Our Team</a></li>
+      <li><a href="/free-case-evaluation">Free Case Evaluation</a></li>
+    </ul>
+    <a href="tel:+18336574812" class="phone-cta">(833) 657-4812</a>
+    <button class="mobile-toggle" onclick="document.getElementById('siteMobileMenu').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="site-mobile-menu" id="siteMobileMenu">
+  <button class="close-btn" onclick="document.getElementById('siteMobileMenu').classList.remove('open')">&#215;</button>
+  <ul>
+    <li><a href="/" onclick="document.getElementById('siteMobileMenu').classList.remove('open')">Home</a></li>
+    <li><a href="/property-damage-claims">Property Damage</a></li>
+    <li><a href="/personal-injury">Personal Injury</a></li>
+    <li><a href="/social-security-disability-lawyers">Social Security</a></li>
+    <li><a href="/privacy-torts">Privacy Torts</a></li>
+    <li><a href="/our-team">Our Team</a></li>
+    <li><a href="/free-case-evaluation">Free Case Evaluation</a></li>
+    <li><a href="tel:+18336574812" style="color:#ffb800;font-weight:600;">(833) 657-4812</a></li>
+  </ul>
+</div>
+
+<div class="bg-mesh"></div>
+
+<!-- DASHBOARD NAV -->
+<nav class="top-nav">
+  <div class="top-nav-inner">
+    <a class="nav-link brand" href="#top">LLG</a>
+    <a class="nav-link" href="#reform">The Reform</a>
+    <a class="nav-link" href="#compare">Pre vs Post</a>
+    <a class="nav-link" href="#hurricanes">Hurricanes</a>
+    <a class="nav-link" href="#carriers">Carriers</a>
+    <a class="nav-link" href="#speed">Speed</a>
+    <a class="nav-link" href="#geography">Geography</a>
+    <a class="nav-link" href="#strategy">Strategy</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="container" id="top">
+<section class="hero">
+  <div class="hero-badge">Louis Law Group &middot; Fee Reform Impact Analysis</div>
+  <h1>Your Claim Is<br><span class="gold">Still Worth Fighting For</span></h1>
+  <p class="hero-sub">Florida's 2022 reform changed how attorneys get paid &mdash; but did it change whether policyholders get paid? We compared three years of outcomes on each side of the reform. The answer is clear.</p>
+  <p class="hero-meta">Based on <strong>Louis Law Group case outcomes</strong> &middot; 3-year apples-to-apples comparison &middot; Prepared March 2026</p>
+  <div class="hero-divider"></div>
+</section>
+</div>
+
+<div class="container">
+
+<!-- KPIs -->
+<div class="kpi-grid" id="kpis"></div>
+
+<!-- HIGHLIGHT -->
+<div class="highlight rv">
+  <div class="big">75.4% vs 75.7%</div>
+  <div class="sub">Post-reform payment rate vs. pre-reform payment rate &mdash; <strong>virtually identical</strong>.<br>The law changed how attorneys get paid. It did not change whether carriers pay claims.</div>
+</div>
+
+<!-- 01 REFORM -->
+<section class="sec rv" id="reform">
+  <div class="sec-h"><span class="sec-n">01</span><h2 class="sec-t">What Changed &mdash; And What Didn't</h2></div>
+  <p class="sec-d">On December 16, 2022, SB 2-A eliminated one-way statutory attorney's fees under &sect;627.428. Previously, if a policyholder prevailed, the carrier paid their attorney's fees on top of the recovery. Now, attorney compensation comes from a percentage of the damages recovered. This report compares the 3 years before the reform (DOL 12/16/2019&ndash;12/15/2022) against the post-reform period (DOL 12/16/2022&ndash;present).</p>
+  <div class="callout">
+    <div class="callout-t">Why 3-Year Windows Matter</div>
+    <p>Comparing all historical cases against a shorter post-reform period would skew the data &mdash; older pre-reform cases had more time to close, and including distant hurricane years inflates pre-reform averages. By using matching 3-year windows centered on the reform date, both periods include comparable mixes of hurricane and routine claims, and similar maturation time for resolution.</p>
+  </div>
+</section>
+
+<!-- 02 COMPARISON -->
+<section class="sec rv" id="compare">
+  <div class="sec-h"><span class="sec-n">02</span><h2 class="sec-t">The 3-Year Comparison</h2></div>
+  <p class="sec-d">Pre-reform: DOL 12/16/2019&ndash;12/15/2022. Post-reform: DOL 12/16/2022&ndash;present. Payment rate = percentage of cases where the carrier paid any amount (indemnity, fees, or both).</p>
+  <div class="cmp rv" id="cmpBox"></div>
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">The Headline</div>
+    <p><strong>Payment rates are virtually identical &mdash; 75.7% pre-reform vs. 75.4% post-reform.</strong> Three out of four cases result in the carrier paying, regardless of fee structure. Average gross per recovered case is lower ($17,467 vs $24,163) &mdash; reflecting the shift from carrier-paid statutory fees to percentage-based fees. But the tradeoff is speed: <strong>median resolution dropped from 12.7 months to 6.4 months</strong> &mdash; policyholders get paid in roughly half the time.</p>
+  </div>
+</section>
+
+<!-- 03 HURRICANES -->
+<section class="sec rv" id="hurricanes">
+  <div class="sec-h"><span class="sec-n">03</span><h2 class="sec-t">Hurricanes vs. Everyday Claims</h2></div>
+  <p class="sec-d">Hurricane and routine claims must be compared separately. Each 3-year window contains one major hurricane: Ian (pre-reform) and Helene (post-reform), enabling a direct comparison.</p>
+  <div class="g2 rv">
+    <div class="qbox" id="q_hurr_pre"></div>
+    <div class="qbox" id="q_hurr_post"></div>
+    <div class="qbox" id="q_daily_pre"></div>
+    <div class="qbox" id="q_daily_post"></div>
+  </div>
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">Hurricane Insight</div>
+    <p>Post-reform hurricane claims (Helene) show an <strong>83.3% payment rate &mdash; higher than pre-reform Ian at 69.3%</strong>. Average gross is lower ($20,256 vs $34,179), consistent with the fee structure change, but the core result is definitive: hurricane claims are still being paid at strong rates. For daily claims, the comparison is similarly stable: <strong>72.8% post vs 76.6% pre</strong>, with median resolution dropping from 12.9 months to 6.9 months &mdash; nearly half the time.</p>
+  </div>
+</section>
+
+<!-- 04 CARRIERS -->
+<section class="sec rv" id="carriers">
+  <div class="sec-h"><span class="sec-n">04</span><h2 class="sec-t">Which Carriers Pay Post-Reform</h2></div>
+  <p class="sec-d">Post-reform payment rates by carrier, sorted highest to lowest. Payment rate = percentage of cases where the carrier paid any gross recovery.</p>
+  <div class="card rv">
+    <div class="tw">
+      <table class="dt">
+        <thead><tr><th>Carrier</th><th class="r">Payment Rate</th><th class="r">Avg Gross</th></tr></thead>
+        <tbody id="carrTb"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">Carrier Intelligence</div>
+    <p><strong>TypTap, Vyrd, Castle Key, and Homeowners Choice</strong> show 100% payment rates post-reform. Heritage and Florida Peninsula pay on 92&ndash;93%. Among higher-volume carriers, <strong>American Integrity reaches 81&ndash;89%</strong>, Slide and Tower Hill at 79%. The highest average gross post-reform: <strong>Olympus at $35,536</strong> and Castle Key at $24,555. Even carriers with lower rates like Citizens (60%) and State Farm (54%) still produce recoveries &mdash; and those rates will improve as recent cases mature.</p>
+  </div>
+</section>
+
+<!-- 05 SPEED -->
+<section class="sec rv" id="speed">
+  <div class="sec-h"><span class="sec-n">05</span><h2 class="sec-t">Cases Resolve Faster</h2></div>
+  <p class="sec-d">Without statutory fee disputes adding complexity, cases move through the system significantly faster post-reform.</p>
+  <div class="sflex rv" style="margin-bottom:20px">
+    <div class="sbox"><div class="bn" style="color:var(--text-dim)">15.5 mo</div><div class="sl">Pre-Reform Avg</div></div>
+    <div class="sbox"><div class="bn" style="color:var(--accent-teal)">11.3 mo</div><div class="sl">Post-Reform Avg</div></div>
+    <div class="sbox"><div class="bn" style="color:var(--accent-teal)">6.4 mo</div><div class="sl">Post-Reform Median</div></div>
+    <div class="sbox"><div class="bn" style="color:var(--accent-gold)">27%</div><div class="sl">Faster (Avg)</div></div>
+  </div>
+  <div class="card rv">
+    <h4>Year-by-Year Outcomes</h4>
+    <div class="tw">
+      <table class="dt">
+        <thead><tr><th>DOL Year</th><th class="r">Payment Rate</th><th class="r">Avg Gross</th><th class="r">Avg Duration</th><th>Regime</th></tr></thead>
+        <tbody id="yrTb"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="callout rv" style="margin-top:20px">
+    <div class="callout-t">What Faster Means</div>
+    <p>Post-reform <strong>median resolution is 6.4 months</strong> vs. 12.7 months pre-reform &mdash; half the time. For daily claims specifically, 6.9 months vs 12.9. Faster resolution means repairs happen sooner, policyholders return to normal faster, and the claim doesn't hang over their lives for over a year.</p>
+  </div>
+</section>
+
+<!-- 06 GEOGRAPHY -->
+<section class="sec rv" id="geography">
+  <div class="sec-h"><span class="sec-n">06</span><h2 class="sec-t">Recovery by Market</h2></div>
+  <p class="sec-d">Average gross recovery varies by market &mdash; reflecting different housing stock, carrier mixes, and loss severity.</p>
+  <div class="card rv"><div id="cityBars"></div></div>
+</section>
+
+<!-- 07 STRATEGY -->
+<section class="sec rv" id="strategy">
+  <div class="sec-h"><span class="sec-n">07</span><h2 class="sec-t">What This Means for You</h2></div>
+  <p class="sec-d rv">Actionable intelligence drawn from this analysis &mdash; organized by audience.</p>
+  <div class="g3 rv">
+    <div class="icard">
+      <h4>For Policyholders</h4>
+      <ul>
+        <li><strong>75.4% of post-reform cases result in the carrier paying</strong> &mdash; virtually the same as pre-reform (75.7%)</li>
+        <li>The law changed how your attorney gets paid, not your right to recover damages</li>
+        <li>Cases resolve in a median of 6.4 months vs 12.7 &mdash; you get paid faster</li>
+        <li>Hurricane claims pay at even higher rates post-reform (83.3% vs 69.3%)</li>
+        <li>Don't let the "no attorney fees" narrative stop you &mdash; the data says otherwise</li>
+      </ul>
+    </div>
+    <div class="icard">
+      <h4>For Attorneys</h4>
+      <ul>
+        <li>Payment rates are stable at 75% &mdash; the reform did not reduce carrier willingness to settle</li>
+        <li>Fee-to-indemnity ratio shifted from 64.6% to 42.0% &mdash; but with median resolution cut in half, case velocity compensates</li>
+        <li>Daily claims post-reform: 72.8% payment rate with 6.9 month median &mdash; sustainable, high-turnover practice</li>
+        <li>Carrier-specific knowledge is more valuable than ever: TypTap, Castle Key, Heritage all pay 90%+</li>
+        <li>The 3-year comparison controls for hurricane mix and case maturation &mdash; methodologically sound</li>
+      </ul>
+    </div>
+    <div class="icard">
+      <h4>For Public Adjusters</h4>
+      <ul>
+        <li>Your role is <strong>more critical post-reform</strong> &mdash; recovery determines the fee, so documentation drives everything</li>
+        <li>Carriers paying 80%+ (TypTap, Castle Key, American Integrity, Heritage) are where quality estimates convert best</li>
+        <li>Faster resolution (6.4 month median) means your clients get repairs done sooner</li>
+        <li>Hurricane claims remain strong &mdash; Helene shows 83.3% payment rate under the new fee structure</li>
+        <li>The data proves the pipeline is viable &mdash; refer with confidence</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="sec rv" style="margin-top:20px;">
+  <div class="cta-banner">
+    <h3 class="cta-banner-title">Have a Property Damage Claim?</h3>
+    <p class="cta-banner-sub">Our property damage attorneys will review your case and respond within 24 hours. Free and confidential.</p>
+    <div class="cta-buttons">
+      <a href="/free-case-evaluation" class="cta-btn-primary">Free Case Evaluation &rarr;</a>
+      <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." class="cta-btn-secondary">Text a Lawyer &rarr;</a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<!-- REPORT DISCLAIMER -->
+<div class="report-disclaimer">
+  <div class="container">
+    <p>This analysis is for informational purposes only and does not constitute legal advice. Based on Louis Law Group case outcomes comparing 3-year windows before and after Florida's December 2022 insurance reform (SB 2-A). Past results do not guarantee future outcomes. Contact our office for a case evaluation.</p>
+  </div>
+</div>
+
+<!-- SITE FOOTER -->
+<footer class="site-footer">
+  <div class="site-footer-inner">
+    <div class="site-footer-grid">
+      <div class="site-footer-col">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="/ada-compliance">ADA Compliance</a></li>
+          <li><a href="/terms-of-use-agreement">Terms of Use Agreement</a></li>
+          <li><a href="/privacy-policy">Privacy</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Practice Areas</h3>
+        <ul>
+          <li><a href="/property-damage-claims">Property Damage Claims</a></li>
+          <li><a href="/personal-injury">Personal Injury</a></li>
+          <li><a href="/social-security-disability-lawyers">SSDI Disability</a></li>
+          <li><a href="/privacy-torts">Privacy Torts</a></li>
+          <li><a href="/water-damage-restoration">Water Damage Claims</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="/resources">Blog</a></li>
+          <li><a href="/job-id-00001">Careers</a></li>
+          <li><a href="/ssdi-lawyers">SSDI Disability Lawyers</a></li>
+          <li><a href="/public-adjuster-resources-florida">Public Adjuster Resources</a></li>
+          <li><a href="/case-law-updates">Case Law Updates</a></li>
+          <li><a href="/reports/florida-insurance-market-january-2026">FL Insurance Market Report</a></li>
+          <li><a href="/reports/florida-presuit-notice-intelligence-report">FL Pre-Suit Notice Report</a></li>
+          <li><a href="/reports/fee-reform-case-outcomes-dashboard">Fee Reform Case Outcomes</a></li>
+        </ul>
+      </div>
+      <div class="site-footer-col">
+        <h3>Contacto</h3>
+        <ul>
+          <li><a href="/abogados-florida">Abogados en Florida</a></li>
+          <li><a href="/abogado-discapacidad-florida">Abogado Discapacidad Florida</a></li>
+          <li><a href="/contact-us">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="site-footer-copyright">
+      <p>Copyright &copy; 2026 Louis Law Group</p>
+      <p>All rights reserved. This website and its content are protected by copyright law. No part of this website may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of Louis Law Group, except in the case of brief quotations embodied in critical reviews and certain other noncommercial uses permitted by copyright law.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── DATA ── */
+const P = { apr: 75.7, ag: 24163, mg: 19000, ad: 464, md: 382, fr: 64.6 };
+const Q = { apr: 75.4, ag: 17467, mg: 15000, ad: 340, md: 191, fr: 42.0 };
+
+const QUADS = [
+  { id: 'q_hurr_pre', label: 'Hurricane \u00b7 Pre-Reform', sub: 'Ian (Sep 2022)', post: false, apr: 69.3, ag: 34179, mg: 28000, ad: 443, md: 355 },
+  { id: 'q_hurr_post', label: 'Hurricane \u00b7 Post-Reform', sub: 'Helene (Sep 2024)', post: true, apr: 83.3, ag: 20256, mg: 18332, ad: 425, md: 158 },
+  { id: 'q_daily_pre', label: 'Daily Claims \u00b7 Pre-Reform', sub: 'Non-storm losses (2020\u20132022)', post: false, apr: 76.6, ag: 23313, mg: 18000, ad: 467, md: 388 },
+  { id: 'q_daily_post', label: 'Daily Claims \u00b7 Post-Reform', sub: 'Non-storm losses (2023\u20132025)', post: true, apr: 72.8, ag: 16018, mg: 14557, ad: 315, md: 206 },
+];
+
+const CARRIERS = [
+  { nm: 'TYPTAP INS.', apr: 100, ag: 19102 },
+  { nm: 'VYRD INS.', apr: 100, ag: 20981 },
+  { nm: 'CASTLE KEY INDEMNITY', apr: 100, ag: 24555 },
+  { nm: 'HOMEOWNERS CHOICE P&C', apr: 100, ag: 13733 },
+  { nm: 'FLORIDA PENINSULA INS.', apr: 93, ag: 14481 },
+  { nm: 'HERITAGE P&C INS.', apr: 92, ag: 19192 },
+  { nm: 'AMERICAN INTEGRITY INS.', apr: 89, ag: 22320 },
+  { nm: 'KIN INTERINS. NETWORK', apr: 86, ag: 11305 },
+  { nm: 'EDISON INS.', apr: 83, ag: 20176 },
+  { nm: 'AMERICAN INTEGRITY INS. (FL)', apr: 81, ag: 21373 },
+  { nm: 'SLIDE INS.', apr: 79, ag: 8746 },
+  { nm: 'TOWER HILL INS. EXCHANGE', apr: 79, ag: 11107 },
+  { nm: 'AMERICAN SECURITY INS.', apr: 74, ag: 17607 },
+  { nm: 'OLYMPUS INS.', apr: 71, ag: 35536 },
+  { nm: "PEOPLE'S TRUST INS.", apr: 67, ag: 14592 },
+  { nm: 'UNIVERSAL P&C INS.', apr: 62, ag: 23657 },
+  { nm: 'TRUCK INS. EXCHANGE', apr: 64, ag: 13358 },
+  { nm: 'CITIZENS PROPERTY INS.', apr: 60, ag: 9125 },
+  { nm: 'STATE FARM FLORIDA INS.', apr: 54, ag: 16463 },
+];
+
+const YEARS = [
+  { y: 2020, apr: 80.7, ag: 28571, ad: 468 },
+  { y: 2021, apr: 75.4, ag: 18756, ad: 463 },
+  { y: 2022, apr: 69.4, ag: 26936, ad: 460 },
+  { y: 2023, apr: 63.6, ag: 20584, ad: 309 },
+  { y: 2024, apr: 80.6, ag: 17416, ad: 302 },
+  { y: 2025, apr: 85.5, ag: 12198, ad: 138 },
+];
+
+const CITIES = [
+  { c: 'Weston', ag: 34118 },
+  { c: 'Davie', ag: 33142 },
+  { c: 'Plantation', ag: 31854 },
+  { c: 'Pembroke Pines', ag: 29380 },
+  { c: 'Orlando', ag: 28562 },
+  { c: 'Hialeah', ag: 28517 },
+  { c: 'Margate', ag: 27802 },
+  { c: 'Miramar', ag: 27125 },
+  { c: 'Hollywood', ag: 27052 },
+  { c: 'Homestead', ag: 26199 },
+  { c: 'Pompano Beach', ag: 25437 },
+  { c: 'Coral Springs', ag: 24693 },
+  { c: 'Miami', ag: 24156 },
+  { c: 'Deerfield Beach', ag: 23780 },
+  { c: 'Fort Lauderdale', ag: 22858 },
+];
+
+/* ── BUILD FUNCTIONS ── */
+
+function buildKPIs() {
+  const ks = [
+    { v: '75.4%', l: 'Post-Reform Pay Rate', c: 'var(--accent-teal)' },
+    { v: '75.7%', l: 'Pre-Reform Pay Rate', c: 'var(--text-dim)' },
+    { v: '6.4 mo', l: 'Post Median Resolution', c: 'var(--accent-teal)' },
+    { v: '12.7 mo', l: 'Pre Median Resolution', c: 'var(--text-dim)' },
+    { v: '83.3%', l: 'Hurricane Pay (Post)', c: 'var(--accent-orange)' },
+    { v: '72.8%', l: 'Daily Pay (Post)', c: 'var(--accent-teal)' },
+    { v: '27%', l: 'Faster Resolution', c: 'var(--accent-gold)' },
+    { v: '3 yrs', l: 'Each Window', c: 'var(--text-dim)' },
+  ];
+  const el = document.getElementById('kpis');
+  ks.forEach((k, i) => {
+    const d = document.createElement('div');
+    d.className = 'kpi';
+    d.style.transitionDelay = i * 0.07 + 's';
+    d.innerHTML = '<div class="kpi-v" style="color:' + k.c + '">' + k.v + '</div><div class="kpi-l">' + k.l + '</div>';
+    el.appendChild(d);
+  });
+}
+
+function buildCmp() {
+  const rows = [
+    ['Payment Rate', P.apr + '%', Q.apr + '%'],
+    ['Avg Gross Recovery', '$' + P.ag.toLocaleString(), '$' + Q.ag.toLocaleString()],
+    ['Median Gross', '$' + P.mg.toLocaleString(), '$' + Q.mg.toLocaleString()],
+    ['Avg Duration', Math.round(P.ad / 30) + ' months', Math.round(Q.ad / 30) + ' months'],
+    ['Median Duration', Math.round(P.md / 30) + ' months', Math.round(Q.md / 30) + ' months'],
+    ['Fee / Indemnity Ratio', P.fr + '%', Q.fr + '%']
+  ];
+  var a = '<div class="cmp-label"><span class="dot" style="background:var(--text-dim)"></span>Pre-Reform 3yr (2020\u20132022)</div>';
+  var b = '<div class="cmp-label"><span class="dot" style="background:var(--accent-teal)"></span>Post-Reform (2023\u2013present)</div>';
+  rows.forEach(function(r) {
+    a += '<div class="cmp-r"><span class="l">' + r[0] + '</span><span class="v" style="color:var(--text-dim)">' + r[1] + '</span></div>';
+    b += '<div class="cmp-r"><span class="l">' + r[0] + '</span><span class="v" style="color:var(--accent-teal)">' + r[2] + '</span></div>';
+  });
+  document.getElementById('cmpBox').innerHTML = '<div class="cmp-s pre">' + a + '</div><div class="cmp-s pst">' + b + '</div>';
+}
+
+function buildQuads() {
+  QUADS.forEach(function(q) {
+    var c = q.post ? 'var(--accent-teal)' : 'var(--text-dim)';
+    var el = document.getElementById(q.id);
+    el.innerHTML =
+      '<div class="qbox-t" style="color:' + c + '">' + q.label + '</div>' +
+      '<div class="qbox-sub">' + q.sub + '</div>' +
+      '<div class="qr"><span class="ql">Payment Rate</span><span class="qv" style="color:' + (q.apr >= 75 ? 'var(--accent-teal)' : q.apr >= 60 ? 'var(--accent-gold)' : 'var(--accent-orange)') + '">' + q.apr + '%</span></div>' +
+      '<div class="qr"><span class="ql">Avg Gross</span><span class="qv">$' + q.ag.toLocaleString() + '</span></div>' +
+      '<div class="qr"><span class="ql">Median Gross</span><span class="qv">$' + q.mg.toLocaleString() + '</span></div>' +
+      '<div class="qr"><span class="ql">Avg Duration</span><span class="qv">' + Math.round(q.ad / 30) + ' mo</span></div>' +
+      '<div class="qr"><span class="ql">Median Duration</span><span class="qv">' + Math.round(q.md / 30) + ' mo</span></div>';
+  });
+}
+
+function buildCarriers() {
+  var b = document.getElementById('carrTb');
+  CARRIERS.forEach(function(c, i) {
+    var t = document.createElement('tr');
+    t.style.transitionDelay = i * 0.04 + 's';
+    var rc = c.apr >= 90 ? 'bg' : c.apr >= 70 ? 'bgd' : c.apr >= 50 ? 'bo' : 'brd';
+    t.innerHTML = '<td class="nm">' + c.nm + '</td><td class="m"><span class="badge ' + rc + '">' + c.apr + '%</span></td><td class="m">' + (c.ag > 0 ? '$' + c.ag.toLocaleString() : '\u2014') + '</td>';
+    b.appendChild(t);
+  });
+}
+
+function buildYears() {
+  var b = document.getElementById('yrTb');
+  YEARS.forEach(function(y, i) {
+    var t = document.createElement('tr');
+    t.style.transitionDelay = i * 0.04 + 's';
+    var r = y.y >= 2023 ? 'Post-Reform' : y.y <= 2021 ? 'Pre-Reform' : 'Split';
+    var pc = r === 'Post-Reform' ? 'pill-post' : r === 'Split' ? 'pill-split' : 'pill-pre';
+    t.innerHTML = '<td class="nm">' + y.y + '</td><td class="m"><span class="badge ' + (y.apr >= 75 ? 'bg' : y.apr >= 60 ? 'bgd' : 'bo') + '">' + y.apr + '%</span></td><td class="m">' + (y.ag > 0 ? '$' + y.ag.toLocaleString() : '\u2014') + '</td><td class="m">' + y.ad + ' days</td><td><span class="pill ' + pc + '">' + r + '</span></td>';
+    b.appendChild(t);
+  });
+}
+
+function buildCities() {
+  var el = document.getElementById('cityBars');
+  el.innerHTML = '';
+  var sorted = CITIES.slice().sort(function(a, b) { return b.ag - a.ag; });
+  var mx = Math.max.apply(null, sorted.map(function(d) { return d.ag; }));
+  sorted.forEach(function(d, i) {
+    var pct = (d.ag / mx * 100).toFixed(1);
+    var row = document.createElement('div');
+    row.className = 'br';
+    row.style.transitionDelay = i * 0.05 + 's';
+    row.innerHTML = '<div class="br-l">' + d.c + '</div><div class="br-t"><div class="br-f" style="background:linear-gradient(90deg,rgba(255,184,0,0.25),rgba(255,184,0,0.55))" data-w="' + pct + '%"></div></div><div class="br-v">$' + (d.ag / 1000).toFixed(1) + 'K avg</div>';
+    el.appendChild(row);
+  });
+}
+
+/* ── OBSERVER ── */
+function setupObs() {
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('v');
+        e.target.querySelectorAll('.br').forEach(function(r, i) {
+          setTimeout(function() {
+            r.classList.add('v');
+            var f = r.querySelector('.br-f');
+            if (f) f.style.width = f.dataset.w;
+          }, i * 50);
+        });
+        e.target.querySelectorAll('tbody tr').forEach(function(r, i) {
+          setTimeout(function() { r.classList.add('v'); }, i * 40);
+        });
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.rv,.kpi').forEach(function(el) { obs.observe(el); });
+}
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  buildKPIs();
+  buildCmp();
+  buildQuads();
+  buildCarriers();
+  buildYears();
+  buildCities();
+  setupObs();
+});
+</script>
+</body>
+</html>

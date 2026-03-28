@@ -64,6 +64,11 @@ const nextConfig = {
         source: '/reports/florida-presuit-notice-intelligence-report',
         destination: '/reports/florida-presuit-notice-intelligence-report.html',
       },
+      {
+        // Clean URL for Fee Reform Case Outcomes Dashboard
+        source: '/reports/fee-reform-case-outcomes-dashboard',
+        destination: '/reports/fee-reform-case-outcomes-dashboard.html',
+      },
     ];
   },
 

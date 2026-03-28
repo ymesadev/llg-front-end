@@ -183,6 +183,11 @@ export default function Footer() {
                   FL Pre-Suit Notice Report
                 </a>
               </li>
+              <li className={styles.navItem}>
+                <a href="/reports/fee-reform-case-outcomes-dashboard" className={styles.navLink}>
+                  Fee Reform Case Outcomes
+                </a>
+              </li>
             </ul>
           </div>
 
