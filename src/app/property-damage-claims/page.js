@@ -58,8 +58,8 @@ const SERVICES = [
 
 const STATS = [
   {
-    number: "72%",
-    label: "of Florida property damage claims are underpaid or denied on first submission",
+    number: "47%",
+    label: "of Florida property damage claims are denied or closed without payment — the highest rate in a decade",
     icon: "❌",
   },
   {
@@ -79,7 +79,7 @@ const STATS = [
   },
   {
     number: "60 Days",
-    label: "to file proof of loss after damage — missing this deadline can kill your claim",
+    label: "to submit proof of loss once your insurer requests it — missing this deadline can kill your claim",
     icon: "⏰",
   },
   {
@@ -118,7 +118,7 @@ const FAQS = [
   },
   {
     q: "How long do I have to file a property damage insurance claim in Florida?",
-    a: "Florida law requires you to report damage to your insurer promptly — typically within 60 days for proof of loss. The statute of limitations for filing a lawsuit is generally 3 years from the date of loss under current Florida law. However, after the 2022 reforms, timelines are stricter. Contact an attorney immediately to protect your rights.",
+    a: "Florida law requires you to report damage to your insurer promptly. Once your insurer requests a proof of loss, you typically have 60 days to submit it. The statute of limitations for filing a lawsuit is generally 3 years from the date of loss under current Florida law. After the 2022 reforms, timelines are stricter. Contact an attorney immediately to protect your rights.",
   },
   {
     q: "What if my insurer says my damage is from wear and tear, not the storm?",
@@ -237,7 +237,7 @@ export default function PropertyDamageClaimsPage() {
       <div className={styles.urgencyBanner}>
         <span className={styles.urgencyIcon}>⚠️</span>
         <span>
-          <strong>Florida Deadline Alert:</strong> You must file proof of loss within 60 days of damage.{" "}
+          <strong>Florida Deadline Alert:</strong> You have 60 days to submit proof of loss once your insurer requests it.{" "}
           <a href={CTA_URL} className={styles.urgencyLink}>
             Don&apos;t miss your window — check your options now
           </a>.
