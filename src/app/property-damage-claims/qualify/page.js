@@ -26,7 +26,7 @@ const CARRIERS = [
 const DAMAGE_LABELS = ["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"];
 const RESPONSE_LABELS = ["Denied claim entirely","Underpaid / lowballed","Delaying or not responding","Claim pending — no decision yet","No claim filed yet"];
 const TOTAL_STEPS = 6;
-const STEP_NAMES = ["owner_check","florida_check","carrier_select","damage_type","date_of_loss","insurer_response","contact_info"];
+const STEP_NAMES = ["damage_type","owner_check","florida_check","carrier_select","date_of_loss","insurer_response","contact_info"];
 
 export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
@@ -95,20 +95,20 @@ export default function PropertyDamageQualify() {
   const handlePickAndNext = (key, val, delay = 320) => {
     setAnswer(key, val);
     const label = key === 3 ? DAMAGE_LABELS[val] : key === 5 ? RESPONSE_LABELS[val] : String(val);
-    trackEvent("qualify_step_answered", { case_type: "property-damage", step: key, step_name: STEP_NAMES[key], answer: label });
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: cur, step_name: STEP_NAMES[cur], answer: label });
     setTimeout(next, delay);
   };
 
   const handleOwner = (isOwner) => {
     setAnswer(0, isOwner);
-    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 0, step_name: "owner_check", answer: isOwner ? "yes" : "no", disqualified: !isOwner });
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: cur, step_name: "owner_check", answer: isOwner ? "yes" : "no", disqualified: !isOwner });
     if (!isOwner) { setTimeout(() => showDQ("not-owner"), 320); return; }
     setTimeout(next, 320);
   };
 
   const handleFlorida = (isFL) => {
     setAnswer(1, isFL);
-    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 1, step_name: "florida_check", answer: isFL ? "yes" : "no", disqualified: !isFL });
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: cur, step_name: "florida_check", answer: isFL ? "yes" : "no", disqualified: !isFL });
     if (!isFL) { setTimeout(() => showDQ("out-of-state"), 320); return; }
     setTimeout(next, 320);
   };
@@ -319,10 +319,27 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 0: Owner check */}
+          {/* Step 0: Type of damage (engaging opener) */}
           {cur === 0 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Question 1 of 7</div>
+              <div className={styles.question}>What type of damage occurred?</div>
+              <div className={styles.hint}>Select the primary cause of loss</div>
+              <div className={styles.optsGrid}>
+                {["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"].map((label, i) => (
+                  <button key={i} className={`${styles.opt} ${answers[3] === i ? styles.selected : ""}`}
+                    onClick={() => handlePickAndNext(3, i)}>
+                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 1: Owner check */}
+          {cur === 1 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Question 2 of 7</div>
               <div className={styles.question}>Are you the owner of the damaged property?</div>
               <div className={styles.hint}>Only property owners can initiate an insurance claim dispute</div>
               <div className={styles.opts}>
@@ -336,10 +353,10 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 1: Florida check */}
-          {cur === 1 && (
+          {/* Step 2: Florida check */}
+          {cur === 2 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 2 of 7</div>
+              <div className={styles.stepLabel}>Question 3 of 7</div>
               <div className={styles.question}>Is the damaged property located in Florida?</div>
               <div className={styles.hint}>We exclusively handle Florida property insurance claims</div>
               <div className={styles.opts}>
@@ -353,10 +370,10 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 2: Insurance carrier */}
-          {cur === 2 && (
+          {/* Step 3: Insurance carrier */}
+          {cur === 3 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 3 of 7</div>
+              <div className={styles.stepLabel}>Question 4 of 7</div>
               <div className={styles.question}>Who is your insurance company?</div>
               <div className={styles.hint}>Search or scroll to find your carrier</div>
               <div className={styles.ddWrap} ref={ddRef}>
@@ -373,7 +390,7 @@ export default function PropertyDamageQualify() {
                     ? <div className={styles.ddEmpty}>No carriers found</div>
                     : filteredCarriers.map((c) => (
                       <div key={c} className={`${styles.ddItem} ${carrier === c ? styles.ddItemActive : ""}`}
-                        onClick={() => { setCarrier(c); setAnswer(2, c); setDdQuery(""); setDdOpen(false); trackEvent("qualify_step_answered", { case_type: "property-damage", step: 2, step_name: "carrier_select", answer: c }); }}>
+                        onClick={() => { setCarrier(c); setAnswer(2, c); setDdQuery(""); setDdOpen(false); trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "carrier_select", answer: c }); }}>
                         {c}
                       </div>
                     ))
@@ -387,23 +404,6 @@ export default function PropertyDamageQualify() {
                 )}
               </div>
               <button className={styles.btn} onClick={next} disabled={!carrier}>Continue →</button>
-            </div>
-          )}
-
-          {/* Step 3: Type of damage */}
-          {cur === 3 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 4 of 7</div>
-              <div className={styles.question}>What type of damage occurred?</div>
-              <div className={styles.hint}>Select the primary cause of loss</div>
-              <div className={styles.optsGrid}>
-                {["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"].map((label, i) => (
-                  <button key={i} className={`${styles.opt} ${answers[3] === i ? styles.selected : ""}`}
-                    onClick={() => handlePickAndNext(3, i)}>
-                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
-                  </button>
-                ))}
-              </div>
             </div>
           )}
 
