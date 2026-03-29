@@ -155,9 +155,8 @@ const OpenReplay = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Check consent before starting
+    // Check consent before starting (agreedToTerms is set by the site Popup)
     const hasConsent = () =>
-      localStorage.getItem('cookieConsent') === 'true' &&
       localStorage.getItem('agreedToTerms') === 'true';
 
     if (hasConsent()) {
