@@ -27,6 +27,7 @@ const CARRIERS = [
 const DAMAGE_LABELS = ["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"];
 const RESPONSE_LABELS = ["Denied claim entirely","Underpaid / lowballed","Delaying or not responding","Claim pending — no decision yet","No claim filed yet"];
 const TOTAL_STEPS = 6;
+const STEP_NAMES = ["owner_check","florida_check","carrier_select","damage_type","date_of_loss","insurer_response","contact_info"];
 
 export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
@@ -56,6 +57,35 @@ export default function PropertyDamageQualify() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Track each step view
+  useEffect(() => {
+    if (cur <= TOTAL_STEPS) {
+      trackEvent("qualify_step_viewed", { case_type: "property-damage", step: cur, step_name: STEP_NAMES[cur] });
+    }
+  }, [cur]);
+
+  // Track abandonment on page exit
+  const curRef = useRef(cur);
+  const submittedRef = useRef(submitted);
+  const answersRef = useRef(answers);
+  useEffect(() => { curRef.current = cur; }, [cur]);
+  useEffect(() => { submittedRef.current = submitted; }, [submitted]);
+  useEffect(() => { answersRef.current = answers; }, [answers]);
+  useEffect(() => {
+    const handleExit = () => {
+      if (!submittedRef.current && curRef.current <= TOTAL_STEPS) {
+        trackEvent("qualify_abandoned", {
+          case_type: "property-damage",
+          last_step: curRef.current,
+          last_step_name: STEP_NAMES[curRef.current],
+          answers_given: Object.keys(answersRef.current).length,
+        });
+      }
+    };
+    window.addEventListener("beforeunload", handleExit);
+    return () => window.removeEventListener("beforeunload", handleExit);
+  }, []);
+
   const progress = Math.min((cur / TOTAL_STEPS) * 100, 100);
 
   const setAnswer = (key, val) => setAnswers((a) => ({ ...a, [key]: val }));
@@ -65,17 +95,21 @@ export default function PropertyDamageQualify() {
 
   const handlePickAndNext = (key, val, delay = 320) => {
     setAnswer(key, val);
+    const label = key === 3 ? DAMAGE_LABELS[val] : key === 5 ? RESPONSE_LABELS[val] : String(val);
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: key, step_name: STEP_NAMES[key], answer: label });
     setTimeout(next, delay);
   };
 
   const handleOwner = (isOwner) => {
     setAnswer(0, isOwner);
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 0, step_name: "owner_check", answer: isOwner ? "yes" : "no", disqualified: !isOwner });
     if (!isOwner) { setTimeout(() => showDQ("not-owner"), 320); return; }
     setTimeout(next, 320);
   };
 
   const handleFlorida = (isFL) => {
     setAnswer(1, isFL);
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 1, step_name: "florida_check", answer: isFL ? "yes" : "no", disqualified: !isFL });
     if (!isFL) { setTimeout(() => showDQ("out-of-state"), 320); return; }
     setTimeout(next, 320);
   };
@@ -91,6 +125,8 @@ export default function PropertyDamageQualify() {
       return;
     }
     setAnswer(4, val);
+    const bucket = yrs > 5 ? "over_5y" : yrs > 3 ? "3_to_5y" : yrs > 1 ? "1_to_3y" : "under_1y";
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 4, step_name: "date_of_loss", answer: bucket, years_ago: Math.round(yrs * 10) / 10 });
     if (yrs > 5) setDateNote({ msg: "Warning: Over 5 years ago. Florida statute of limitations may bar your claim.", warn: true });
     else if (yrs > 3) setDateNote({ msg: "Note: Over 3 years ago. We will review applicable deadlines carefully.", warn: true });
     else setDateNote({ msg: `Date recorded: ${loss.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, warn: false });
@@ -160,6 +196,13 @@ export default function PropertyDamageQualify() {
     : CARRIERS;
 
   const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@");
+  const contactStartedRef = useRef(false);
+  const trackContactStart = () => {
+    if (!contactStartedRef.current) {
+      contactStartedRef.current = true;
+      trackEvent("qualify_step_answered", { case_type: "property-damage", step: 6, step_name: "contact_info", answer: "started_typing" });
+    }
+  };
 
   // Result screen
   if (result) {
@@ -265,6 +308,7 @@ export default function PropertyDamageQualify() {
         </div>
 
         <div className={styles.cardBody}>
+          <div className={styles.urgencyBanner}>⚠ Deadlines and statute of limitations may apply. Act now to protect your claim by completing this form.</div>
 
           {/* Step 0: Owner check */}
           {cur === 0 && (
@@ -320,7 +364,7 @@ export default function PropertyDamageQualify() {
                     ? <div className={styles.ddEmpty}>No carriers found</div>
                     : filteredCarriers.map((c) => (
                       <div key={c} className={`${styles.ddItem} ${carrier === c ? styles.ddItemActive : ""}`}
-                        onClick={() => { setCarrier(c); setAnswer(2, c); setDdQuery(""); setDdOpen(false); }}>
+                        onClick={() => { setCarrier(c); setAnswer(2, c); setDdQuery(""); setDdOpen(false); trackEvent("qualify_step_answered", { case_type: "property-damage", step: 2, step_name: "carrier_select", answer: c }); }}>
                         {c}
                       </div>
                     ))
@@ -394,17 +438,17 @@ export default function PropertyDamageQualify() {
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Full name</label>
                   <input className={styles.input} placeholder="Jane Smith" value={contact.name}
-                    onChange={(e) => setContact((c) => ({ ...c, name: e.target.value }))} />
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, name: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Phone number</label>
                   <input className={styles.input} placeholder="(954) 555-0100" value={contact.phone}
-                    onChange={(e) => setContact((c) => ({ ...c, phone: e.target.value }))} />
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, phone: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Email address</label>
                   <input className={styles.input} type="email" placeholder="jane@example.com" value={contact.email}
-                    onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))} />
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }} />
                 </div>
               </div>
               <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleSubmit}

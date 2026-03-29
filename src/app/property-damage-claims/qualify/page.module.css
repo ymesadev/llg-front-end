@@ -67,6 +67,19 @@
   padding: 2rem 2rem 1.5rem;
 }
 
+/* Urgency banner */
+.urgencyBanner {
+  background: #fff8e6;
+  border: 1px solid #f0c040;
+  border-radius: 8px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: #7a5e00;
+  font-weight: 500;
+  margin-bottom: 1.25rem;
+}
+
 /* Step animation */
 .step {
   animation: fadeUp 0.32s ease forwards;
