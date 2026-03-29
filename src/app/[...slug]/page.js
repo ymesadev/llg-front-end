@@ -1577,6 +1577,11 @@ export default async function Page(props) {
             </div>
           </section>
           )}
+          {/* Sticky mobile CTA — routes to correct intake form per article type */}
+          <div className={styles.stickyMobileCta}>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyCall}>Check Your Eligibility</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>See If You Qualify →</Link>
+          </div>
           <Testimonials />
           <Steps />
           <Contact />

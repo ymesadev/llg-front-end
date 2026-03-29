@@ -39,6 +39,7 @@ const AIChatBot = () => {
   const [conversationId, setConversationId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [cookieVisible, setCookieVisible] = useState(false);
+  const [isArticlePage, setIsArticlePage] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -49,6 +50,15 @@ const AIChatBot = () => {
     check();
     window.addEventListener("consentUpdated", check);
     return () => window.removeEventListener("consentUpdated", check);
+  }, []);
+
+  // Hide floating chat button on article pages that have their own CTAs
+  useEffect(() => {
+    const check = () => setIsArticlePage(document.body.hasAttribute("data-article-page"));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { attributes: true, attributeFilter: ["data-article-page"] });
+    return () => observer.disconnect();
   }, []);
 
   // Generate unique user ID and load chat history
@@ -386,13 +396,13 @@ const AIChatBot = () => {
     }
   };
 
-  // Hide AIChatBot on live-chat page
-  if (pathname === "/live-chat") {
+  // Hide AIChatBot on live-chat page or article pages (which have their own CTAs)
+  if (pathname === "/live-chat" || isArticlePage) {
     return null;
   }
 
   return (
-    <div className={`${styles.container} ${cookieVisible ? styles.cookieBump : ""}`}>
+    <div className={`${styles.container} ${cookieVisible ? styles.cookieBump : ""}`} data-floating-cta="lets-chat">
       {/* Chat Button */}
       <button
         onClick={toggleChat}

@@ -9,6 +9,15 @@ import { trackEvent } from "@/app/utils/analytics";
 const Popup = () => {
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
+  const [isArticlePage, setIsArticlePage] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsArticlePage(document.body.hasAttribute("data-article-page"));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { attributes: true, attributeFilter: ["data-article-page"] });
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const hasAgreed = localStorage.getItem("agreedToTerms");
@@ -100,15 +109,18 @@ const Popup = () => {
           </div>
         </div>
       )}
-      {/* Floating SMS Button */}
-      <a
-        href="sms:8336574812"
-        className={styles.textUsButton}
-        onClick={() => trackEvent("floating_sms_clicked")}
-      >
-        <p>Text Us</p>
-        <TextUsPopup className={styles.textUsIcon} />
-      </a>
+      {/* Floating SMS Button — hidden on article pages that have their own CTAs */}
+      {!isArticlePage && (
+        <a
+          href="sms:8336574812"
+          className={styles.textUsButton}
+          data-floating-cta="text-us"
+          onClick={() => trackEvent("floating_sms_clicked")}
+        >
+          <p>Text Us</p>
+          <TextUsPopup className={styles.textUsIcon} />
+        </a>
+      )}
     </>
   );
 };
