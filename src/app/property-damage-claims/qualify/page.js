@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { trackEvent } from "@/app/utils/analytics";
-import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 
 const CARRIERS = [
   "Allstate Insurance","American Integrity Insurance","American Traditions Insurance",
@@ -310,10 +309,20 @@ export default function PropertyDamageQualify() {
         <div className={styles.cardBody}>
           <div className={styles.urgencyBanner}>⚠ Deadlines and statute of limitations may apply. Act now to protect your claim by completing this form.</div>
 
+          {cur === 0 && (
+            <div className={styles.trustBar}>
+              <span>Free consultation</span>
+              <span className={styles.trustDot} />
+              <span>No fees unless we win</span>
+              <span className={styles.trustDot} />
+              <span>500+ claims filed</span>
+            </div>
+          )}
+
           {/* Step 0: Owner check */}
           {cur === 0 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Louis Law Group · Claim Qualifier</div>
+              <div className={styles.stepLabel}>Question 1 of 7</div>
               <div className={styles.question}>Are you the owner of the damaged property?</div>
               <div className={styles.hint}>Only property owners can initiate an insurance claim dispute</div>
               <div className={styles.opts}>
@@ -466,6 +475,10 @@ export default function PropertyDamageQualify() {
           </button>
           <span className={styles.stepCounter}>{cur <= TOTAL_STEPS ? `Step ${cur + 1} of 7` : ""}</span>
         </div>
+      </div>
+
+      <div className={styles.phoneCta}>
+        Prefer to talk? Call <a href="tel:8336574812">(833) 657-4812</a> for a free case review
       </div>
     </div>
   );
