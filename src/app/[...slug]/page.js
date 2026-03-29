@@ -180,7 +180,7 @@ const sanitizeSchema = {
     ...(defaultSchema.protocols || {}),
     href: [...(defaultSchema.protocols?.href || ["http", "https", "mailto", "tel"]), "sms"],
   },
-  tagNames: [...(defaultSchema.tagNames || []), "a"],
+  tagNames: [...(defaultSchema.tagNames || []), "a", "div", "span"],
   attributes: {
     ...(defaultSchema.attributes || {}),
     a: [
@@ -189,9 +189,20 @@ const sanitizeSchema = {
       "target",
       "rel",
       "className",
+      "style",
     ],
-    p: [...(defaultSchema.attributes?.p || []), "className"],
+    p: [...(defaultSchema.attributes?.p || []), "className", "style"],
+    div: [...(defaultSchema.attributes?.div || []), "className", "style"],
+    h3: [...(defaultSchema.attributes?.h3 || []), "style"],
+    span: [...(defaultSchema.attributes?.span || []), "className", "style"],
   },
+};
+
+// Detect truly pure HTML content (no markdown headings mixed in)
+const isPureHtml = (body) => {
+  if (!body || !body.trimStart().startsWith("<")) return false;
+  // If content has markdown headings, it's mixed — use ReactMarkdown
+  return !/^#{1,6}\s/m.test(body);
 };
 
 // react-markdown v9+: use a single urlTransform instead of transformImageUri/transformLinkUri
@@ -1192,10 +1203,9 @@ export default async function Page(props) {
                     <div key={`faq-block-${index}`}>
                       {block.__component === "shared.rich-text" && (() => {
                         const body = block.body || "";
-                        const isHtml = body.trimStart().startsWith("<");
                         return (
                           <div className={styles.blogText}>
-                            {isHtml ? parse(body) : (
+                            {isPureHtml(body) ? parse(body) : (
                               <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
@@ -1410,10 +1420,9 @@ export default async function Page(props) {
                     <div key={index}>
                       {block.__component === "shared.rich-text" && (() => {
                         const body = demoteH1(block.body || "");
-                        const isHtml = body.trimStart().startsWith("<");
                         return (
                           <div className={styles.blogText}>
-                            {isHtml ? parse(body) : (
+                            {isPureHtml(body) ? parse(body) : (
                               <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw, [rehypeSanitize, sanitizeSchema]]}
