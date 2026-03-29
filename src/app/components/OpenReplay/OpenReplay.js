@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 
 /**
  * OpenReplay — session replay with user identification, page tracking,
@@ -9,7 +10,10 @@ import { useEffect, useCallback } from 'react';
  *   window.__or_identify(userId, metadata)  — identify a user (e.g. after form submit)
  *   window.__or_event(name, payload)         — track a custom event
  */
+const CONSENT_FREE_PATHS = ['/property-damage-claims/qualify'];
+
 const OpenReplay = () => {
+  const pathname = usePathname();
   const startTracker = useCallback(() => {
     if (typeof window === 'undefined') return;
     if (window.__or_tracker) return; // already running
@@ -155,11 +159,14 @@ const OpenReplay = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
+    // Auto-start on consent-free pages (e.g. qualify page — no terms popup shown)
+    const isConsentFree = CONSENT_FREE_PATHS.includes(pathname);
+
     // Check consent before starting (agreedToTerms is set by the site Popup)
     const hasConsent = () =>
       localStorage.getItem('agreedToTerms') === 'true';
 
-    if (hasConsent()) {
+    if (isConsentFree || hasConsent()) {
       startTracker();
     }
 
@@ -169,7 +176,7 @@ const OpenReplay = () => {
     };
     window.addEventListener('consentUpdated', onConsent);
     return () => window.removeEventListener('consentUpdated', onConsent);
-  }, [startTracker]);
+  }, [startTracker, pathname]);
 
   return null;
 };

@@ -1,15 +1,21 @@
 "use client";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./Popup.module.css";
 import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
 import { trackEvent } from "@/app/utils/analytics";
 
+const POPUP_EXCLUDED_PATHS = ["/property-damage-claims/qualify"];
+
 const Popup = () => {
+  const pathname = usePathname();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [isArticlePage, setIsArticlePage] = useState(false);
+
+  const isExcludedPage = POPUP_EXCLUDED_PATHS.includes(pathname);
 
   useEffect(() => {
     const check = () => setIsArticlePage(document.body.hasAttribute("data-article-page"));
@@ -20,13 +26,15 @@ const Popup = () => {
   }, []);
 
   useEffect(() => {
+    if (isExcludedPage) return; // Skip terms popup on qualify page
     const hasAgreed = localStorage.getItem("agreedToTerms");
     if (!hasAgreed) {
       setTimeout(() => setIsTermsOpen(true), 500); // ⚡ 500ms (was 1000ms)
     }
-  }, []);
+  }, [isExcludedPage]);
 
   useEffect(() => {
+    if (isExcludedPage) return; // No consultation popup on qualify page
     const consultationDismissed = sessionStorage.getItem("consultationDismissed");
     if (localStorage.getItem("agreedToTerms") && !consultationDismissed) {
       setTimeout(() => {
@@ -34,7 +42,7 @@ const Popup = () => {
         trackEvent("consultation_popup_shown");
       }, 3000);
     }
-  }, []);
+  }, [isExcludedPage]);
 
   const agreeToTerms = () => {
     localStorage.setItem("agreedToTerms", "true");
