@@ -1,18 +1,35 @@
 "use client";
 
-import dynamic from "next/dynamic"; // Import next/dynamic
+import { useState, useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
 import styles from "./ContactSection.module.css";
 import HeroForm from "../Hero/components/HeroForm";
 
-// Dynamically import Lottie (disable SSR)
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
-// Import Lottie animation JSON
 import contactAnimation from "../../../../public/lottie/contact.json";
+import { Instagram, Facebook, Linkedin, Phone } from "lucide-react";
 
-import { Instagram, Facebook, Linkedin, Phone } from "lucide-react"; // Icons from lucide-react
+function LazyLottie() {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
 
-// Footer is now handled in layout.js
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { setVisible(true); obs.disconnect(); }
+    }, { rootMargin: "200px" });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className={styles.lottieWrapper}>
+      {visible && <Lottie animationData={contactAnimation} loop={false} />}
+    </div>
+  );
+}
 
 const ContactSection = () => {
   return (
@@ -66,10 +83,7 @@ const ContactSection = () => {
                 </div>
               </div>
 
-              {/* Lottie Animation */}
-              <div className={styles.lottieWrapper}>
-                <Lottie animationData={contactAnimation} loop={false} />
-              </div>
+              <LazyLottie />
 
               {/* Address */}
               <div className={styles.address}>

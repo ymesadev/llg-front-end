@@ -22,6 +22,7 @@ import Testimonials from "../components/Testimonials/Testimonials";
 import { getSeoOverride } from "../utils/seoOverrides";
 import { getFaqOverride } from "../utils/faqOverrides";
 import ArticlePageMarker from "../components/ArticlePageMarker";
+import MobileExitIntent from "../components/MobileExitIntent/MobileExitIntent";
 
 // Resilient fetch: retry once after a short delay on network/server errors
 async function resilientFetch(url, options = {}, retries = 1) {
@@ -1582,6 +1583,7 @@ export default async function Page(props) {
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyCall}>Check Your Eligibility</Link>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>See If You Qualify →</Link>
           </div>
+          <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} />
           <Testimonials />
           <Steps />
           <Contact />
