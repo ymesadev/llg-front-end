@@ -23,6 +23,12 @@ import { getSeoOverride } from "../utils/seoOverrides";
 import { getFaqOverride } from "../utils/faqOverrides";
 import ArticlePageMarker from "../components/ArticlePageMarker";
 import MobileExitIntent from "../components/MobileExitIntent/MobileExitIntent";
+import ReadingProgress from "../components/ReadingProgress/ReadingProgress";
+import RelatedArticles from "../components/RelatedArticles/RelatedArticles";
+import PrefetchLinks from "../components/PrefetchLinks/PrefetchLinks";
+import SaveArticle from "../components/SaveArticle/SaveArticle";
+import PushOptIn from "../components/PushOptIn/PushOptIn";
+import SocialProofToast from "../components/SocialProofToast/SocialProofToast";
 
 // Resilient fetch: retry once after a short delay on network/server errors
 async function resilientFetch(url, options = {}, retries = 1) {
@@ -992,6 +998,8 @@ export default async function Page(props) {
   return (
     <Layout>
       <ArticlePageMarker />
+      {isArticlePage && <ReadingProgress />}
+      {isArticlePage && <PrefetchLinks />}
       {isJobPage ? (
         <>
           <section className={styles.jobHero}>
@@ -1320,6 +1328,7 @@ export default async function Page(props) {
                 >
                   <FaLinkedin className={styles.socialIcon} />
                 </a>
+                <SaveArticle title={page.title} slug={slug} />
               </div>
               {/* Article schema with speakable for AI voice assistants */}
               <script
@@ -1481,17 +1490,10 @@ export default async function Page(props) {
                   </ul>
                 </div>
               )}
-              {/* Related Articles — dynamic state-specific internal linking */}
+              {/* Related Articles — visual card grid */}
               {(() => {
                 const { title: relTitle, links: relLinks } = getRelatedLinks(slug, articleType);
-                return (
-                  <div style={{background:"#f9fafb",border:"1px solid #e5e7eb",padding:"20px 24px",borderRadius:"6px",margin:"32px 0"}}>
-                    <h3 style={{marginTop:0,marginBottom:"12px",color:"#111827",fontSize:"1.05rem"}}>{relTitle}</h3>
-                    <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.8"}}>
-                      {relLinks.map((l, i) => <li key={i}><a href={l.href}>{l.label}</a></li>)}
-                    </ul>
-                  </div>
-                );
+                return <RelatedArticles title={relTitle} links={relLinks} articleType={articleType} />;
               })()}
               {/* Cross-practice area links — boost internal linking */}
               {(() => {
@@ -1584,6 +1586,8 @@ export default async function Page(props) {
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>See If You Qualify →</Link>
           </div>
           <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} />
+          <SocialProofToast />
+          <PushOptIn />
           <Testimonials />
           <Steps />
           <Contact />
