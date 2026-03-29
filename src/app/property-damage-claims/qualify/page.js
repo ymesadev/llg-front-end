@@ -315,7 +315,7 @@ export default function PropertyDamageQualify() {
               <span className={styles.trustDot} />
               <span>No fees unless we win</span>
               <span className={styles.trustDot} />
-              <span>500+ claims filed</span>
+              <span>4,000+ claims filed</span>
             </div>
           )}
 
