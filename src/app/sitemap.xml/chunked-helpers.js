@@ -172,17 +172,18 @@ export async function collectAllUrls() {
 
 // --- New optimized helpers ---
 export async function getEndpointCounts() {
-  const out = [];
-  for (const m of MAP) {
-    // fetch with pageSize=1 to get total count
-    const res = await fetchPage(m.endpoint, 1, 1);
-    const total = res?.meta?.pagination?.total ?? 0;
-    out.push({ endpoint: m.endpoint, count: Number(total || 0), fields: m.fields, prefix: m.prefix });
-  }
+  // Fetch all endpoint counts in parallel
+  const results = await Promise.all(
+    MAP.map(async (m) => {
+      const res = await fetchPage(m.endpoint, 1, 1);
+      const total = res?.meta?.pagination?.total ?? 0;
+      return { endpoint: m.endpoint, count: Number(total || 0), fields: m.fields, prefix: m.prefix };
+    })
+  );
   // Add dynamically discovered static pages count
   const staticPages = getStaticPages();
-  out.push({ endpoint: 'static', count: staticPages.length, fields: [], prefix: '' });
-  return out;
+  results.push({ endpoint: 'static', count: staticPages.length, fields: [], prefix: '' });
+  return results;
 }
 
 // collect urls for a flattened range [start, start+limit)
@@ -231,24 +232,36 @@ export async function collectUrlsRange(startIndex, limit, fetchPageSize = 200) {
     const need = Math.min(remaining, c.count - offset);
     // determine which pages to fetch from this endpoint
     const firstPage = Math.floor(offset / fetchPageSize) + 1;
-    let idxInPage = offset % fetchPageSize;
-    let fetched = 0;
+    const idxInFirstPage = offset % fetchPageSize;
+    const lastPage = Math.ceil((offset + need) / fetchPageSize) + firstPage - Math.floor(offset / fetchPageSize);
+    const totalPagesToFetch = lastPage - firstPage;
 
-    for (let p = firstPage; fetched < need; p++) {
-      const res = await fetchPage(c.endpoint, p, fetchPageSize);
-      const data = res?.data || [];
-      for (let i = idxInPage; i < data.length && fetched < need; i++) {
-        const item = data[i];
-        const attrs = item?.attributes ?? item ?? {};
-        const val = pick(attrs, c.fields);
-        const path = toLoc(c.prefix || '', val);
-        if (!path) continue;
-        const lastmod = attrs.updatedAt || attrs.publishedAt || attrs.createdAt || undefined;
-        out.push({ loc: `${SITE}${path}`, lastmod });
-        fetched += 1;
-        remaining -= 1;
+    // Fetch all needed pages in parallel (batches of 5)
+    const allData = [];
+    for (let batchStart = firstPage; batchStart <= firstPage + totalPagesToFetch; batchStart += 5) {
+      const batchEnd = Math.min(batchStart + 5, firstPage + totalPagesToFetch + 1);
+      const batch = [];
+      for (let p = batchStart; p < batchEnd; p++) {
+        batch.push(fetchPage(c.endpoint, p, fetchPageSize));
       }
-      idxInPage = 0; // only the first page uses a non-zero start
+      const results = await Promise.all(batch);
+      for (const res of results) {
+        allData.push(...(res?.data || []));
+      }
+    }
+
+    // Extract items from fetched data
+    let fetched = 0;
+    for (let i = idxInFirstPage; i < allData.length && fetched < need; i++) {
+      const item = allData[i];
+      const attrs = item?.attributes ?? item ?? {};
+      const val = pick(attrs, c.fields);
+      const path = toLoc(c.prefix || '', val);
+      if (!path) continue;
+      const lastmod = attrs.updatedAt || attrs.publishedAt || attrs.createdAt || undefined;
+      out.push({ loc: `${SITE}${path}`, lastmod });
+      fetched += 1;
+      remaining -= 1;
     }
 
     // we've consumed offset in this endpoint
