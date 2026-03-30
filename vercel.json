@@ -2,6 +2,9 @@
   "functions": {
     "src/app/api/chat/route.js": {
       "maxDuration": 60
+    },
+    "src/app/api/sitemap/[page]/route.js": {
+      "maxDuration": 60
     }
   }
 }

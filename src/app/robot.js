@@ -1,12 +1,12 @@
 // app/robots.js
 export default function robots() {
-  const site = (process.env.NEXT_PUBLIC_SITE_URL || 'https://louislawgroup.com').replace(/\/+$/, '')
+  const site = 'https://www.louislawgroup.com'
 
   return {
     rules: [
       {
         userAgent: '*',
-        allow: '/',
+        allow: ['/', '/api/sitemap/'],
         disallow: ['/api/', '/admin', '/preview', '/draft', '/private', '/_next'],
       },
     ],
