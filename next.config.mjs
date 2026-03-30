@@ -48,33 +48,36 @@ const nextConfig = {
   },
 
   async rewrites() {
-    return [
-      {
-        // Rewrite /sitemaps/1.xml to /api/sitemap/1
-        source: '/sitemaps/:page.xml',
-        destination: '/api/sitemap/:page',
-      },
-      {
-        // Clean URL for MIR dashboard report
-        source: '/reports/florida-insurance-market-january-2026',
-        destination: '/reports/florida-insurance-market-january-2026.html',
-      },
-      {
-        // Clean URL for Pre-Suit Notice Intelligence Report
-        source: '/reports/florida-presuit-notice-intelligence-report',
-        destination: '/reports/florida-presuit-notice-intelligence-report.html',
-      },
-      {
-        // Clean URL for Fee Reform Case Outcomes Dashboard
-        source: '/reports/fee-reform-case-outcomes-dashboard',
-        destination: '/reports/fee-reform-case-outcomes-dashboard.html',
-      },
-      {
-        // Static article page with custom UI
-        source: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform',
-        destination: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform.html',
-      },
-    ];
+    return {
+      beforeFiles: [
+        {
+          // Static article page with custom UI — must come before catch-all route
+          source: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform',
+          destination: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform.html',
+        },
+        {
+          // Static report pages with custom UI
+          source: '/reports/florida-insurance-market-january-2026',
+          destination: '/reports/florida-insurance-market-january-2026.html',
+        },
+        {
+          source: '/reports/florida-presuit-notice-intelligence-report',
+          destination: '/reports/florida-presuit-notice-intelligence-report.html',
+        },
+        {
+          source: '/reports/fee-reform-case-outcomes-dashboard',
+          destination: '/reports/fee-reform-case-outcomes-dashboard.html',
+        },
+      ],
+      afterFiles: [
+        {
+          // Rewrite /sitemaps/1.xml to /api/sitemap/1
+          source: '/sitemaps/:page.xml',
+          destination: '/api/sitemap/:page',
+        },
+      ],
+      fallback: [],
+    };
   },
 
   async headers() {
