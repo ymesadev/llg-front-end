@@ -130,104 +130,98 @@ export default async function CaseLawUpdatesPage({ searchParams }) {
             </p>
           </div>
 
-          {/* Category Filter Bar */}
-          <div className={styles.filterBar}>
-            <span className={styles.filterLabel}>Categories:</span>
-            {["All", "Property Insurance", "Bad Faith", "PA Regulations", "Carrier Disputes", "Appraisal", "Legislative"].map((cat) => (
-              <span key={cat} className={styles.filterTag}>{cat}</span>
-            ))}
-          </div>
-
           {/* Article Grid */}
-          {posts.length > 0 ? (
-            <div className={styles.grid}>
-              {posts.map((post) => {
-                const tag = getCategoryTag(post.title || "", post.slug || "");
-                const tagColor = getTagColor(tag);
-                const date = post.publishedAt
-                  ? new Date(post.publishedAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })
-                  : "";
+          {posts.length > 0 && (
+            <>
+              {/* Category Filter Bar */}
+              <div className={styles.filterBar}>
+                <span className={styles.filterLabel}>Categories:</span>
+                {["All", "Property Insurance", "Bad Faith", "PA Regulations", "Carrier Disputes", "Appraisal", "Legislative"].map((cat) => (
+                  <span key={cat} className={styles.filterTag}>{cat}</span>
+                ))}
+              </div>
 
-                return (
-                  <Link key={post.id} href={`/${post.slug}`} className={styles.postCard}>
-                    {post.cover && (
-                      <img
-                        src={`https://login.louislawgroup.com${post.cover.url}`}
-                        alt={post.title}
-                        className={styles.postImage}
-                      />
-                    )}
-                    <div className={styles.postContent}>
-                      <div className={styles.postMeta}>
-                        <span
-                          className={styles.postTag}
-                          style={{
-                            background: tagColor.bg,
-                            color: tagColor.text,
-                            borderColor: tagColor.border,
-                          }}
-                        >
-                          {tag}
-                        </span>
-                        {date && <span className={styles.postDate}>{date}</span>}
+              <div className={styles.grid}>
+                {posts.map((post) => {
+                  const tag = getCategoryTag(post.title || "", post.slug || "");
+                  const tagColor = getTagColor(tag);
+                  const date = post.publishedAt
+                    ? new Date(post.publishedAt).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })
+                    : "";
+
+                  return (
+                    <Link key={post.id} href={`/${post.slug}`} className={styles.postCard}>
+                      {post.cover && (
+                        <img
+                          src={`https://login.louislawgroup.com${post.cover.url}`}
+                          alt={post.title}
+                          className={styles.postImage}
+                        />
+                      )}
+                      <div className={styles.postContent}>
+                        <div className={styles.postMeta}>
+                          <span
+                            className={styles.postTag}
+                            style={{
+                              background: tagColor.bg,
+                              color: tagColor.text,
+                              borderColor: tagColor.border,
+                            }}
+                          >
+                            {tag}
+                          </span>
+                          {date && <span className={styles.postDate}>{date}</span>}
+                        </div>
+                        <h2 className={styles.postTitle}>{post.title}</h2>
+                        <p className={styles.postExcerpt}>{post.description}</p>
+                        <span className={styles.readMore}>Read Analysis →</span>
                       </div>
-                      <h2 className={styles.postTitle}>{post.title}</h2>
-                      <p className={styles.postExcerpt}>{post.description}</p>
-                      <span className={styles.readMore}>Read Analysis →</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          ) : (
-            <div className={styles.noPosts}>
-              <h2>Case law and industry insight articles coming soon</h2>
-              <p>
-                Our daily monitoring system is pulling the latest Florida property insurance
-                decisions. Check back tomorrow for the first batch of case summaries.
-              </p>
-            </div>
-          )}
+                    </Link>
+                  );
+                })}
+              </div>
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <nav className={styles.pagination}>
-              {currentPage > 1 && (
-                <Link
-                  href={`/case-law-updates?page=${currentPage - 1}`}
-                  className={styles.paginationLink}
-                >
-                  Previous
-                </Link>
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <nav className={styles.pagination}>
+                  {currentPage > 1 && (
+                    <Link
+                      href={`/case-law-updates?page=${currentPage - 1}`}
+                      className={styles.paginationLink}
+                    >
+                      Previous
+                    </Link>
+                  )}
+                  {paginationItems.map((item, idx) =>
+                    item === "..." ? (
+                      <span key={idx} className={styles.paginationDots}>…</span>
+                    ) : (
+                      <Link
+                        key={item}
+                        href={`/case-law-updates?page=${item}`}
+                        className={`${styles.paginationLink} ${
+                          currentPage === item ? styles.active : ""
+                        }`}
+                      >
+                        {item}
+                      </Link>
+                    )
+                  )}
+                  {currentPage < totalPages && (
+                    <Link
+                      href={`/case-law-updates?page=${currentPage + 1}`}
+                      className={styles.paginationLink}
+                    >
+                      Next
+                    </Link>
+                  )}
+                </nav>
               )}
-              {paginationItems.map((item, idx) =>
-                item === "..." ? (
-                  <span key={idx} className={styles.paginationDots}>…</span>
-                ) : (
-                  <Link
-                    key={item}
-                    href={`/case-law-updates?page=${item}`}
-                    className={`${styles.paginationLink} ${
-                      currentPage === item ? styles.active : ""
-                    }`}
-                  >
-                    {item}
-                  </Link>
-                )
-              )}
-              {currentPage < totalPages && (
-                <Link
-                  href={`/case-law-updates?page=${currentPage + 1}`}
-                  className={styles.paginationLink}
-                >
-                  Next
-                </Link>
-              )}
-            </nav>
+            </>
           )}
         </div>
       </section>
