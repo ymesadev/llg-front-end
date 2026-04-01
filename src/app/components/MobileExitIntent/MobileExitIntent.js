@@ -5,7 +5,8 @@ import Link from "next/link";
 import styles from "./MobileExitIntent.module.css";
 import { trackEvent } from "@/app/utils/analytics";
 
-export default function MobileExitIntent({ intakeHref = "/ssdi/qualify" }) {
+export default function MobileExitIntent({ intakeHref = "/ssdi/qualify", lang = "en" }) {
+  const isES = lang === "es";
   const [show, setShow] = useState(false);
   const lastY = useRef(0);
   const lastT = useRef(0);
@@ -56,18 +57,18 @@ export default function MobileExitIntent({ intakeHref = "/ssdi/qualify" }) {
       <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.close} onClick={dismiss} aria-label="Close">&times;</button>
         <div className={styles.badge}>Louis Law Group</div>
-        <h2 className={styles.title}>Before you go...</h2>
+        <h2 className={styles.title}>{isES ? "Antes de irse..." : "Before you go..."}</h2>
         <p className={styles.sub}>
-          Find out if you qualify for a free case review. Takes under 2 minutes — no obligation.
+          {isES ? "Descubra si califica para una evaluación gratis de su caso. Toma menos de 2 minutos — sin compromiso." : "Find out if you qualify for a free case review. Takes under 2 minutes — no obligation."}
         </p>
         <Link
           href={intakeHref}
           className={styles.cta}
           onClick={() => trackEvent("exit_intent_clicked", { href: intakeHref })}
         >
-          Check Your Eligibility &rarr;
+          {isES ? "Verifique Su Elegibilidad \u2192" : "Check Your Eligibility \u2192"}
         </Link>
-        <p className={styles.note}>No fees unless we win your case.</p>
+        <p className={styles.note}>{isES ? "Sin costo a menos que ganemos su caso." : "No fees unless we win your case."}</p>
       </div>
     </div>
   );

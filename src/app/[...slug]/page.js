@@ -1418,7 +1418,7 @@ export default async function Page(props) {
                 if (tocHeadings.length < 4) return null;
                 return (
                   <nav className={styles.toc} aria-label="Table of contents">
-                    <p className={styles.tocTitle}>In This Article</p>
+                    <p className={styles.tocTitle}>{articleLang === "es" ? "En Este Artículo" : "In This Article"}</p>
                     <ol className={styles.tocList}>
                       {tocHeadings.map((h, i) => (
                         <li key={i} className={styles.tocItem}>{h}</li>
@@ -1557,7 +1557,7 @@ export default async function Page(props) {
                 ];
                 return (
                   <nav style={{borderTop:"1px solid #e5e7eb",paddingTop:"20px",margin:"16px 0 32px"}} aria-label="More resources">
-                    <h3 style={{marginTop:0,marginBottom:"10px",color:"#374151",fontSize:"0.95rem"}}>More from Louis Law Group</h3>
+                    <h3 style={{marginTop:0,marginBottom:"10px",color:"#374151",fontSize:"0.95rem"}}>{articleLang === "es" ? "Más de Louis Law Group" : "More from Louis Law Group"}</h3>
                     <ul style={{margin:0,paddingLeft:"20px",lineHeight:"1.9",columns:2,columnGap:"24px"}}>
                       {crossLinks.map((l, i) => <li key={i}><a href={l.href}>{l.label}</a></li>)}
                     </ul>
@@ -1569,23 +1569,26 @@ export default async function Page(props) {
                 const intakeHref = getIntakeHref(slug, articleType);
                 const isCaseLaw = articleType === "case-law";
                 const isSSDI = articleType === "ssdi";
-                const ctaTitle = isCaseLaw
-                  ? "Submit a Policy or Denial Letter for Review"
-                  : isSSDI
-                    ? "Find Out If You Qualify for SSDI Benefits"
-                    : "Find Out If You Qualify — Free Case Review";
+                const isES = articleLang === "es";
+                const ctaTitle = isES
+                  ? (isSSDI ? "Descubra Si Califica para Beneficios de SSDI" : "Descubra Si Califica — Evaluación Gratis")
+                  : isCaseLaw
+                    ? "Submit a Policy or Denial Letter for Review"
+                    : isSSDI
+                      ? "Find Out If You Qualify for SSDI Benefits"
+                      : "Find Out If You Qualify — Free Case Review";
                 return (
                   <div className={styles.endCta}>
                     <h3 className={styles.endCtaTitle}>{ctaTitle}</h3>
                     <p className={styles.endCtaSubtext}>
-                      {isCaseLaw ? "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential" : "No fees unless we win · 100% confidential · Same-day response"}
+                      {isES ? "Sin costo a menos que ganemos · 100% confidencial · Respuesta el mismo día" : isCaseLaw ? "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential" : "No fees unless we win · 100% confidential · Same-day response"}
                     </p>
                     <div style={{display:"flex",gap:"12px",flexWrap:"wrap",justifyContent:"center"}}>
                       <Link href={intakeHref} className={styles.endCtaBtn}>
-                        Check Your Eligibility →
+                        {isES ? "Verifique Su Elegibilidad →" : "Check Your Eligibility →"}
                       </Link>
                       <Link href={intakeHref} className={styles.endCtaBtnSecondary}>
-                        See If You Qualify →
+                        {isES ? "Vea Si Califica →" : "See If You Qualify →"}
                       </Link>
                     </div>
                   </div>
@@ -1603,7 +1606,9 @@ export default async function Page(props) {
                     <Link href="/pierre-a-louis-esq">Pierre A. Louis, Esq.</Link>
                   </p>
                   <p className={styles.authorCardBio}>
-                    Pierre A. Louis is an attorney and founder of Louis Law Group, specializing in property damage insurance claims and Social Security disability (SSDI/SSI). He has recovered over $200 million for clients against major insurance companies.
+                    {articleLang === "es"
+                      ? "Pierre A. Louis es abogado y fundador de Louis Law Group, especializado en reclamos de seguros por daños a la propiedad y discapacidad del Seguro Social (SSDI/SSI). Ha recuperado más de $200 millones para sus clientes contra las principales compañías de seguros."
+                      : "Pierre A. Louis is an attorney and founder of Louis Law Group, specializing in property damage insurance claims and Social Security disability (SSDI/SSI). He has recovered over $200 million for clients against major insurance companies."}
                   </p>
                 </div>
               </div>
@@ -1618,10 +1623,10 @@ export default async function Page(props) {
           )}
           {/* Sticky mobile CTA — routes to correct intake form per article type */}
           <div className={styles.stickyMobileCta}>
-            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyCall}>Check Your Eligibility</Link>
-            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>See If You Qualify →</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyCall}>{articleLang === "es" ? "Verifique Su Elegibilidad" : "Check Your Eligibility"}</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →"}</Link>
           </div>
-          <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} />
+          <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} />
           <SocialProofToast />
           <PushOptIn />
           <Testimonials />
