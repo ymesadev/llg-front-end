@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
+import { trackEvent } from "@/app/utils/analytics";
 
 const TOTAL_STEPS = 9; // steps 0–9 (plus branches 5b, 7b)
 
@@ -74,6 +75,38 @@ export default function SSDIQualify() {
   const [submitting, setSubmitting] = useState(false);
   const [scoreBarWidth, setScoreBarWidth] = useState(0);
 
+  const SSDI_STEP_NAMES = { 0: "receiving_benefits", 1: "prior_terminated", 2: "currently_working", 3: "age", 4: "work_credits", 5: "medical_provider", "5b": "medical_commitment", 6: "disability_duration", 7: "current_attorney", "7b": "attorney_release", 8: "prior_denials", 9: "contact_info" };
+
+  // Track step views
+  useEffect(() => {
+    if (cur !== "result" && SSDI_STEP_NAMES[cur]) {
+      trackEvent("qualify_step_viewed", { case_type: "ssdi", step: cur, step_name: SSDI_STEP_NAMES[cur] });
+    }
+  }, [cur]);
+
+  // Track abandonment on page exit
+  const curRef = useRef(cur);
+  const resultRef = useRef(result);
+  const answersRef = useRef(answers);
+  useEffect(() => { curRef.current = cur; }, [cur]);
+  useEffect(() => { resultRef.current = result; }, [result]);
+  useEffect(() => { answersRef.current = answers; }, [answers]);
+  useEffect(() => {
+    trackEvent("qualify_page_view", { case_type: "ssdi" });
+    const handleExit = () => {
+      if (!resultRef.current && curRef.current !== "result") {
+        trackEvent("qualify_abandoned", {
+          case_type: "ssdi",
+          last_step: curRef.current,
+          last_step_name: SSDI_STEP_NAMES[curRef.current],
+          answers_given: Object.keys(answersRef.current).length,
+        });
+      }
+    };
+    window.addEventListener("beforeunload", handleExit);
+    return () => window.removeEventListener("beforeunload", handleExit);
+  }, []);
+
   // Animate score bar after result renders
   useEffect(() => {
     if (result && !result.dq) {
@@ -104,10 +137,13 @@ export default function SSDIQualify() {
 
   const pick = (key, val, next, delay = 320) => {
     setAns(key, val);
+    trackEvent("qualify_step_answered", { case_type: "ssdi", step: cur, step_name: SSDI_STEP_NAMES[cur], answer_key: key, answer: val });
     setTimeout(() => go(next), delay);
   };
 
   const dq = (reason) => {
+    trackEvent("qualify_step_answered", { case_type: "ssdi", step: cur, step_name: SSDI_STEP_NAMES[cur], answer: "disqualified", disqualified: true, dq_reason: reason });
+    trackEvent("qualify_disqualified", { case_type: "ssdi", reason, step: cur, step_name: SSDI_STEP_NAMES[cur] });
     setHistory((h) => [...h, cur]);
     setResult({ dq: true, reason });
     setCur("result");
@@ -124,12 +160,10 @@ export default function SSDIQualify() {
         body: JSON.stringify({ ...contact, answers, score }),
       });
     } catch {/* silent */}
+    trackEvent("qualify_submitted", { case_type: "ssdi", score });
     // Identify user in OpenReplay
     if (window.__or_identify) {
       window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'ssdi', score });
-    }
-    if (window.__or_event) {
-      window.__or_event('form_submitted', { form: 'ssdi_qualify', score, name: contact.name });
     }
     setResult({ dq: false, score });
     setCur("result");
@@ -142,6 +176,13 @@ export default function SSDIQualify() {
   };
 
   const contactOk = contact.name.trim() && contact.phone.trim() && contact.email.includes("@");
+  const contactStartedRef = useRef(false);
+  const trackContactStart = () => {
+    if (!contactStartedRef.current) {
+      contactStartedRef.current = true;
+      trackEvent("qualify_step_answered", { case_type: "ssdi", step: 9, step_name: "contact_info", answer: "started_typing" });
+    }
+  };
 
   // ── Result screen ──────────────────────────────────────────
   if (result && cur === "result") {
@@ -255,7 +296,7 @@ export default function SSDIQualify() {
               <div className={styles.question}>Are you currently receiving Social Security disability benefits?</div>
               <div className={styles.hint}>SSDI or SSI — either applies to this question</div>
               <div className={styles.opts}>
-                <button className={styles.opt} onClick={() => { setTimeout(() => go(1), 320); }}>
+                <button className={styles.opt} onClick={() => { trackEvent("qualify_step_answered", { case_type: "ssdi", step: 0, step_name: "receiving_benefits", answer: "no" }); setTimeout(() => go(1), 320); }}>
                   <span className={styles.optKey}>A</span> No — I am not currently receiving benefits
                 </button>
                 <button className={styles.opt} onClick={() => { setTimeout(() => dq("benefits"), 320); }}>
@@ -484,17 +525,17 @@ export default function SSDIQualify() {
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Full name</label>
                   <input className={styles.input} placeholder="Jane Smith" value={contact.name}
-                    onChange={(e) => setContact((c) => ({ ...c, name: e.target.value }))} />
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, name: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Phone number</label>
                   <input className={styles.input} placeholder="(954) 555-0100" value={contact.phone}
-                    onChange={(e) => setContact((c) => ({ ...c, phone: e.target.value }))} />
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, phone: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Email address</label>
                   <input className={styles.input} type="email" placeholder="jane@example.com" value={contact.email}
-                    onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))} />
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }} />
                 </div>
               </div>
               <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleSubmit}

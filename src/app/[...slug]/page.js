@@ -74,6 +74,21 @@ function getArticleType(slug) {
   return "property-damage";
 }
 
+// Detect Spanish articles by slug patterns
+function isSpanishArticle(slug) {
+  const s = (slug || "").toLowerCase();
+  const esKeywords = [
+    "abogado", "abogados", "discapacidad", "seguro-social", "negaron",
+    "apelar", "calificar", "beneficios-discapacidad", "consulta-gratis",
+    "danos-por-agua", "denegacion", "reclamar-seguro", "hispanos",
+    "accidente", "laboral", "derechos-legales", "asesoria-legal",
+    "reclamo-negado", "seguros-florida", "dano-propiedad",
+    "huracan", "inundacion", "techo-danado", "incendio",
+    "compania-seguros", "poliza", "indemnizacion",
+  ];
+  return esKeywords.some(k => s.includes(k));
+}
+
 // US state slug fragments → full names
 const STATE_MAP = {
   alabama:"Alabama",alaska:"Alaska",arizona:"Arizona",arkansas:"Arkansas",
@@ -156,6 +171,13 @@ function getRelatedLinks(slug, articleType) {
 
 // Returns the correct intake href based on articleType (determined by getArticleType)
 function getIntakeHref(slug, articleType) {
+  const isES = isSpanishArticle(slug);
+  if (isES) {
+    switch (articleType) {
+      case "ssdi":            return "/ssdi/calificar";
+      default:                return "/reclamos-propiedad/calificar";
+    }
+  }
   switch (articleType) {
     case "case-law":        return "/case-law-updates#submit-policy";
     case "ahs":             return "/american-home-shield-privacy-torts/qualify";
@@ -989,6 +1011,7 @@ export default async function Page(props) {
 
   // Compute article type early — used in schema injection + content rendering
   const articleType = getArticleType(slug);
+  const articleLang = isSpanishArticle(slug) ? "es" : "en";
   const isSSAFormPage = /^ssa-\d+/.test(slug) || slug === 'request-for-reconsideration-form-ssa-561';
 
   // Debug: log keys so we can see what's coming from Strapi in server logs
@@ -1405,7 +1428,7 @@ export default async function Page(props) {
                 );
               })()}
               <div className={styles.blogContent}>
-                {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} />}
+                {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} lang={articleLang} />}
                 {(() => {
                   // articleType computed above via getArticleType(slug)
                   // Demote H1 in article body to H2 (page template already has the H1)
@@ -1451,16 +1474,20 @@ export default async function Page(props) {
               {(() => {
                 const faqSchema = page.blocks ? extractFaqSchema(page.blocks) : null;
                 const faqOverride = !faqSchema ? getFaqOverride(slug) : null;
-                const ssdiStaticFaq = !faqSchema && !faqOverride && articleType === "ssdi" ? [
+                const ssdiStaticFaq = !faqSchema && !faqOverride && articleType === "ssdi" ? (articleLang === "es" ? [
+                  { q: "\u00BFCuanto tiempo toma ser aprobado para SSDI?", a: "La mayoria de las solicitudes iniciales de SSDI toman de 3 a 6 meses para una decision. Las apelaciones pueden tomar de 12 a 24 meses. Trabajar con un abogado de discapacidad mejora significativamente sus probabilidades de aprobacion en cada etapa." },
+                  { q: "\u00BFQue debo hacer si mi reclamo de SSDI es negado?", a: "Aproximadamente el 67% de los reclamos iniciales de SSDI son negados. Tiene 60 dias para presentar una Solicitud de Reconsideracion. Si es negado nuevamente, solicite una audiencia ALJ — aqui es donde la mayoria de los reclamos son finalmente aprobados." },
+                  { q: "\u00BFLouis Law Group maneja casos de SSDI?", a: "Si. Louis Law Group es una firma de abogados de Florida especializada en reclamos de discapacidad SSDI y SSI. Trabajamos por contingencia — no paga nada a menos que ganemos. Llame al (833) 657-4812 para una consulta gratis." }
+                ] : [
                   { q: "How long does it take to get approved for SSDI?", a: "Most initial SSDI applications take 3\u20136 months for a decision. Appeals can take 12\u201324 months. Working with a disability attorney significantly improves your approval odds at every stage." },
                   { q: "What should I do if my SSDI claim is denied?", a: "About 67% of initial SSDI claims are denied. You have 60 days to file a Request for Reconsideration. If denied again, request an ALJ hearing \u2014 this is where most claims are ultimately approved." },
                   { q: "Does Louis Law Group handle SSDI cases?", a: "Yes. Louis Law Group is a Florida law firm specializing in SSDI and SSI disability claims. We work on contingency \u2014 you pay nothing unless we win. Call (833) 657-4812 for a free consultation." }
-                ] : null;
+                ]) : null;
                 const items = faqSchema?.mainEntity?.map(e => ({ q: e.name, a: e.acceptedAnswer?.text })) || faqOverride || ssdiStaticFaq;
                 if (!items || items.length === 0) return null;
                 return (
                   <div className={styles.visibleFaq}>
-                    <h2>Frequently Asked Questions</h2>
+                    <h2>{articleLang === "es" ? "Preguntas Frecuentes" : "Frequently Asked Questions"}</h2>
                     {items.map((item, i) => (
                       <div key={i} className={styles.visibleFaqItem}>
                         <h3>{item.q}</h3>
@@ -1476,7 +1503,7 @@ export default async function Page(props) {
                 if (sources.length === 0) return null;
                 return (
                   <div className={styles.sourcesSection}>
-                    <h3>Sources &amp; References</h3>
+                    <h3>{articleLang === "es" ? "Fuentes y Referencias" : "Sources & References"}</h3>
                     <ul>
                       {sources.map((s, i) => (
                         <li key={i}><a href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a></li>
@@ -1488,7 +1515,7 @@ export default async function Page(props) {
               {/* SSDI: Related Forms box — contextual internal links to SSA form pages */}
               {articleType === "ssdi" && !isSSAFormPage && (
                 <div style={{background:"#f0f7ff",borderLeft:"4px solid #1a56db",padding:"20px 24px",borderRadius:"4px",margin:"32px 0"}}>
-                  <h3 style={{marginTop:0,color:"#1a56db"}}>SSDI Forms You May Need</h3>
+                  <h3 style={{marginTop:0,color:"#1a56db"}}>{articleLang === "es" ? "Formularios de SSDI Que Puede Necesitar" : "SSDI Forms You May Need"}</h3>
                   <ul>
                     <li><a href="/request-for-reconsideration-form-ssa-561">SSA-561 — Request for Reconsideration</a></li>
                     <li><a href="/ssa-3373-function-report-adult">SSA-3373 — Function Report Adult</a></li>

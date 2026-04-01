@@ -9,7 +9,7 @@ const reasons = [
   {
     icon: "🏆",
     title: "Millions Recovered for Clients",
-    body: "We've helped thousands of Florida families recover millions from insurance companies and the SSA.",
+    body: "We've helped thousands of families recover millions from insurance companies and the SSA.",
   },
   {
     icon: "📞",
@@ -22,14 +22,14 @@ const reasons = [
     body: "Attorney-client privilege protects every conversation. Your information is never shared without your consent.",
   },
   {
-    icon: "📍",
-    title: "Florida-Focused Practice",
-    body: "We know Florida insurance law, SSA procedures, and local courts. Our focus gives our clients an edge.",
+    icon: "🇺🇸",
+    title: "Nationwide SSDI Representation",
+    body: "We represent disability claimants across all 50 states. No matter where you live, our team can handle your SSDI case.",
   },
   {
-    icon: "👤",
-    title: "Direct Attorney Access",
-    body: "You'll work directly with Pierre A. Louis, Esq. — not a paralegal or call center. Real attorney attention.",
+    icon: "👥",
+    title: "Dedicated Attorney Team",
+    body: "Your case is assigned to an experienced attorney from our team — not a paralegal or call center. Real attorney attention at every stage.",
   },
 ];
 
@@ -40,7 +40,7 @@ export default function WhyChooseUs() {
         <p className={styles.eyebrow}>Why Clients Choose Us</p>
         <h2 className={styles.title}>The Louis Law Group Difference</h2>
         <p className={styles.subtitle}>
-          We're not a settlement mill. We're a Florida-focused firm that fights
+          We're not a settlement mill. We're a client-focused firm that fights
           for maximum recovery — every time.
         </p>
         <div className={styles.grid}>

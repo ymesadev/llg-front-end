@@ -36,10 +36,10 @@ const SEO_OVERRIDES = {
     description: "How to apply for SSDI online in Missouri. Eligibility, required documents, SSA office locations, and what to do if denied. Free consultation: (833) 657-4812.",
   },
 
-  // #5: Average SSDI Payment California — 5,373 imps, 0.35% CTR, pos 4.0
+  // #5: Average SSDI Payment California — 5,498 imps, 0.3% CTR, pos 5.4
   "average-ssdi-payment-california-2026": {
-    title: "Average SSDI Payment California 2026: $1,580/Mo",
-    description: "California SSDI payments average $1,580/month in 2026. See what you should receive and find out if you are underpaid. Free disability attorney consultation.",
+    title: "Average SSDI Payment California 2026: $1,580/Mo Check",
+    description: "The average SSDI check in California is $1,580/month in 2026. 43% of recipients are underpaid. See if you qualify for more and how to increase your benefit.",
   },
 
   // #6: SSDI ALJ Hearing Tips — 4,601 imps, 0.07% CTR, pos 3.5
@@ -186,6 +186,39 @@ const SEO_OVERRIDES = {
   "faq-property-damage-does-homeowners-insurance-cover-roof-leaks": {
     title: "Does Homeowners Insurance Cover Roof Leaks? (2026 Guide)",
     description: "Yes, homeowners insurance covers roof leaks from storms and sudden damage — but NOT wear and tear. Learn what's covered, common denials, and your legal options.",
+  },
+
+  // === TOP 20 SSDI CTR OPTIMIZATION (2026-03-27) ===
+  // Targeting pages not in Strapi articles DB or needing override priority
+
+  // Social Security Disability Lawyers (page, not article) — 4,798 imps, 0.1% CTR, pos 46.4
+  "social-security-disability-lawyers": {
+    title: "Social Security Disability Lawyers: Free Case Review (2026)",
+    description: "Experienced SSDI lawyers helping you win disability benefits. We handle applications, denials, and appeals. No fee unless you win. Free consult: (844) 853-8996.",
+  },
+
+  // SSDI Approval Timeline California v9 — 3,244 imps, 0.5% CTR, pos 4.6 (not in Strapi)
+  "ssdi-approval-timeline-california-2026-9": {
+    title: "SSDI Approval Timeline California 2026: 3-5 Month Wait",
+    description: "How long does SSDI take in California? 3-5 months for initial claims in 2026. See processing times at each stage and how to speed up your approval.",
+  },
+
+  // Direct Deposit Changes Delay SS Payments — 1,869 imps, 0.7% CTR, pos 4.5 (canonical URL)
+  "direct-deposit-changes-can-delay-social-security-payments": {
+    title: "Direct Deposit Changes Can Delay SSDI Payments (2026)",
+    description: "Changing your direct deposit? It can delay your Social Security check by 1-3 months due to new fraud protocols. Learn how to avoid payment gaps.",
+  },
+
+  // Average SSDI Payment Florida v10 — 1,844 imps, 0.8% CTR, pos 2.4 (not in Strapi)
+  "average-ssdi-payment-florida-2026-10": {
+    title: "Average SSDI Payment Florida 2026: $1,537/Mo (+ Max)",
+    description: "Florida SSDI pays $1,537/month on average in 2026. Maximum is $3,822. See what you should receive and find out if SSA is underpaying you.",
+  },
+
+  // SSDI Approval Timeline Texas v10 — 1,729 imps, 1.0% CTR, pos 3.3 (not in Strapi)
+  "ssdi-approval-timeline-texas-2026-10": {
+    title: "SSDI Approval Timeline Texas 2026: Wait Times by Stage",
+    description: "Texas SSDI approval takes 4-6 months for initial claims in 2026. See processing times at each stage, hearing wait times in Dallas and Houston, and speed-up tips.",
   },
 };
 

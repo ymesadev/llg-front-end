@@ -399,6 +399,32 @@
   margin: 2rem 0;
 }
 
+.youtubeEmbed {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin: 1.5rem auto;
+  aspect-ratio: 9 / 16;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.youtubeIframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .youtubeEmbed {
+    max-width: 100%;
+  }
+}
+
 .blogImageContainer img {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -814,6 +840,24 @@
 
 .endCtaBtn:hover {
   background: #b5923e;
+}
+
+.endCtaBtnSecondary {
+  display: inline-block;
+  background: transparent;
+  color: #c9a84c;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+  border-radius: 30px;
+  border: 2px solid #c9a84c;
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.endCtaBtnSecondary:hover {
+  background: #c9a84c;
+  color: #fff;
 }
 
 /* ── Author bio card (bottom of article) ── */

@@ -13,8 +13,22 @@ const INTAKE_MAP = {
   "american-integrity": { href: "/american-integrity-insurance-privacy-torts/qualify", headline: "See If You Qualify — American Integrity Claim",   sub: "Check your eligibility for the American Integrity Insurance case — takes under 2 minutes." },
 };
 
-export default function DocumentUploadCTA({ articleType = "property-damage" }) {
-  const config = INTAKE_MAP[articleType] || INTAKE_MAP["property-damage"];
+const INTAKE_MAP_ES = {
+  "ssdi":            { href: "/ssdi/calificar",                headline: "Descubra Si Califica para Beneficios de SSDI",              sub: "Responda 10 preguntas rapidas y obtenga su puntuacion de elegibilidad al instante — gratis, sin compromiso." },
+  "property-damage": { href: "/reclamos-propiedad/calificar",  headline: "Vea Si Tiene un Reclamo de Seguro Fuerte",                  sub: "Complete nuestro calificador de 2 minutos y descubra si es un candidato fuerte para representacion — sin costo." },
+};
+
+export default function DocumentUploadCTA({ articleType = "property-damage", lang = "en" }) {
+  const isSpanish = lang === "es";
+  const map = isSpanish ? INTAKE_MAP_ES : INTAKE_MAP;
+  const config = map[articleType] || (isSpanish ? INTAKE_MAP_ES["property-damage"] : INTAKE_MAP["property-damage"]);
+
+  const btnText = isSpanish
+    ? "Vea Si Califica — Evaluacion Gratis \u2192"
+    : "See If You Qualify — Free Eligibility Check \u2192";
+  const disclaimer = isSpanish
+    ? "Sin costo a menos que ganemos \u00B7 Toma menos de 2 minutos \u00B7 Sin compromiso"
+    : "No fees unless we win \u00B7 Takes under 2 minutes \u00B7 No obligation";
 
   return (
     <div className={styles.ctaBox}>
@@ -22,9 +36,9 @@ export default function DocumentUploadCTA({ articleType = "property-damage" }) {
         <h3 className={styles.headline}>{config.headline}</h3>
         <p className={styles.subtitle}>{config.sub}</p>
         <Link href={config.href} className={styles.btn}>
-          See If You Qualify — Free Eligibility Check →
+          {btnText}
         </Link>
-        <p className={styles.disclaimer}>No fees unless we win · Takes under 2 minutes · No obligation</p>
+        <p className={styles.disclaimer}>{disclaimer}</p>
       </div>
     </div>
   );

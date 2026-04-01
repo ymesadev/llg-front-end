@@ -114,6 +114,10 @@ public/*
 # allow SSDI qualify flow
 !src/app/ssdi/
 !src/app/ssdi/**
+
+# allow Spanish property damage qualifier
+!src/app/reclamos-propiedad/
+!src/app/reclamos-propiedad/**
 !src/app/ssdi-lawyers/
 !src/app/ssdi-lawyers/**
 
