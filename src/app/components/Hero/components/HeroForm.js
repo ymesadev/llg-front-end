@@ -5,9 +5,59 @@ import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import styles from "./HeroForm.module.css";
 
-export default function FreeCaseEvaluationPage() {
+const translations = {
+  en: {
+    name: "Name",
+    email: "Email",
+    phone: "Phone",
+    zipCode: "Zip Code",
+    selectCaseType: "Select Case Type",
+    propertyDamage: "Property Damage",
+    personalInjury: "Personal Injury",
+    ssdi: "SSDI",
+    employmentLaw: "Employment Law",
+    warrantyLaw: "Warranty Law",
+    selectCarrier: "Select Carrier",
+    message: "Message",
+    messagePlaceholder: "Tell us more about your case",
+    consent: <>By submitting this form, you consent to receive case updates, appointment reminders, and important legal notifications from Louis Law Group at the number provided. Msg &amp; data rates may apply. Message frequency may vary depending on your case status. You can unsubscribe at any time by replying STOP or clicking the unsubscribe link. Reply HELP for assistance. Your phone number will not be shared with third parties. Read our{' '}<a href="https://www.louislawgroup.com/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>{' '}and{' '}<a href="https://www.louislawgroup.com/terms-of-use-agreement" target="_blank" rel="noopener noreferrer">Terms of Use Agreement</a>{' '}for more information.</>,
+    submit: "Free Case Evaluation",
+    errorMessage: "Please enter a valid US phone number and try again.",
+    submitting: "Submitting...",
+    intakeRoutes: {
+      "Property Damage": "/property-damage-claims/qualify",
+      "SSDI": "/ssdi/qualify",
+    },
+  },
+  es: {
+    name: "Nombre",
+    email: "Correo Electrónico",
+    phone: "Teléfono",
+    zipCode: "Código Postal",
+    selectCaseType: "Seleccione Tipo de Caso",
+    propertyDamage: "Daño a la Propiedad",
+    personalInjury: "Lesiones Personales",
+    ssdi: "Discapacidad (SSDI)",
+    employmentLaw: "Derecho Laboral",
+    warrantyLaw: "Ley de Garantía",
+    selectCarrier: "Seleccione Aseguradora",
+    message: "Mensaje",
+    messagePlaceholder: "Cuéntenos más sobre su caso",
+    consent: <>Al enviar este formulario, usted acepta recibir actualizaciones de su caso, recordatorios de citas y notificaciones legales importantes de Louis Law Group al número proporcionado. Pueden aplicar tarifas de mensajes y datos. La frecuencia de los mensajes puede variar según el estado de su caso. Puede cancelar su suscripción en cualquier momento respondiendo STOP o haciendo clic en el enlace para cancelar. Responda HELP para obtener ayuda. Su número de teléfono no será compartido con terceros. Lea nuestra{' '}<a href="https://www.louislawgroup.com/privacy-policy" target="_blank" rel="noopener noreferrer">Política de Privacidad</a>{' '}y{' '}<a href="https://www.louislawgroup.com/terms-of-use-agreement" target="_blank" rel="noopener noreferrer">Acuerdo de Términos de Uso</a>{' '}para más información.</>,
+    submit: "Evaluación Gratuita del Caso",
+    errorMessage: "Por favor ingrese un número de teléfono válido de EE.UU. e intente de nuevo.",
+    submitting: "Enviando...",
+    intakeRoutes: {
+      "Property Damage": "/reclamos-propiedad/calificar",
+      "SSDI": "/ssdi/calificar",
+    },
+  },
+};
+
+export default function FreeCaseEvaluationPage({ lang = "en" }) {
   const router = useRouter();
   const formLoadTime = useRef(Date.now());
+  const t = translations[lang] || translations.en;
 
   // Form data
   const [formData, setFormData] = useState({
@@ -113,11 +163,7 @@ export default function FreeCaseEvaluationPage() {
       });
 
       // Redirect based on case type before resetting form
-      const intakeRoutes = {
-        "Property Damage": "/property-damage-claims/qualify",
-        "SSDI": "/ssdi/qualify",
-      };
-      const redirectTo = intakeRoutes[formData.caseType] || "/thank-you";
+      const redirectTo = t.intakeRoutes[formData.caseType] || "/thank-you";
       setFormStatus("success");
       // Identify user in OpenReplay
       if (window.__or_identify) {
@@ -171,7 +217,7 @@ export default function FreeCaseEvaluationPage() {
       <div className={styles.errorContainer}>
         <FaTimesCircle className={styles.errorIcon} />
         <p className={styles.errorMessage}>
-          Please enter a valid US phone number and try again.
+          {t.errorMessage}
         </p>
       </div>
     );
@@ -182,7 +228,7 @@ export default function FreeCaseEvaluationPage() {
     return (
       <div className={styles.spinnerContainer}>
         <FaSpinner className={styles.spinner} />
-        <p>Submitting...</p>
+        <p>{t.submitting}</p>
       </div>
     );
   }
@@ -216,7 +262,7 @@ export default function FreeCaseEvaluationPage() {
             onBlur={() => setIsNameFocused(false)}
             required
           />
-          <label>Name</label>
+          <label>{t.name}</label>
         </div>
 
         {/* Email */}
@@ -232,7 +278,7 @@ export default function FreeCaseEvaluationPage() {
             onBlur={() => setIsEmailFocused(false)}
             required
           />
-          <label>Email</label>
+          <label>{t.email}</label>
         </div>
 
         {/* Phone */}
@@ -248,7 +294,7 @@ export default function FreeCaseEvaluationPage() {
             onBlur={() => setIsPhoneFocused(false)}
             required
           />
-          <label>Phone</label>
+          <label>{t.phone}</label>
         </div>
 
         {/* Zipcode */}
@@ -264,7 +310,7 @@ export default function FreeCaseEvaluationPage() {
             onBlur={() => setIsZipcodeFocused(false)}
             required
           />
-          <label>Zip Code</label>
+          <label>{t.zipCode}</label>
         </div>
       </div>
 
@@ -278,13 +324,13 @@ export default function FreeCaseEvaluationPage() {
           required
         >
           <option value="" disabled>
-            Select Case Type
+            {t.selectCaseType}
           </option>
-          <option value="Property Damage">Property Damage</option>
-          <option value="Personal Injury">Personal Injury</option>
-          <option value="SSDI">SSDI</option>
-          <option value="Employment Law">Employment Law</option>
-          <option value="Warranty Law">Warranty Law</option>
+          <option value="Property Damage">{t.propertyDamage}</option>
+          <option value="Personal Injury">{t.personalInjury}</option>
+          <option value="SSDI">{t.ssdi}</option>
+          <option value="Employment Law">{t.employmentLaw}</option>
+          <option value="Warranty Law">{t.warrantyLaw}</option>
         </select>
       </div>
 
@@ -299,7 +345,7 @@ export default function FreeCaseEvaluationPage() {
             required
           >
             <option value="" disabled>
-              Select Carrier
+              {t.selectCarrier}
             </option>
             <option value="American Home Shield">American Home Shield</option>
             <option value="Other">Other</option>
@@ -309,10 +355,10 @@ export default function FreeCaseEvaluationPage() {
 
       {/* Description */}
       <div className={styles.message}>
-        <label>Message</label>
+        <label>{t.message}</label>
         <textarea
           name="description"
-          placeholder="Tell us more about your case"
+          placeholder={t.messagePlaceholder}
           className={styles.textarea}
           rows={4}
           value={formData.description}
@@ -331,19 +377,13 @@ export default function FreeCaseEvaluationPage() {
     required
   />
   <label>
-    By submitting this form, you consent to receive case updates, appointment reminders, and important legal notifications from Louis Law Group at the number provided. Msg &amp; data rates may apply. Message frequency may vary depending on your case status. You can unsubscribe at any time by replying STOP or clicking the unsubscribe link. Reply HELP for assistance. Your phone number will not be shared with third parties. Read our{' '}
-    <a href="https://www.louislawgroup.com/privacy-policy" target="_blank" rel="noopener noreferrer">
-      Privacy Policy
-    </a>{' '}and{' '}
-    <a href="https://www.louislawgroup.com/terms-of-use-agreement" target="_blank" rel="noopener noreferrer">
-      Terms of Use Agreement
-    </a>{' '}for more information.
+    {t.consent}
   </label>
 </div>
 
       {/* Submission Button */}
       <button type="submit" className={styles.submitButton}>
-        Free Case Evaluation
+        {t.submit}
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <g
             fill="none"

@@ -1074,7 +1074,7 @@ export default async function Page(props) {
             </div>
           </section>
           <Steps />
-          <Contact />
+          <Contact lang={articleLang} />
         </>
       ) : isArticlePage ? (
         <>
@@ -1631,7 +1631,7 @@ export default async function Page(props) {
           <PushOptIn />
           <Testimonials />
           <Steps />
-          <Contact />
+          <Contact lang={articleLang} />
         </>
       ) : isAttorneyPage ? (
         <>
@@ -1651,7 +1651,7 @@ export default async function Page(props) {
                   <h1 className={styles.attorneyTitle}>{page.title}</h1>
                 </div>
                 <div className={styles.rightColumn}>
-                  <HeroForm />
+                  <HeroForm lang={articleLang} />
                 </div>
               </div>
             </div>
@@ -1671,7 +1671,7 @@ export default async function Page(props) {
           </section>
           <Results />
           <Steps />
-          <Contact />
+          <Contact lang={articleLang} />
         </>
       ) : isFaqsPage ? (
         <>
@@ -1711,7 +1711,7 @@ export default async function Page(props) {
           </section>
           <Results />
           <Steps />
-          <Contact />
+          <Contact lang={articleLang} />
         </>
       ) : (
         <>
@@ -1851,7 +1851,7 @@ export default async function Page(props) {
                       const mediaObj = resolveFeaturedImage(page);
                       // If the right-side featured image is missing, show the Hero form instead
                       if (!mediaObj?.url) {
-                        return <HeroForm />;
+                        return <HeroForm lang={articleLang} />;
                       }
                       const src = safeMediaUrl(mediaObj.url);
                       return (
@@ -1930,7 +1930,7 @@ export default async function Page(props) {
 
           <Results />
           <Steps />
-          <Contact />
+          <Contact lang={articleLang} />
         </>
       )}
       {/* GLOBAL CTA FIXER + LOGGER (client-side, all pages) */}

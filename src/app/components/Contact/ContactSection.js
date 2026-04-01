@@ -31,7 +31,19 @@ function LazyLottie() {
   );
 }
 
-const ContactSection = () => {
+const contactTranslations = {
+  en: {
+    title: <>Let's get <span className={styles.yellowBg}>in touch</span></>,
+    description: "We like to simplify our intake process. From submitting your claim to finalizing your case, our streamlined approach ensures a hassle-free experience. Our legal team is dedicated to making this process as efficient and straightforward as possible.",
+  },
+  es: {
+    title: <>Póngase en <span className={styles.yellowBg}>contacto</span></>,
+    description: "Nos gusta simplificar nuestro proceso de admisión. Desde la presentación de su reclamo hasta la finalización de su caso, nuestro enfoque simplificado garantiza una experiencia sin complicaciones. Nuestro equipo legal se dedica a hacer este proceso lo más eficiente y directo posible.",
+  },
+};
+
+const ContactSection = ({ lang = "en" }) => {
+  const ct = contactTranslations[lang] || contactTranslations.en;
   return (
     <>
       <section className={`blueBg ${styles.contactSection}`}>
@@ -39,12 +51,9 @@ const ContactSection = () => {
           <div className="column-2a">
             {/* Left Section */}
             <div className={styles.leftColumn}>
-              <h2 className={styles.title}>Let's get <span className={styles.yellowBg}>in touch</span></h2>
+              <h2 className={styles.title}>{ct.title}</h2>
               <p className={styles.description}>
-                We like to simplify our intake process. From submitting your
-                claim to finalizing your case, our streamlined approach ensures
-                a hassle-free experience. Our legal team is dedicated to making
-                this process as efficient and straightforward as possible.
+                {ct.description}
               </p>
               <div className={styles.contactInfo}>
                 {/* Phone Number */}
@@ -93,7 +102,7 @@ const ContactSection = () => {
 
             {/* Right Section */}
             <div className={styles.rightColumn}>
-              <HeroForm />
+              <HeroForm lang={lang} />
             </div>
           </div>
         </div>
