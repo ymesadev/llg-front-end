@@ -46,6 +46,7 @@ const Popup = () => {
 
   const agreeToTerms = () => {
     localStorage.setItem("agreedToTerms", "true");
+    localStorage.setItem("cookieConsent", "true");
     setIsTermsOpen(false);
     window.dispatchEvent(new Event("consentUpdated"));
     trackEvent("terms_consent_given");
