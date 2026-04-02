@@ -31,15 +31,15 @@ export default function DocumentUploadCTA({ articleType = "property-damage", lan
     : "No fees unless we win \u00B7 Takes under 2 minutes \u00B7 No obligation";
 
   return (
-    <div className={styles.ctaBox}>
+    <Link href={config.href} className={styles.ctaBox}>
       <div className={styles.inner}>
         <h3 className={styles.headline}>{config.headline}</h3>
         <p className={styles.subtitle}>{config.sub}</p>
-        <Link href={config.href} className={styles.btn}>
+        <span className={styles.btn}>
           {btnText}
-        </Link>
+        </span>
         <p className={styles.disclaimer}>{disclaimer}</p>
       </div>
-    </div>
+    </Link>
   );
 }
