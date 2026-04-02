@@ -5,6 +5,10 @@ import { usePathname } from "next/navigation";
 function push(event, data = {}) {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({ event, page: window.location.pathname, ...data, ts: Date.now() });
+  // Mirror to OpenReplay for session replay visibility
+  if (window.__or_event) {
+    try { window.__or_event(event, { page: window.location.pathname, ...data }); } catch (e) { /* silent */ }
+  }
 }
 
 export default function BehaviorTracking() {

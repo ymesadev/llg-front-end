@@ -1310,21 +1310,21 @@ export default async function Page(props) {
                 <UrgencyBanner articleType={articleType} />
               )}
               {/* Author byline */}
-              <div className={styles.authorByline}>
+              <Link href="/pierre-a-louis-esq" className={styles.authorByline}>
                 <img
                   src="https://login.louislawgroup.com/uploads/pierre_louis_new_003bb95e9b.jpg"
                   alt="Pierre A. Louis, Esq."
                   className={styles.authorPhoto}
                 />
                 <div className={styles.authorInfo}>
-                  <Link href="/pierre-a-louis-esq" className={styles.authorName}>
+                  <span className={styles.authorName}>
                     Pierre A. Louis, Esq.
-                  </Link>
+                  </span>
                   <span className={styles.authorCredential}>
                     Louis Law Group
                   </span>
                 </div>
-              </div>
+              </Link>
               <p className={styles.blogDate}>
                 <FaRegCalendarAlt className={styles.icon} />{" "}
                 {new Date(page.createdAt).toLocaleDateString()} |{" "}
@@ -1626,6 +1626,17 @@ export default async function Page(props) {
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyCall}>{articleLang === "es" ? "Verifique Su Elegibilidad" : "Check Your Eligibility"}</Link>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →"}</Link>
           </div>
+          {/* Sticky desktop CTA for SSDI articles — above-fold qualify prompt */}
+          {articleType === "ssdi" && (
+            <div className={styles.stickyDesktopCta}>
+              <span className={styles.stickyDesktopText}>
+                {articleLang === "es" ? "¿Tiene una discapacidad? Podría calificar para beneficios de SSDI." : "Living with a disability? You may qualify for SSDI benefits."}
+              </span>
+              <Link href={getIntakeHref(slug, articleType)} className={styles.stickyDesktopBtn}>
+                {articleLang === "es" ? "Verifique Su Elegibilidad →" : "Check Your Eligibility →"}
+              </Link>
+            </div>
+          )}
           <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} />
           <SocialProofToast />
           <PushOptIn />

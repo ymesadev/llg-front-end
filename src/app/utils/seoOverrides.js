@@ -220,6 +220,20 @@ const SEO_OVERRIDES = {
     title: "SSDI Approval Timeline Texas 2026: Wait Times by Stage",
     description: "Texas SSDI approval takes 4-6 months for initial claims in 2026. See processing times at each stage, hearing wait times in Dallas and Houston, and speed-up tips.",
   },
+
+  // === FPP STRATEGY FIXES (2026-04-01) ===
+
+  // Roofers responsible for leaks — 255 imps, pos 13.7, needs push to page 1
+  "are-roofers-responsible-for-leaks-in-florida": {
+    title: "Are Roofers Responsible for Leaks? Florida Law (2026)",
+    description: "Yes, Florida roofers can be liable for leaks from defective work. Learn roofer liability, your legal rights, and when to sue. Free attorney consult: (833) 657-4812.",
+  },
+
+  // Mold lawyer near me — improve from pos 7.9 → top 5 via internal linking support
+  "mold-damage-lawyer-florida": {
+    title: "Mold Damage Lawyer Florida: Fight Denied Insurance Claims (2026)",
+    description: "Florida mold damage lawyer handling denied and underpaid mold claims. Insurance companies exclude mold — we fight back. Free case evaluation: (833) 657-4812.",
+  },
 };
 
 export function getSeoOverride(slug) {

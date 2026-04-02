@@ -44,6 +44,11 @@ const nextConfig = {
       // legal-guide-american-*, legal-american-home-*
       { source: '/legal-guide-american-:slug*', destination: '/american-home-shield-privacy-torts', permanent: true },
       { source: '/legal-american-home-:slug*', destination: '/american-home-shield-privacy-torts', permanent: true },
+
+      // ── Allstate cannibalization fix (2026-04-01) ──
+      // Texas variant competes with main Allstate page — LLG doesn't practice in TX.
+      // Consolidate 1,162 impr into the main page at pos 3.9
+      { source: '/allstate-denied-my-roof-claim-texas', destination: '/allstate-denied-my-roof-claim', permanent: true },
     ];
   },
 

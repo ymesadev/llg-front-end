@@ -95,12 +95,14 @@
   overflow: hidden;
   text-decoration: none;
   color: inherit;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s, border-color 0.2s;
 }
 
 .postCard:hover {
   transform: scale(1.02);
   box-shadow: 0 4px 20px rgba(26, 43, 73, 0.1);
+  border-color: #c9a84c;
 }
 
 .postImage {

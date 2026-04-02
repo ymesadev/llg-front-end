@@ -654,6 +654,13 @@
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.authorByline:hover .authorName {
+  text-decoration: underline;
 }
 
 .authorPhoto {
@@ -951,6 +958,57 @@
   .endCta {
     padding: 1.5rem 1rem;
   }
+}
+
+/* ── Sticky desktop CTA (SSDI articles) ── */
+.stickyDesktopCta {
+  display: none;
+}
+
+@media (min-width: 769px) {
+  .stickyDesktopCta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 998;
+    background: #1a2b49;
+    border-top: 2px solid #c9a84c;
+    padding: 0.75rem 2rem;
+    animation: slideUpCta 0.3s ease-out;
+  }
+
+  .stickyDesktopText {
+    font-size: 0.95rem;
+    color: #d6dce8;
+    font-weight: 500;
+  }
+
+  .stickyDesktopBtn {
+    display: inline-block;
+    background: #c9a84c;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.6rem 1.75rem;
+    border-radius: 30px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+  }
+
+  .stickyDesktopBtn:hover {
+    background: #b5923e;
+  }
+}
+
+@keyframes slideUpCta {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
 }
 
 /* ── Quick Answer Box (AI citability) ── */

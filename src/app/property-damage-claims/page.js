@@ -2,15 +2,15 @@ import styles from "./page.module.css";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Property Damage Claims Lawyers | Insurance Claim Attorneys | Louis Law Group",
+  title: "Florida Property Damage Attorney | Denied Claim Lawyers | Louis Law Group",
   description:
-    "Insurance claim denied or underpaid? Louis Law Group fights for Florida property owners against insurance companies. Free case evaluation — no fees unless you win.",
+    "Florida property damage attorney fighting denied & underpaid insurance claims. Roof damage, water damage, hurricane claims — free case evaluation: (833) 657-4812.",
   keywords:
-    "property damage lawyer, insurance claim attorney, denied insurance claim Florida, underpaid insurance claim, hurricane damage lawyer, roof damage claim, water damage attorney, property damage insurance dispute",
+    "property damage attorney florida, florida property damage lawyer, denied insurance claim florida, underpaid insurance claim, hurricane damage attorney, roof damage lawyer florida, water damage attorney florida, insurance claim dispute lawyer",
   openGraph: {
-    title: "Property Damage Claims Lawyers | Louis Law Group",
+    title: "Florida Property Damage Attorney | Louis Law Group",
     description:
-      "Insurance companies deny or underpay most Florida property damage claims. Our attorneys fight back. Free case evaluation — no fees unless we win.",
+      "Denied or underpaid property damage claim? Florida property damage attorneys at Louis Law Group fight insurance companies. Free case evaluation — no fees unless we win.",
     url: "https://www.louislawgroup.com/property-damage-claims",
   },
 };
