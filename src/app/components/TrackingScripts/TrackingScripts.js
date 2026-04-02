@@ -46,10 +46,11 @@ export default function TrackingScripts() {
         }}
       />
 
-      {/* Google Analytics (GA4 & Ads Pixel) */}
+      {/* Google Analytics (GA4 primary, Ads secondary) */}
       <Script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=AW-722091953"
+        id="gtag-js"
+        strategy="afterInteractive"
+        src="https://www.googletagmanager.com/gtag/js?id=G-3Z6F2Q3TQ5"
       />
       <Script
         id="google-analytics"
@@ -59,8 +60,8 @@ export default function TrackingScripts() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
+            gtag('config', 'G-3Z6F2Q3TQ5', { send_page_view: true });
             gtag('config', 'AW-722091953');
-            gtag('config', 'G-3Z6F2Q3TQ5');
           `,
         }}
       />
