@@ -26,6 +26,24 @@ export default function TrackingScripts() {
 
   return (
     <>
+      {/* Signal consent granted — this component only renders after user consents */}
+      <Script
+        id="consent-update"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('consent', 'update', {
+              analytics_storage: 'granted',
+              ad_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted'
+            });
+          `,
+        }}
+      />
+
       {/* Google Tag Manager (GTM) */}
       <Script
         id="google-tag-manager"
