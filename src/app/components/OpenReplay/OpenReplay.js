@@ -96,14 +96,24 @@ const OpenReplay = () => {
 
         // ── Track key user interactions ──
 
-        // Phone click tracking
+        // Phone click tracking — fires across all pixels
         document.addEventListener('click', (e) => {
           const link = e.target.closest('a[href^="tel:"]');
           if (link) {
-            window.__or_event?.('phone_click', {
-              number: link.href.replace('tel:', ''),
-              page: window.location.pathname,
-            });
+            const number = link.href.replace('tel:', '');
+            const page = window.location.pathname;
+            window.__or_event?.('phone_click', { number, page });
+            // GA4 + GTM
+            if (window.gtag) {
+              window.gtag('event', 'phone_click', { number, page });
+              window.gtag('event', 'conversion', { send_to: 'AW-722091953', event_category: 'Lead', event_label: 'phone_click' });
+            }
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({ event: 'phone_click', number, page, ts: Date.now() });
+            // Facebook Pixel
+            if (window.fbq) window.fbq('track', 'Contact', { content_name: 'phone_click' });
+            // TikTok Pixel
+            if (window.ttq) window.ttq.track('Contact', { content_name: 'phone_click' });
           }
         });
 

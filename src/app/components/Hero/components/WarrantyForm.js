@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
+import { trackConversion } from "@/app/utils/analytics";
 import styles from "./HeroForm.module.css";
 
 export default function FreeCaseEvaluationPage() {
@@ -93,7 +94,13 @@ export default function FreeCaseEvaluationPage() {
       });
 
       setFormStatus("success");
-      // reset form if you like—user will be redirected immediately
+      // Fire conversion across all pixels (GA4, GTM, FB, TikTok, OpenReplay)
+      trackConversion('warranty_form', { case_type: 'warranty', carrier: formData.filedCarrier, state: formData.state });
+      // Identify user in OpenReplay
+      if (window.__or_identify) {
+        window.__or_identify(formData.email, { name: formData.name, phone: formData.phone, case_type: 'warranty' });
+      }
+      // reset form — user will be redirected immediately
       setFormData({
         name: "",
         phone: "",

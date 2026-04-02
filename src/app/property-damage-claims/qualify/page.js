@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
-import { trackEvent } from "@/app/utils/analytics";
+import { trackEvent, trackConversion } from "@/app/utils/analytics";
 
 const CARRIERS = [
   "Allstate Insurance","American Integrity Insurance","American Traditions Insurance",
@@ -170,12 +170,11 @@ export default function PropertyDamageQualify() {
       });
     } catch {/* silent — still show result */}
     trackEvent("qualify_submitted", { case_type: "property-damage", score });
+    // Fire conversion across all pixels (GA4, GTM, FB, TikTok, OpenReplay)
+    trackConversion('pd_qualify', { case_type: 'property-damage', score });
     // Identify user in OpenReplay
     if (window.__or_identify) {
       window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'property-damage', score });
-    }
-    if (window.__or_event) {
-      window.__or_event('form_submitted', { form: 'pd_qualify', score, name: contact.name });
     }
     setResult({ dq: false, score });
     setCur(TOTAL_STEPS + 1);

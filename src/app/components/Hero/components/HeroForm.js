@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
+import { trackConversion } from "@/app/utils/analytics";
 import styles from "./HeroForm.module.css";
 
 const translations = {
@@ -165,12 +166,11 @@ export default function FreeCaseEvaluationPage({ lang = "en" }) {
       // Redirect based on case type before resetting form
       const redirectTo = t.intakeRoutes[formData.caseType] || "/thank-you";
       setFormStatus("success");
+      // Fire conversion across all pixels (GA4, GTM, FB, TikTok, OpenReplay)
+      trackConversion('hero_form', { case_type: formData.caseType, name: formData.name });
       // Identify user in OpenReplay
       if (window.__or_identify) {
         window.__or_identify(formData.email, { name: formData.name, phone: formData.phone, case_type: formData.caseType, zipcode: formData.zipcode });
-      }
-      if (window.__or_event) {
-        window.__or_event('form_submitted', { form: 'hero_form', case_type: formData.caseType, name: formData.name });
       }
       setFormData({
         name: "",
