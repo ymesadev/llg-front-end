@@ -29,6 +29,7 @@ import PrefetchLinks from "../components/PrefetchLinks/PrefetchLinks";
 import SaveArticle from "../components/SaveArticle/SaveArticle";
 import PushOptIn from "../components/PushOptIn/PushOptIn";
 import SocialProofToast from "../components/SocialProofToast/SocialProofToast";
+import FPPChecker from "../components/FPPChecker/FPPChecker";
 
 // Resilient fetch: retry once after a short delay on network/server errors
 async function resilientFetch(url, options = {}, retries = 1) {
@@ -1439,7 +1440,10 @@ export default async function Page(props) {
                       .replace(/<\/h1>/gi, '</h2>')
                       .replace(/^#\s+/gm, '## ');
                   };
-                  return (page.blocks || []).map((block, index) => (
+                  const blocks = page.blocks || [];
+                  const midpoint = Math.floor(blocks.length / 2);
+                  const showFPP = articleType === "property-damage";
+                  return blocks.map((block, index) => (
                     <div key={index}>
                       {block.__component === "shared.rich-text" && (() => {
                         const body = demoteH1(block.body || "");
@@ -1466,6 +1470,7 @@ export default async function Page(props) {
                           />
                         </div>
                       )}
+                      {showFPP && index === midpoint && <FPPChecker />}
                     </div>
                   ));
                 })()}

@@ -91,6 +91,10 @@ public/*
 !src/app/components/ServicesCarousel/
 !src/app/components/ServicesCarousel/**
 
+# allow FPP Claims Checker widget
+!src/app/components/FPPChecker/
+!src/app/components/FPPChecker/**
+
 # allow OpenReplay session tracking
 !src/app/components/OpenReplay/
 !src/app/components/OpenReplay/**
