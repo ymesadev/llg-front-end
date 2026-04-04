@@ -164,7 +164,7 @@ export default function FPPChecker() {
     if (!email.includes("@")) return;
     setSubmitted(true);
     try {
-      await fetch("https://hooks.louislawgroup.com/webhook/fpp-checker", {
+      await fetch("https://n8n.louislawgroup.com/webhook/fpp-checker", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, answers, totalFlags, timestamp: new Date().toISOString() }),
