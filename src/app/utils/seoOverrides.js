@@ -463,6 +463,804 @@ const SEO_OVERRIDES = {
     description: "People's Trust Insurance claims phone and filing guide for FL homeowners. Denied? Free legal help: (833) 657-4812.",
   },
 
+
+  // === ADDITIONAL CARRIER OVERRIDES (agent-generated) ===
+  "state-farm-florida-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "State Farm Claims Phone Number | FL Guide 2026",
+    description: "Get the State Farm claims phone number and filing steps for Florida. Need help with a denied claim? Call (833) 657-4812.",
+  },
+  "state-farm-closed-my-claim-texas": {
+    title: "State Farm Closed My Claim — FL Help 2026",
+    description: "State Farm closed your claim without paying? Know your rights under Florida law. Free consultation — call (833) 657-4812.",
+  },
+  "state-farm-denied-my-roof-claim-florida": {
+    title: "State Farm Denied My Roof Claim FL 2026",
+    description: "Denied roof claim by State Farm in Florida? Fight back with an experienced attorney. Call (833) 657-4812 — free consult.",
+  },
+  "state-farm-claim-denial-texas": {
+    title: "State Farm Claim Denial — FL Attorney 2026",
+    description: "State Farm denied your insurance claim? A Florida denial attorney can help you recover. Call (833) 657-4812 now.",
+  },
+  "state-farm-denied-my-roof-claim-texas": {
+    title: "State Farm Denied Roof Claim? Get Help 2026",
+    description: "State Farm denied your roof claim? Our Florida attorneys fight denied claims daily. Call (833) 657-4812 for free help.",
+  },
+  "why-does-state-farm-deny-roof-claims-2026": {
+    title: "Why State Farm Denies Roof Claims FL 2026",
+    description: "State Farm roof claim denied? Learn why and how to fight back in Florida. Free attorney consult — call (833) 657-4812.",
+  },
+  "state-farm-denied-water-damage-claim-florida": {
+    title: "State Farm Denied Water Damage Claim FL 2026",
+    description: "State Farm denied your water damage claim in Florida? Act now. Free legal review — call (833) 657-4812.",
+  },
+  "state-farm-denial-florida": {
+    title: "State Farm Denial in Florida — Your Rights 2026",
+    description: "State Farm denied your Florida claim? You have rights. Get a free case review from a denial attorney. Call (833) 657-4812.",
+  },
+  "state-farm-insurance-damage-claims-florida": {
+    title: "State Farm Damage Claims Florida 2026",
+    description: "State Farm damage claim in Florida denied or underpaid? Get the compensation you deserve. Call (833) 657-4812 now.",
+  },
+  "state-farm-insurance-claim-attorney-florida": {
+    title: "State Farm Claim Attorney Florida 2026",
+    description: "Need a State Farm claim denial attorney in Florida? Free consultation. Call (833) 657-4812 to fight your denial.",
+  },
+  "what-to-do-if-state-farm-denied-roof-claim-florida": {
+    title: "State Farm Denied Roof Claim? FL Steps 2026",
+    description: "State Farm denied your roof claim in Florida? Here is what to do next. Free attorney review — call (833) 657-4812.",
+  },
+  "state-farm-denied-water-damage-claim-texas": {
+    title: "State Farm Denied Water Damage? FL Help 2026",
+    description: "State Farm denied your water damage claim? A Florida attorney can fight for your payout. Call (833) 657-4812 today.",
+  },
+  "state-farm-denied-water-damage-claim-reddit": {
+    title: "State Farm Water Damage Denied? FL Help 2026",
+    description: "State Farm denied water damage? Skip Reddit and get real legal help in Florida. Call (833) 657-4812 — free consult.",
+  },
+  "state-farm-denied-my-water-damage-claim-florida": {
+    title: "State Farm Denied Water Damage FL 2026",
+    description: "State Farm denied your water damage claim? Florida attorneys fight these denials. Call (833) 657-4812 for free help.",
+  },
+  "faq-water-damage-does-state-farm-cover-water-damage-from-leaking-roof": {
+    title: "State Farm Water Damage Coverage FL FAQ 2026",
+    description: "Does State Farm cover water damage from a leaking roof? Get answers and legal help. Call (833) 657-4812 today.",
+  },
+  "allstate-denied-my-roof-claim-texas": {
+    title: "Allstate Denied Roof Claim? FL Help 2026",
+    description: "Allstate denied your roof claim? Our Florida denial attorneys recover what you are owed. Call (833) 657-4812 now.",
+  },
+  "allstate-roof-claim-denied-texas-2026": {
+    title: "Allstate Roof Claim Denied? FL Attorney 2026",
+    description: "Allstate roof claim denied? Do not accept it. Florida attorneys fight for your rights. Call (833) 657-4812 today.",
+  },
+  "allstate-denied-my-claim-texas": {
+    title: "Allstate Denied My Claim — FL Lawyer 2026",
+    description: "Allstate denied your claim? Get a free consultation with a Florida insurance denial lawyer. Call (833) 657-4812.",
+  },
+  "allstate-denied-my-claim-florida": {
+    title: "Allstate Denied My Claim in Florida 2026",
+    description: "Allstate denied your Florida insurance claim? You can fight back. Free legal review — call (833) 657-4812.",
+  },
+  "fight-allstate-insurance-denial-2026": {
+    title: "Fight Allstate Insurance Denial FL 2026",
+    description: "Fight your Allstate insurance denial with a Florida attorney. Free consultation — call (833) 657-4812 to get started.",
+  },
+  "allstate-denied-my-roof-claim-florida": {
+    title: "Allstate Denied Roof Claim in FL 2026",
+    description: "Allstate denied your roof claim in Florida? Your rights matter. Call (833) 657-4812 for a free attorney consultation.",
+  },
+  "allstate-denied-roof-claims-florida": {
+    title: "Allstate Denied Roof Claims FL 2026",
+    description: "Allstate denying roof claims in Florida? Learn why and fight back. Call (833) 657-4812 for a free case review.",
+  },
+  "allstate-castle-key-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Allstate Castle Key Claims Phone FL 2026",
+    description: "Get the Allstate Castle Key claims phone number and FL filing guide. Denied? Call (833) 657-4812 for legal help.",
+  },
+  "allstate-bad-faith-insurance-florida-2026": {
+    title: "Allstate Bad Faith Insurance Florida 2026",
+    description: "Allstate acting in bad faith on your Florida claim? Hold them accountable. Call (833) 657-4812 for a free review.",
+  },
+  "allstate-water-damage-claim-denied-florida-2026": {
+    title: "Allstate Water Damage Denied FL 2026",
+    description: "Allstate denied your water damage claim in Florida? Act now to protect your rights. Call (833) 657-4812 today.",
+  },
+  "allstate-homeowners-claim-denied-2026": {
+    title: "Allstate Homeowners Claim Denied FL 2026",
+    description: "Allstate denied your homeowners claim? Florida attorneys fight for full payouts. Call (833) 657-4812 — free consult.",
+  },
+  "allstate-insurance-denied-claim-florida-2026": {
+    title: "Allstate Denied Claim Florida 2026",
+    description: "Allstate denied your Florida insurance claim? You have legal options. Call (833) 657-4812 for a free consultation.",
+  },
+  "allstate-insurance-denied-claim-florida-2026-1": {
+    title: "Allstate Insurance Denied? FL Rights 2026",
+    description: "Allstate denied your claim in Florida? Know your rights and fight back. Free attorney help — call (833) 657-4812.",
+  },
+  "allstate-claim-denial-attorney-2026-1": {
+    title: "Allstate Claim Denial Attorney FL 2026",
+    description: "Need an Allstate claim denial attorney in Florida? Free case evaluation — call (833) 657-4812 to fight your denial.",
+  },
+  "allstate-insurance-damage-claims-florida": {
+    title: "Allstate Damage Claims Florida 2026",
+    description: "Filing an Allstate damage claim in Florida? Get expert help for denied or underpaid claims. Call (833) 657-4812.",
+  },
+  "allstate-insurance-claim-attorney-florida": {
+    title: "Allstate Claim Attorney Florida 2026",
+    description: "Florida Allstate claim attorney ready to fight your denial. Free consultation — call (833) 657-4812 now.",
+  },
+  "allstate-underpaid-claim-attorney-florida-2026": {
+    title: "Allstate Underpaid Claim? FL Attorney 2026",
+    description: "Allstate underpaid your Florida claim? Get the full amount you deserve. Call (833) 657-4812 for free legal help.",
+  },
+  "allstate-hurricane-claim-denied-attorney-2026": {
+    title: "Allstate Hurricane Denied? FL Attorney 2026",
+    description: "Allstate denied your hurricane claim? Florida denial attorneys fight for you. Call (833) 657-4812 — free review.",
+  },
+  "allstate-insurance-claims-florida": {
+    title: "Allstate Insurance Claims Florida 2026",
+    description: "Filing an Allstate insurance claim in Florida? Get help with denials and underpayments. Call (833) 657-4812.",
+  },
+  "allstate-denied-my-roof-claim-what-to-do": {
+    title: "Allstate Denied Roof Claim? FL Steps 2026",
+    description: "Allstate denied your roof claim? Here is what to do next in Florida. Free attorney consult — call (833) 657-4812.",
+  },
+  "allstate-denied-my-roof-claim-reddit": {
+    title: "Allstate Denied Roof Claim? FL Help 2026",
+    description: "Allstate denied your roof claim? Skip Reddit — get real Florida legal help. Call (833) 657-4812 for a free review.",
+  },
+  "progressive-asi-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Progressive ASI Claims Phone FL 2026",
+    description: "Get the Progressive ASI claims phone number and FL filing steps. Claim denied? Call (833) 657-4812 for legal help.",
+  },
+  "progressive-claim-denial-attorney-florida-2026": {
+    title: "Progressive Denial Attorney Florida 2026",
+    description: "Need a Progressive claim denial attorney in Florida? Free case review — call (833) 657-4812 to fight your denial.",
+  },
+  "progressive-insurance-claims-florida": {
+    title: "Progressive Insurance Claims Florida 2026",
+    description: "Filing a Progressive insurance claim in Florida? Get help for denied or delayed claims. Call (833) 657-4812.",
+  },
+  "progressive-insurance-damage-claims-florida": {
+    title: "Progressive Damage Claims Florida 2026",
+    description: "Progressive damage claim in Florida denied or underpaid? Fight for full compensation. Call (833) 657-4812 today.",
+  },
+  "progressive-bad-faith-insurance-florida-2026": {
+    title: "Progressive Bad Faith Insurance FL 2026",
+    description: "Progressive acting in bad faith in Florida? Hold them accountable. Free case review — call (833) 657-4812.",
+  },
+  "progressive-select-insurance-company-claims-florida-2026": {
+    title: "Progressive Select Claims Florida 2026",
+    description: "Progressive Select claim denied in Florida? Get legal help to recover your payout. Call (833) 657-4812 now.",
+  },
+  "progressive-roof-claim-denied-2026": {
+    title: "Progressive Roof Claim Denied FL 2026",
+    description: "Progressive denied your roof claim? Florida attorneys fight these denials. Call (833) 657-4812 for free help.",
+  },
+  "progressive-insurance-denied-claim-2026": {
+    title: "Progressive Denied Your Claim? FL 2026",
+    description: "Progressive denied your insurance claim? Fight back with a Florida attorney. Call (833) 657-4812 — free consult.",
+  },
+  "progressive-insurance-claim-attorney-florida": {
+    title: "Progressive Claim Attorney Florida 2026",
+    description: "Need a Progressive insurance claim attorney in Florida? Free consultation — call (833) 657-4812 to start your case.",
+  },
+  "progressive-home-insurance-denied-florida-2026-1": {
+    title: "Progressive Home Insurance Denied FL 2026",
+    description: "Progressive denied your home insurance claim in Florida? Act fast. Free legal help — call (833) 657-4812.",
+  },
+  "progressive-homeowners-insurance-denial-2026-1": {
+    title: "Progressive Homeowners Denied FL 2026",
+    description: "Progressive denied your homeowners claim? Florida denial attorneys can help. Call (833) 657-4812 for free review.",
+  },
+  "was-your-hurricane-claim-denied-by-progressive-select-insurance-company": {
+    title: "Progressive Hurricane Claim Denied? FL 2026",
+    description: "Progressive denied your hurricane claim? Florida attorneys fight for your rights. Call (833) 657-4812 — free help.",
+  },
+  "how-much-roof-damage-for-insurance-claim-progressive-florida": {
+    title: "Roof Damage for Progressive Claim FL 2026",
+    description: "How much roof damage do you need for a Progressive claim in Florida? Get answers — call (833) 657-4812.",
+  },
+  "can-you-sue-car-insurance-bad-faith-progressive-florida": {
+    title: "Sue Progressive Bad Faith FL 2026",
+    description: "Can you sue Progressive for bad faith in Florida? Yes. Free legal consultation — call (833) 657-4812 today.",
+  },
+  "castle-key-insurance-claims-florida": {
+    title: "Castle Key Insurance Claims Florida 2026",
+    description: "Filing a Castle Key insurance claim in Florida? Get help with denials and delays. Call (833) 657-4812 now.",
+  },
+  "castle-key-indemnity-insurance-damage-claims-florida": {
+    title: "Castle Key Damage Claims Florida 2026",
+    description: "Castle Key damage claim denied or underpaid in Florida? Fight for fair payment. Call (833) 657-4812 today.",
+  },
+  "usaa-insurance-claims-phone-number-how-to-file-a-claim": {
+    title: "USAA Claims Phone Number | FL Guide 2026",
+    description: "Get the USAA claims phone number and FL filing steps. Denied? Call (833) 657-4812 for free attorney help.",
+  },
+  "was-your-hurricane-claim-denied-by-united-services-automobile-association-usaa": {
+    title: "USAA Hurricane Claim Denied? FL 2026",
+    description: "USAA denied your hurricane claim? Florida attorneys fight for military families. Call (833) 657-4812 — free help.",
+  },
+  "usaa-roof-claim-denied-florida-2026": {
+    title: "USAA Roof Claim Denied Florida 2026",
+    description: "USAA denied your roof claim in Florida? Fight back now. Free attorney consultation — call (833) 657-4812.",
+  },
+  "usaa-bad-faith-insurance-florida-2026": {
+    title: "USAA Bad Faith Insurance Florida 2026",
+    description: "USAA acting in bad faith on your Florida claim? Hold them accountable. Call (833) 657-4812 for a free review.",
+  },
+  "usaa-claim-denied-attorney-florida-2026": {
+    title: "USAA Claim Denied? FL Attorney 2026",
+    description: "USAA denied your claim? Florida denial attorneys fight for you. Free case review — call (833) 657-4812 today.",
+  },
+  "fight-usaa-insurance-denial-florida-2026": {
+    title: "Fight USAA Insurance Denial FL 2026",
+    description: "Fight your USAA insurance denial in Florida with experienced attorneys. Free consult — call (833) 657-4812.",
+  },
+  "usaa-insurance-claims-florida": {
+    title: "USAA Insurance Claims Florida 2026",
+    description: "Filing a USAA insurance claim in Florida? Get help with denials and underpayments. Call (833) 657-4812 now.",
+  },
+  "usaa-hurricane-claim-denied-florida-2026": {
+    title: "USAA Hurricane Denied Florida 2026",
+    description: "USAA denied your Florida hurricane claim? Act fast to protect your rights. Call (833) 657-4812 for free help.",
+  },
+  "usaa-water-damage-claim-denied-2026": {
+    title: "USAA Water Damage Denied? FL Help 2026",
+    description: "USAA denied your water damage claim? Florida attorneys fight these denials daily. Call (833) 657-4812 today.",
+  },
+  "usaa-insurance-damage-claims-florida": {
+    title: "USAA Damage Claims Florida 2026",
+    description: "USAA damage claim denied or underpaid in Florida? Fight for what you deserve. Call (833) 657-4812 — free consult.",
+  },
+  "usaa-homeowners-insurance-denied-2026": {
+    title: "USAA Homeowners Denied? Florida 2026",
+    description: "USAA denied your homeowners claim? Florida attorneys recover what you are owed. Call (833) 657-4812 for help.",
+  },
+  "usaa-denied-water-damage-claim-florida-2026": {
+    title: "USAA Denied Water Damage Claim FL 2026",
+    description: "USAA denied your water damage claim in Florida? Do not wait. Call (833) 657-4812 for a free attorney review.",
+  },
+  "usaa-fire-damage-claim-denied-2026": {
+    title: "USAA Fire Damage Claim Denied FL 2026",
+    description: "USAA denied your fire damage claim? Florida attorneys fight for full payouts. Call (833) 657-4812 — free review.",
+  },
+  "usaa-roof-claim-denied-florida-2026-1": {
+    title: "USAA Roof Claim Denied? FL Rights 2026",
+    description: "USAA roof claim denied in Florida? Know your rights and fight back now. Call (833) 657-4812 for free help.",
+  },
+  "usaa-insurance-claim-attorney-florida": {
+    title: "USAA Claim Attorney Florida 2026",
+    description: "Need a USAA insurance claim attorney in Florida? Free consultation — call (833) 657-4812 to start your case.",
+  },
+  "usaa-denied-roof-claim-florida": {
+    title: "USAA Denied Roof Claim Florida 2026",
+    description: "USAA denied your roof claim in Florida? Act now before deadlines pass. Call (833) 657-4812 for free help.",
+  },
+  "usaa-insurance-claim-denial-2026-5": {
+    title: "USAA Insurance Claim Denial FL 2026",
+    description: "USAA denied your insurance claim? Florida denial attorneys are ready to fight. Call (833) 657-4812 today.",
+  },
+  "usaa-denied-water-damage-claim-florida": {
+    title: "USAA Denied Water Damage? FL Help 2026",
+    description: "USAA denied your Florida water damage claim? Get legal help today. Call (833) 657-4812 for a free review.",
+  },
+  "usaa-bad-faith-insurance-florida-2026-4": {
+    title: "USAA Bad Faith Claim? FL Attorney 2026",
+    description: "USAA bad faith claim in Florida? Our attorneys hold insurers accountable. Call (833) 657-4812 — free review.",
+  },
+  "what-to-do-if-insurance-denied-roof-claim-usaa-florida": {
+    title: "USAA Denied Roof Claim? FL Steps 2026",
+    description: "USAA denied your roof claim in Florida? Here is exactly what to do next. Call (833) 657-4812 for free help.",
+  },
+  "liberty-mutual-denied-my-claim-texas": {
+    title: "Liberty Mutual Denied Claim? FL Help 2026",
+    description: "Liberty Mutual denied your claim? Florida insurance attorneys fight denials. Call (833) 657-4812 for free consult.",
+  },
+  "liberty-mutual-insurance-claims-phone-number-how-to-file-a-claim": {
+    title: "Liberty Mutual Claims Phone | FL 2026",
+    description: "Get the Liberty Mutual claims phone number and filing guide. Denied? Call (833) 657-4812 for Florida legal help.",
+  },
+  "liberty-mutual-insurance-damage-claims-florida": {
+    title: "Liberty Mutual Damage Claims FL 2026",
+    description: "Liberty Mutual damage claim denied in Florida? Fight for your full payout. Call (833) 657-4812 for free help.",
+  },
+  "liberty-mutual-insurance-claims-florida": {
+    title: "Liberty Mutual Claims Florida 2026",
+    description: "Filing a Liberty Mutual claim in Florida? Get help with denials and delays. Call (833) 657-4812 now.",
+  },
+  "liberty-mutual-denied-claim-florida": {
+    title: "Liberty Mutual Denied? FL Attorney 2026",
+    description: "Liberty Mutual denied your Florida claim? An attorney can fight for you. Call (833) 657-4812 for a free review.",
+  },
+  "hurricane-claim-denied-by-homeowners-choice-property-and-casualty-insurance": {
+    title: "Homeowners Choice Hurricane Denied FL 2026",
+    description: "Homeowners Choice denied your hurricane claim? Fight back in Florida. Call (833) 657-4812 for a free review.",
+  },
+  "homeowners-choice-property-casualty-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Homeowners Choice Claims Phone FL 2026",
+    description: "Get the Homeowners Choice claims phone number and FL filing steps. Denied? Call (833) 657-4812 for help.",
+  },
+  "homeowners-choice-insurance-claims-florida": {
+    title: "Homeowners Choice Claims Florida 2026",
+    description: "Filing a Homeowners Choice claim in Florida? Get help with denials. Call (833) 657-4812 for a free consultation.",
+  },
+  "homeowners-choice-insurance-damage-claims-florida": {
+    title: "Homeowners Choice Damage Claims FL 2026",
+    description: "Homeowners Choice damage claim denied in Florida? Fight for your payout. Call (833) 657-4812 — free consult.",
+  },
+  "case-law-homeowners-choice-v-oakes-policy-interpretation-2026": {
+    title: "Homeowners Choice v Oakes FL Case 2026",
+    description: "Key Florida case law: Homeowners Choice v Oakes on policy interpretation. Need help? Call (833) 657-4812.",
+  },
+  "universal-property-casualty-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Universal Property Claims Phone FL 2026",
+    description: "Get the Universal Property claims phone number and FL filing guide. Denied? Call (833) 657-4812 for legal help.",
+  },
+  "universal-property-and-casualty-denying-claims-texas": {
+    title: "Universal Property Denying Claims FL 2026",
+    description: "Universal Property denying claims? Florida attorneys fight back for policyholders. Call (833) 657-4812 today.",
+  },
+  "universal-property-casualty-denying-claims-florida": {
+    title: "Universal Property Denied Claim FL 2026",
+    description: "Universal Property denied your Florida claim? You have legal options. Call (833) 657-4812 for a free review.",
+  },
+  "universal-property-casualty-claim-denied-florida-2026": {
+    title: "Universal Property Claim Denied FL 2026",
+    description: "Universal Property denied your Florida claim in 2026? Act fast. Free attorney help — call (833) 657-4812.",
+  },
+  "universal-property-casualty-insurance-claims-florida": {
+    title: "Universal Property Claims Florida 2026",
+    description: "Filing a Universal Property claim in Florida? Get guidance and legal help. Call (833) 657-4812 now.",
+  },
+  "universal-property-casualty-insurance-damage-claims-florida": {
+    title: "Universal Property Damage Claims FL 2026",
+    description: "Universal Property damage claim denied in Florida? Fight for fair payment. Call (833) 657-4812 — free consult.",
+  },
+  "case-law-burns-v-universal-property-4th-dca-2026": {
+    title: "Burns v Universal Property FL Case 2026",
+    description: "Key FL case law: Burns v Universal Property 4th DCA. Claim denied? Call (833) 657-4812 for legal help.",
+  },
+  "case-law-universal-property-v-montgomery-6th-dca-2026": {
+    title: "Universal Property v Montgomery FL 2026",
+    description: "FL case law: Universal Property v Montgomery 6th DCA. Need help with your claim? Call (833) 657-4812.",
+  },
+  "case-law-universal-property-v-griffin-coverage-dispute-2026": {
+    title: "Universal v Griffin Coverage FL 2026",
+    description: "FL case law: Universal Property v Griffin coverage dispute. Claim denied? Call (833) 657-4812 for help.",
+  },
+  "slide-insurance-claims-florida": {
+    title: "Slide Insurance Claims Florida 2026",
+    description: "Filing a Slide Insurance claim in Florida? Get help with denials and underpayments. Call (833) 657-4812.",
+  },
+  "slide-insurance-damage-claims-florida": {
+    title: "Slide Insurance Damage Claims FL 2026",
+    description: "Slide damage claim denied in Florida? Fight for your full payout. Call (833) 657-4812 for free legal help.",
+  },
+  "slide-insurance-claim-denied-florida-2026": {
+    title: "Slide Insurance Denied Claim FL 2026",
+    description: "Slide Insurance denied your Florida claim? Act now. Free attorney consultation — call (833) 657-4812.",
+  },
+  "slide-insurance-claim-attorney-florida": {
+    title: "Slide Insurance Claim Attorney FL 2026",
+    description: "Need a Slide Insurance claim attorney in Florida? Free case review — call (833) 657-4812 to fight your denial.",
+  },
+  "slide-insurance-claim-florida": {
+    title: "Slide Insurance Claim Florida 2026",
+    description: "Filing a Slide Insurance claim in Florida? Get expert guidance and legal help. Call (833) 657-4812 now.",
+  },
+  "slide-insurance-wiretapping-investigation-florida-2026": {
+    title: "Slide Insurance Wiretapping FL 2026",
+    description: "Slide Insurance wiretapping investigation in Florida. Your privacy rights matter. Call (833) 657-4812 to learn more.",
+  },
+  "slide-insurance-customer-data-tracking-2026": {
+    title: "Slide Insurance Data Tracking FL 2026",
+    description: "Slide Insurance tracking customer data? Know your Florida privacy rights. Call (833) 657-4812 for legal help.",
+  },
+  "slide-insurance-data-privacy-rights-investigation-2026": {
+    title: "Slide Privacy Rights Investigation 2026",
+    description: "Slide Insurance data privacy investigation. Protect your Florida rights. Call (833) 657-4812 for a free review.",
+  },
+  "slide-insurance-privacy-class-action-investigation-2026": {
+    title: "Slide Privacy Class Action FL 2026",
+    description: "Slide Insurance privacy class action investigation in Florida. Your rights matter. Call (833) 657-4812.",
+  },
+  "slide-insurance-privacy-violation-investigation-2026": {
+    title: "Slide Privacy Violation FL 2026",
+    description: "Slide Insurance privacy violation investigation. Protect your rights in Florida. Call (833) 657-4812 today.",
+  },
+  "slide-insurance-session-replay-investigation-2026": {
+    title: "Slide Session Replay Investigation FL 2026",
+    description: "Slide Insurance session replay investigation. Know your Florida privacy rights. Call (833) 657-4812 for help.",
+  },
+  "slide-insurance-tracking-cookies-investigation-2026": {
+    title: "Slide Tracking Cookies FL 2026",
+    description: "Slide Insurance tracking cookies investigation in Florida. Protect your privacy. Call (833) 657-4812 today.",
+  },
+  "slide-insurance-consumer-privacy-investigation-2026": {
+    title: "Slide Consumer Privacy FL 2026",
+    description: "Slide Insurance consumer privacy investigation in Florida. Assert your rights. Call (833) 657-4812 for help.",
+  },
+  "landslide-insurance-claim-florida-property-damage": {
+    title: "Landslide Insurance Claim Florida 2026",
+    description: "Landslide property damage claim in Florida? Get legal help for denials. Call (833) 657-4812 for a free review.",
+  },
+  "slide-insurance-privacy-torts/qualify": {
+    title: "Slide Insurance Privacy Torts FL 2026",
+    description: "Slide Insurance privacy torts investigation. Qualify for Florida legal action. Call (833) 657-4812 today.",
+  },
+  "chubb-federal-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Chubb Federal Claims Phone FL 2026",
+    description: "Get the Chubb Federal Insurance claims phone number and FL filing guide. Denied? Call (833) 657-4812.",
+  },
+  "how-to-file-a-claim-with-chubb-european-group-se": {
+    title: "File Claim: Chubb European Group FL 2026",
+    description: "How to file a claim with Chubb European Group in Florida. Need help? Call (833) 657-4812 for a free review.",
+  },
+  "chubb-insurance-claims-florida": {
+    title: "Chubb Insurance Claims Florida 2026",
+    description: "Filing a Chubb insurance claim in Florida? Get help with denials. Call (833) 657-4812 for a free consultation.",
+  },
+  "chubb-insurance-damage-claims-florida": {
+    title: "Chubb Damage Claims Florida 2026",
+    description: "Chubb damage claim denied in Florida? Fight for fair compensation. Call (833) 657-4812 — free attorney consult.",
+  },
+  "hurricane-claim-denied-chubb-european-group": {
+    title: "Chubb Hurricane Claim Denied? FL 2026",
+    description: "Chubb denied your hurricane claim? Florida attorneys fight for policyholders. Call (833) 657-4812 for free help.",
+  },
+  "how-to-file-a-claim-with-heritage-property-and-casualty-insurance-company": {
+    title: "File Claim: Heritage Insurance FL 2026",
+    description: "How to file a claim with Heritage Property and Casualty in Florida. Denied? Call (833) 657-4812 for help.",
+  },
+  "was-your-hurricane-claim-denied-by-heritage-property-and-casualty-insurance-company": {
+    title: "Heritage Hurricane Claim Denied? FL 2026",
+    description: "Heritage denied your hurricane claim in Florida? Fight back now. Free review — call (833) 657-4812.",
+  },
+  "heritage-insurance-wind-claim-denied-gainesville-florid": {
+    title: "Heritage Wind Claim Denied FL 2026",
+    description: "Heritage denied your wind claim in Florida? Act now to protect your rights. Call (833) 657-4812 for free help.",
+  },
+  "heritage-property-casualty-insurance-damage-claims-florida": {
+    title: "Heritage Damage Claims Florida 2026",
+    description: "Heritage damage claim denied in Florida? Fight for your full payout. Call (833) 657-4812 — free consultation.",
+  },
+  "southern-heritage-insurance-damage-claims-florida": {
+    title: "Southern Heritage Damage Claims FL 2026",
+    description: "Southern Heritage damage claim denied in Florida? Get legal help today. Call (833) 657-4812 for a free review.",
+  },
+  "heritage-insurance-claim-denied-florida-2026": {
+    title: "Heritage Claim Denied Florida 2026",
+    description: "Heritage denied your claim in Florida? You have legal options. Free consult — call (833) 657-4812 today.",
+  },
+  "heritage-property-casualty-insurance-claim-attorney-florida": {
+    title: "Heritage Claim Attorney Florida 2026",
+    description: "Need a Heritage insurance claim attorney in Florida? Free case review — call (833) 657-4812 to fight back.",
+  },
+  "citizens-property-insurance-claims-phone-number-how-to-file-a-claim": {
+    title: "Citizens Property Claims Phone FL 2026",
+    description: "Get the Citizens Property claims phone number and FL filing steps. Denied? Call (833) 657-4812 for help.",
+  },
+  "was-your-hurricane-claim-denied-by-citizens-property-insurance-corporation": {
+    title: "Citizens Hurricane Denied? FL 2026",
+    description: "Citizens denied your hurricane claim in Florida? Fight back with legal help. Call (833) 657-4812 — free review.",
+  },
+  "citizens-insurance-claim-florida": {
+    title: "Citizens Insurance Claim Florida 2026",
+    description: "Filing a Citizens insurance claim in Florida? Get help with denials and delays. Call (833) 657-4812 now.",
+  },
+  "citizens-insurance-claim-denied-florida-2026": {
+    title: "Citizens Claim Denied Florida 2026",
+    description: "Citizens denied your Florida insurance claim? You can fight back. Free review — call (833) 657-4812 today.",
+  },
+  "case-law-citizens-v-blanco-water-damage-concurrent-cause-2026": {
+    title: "Citizens v Blanco FL Water Damage 2026",
+    description: "Key FL case law: Citizens v Blanco on water damage and concurrent cause. Need help? Call (833) 657-4812.",
+  },
+  "case-law-indoor-environmental-v-citizens-late-notice-aob-2026": {
+    title: "Indoor Environmental v Citizens FL 2026",
+    description: "FL case law: Indoor Environmental v Citizens on late notice AOB. Claim issues? Call (833) 657-4812.",
+  },
+  "case-law-citizens-v-buergo-florida-coverage-dispute-2026": {
+    title: "Citizens v Buergo Coverage FL 2026",
+    description: "FL case law: Citizens v Buergo coverage dispute. Need claim help? Call (833) 657-4812 for a free review.",
+  },
+  "citizens-property-appeal-lost-pensacola-2026": {
+    title: "Citizens Property Appeal Lost FL 2026",
+    description: "Lost your Citizens Property appeal in Florida? You still have options. Call (833) 657-4812 for legal help.",
+  },
+  "citizens-property-appeal-lost-miami-2026": {
+    title: "Citizens Appeal Lost Miami FL 2026",
+    description: "Lost your Citizens Property appeal in Miami? Do not give up. Call (833) 657-4812 for a free attorney review.",
+  },
+  "manatee-insurance-exchange-claims-phone-number-how-to-file-a-claim": {
+    title: "Manatee Insurance Claims Phone FL 2026",
+    description: "Get the Manatee Insurance claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "ten-tips-handling-claim-denials-manatee-insurance-exchange": {
+    title: "10 Tips: Manatee Claim Denials FL 2026",
+    description: "Expert tips to fight Manatee Insurance claim denials in Florida. Get help — call (833) 657-4812 today.",
+  },
+  "was-your-hurricane-claim-denied-by-foremost-insurance-company": {
+    title: "Foremost Hurricane Denied? Florida 2026",
+    description: "Foremost denied your hurricane claim? Florida attorneys fight for you. Call (833) 657-4812 for a free review.",
+  },
+  "nationwide-insurance-claims-florida": {
+    title: "Nationwide Insurance Claims Florida 2026",
+    description: "Filing a Nationwide insurance claim in Florida? Get help with denials. Call (833) 657-4812 for free advice.",
+  },
+  "nationwide-claims-phone-number-how-to-file-a-claim": {
+    title: "Nationwide Claims Phone Number FL 2026",
+    description: "Get the Nationwide claims phone number and FL filing steps. Claim denied? Call (833) 657-4812 for help.",
+  },
+  "nationwide-insurance-damage-claims-florida": {
+    title: "Nationwide Damage Claims Florida 2026",
+    description: "Nationwide damage claim denied in Florida? Fight for fair payment. Call (833) 657-4812 for a free review.",
+  },
+  "nationwide-insurance-claim-advocates-lawsuit-florida": {
+    title: "Nationwide Claim Advocates FL Lawsuit 2026",
+    description: "Nationwide Insurance claim lawsuit in Florida? Get legal representation today. Call (833) 657-4812 — free consult.",
+  },
+  "nationwide-pet-insurance-denied-claim-florida": {
+    title: "Nationwide Pet Insurance Denied FL 2026",
+    description: "Nationwide denied your pet insurance claim in Florida? You have rights. Call (833) 657-4812 for legal help.",
+  },
+  "will-my-homeowners-insurance-cover-mold-damage-nationwide": {
+    title: "Nationwide Mold Damage Coverage FL 2026",
+    description: "Will Nationwide cover mold damage? Get answers and Florida legal help. Call (833) 657-4812 for a free review.",
+  },
+  "ssdi-benefits-guide-apply-appeal-nationwide": {
+    title: "SSDI Benefits Guide — Apply & Appeal 2026",
+    description: "SSDI benefits guide: how to apply and appeal nationwide. Need help? Call (833) 657-4812 for a free consultation.",
+  },
+  "ssdi-benefits-guide-protecting-your-rights-nationwide": {
+    title: "SSDI Benefits: Protect Your Rights 2026",
+    description: "Protect your SSDI benefits and rights. Expert guidance for appeals. Call (833) 657-4812 for free legal help.",
+  },
+  "ssdi-benefits-guide-claim-appeal-process-nationwide": {
+    title: "SSDI Claim Appeal Process Guide 2026",
+    description: "SSDI claim appeal process guide. Do not give up on your benefits. Call (833) 657-4812 for free help.",
+  },
+  "hurricane-claim-denied-vyrd-insurance-company": {
+    title: "Vyrd Insurance Hurricane Denied FL 2026",
+    description: "Vyrd Insurance denied your hurricane claim? Fight back in Florida. Call (833) 657-4812 for a free review.",
+  },
+  "farmers-insurance-wind-claim-denied-orlando-florida": {
+    title: "Farmers Wind Claim Denied FL 2026",
+    description: "Farmers denied your wind claim in Florida? Fight back with legal help. Call (833) 657-4812 for a free review.",
+  },
+  "farmers-insurance-wind-claim-denied-arlington-texas": {
+    title: "Farmers Wind Claim Denied? FL Help 2026",
+    description: "Farmers denied your wind damage claim? Florida attorneys fight insurance denials. Call (833) 657-4812 today.",
+  },
+  "farmers-insurance-wildfire-claim-denied-boulder-colorad": {
+    title: "Farmers Wildfire Claim Denied? Help 2026",
+    description: "Farmers denied your wildfire claim? Get legal help to recover your payout. Call (833) 657-4812 — free consult.",
+  },
+  "florida-peninsula-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "FL Peninsula Claims Phone Number 2026",
+    description: "Get the Florida Peninsula claims phone number and filing steps. Denied? Call (833) 657-4812 for legal help.",
+  },
+  "florida-peninsula-claims-phone-number-how-to-file-a-claim": {
+    title: "Florida Peninsula Phone & Filing 2026",
+    description: "Florida Peninsula claims phone number and filing guide. Need help with a denial? Call (833) 657-4812 today.",
+  },
+  "florida-peninsula-insurance-damage-claims-florida": {
+    title: "FL Peninsula Damage Claims 2026",
+    description: "Florida Peninsula damage claim denied? Fight for your payout with attorney help. Call (833) 657-4812 now.",
+  },
+  "florida-peninsula-insurance-claim-attorney-florida": {
+    title: "FL Peninsula Claim Attorney 2026",
+    description: "Need a Florida Peninsula claim attorney? Free case review — call (833) 657-4812 to fight your denial.",
+  },
+  "trident-reciprocal-exchange-claims-florida": {
+    title: "Trident Reciprocal Claims Florida 2026",
+    description: "Filing a Trident Reciprocal claim in Florida? Get help with denials. Call (833) 657-4812 for a free consultation.",
+  },
+  "trident-reciprocal-exchange-claims-phone-number-how-to-file-a-claim": {
+    title: "Trident Claims Phone Number FL 2026",
+    description: "Get the Trident Reciprocal claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "trident-reciprocal-exchange-claim-attorney-florida": {
+    title: "Trident Claim Attorney Florida 2026",
+    description: "Need a Trident Reciprocal claim attorney in Florida? Free case review — call (833) 657-4812 today.",
+  },
+  "trident-reciprocal-exchange-damage-claims-florida": {
+    title: "Trident Damage Claims Florida 2026",
+    description: "Trident damage claim denied in Florida? Fight for your payout. Call (833) 657-4812 for a free attorney review.",
+  },
+  "how-to-file-a-claim-with-cypress-property-and-casualty-insurance-company": {
+    title: "File Claim: Cypress Insurance FL 2026",
+    description: "How to file a claim with Cypress Property and Casualty in Florida. Denied? Call (833) 657-4812 for help.",
+  },
+  "cypress-property-casualty-insurance-damage-claims-florida": {
+    title: "Cypress Damage Claims Florida 2026",
+    description: "Cypress Property damage claim denied in Florida? Fight for fair payment. Call (833) 657-4812 — free consult.",
+  },
+  "cypress-property-casualty-insurance-claims-florida": {
+    title: "Cypress Insurance Claims Florida 2026",
+    description: "Filing a Cypress Property claim in Florida? Get help with denials and delays. Call (833) 657-4812 now.",
+  },
+  "cypress-property-casualty-insurance-claim-attorney-florida": {
+    title: "Cypress Claim Attorney Florida 2026",
+    description: "Need a Cypress Property claim attorney in Florida? Free case review — call (833) 657-4812 to fight back.",
+  },
+  "olympus-insurance-company-florida-claims-phone-number-how-to-file-a-claim": {
+    title: "Olympus Insurance Claims Phone FL 2026",
+    description: "Get the Olympus Insurance claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "was-your-hurricane-claim-denied-by-olympus-insurance-company": {
+    title: "Olympus Hurricane Claim Denied? FL 2026",
+    description: "Olympus denied your hurricane claim? Fight back in Florida. Call (833) 657-4812 for a free attorney review.",
+  },
+  "how-to-file-a-claim-with-olympus-insurance-company": {
+    title: "File Claim: Olympus Insurance FL 2026",
+    description: "How to file a claim with Olympus Insurance in Florida. Need help? Call (833) 657-4812 for a free review.",
+  },
+  "handling-claim-denials-olympus-insurance": {
+    title: "Olympus Claim Denials Guide FL 2026",
+    description: "Guide to handling Olympus Insurance claim denials in Florida. Get help — call (833) 657-4812 today.",
+  },
+  "olympus-insurance-claims-florida": {
+    title: "Olympus Insurance Claims Florida 2026",
+    description: "Filing an Olympus Insurance claim in Florida? Get help with denials. Call (833) 657-4812 for free advice.",
+  },
+  "peoples-trust-insurance-claim-denial-tips": {
+    title: "Peoples Trust Denial Tips FL 2026",
+    description: "Tips to fight a Peoples Trust claim denial in Florida. Protect your rights — call (833) 657-4812 today.",
+  },
+  "peoples-trust-insurance-claims-florida": {
+    title: "Peoples Trust Claims Florida 2026",
+    description: "Filing a Peoples Trust claim in Florida? Get help with denials and delays. Call (833) 657-4812 now.",
+  },
+  "peoples-trust-insurance-damage-claims-florida": {
+    title: "Peoples Trust Damage Claims FL 2026",
+    description: "Peoples Trust damage claim denied in Florida? Fight for fair payment. Call (833) 657-4812 for free help.",
+  },
+  "security-first-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Security First Claims Phone FL 2026",
+    description: "Get the Security First claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "security-first-insurance-claims-florida": {
+    title: "Security First Claims Florida 2026",
+    description: "Filing a Security First claim in Florida? Get help with denials. Call (833) 657-4812 for a free consultation.",
+  },
+  "ten-tips-handling-security-first-insurance-denials": {
+    title: "10 Tips: Security First Denials FL 2026",
+    description: "Expert tips to fight Security First insurance denials in Florida. Get help — call (833) 657-4812 today.",
+  },
+  "was-your-hurricane-claim-denied-by-security-first-insurance-company": {
+    title: "Security First Hurricane Denied FL 2026",
+    description: "Security First denied your hurricane claim? Fight back in Florida. Call (833) 657-4812 for a free review.",
+  },
+  "security-first-insurance-damage-claims-florida": {
+    title: "Security First Damage Claims FL 2026",
+    description: "Security First damage claim denied in Florida? Fight for your payout. Call (833) 657-4812 — free consult.",
+  },
+  "security-first-insurance-claim-denied-florida-2026": {
+    title: "Security First Denied Claim FL 2026",
+    description: "Security First denied your Florida claim? Act now. Free attorney review — call (833) 657-4812 today.",
+  },
+  "monarch-national-insurance-damage-claims-florida": {
+    title: "Monarch National Damage Claims FL 2026",
+    description: "Monarch National damage claim denied in Florida? Fight for your payout. Call (833) 657-4812 for free help.",
+  },
+  "monarch-national-insurance-claims-florida": {
+    title: "Monarch National Claims Florida 2026",
+    description: "Filing a Monarch National claim in Florida? Get help with denials. Call (833) 657-4812 for a free review.",
+  },
+  "tailrow-insurance-claims-florida": {
+    title: "Tailrow Insurance Claims Florida 2026",
+    description: "Filing a Tailrow Insurance claim in Florida? Get help with denials. Call (833) 657-4812 for a free consultation.",
+  },
+  "tailrow-insurance-exchange-claims-phone-number-how-to-file-a-claim": {
+    title: "Tailrow Claims Phone Number FL 2026",
+    description: "Get the Tailrow Insurance claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "tailrow-insurance-damage-claims-florida": {
+    title: "Tailrow Damage Claims Florida 2026",
+    description: "Tailrow damage claim denied in Florida? Fight for fair payment. Call (833) 657-4812 for a free attorney review.",
+  },
+  "tailrow-insurance-claim-attorney-florida": {
+    title: "Tailrow Claim Attorney Florida 2026",
+    description: "Need a Tailrow Insurance claim attorney in Florida? Free case review — call (833) 657-4812 today.",
+  },
+  "typtap-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "TypTap Claims Phone Number FL 2026",
+    description: "Get the TypTap Insurance claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "typtap-insurance-claims-florida": {
+    title: "TypTap Insurance Claims Florida 2026",
+    description: "Filing a TypTap insurance claim in Florida? Get help with denials. Call (833) 657-4812 for a free review.",
+  },
+  "typtap-insurance-damage-claims-florida": {
+    title: "TypTap Damage Claims Florida 2026",
+    description: "TypTap damage claim denied in Florida? Fight for your full payout. Call (833) 657-4812 — free consultation.",
+  },
+  "southern-oak-insurance-claims-florida": {
+    title: "Southern Oak Claims Florida 2026",
+    description: "Filing a Southern Oak claim in Florida? Get help with denials and underpayments. Call (833) 657-4812 now.",
+  },
+  "southern-oak-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Southern Oak Claims Phone FL 2026",
+    description: "Get the Southern Oak claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "southern-oak-insurance-damage-claims-florida": {
+    title: "Southern Oak Damage Claims FL 2026",
+    description: "Southern Oak damage claim denied in Florida? Fight for your payout. Call (833) 657-4812 for a free review.",
+  },
+  "was-your-hurricane-claim-denied-by-safe-harbor-insurance-company": {
+    title: "Safe Harbor Hurricane Denied? FL 2026",
+    description: "Safe Harbor denied your hurricane claim? Fight back in Florida. Call (833) 657-4812 for a free attorney review.",
+  },
+  "safe-harbor-insurance-claims-florida": {
+    title: "Safe Harbor Claims Florida 2026",
+    description: "Filing a Safe Harbor claim in Florida? Get help with denials. Call (833) 657-4812 for a free consultation.",
+  },
+  "safe-harbor-insurance-claim-attorney-florida": {
+    title: "Safe Harbor Claim Attorney FL 2026",
+    description: "Need a Safe Harbor claim attorney in Florida? Free case review — call (833) 657-4812 to fight your denial.",
+  },
+  "safe-harbor-insurance-damage-claims-florida": {
+    title: "Safe Harbor Damage Claims Florida 2026",
+    description: "Safe Harbor damage claim denied in Florida? Fight for fair payment. Call (833) 657-4812 for free legal help.",
+  },
+  "tips-handling-claim-denials-safe-harbor-insurance": {
+    title: "Safe Harbor Denial Tips FL 2026",
+    description: "Tips to handle a Safe Harbor claim denial in Florida. Protect your rights — call (833) 657-4812 today.",
+  },
+  "port-orange-insurance-claims-lawyers": {
+    title: "Port Orange Insurance Claims Lawyer 2026",
+    description: "Port Orange insurance claims lawyer in Florida. Denied? Fight for your payout — call (833) 657-4812 today.",
+  },
+  "orange-insurance-exchange-claims-florida": {
+    title: "Orange Insurance Exchange FL Claims 2026",
+    description: "Filing an Orange Insurance Exchange claim in Florida? Get help with denials. Call (833) 657-4812 now.",
+  },
+  "orange-insurance-exchange-damage-claims-florida": {
+    title: "Orange Insurance Damage Claims FL 2026",
+    description: "Orange Insurance damage claim denied in Florida? Fight back. Call (833) 657-4812 for a free attorney review.",
+  },
+  "orange-insurance-exchange-claim-attorney-florida": {
+    title: "Orange Insurance Claim Attorney FL 2026",
+    description: "Need an Orange Insurance claim attorney in Florida? Free case review — call (833) 657-4812 today.",
+  },
+  "orange-insurance-exchange-claims-phone-number-how-to-file-a-claim": {
+    title: "Orange Insurance Claims Phone FL 2026",
+    description: "Get the Orange Insurance claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "ten-tips-handling-insurance-claim-denials-edison-insurance": {
+    title: "10 Tips: Edison Claim Denials FL 2026",
+    description: "Expert tips to fight Edison Insurance claim denials in Florida. Get help — call (833) 657-4812 today.",
+  },
+  "edison-insurance-claims-florida": {
+    title: "Edison Insurance Claims Florida 2026",
+    description: "Filing an Edison Insurance claim in Florida? Get help with denials. Call (833) 657-4812 for a free review.",
+  },
+  "edison-insurance-damage-claims-florida": {
+    title: "Edison Damage Claims Florida 2026",
+    description: "Edison damage claim denied in Florida? Fight for your payout. Call (833) 657-4812 for free attorney help.",
+  },
+  "was-your-hurricane-claim-denied-by-edison-insurance-company": {
+    title: "Edison Hurricane Claim Denied? FL 2026",
+    description: "Edison denied your hurricane claim? Fight back in Florida. Call (833) 657-4812 for a free case review.",
+  },
+  "edison-insurance-claim-attorney-florida": {
+    title: "Edison Claim Attorney Florida 2026",
+    description: "Need an Edison Insurance claim attorney in Florida? Free consultation — call (833) 657-4812 to fight back.",
+  },
+  "kin-interinsurance-network-claims-phone-number-how-to-file-a-claim": {
+    title: "Kin Insurance Claims Phone FL 2026",
+    description: "Get the Kin Interinsurance claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
+  "case-law-cannon-v-safeco-bad-faith-insurance-2026": {
+    title: "Cannon v Safeco Bad Faith FL Case 2026",
+    description: "Key FL case law: Cannon v Safeco on bad faith insurance. Claim denied? Call (833) 657-4812 for help.",
+  },
+  "mangrove-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Mangrove Insurance Claims Phone FL 2026",
+    description: "Get the Mangrove Insurance claims phone number and FL filing guide. Denied? Call (833) 657-4812 for help.",
+  },
 };
 
 export function getSeoOverride(slug) {
