@@ -28,6 +28,7 @@ import {
   X
 } from "lucide-react";
 import styles from "./page.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 import caseConfig from "../../config/cases";
 
 const config = caseConfig["american-home-shield-privacy-torts"];
@@ -159,6 +160,7 @@ export default function AHSPrivacyLanding() {
       name: contactInfo.name,
       phone: contactInfo.phone
     }));
+    trackGoogleConversion();
     router.push("/american-home-shield-privacy-torts/sign");
   };
 

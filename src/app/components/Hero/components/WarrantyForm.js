@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import styles from "./HeroForm.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 export default function FreeCaseEvaluationPage() {
   const router = useRouter();
@@ -92,6 +93,7 @@ export default function FreeCaseEvaluationPage() {
         timestamp: new Date().toISOString(),
       });
 
+      trackGoogleConversion();
       setFormStatus("success");
       // reset form if you like—user will be redirected immediately
       setFormData({

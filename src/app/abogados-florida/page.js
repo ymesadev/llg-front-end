@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 export default function AbogadosFlorida() {
   const router = useRouter();
@@ -41,6 +42,7 @@ export default function AbogadosFlorida() {
         }),
       });
       if (!res.ok) throw new Error("Error");
+      trackGoogleConversion();
       setFormStatus("success");
     } catch { setFormStatus("error"); }
   };

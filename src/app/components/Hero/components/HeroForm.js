@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import styles from "./HeroForm.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 export default function FreeCaseEvaluationPage() {
   const router = useRouter();
@@ -136,6 +137,7 @@ export default function FreeCaseEvaluationPage() {
         description: "",
         consent: false,
       });
+      trackGoogleConversion();
       router.push(redirectTo);
       return;
     } catch (err) {

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
-import { trackEvent } from "@/app/utils/analytics";
+import { trackEvent, trackGoogleConversion } from "@/app/utils/analytics";
 
 const eligibilityQuestions = [
   { id: "age", question: "Are you 18 years of age or older?", required: true },
@@ -72,6 +72,7 @@ export default function QualifyPage() {
     if (!contactComplete) return;
     localStorage.setItem('slide-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
         trackEvent("qualify_contact_submitted", { case_type: "slide" });
+    trackGoogleConversion();
     router.push("/slide-insurance-privacy-torts/sign");
   };
 

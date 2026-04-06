@@ -60,6 +60,7 @@ export default function TrackingScripts() {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'AW-722091953');
+            gtag('config', 'AW-658866049');
             gtag('config', 'G-3Z6F2Q3TQ5');
           `,
         }}

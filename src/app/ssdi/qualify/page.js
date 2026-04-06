@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 const TOTAL_STEPS = 9; // steps 0–9 (plus branches 5b, 7b)
 
@@ -124,6 +125,7 @@ export default function SSDIQualify() {
         body: JSON.stringify({ ...contact, answers, score }),
       });
     } catch {/* silent */}
+    trackGoogleConversion();
     // Identify user in OpenReplay
     if (window.__or_identify) {
       window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'ssdi', score });

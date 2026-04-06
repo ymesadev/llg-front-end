@@ -21,3 +21,17 @@ export function trackEvent(eventName, properties = {}) {
     window.__or_event(eventName, properties);
   }
 }
+
+/**
+ * Fire a Google Ads conversion event.
+ * Requires gtag to be loaded via TrackingScripts.
+ */
+export function trackGoogleConversion() {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag('event', 'conversion', {
+      send_to: 'AW-658866049/QM4gCN6ypZUcEIH_lboC',
+      value: 1.0,
+      currency: 'USD',
+    });
+  }
+}
