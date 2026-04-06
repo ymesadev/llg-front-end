@@ -292,6 +292,12 @@ const SEO_OVERRIDES = {
     title: "American Integrity Claims Attorney Fort Lauderdale | Louis Law Group",
     description: "Fort Lauderdale American Integrity Insurance claims lawyer. We handle denied roof, water, and hurricane damage claims. Free case review: (833) 657-4812.",
   },
+
+  // American Integrity privacy torts — fix generic title
+  "american-integrity-insurance-privacy-torts": {
+    title: "American Integrity Insurance Privacy Torts | Data Tracking Lawsuit",
+    description: "Visited American Integrity's website? Your data may have been tracked without consent. Learn about privacy tort claims and your legal rights in Florida.",
+  },
 };
 
 export function getSeoOverride(slug) {
