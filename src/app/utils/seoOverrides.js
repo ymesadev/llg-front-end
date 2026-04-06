@@ -298,6 +298,171 @@ const SEO_OVERRIDES = {
     title: "American Integrity Insurance Privacy Torts | Data Tracking Lawsuit",
     description: "Visited American Integrity's website? Your data may have been tracked without consent. Learn about privacy tort claims and your legal rights in Florida.",
   },
+
+  // === ALL FPP CARRIER SEO OVERRIDES (2026-04-06) ===
+
+  // State Farm
+  "state-farm-insurance-claims-florida": {
+    title: "State Farm Insurance Claims Florida: Denied? Fight Back (2026)",
+    description: "State Farm denied your Florida claim? Know your rights under FL law. Steps to fight denial + free case review: (833) 657-4812.",
+  },
+  "state-farm-denied-roof-claim-texas": {
+    title: "State Farm Denied Roof Claim Texas: What to Do (2026)",
+    description: "State Farm denied your roof claim in Texas? Learn how to appeal, your legal rights, and when to hire an attorney. Free help: (833) 657-4812.",
+  },
+  "state-farm-florida-insurance-company-claims-phone-number-how-to-f": {
+    title: "State Farm Florida Claims Phone: (800) 732-5246 | File a Claim",
+    description: "State Farm Florida claims phone: (800) 732-5246. How to file, required docs, deadlines. Denied? Get free legal help: (833) 657-4812.",
+  },
+  "why-does-state-farm-deny-so-many-roof-claims-boca-raton-2026": {
+    title: "Why State Farm Denies Roof Claims in Florida (2026)",
+    description: "State Farm denies 40%+ of Florida roof claims. Common denial reasons, how to fight back, and your rights as a policyholder. Free consult: (833) 657-4812.",
+  },
+  "state-farm-closed-my-claim-florida": {
+    title: "State Farm Closed My Claim Florida: Reopen It (2026)",
+    description: "State Farm closed your Florida claim without paying? You can reopen it. Learn how + get free attorney help: (833) 657-4812.",
+  },
+  "ten-tips-handling-state-farm-claim-denials": {
+    title: "10 Tips: State Farm Claim Denied? How to Win (2026)",
+    description: "State Farm denied your claim? 10 proven steps to fight back and get paid. Florida homeowner rights + free case review: (833) 657-4812.",
+  },
+
+  // Allstate
+  "allstate-denied-my-roof-claim": {
+    title: "Allstate Denied My Roof Claim: Florida Rights (2026)",
+    description: "Allstate denied your roof claim? Florida law protects you. Steps to appeal, deadlines, and when to sue. Free case review: (833) 657-4812.",
+  },
+  "ten-tips-handling-allstate-claim-denials": {
+    title: "10 Tips: Allstate Claim Denied? Fight Back (2026)",
+    description: "Allstate denied your claim? 10 expert tips to fight the denial and get paid. Know your Florida rights. Free attorney help: (833) 657-4812.",
+  },
+  "castle-key-insurance-vs-allstate-florida-homeowners-2026": {
+    title: "Castle Key vs Allstate Florida: Same Company? (2026)",
+    description: "Castle Key IS Allstate in Florida. What this means for your claim, coverage differences, and how to fight denials. Free help: (833) 657-4812.",
+  },
+  "allstate-denied-my-roof-claim-2026": {
+    title: "Allstate Roof Claim Denied 2026: Your Options",
+    description: "Allstate denied your 2026 roof claim? Common reasons, appeal steps, and Florida policyholder protections. Free case review: (833) 657-4812.",
+  },
+
+  // Progressive
+  "how-to-file-a-claim-with-progressive-select-insurance-company": {
+    title: "How to File a Progressive Select Claim (2026)",
+    description: "Step-by-step guide to filing a Progressive Select Insurance claim. Deadlines, required docs, and what to do if denied. Free help: (833) 657-4812.",
+  },
+  "tips-handling-claim-denials-progressive-select-insurance": {
+    title: "Progressive Select Denied Claim? 10 Tips to Win (2026)",
+    description: "Progressive Select denied your claim? 10 proven tips to fight back. Florida homeowner rights and free attorney help: (833) 657-4812.",
+  },
+
+  // Castle Key
+  "castle-key-insurance-florida-homeowners-guide": {
+    title: "Castle Key Insurance Florida: Homeowners Guide (2026)",
+    description: "Castle Key Insurance (Allstate FL) homeowners guide. Coverage, claims process, denials, and your rights. Free case review: (833) 657-4812.",
+  },
+  "how-to-file-a-claim-with-castle-key-indemnity-company": {
+    title: "Castle Key Indemnity Claims Phone & How to File (2026)",
+    description: "How to file a Castle Key Indemnity claim in Florida. Phone number, required docs, deadlines. Denied? Free legal help: (833) 657-4812.",
+  },
+
+  // Usaa
+  "ten-tips-handling-usaa-insurance-claim-denials": {
+    title: "10 Tips: USAA Claim Denied? Fight Back (2026)",
+    description: "USAA denied your claim? 10 expert tips for military families to fight denials. Know your rights. Free case review: (833) 657-4812.",
+  },
+
+  // Liberty Mutual
+  "liberty-mutual-denied-my-claim-florida": {
+    title: "Liberty Mutual Denied My Claim Florida (2026)",
+    description: "Liberty Mutual denied your Florida homeowners claim? Your legal rights, appeal steps, and when to hire an attorney. Free help: (833) 657-4812.",
+  },
+
+  // Homeowners Choice
+  "homeowners-choice-property-casualty-insurance-claim-denial-tips": {
+    title: "Homeowners Choice Claim Denied? Florida Tips (2026)",
+    description: "Homeowners Choice denied your FL property claim? Common denial reasons, your rights, and how to fight back. Free consult: (833) 657-4812.",
+  },
+  "guide-filing-claims-homeowners-choice-insurance": {
+    title: "How to File a Homeowners Choice Insurance Claim (2026)",
+    description: "Step-by-step guide to filing a Homeowners Choice Property & Casualty claim in Florida. Phone, docs, deadlines. Free help: (833) 657-4812.",
+  },
+
+  // Slide
+  "slide-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Slide Insurance Claims Phone & How to File (2026)",
+    description: "Slide Insurance claims phone number and filing guide. Step-by-step for Florida homeowners. Denied? Free legal help: (833) 657-4812.",
+  },
+  "slide-insurance-claim-florida-property-damage": {
+    title: "Slide Insurance Claim Denied Florida? Your Rights (2026)",
+    description: "Slide Insurance denied your Florida property damage claim? Know your rights under FL law. Free case review: (833) 657-4812.",
+  },
+
+  // Universal Property
+  "universal-property-casualty-insurance-company-claims-phone-number": {
+    title: "Universal Property & Casualty Claims Phone (2026)",
+    description: "Universal Property & Casualty claims phone number and filing guide. Florida homeowners: denied? Free attorney help: (833) 657-4812.",
+  },
+
+  // Heritage
+  "heritage-insurance-claim-denial-tips": {
+    title: "Heritage Insurance Claim Denied? Florida Tips (2026)",
+    description: "Heritage Property & Casualty denied your FL claim? Tips to fight back, your legal rights, and free case review: (833) 657-4812.",
+  },
+
+  // Chubb
+  "ten-tips-handling-insurance-claim-denials-chubb-insurance": {
+    title: "10 Tips: Chubb Insurance Claim Denied? (2026)",
+    description: "Chubb denied your claim? 10 tips to fight back from Florida insurance attorneys. Know your rights. Free consult: (833) 657-4812.",
+  },
+
+  // Citizens
+  "ten-tips-citizens-property-claim-denials": {
+    title: "Citizens Property Insurance Denied? 10 Tips (2026)",
+    description: "Citizens Property Insurance denied your FL claim? 10 expert tips to fight the denial. Free case review: (833) 657-4812.",
+  },
+
+  // Manatee
+  "hurricane-claim-denied-manatee-insurance-exchange": {
+    title: "Manatee Insurance Claim Denied? Florida Help (2026)",
+    description: "Manatee Insurance Exchange denied your hurricane claim? Florida homeowner rights and how to fight back. Free help: (833) 657-4812.",
+  },
+
+  // Foremost
+  "ten-tips-handling-foremost-insurance-claim-denials": {
+    title: "Foremost Insurance Claim Denied? 10 Tips (2026)",
+    description: "Foremost Insurance denied your claim? 10 proven tips to fight denials. Florida homeowner rights. Free case review: (833) 657-4812.",
+  },
+
+  // Vyrd
+  "how-to-file-a-claim-with-vyrd-insurance-company": {
+    title: "How to File a Vyrd Insurance Claim Florida (2026)",
+    description: "Vyrd Insurance claims guide for Florida homeowners. Phone, filing steps, deadlines. Denied? Free attorney help: (833) 657-4812.",
+  },
+
+  // Security First
+  "essential-tips-for-filing-claims-at-security-first-insurance": {
+    title: "Security First Insurance Claims: Florida Tips (2026)",
+    description: "Security First Insurance claims tips for FL homeowners. How to file, common denials, your rights. Free case review: (833) 657-4812.",
+  },
+
+  // Florida Peninsula
+  "florida-peninsula-insurance-claims-florida": {
+    title: "Florida Peninsula Insurance Claims: Guide (2026)",
+    description: "Florida Peninsula Insurance claims guide. How to file, common denials, and your policyholder rights. Free attorney help: (833) 657-4812.",
+  },
+
+  // Monarch
+  "monarch-national-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Monarch National Claims Phone & Filing Guide (2026)",
+    description: "Monarch National Insurance claims phone and step-by-step filing guide. Florida homeowners: denied? Free help: (833) 657-4812.",
+  },
+
+  // Peoples Trust
+  "peoples-trust-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "People's Trust Claims Phone & Filing Guide (2026)",
+    description: "People's Trust Insurance claims phone and filing guide for FL homeowners. Denied? Free legal help: (833) 657-4812.",
+  },
+
 };
 
 export function getSeoOverride(slug) {
