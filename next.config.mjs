@@ -9,6 +9,26 @@ const nextConfig = {
   },
   async redirects() {
     return [
+
+      // ── Tower Hill consolidation (dead city pages → pillar) ──
+      { source: '/tower-hill-homeowners-insurance-palm-coast', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/tower-hill-insurance-lauderhill', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/tower-hill-insurance-pompano-beach', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/advice-tower-hill-insurance-group-tampa', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/approach-managing-tower-hill-insurance-hialeah', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/tower-hill-homeowners-insurance-doral', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/tower-hill-homeowners-insurance-lakeland', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/tower-hill-homeowners-insurance-melbourne-fl', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      // ── Tower Hill content consolidation (duplicate → pillar) ──
+      { source: '/tower-hill-insurance-florida', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      { source: '/tower-hill-insurance-claim-florida-help', destination: '/tower-hill-homeowners-insurance-florida', permanent: true },
+      // ── American Integrity consolidation (phone/portal dupes → canonical) ──
+      { source: '/american-integrity-insurance-company-florida-claims-phone-number', destination: '/american-integrity-insurance-claims-phone-number', permanent: true },
+      { source: '/american-integrity-claims-phone-number-orlando', destination: '/american-integrity-insurance-claims-phone-number', permanent: true },
+      { source: '/american-integrity-insurance-claims-portal-tallahassee', destination: '/american-integrity-insurance-claims-portal-florida-guide', permanent: true },
+      { source: '/american-integrity-insurance-damage-claims-florida', destination: '/american-integrity-insurance-claim-florida', permanent: true },
+      { source: '/american-integrity-insurance-file-a-claim-florida', destination: '/american-integrity-insurance-claim-florida', permanent: true },
+      { source: '/american-integrity-claim-denials-orlando-florida-guide', destination: '/american-integrity-claims-attorneys', permanent: true },
       // ── AHS consolidation (2,568 thin city pages → 1 hub) ──
       // Redirects all AHS article variants to the privacy torts landing page.
       // The privacy torts page (/american-home-shield-privacy-torts) is a static
