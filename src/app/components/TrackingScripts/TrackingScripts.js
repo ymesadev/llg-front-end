@@ -69,6 +69,7 @@ export default function TrackingScripts() {
             gtag("js", new Date());
             gtag("config", "G-3Z6F2Q3TQ5", { send_page_view: true });
             gtag("config", "AW-722091953");
+            gtag("config", "AW-658866049");
           \`,
         }}
       />

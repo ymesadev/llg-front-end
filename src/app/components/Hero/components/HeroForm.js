@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import { trackConversion } from "@/app/utils/analytics";
 import styles from "./HeroForm.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 const translations = {
   en: {
@@ -182,6 +183,7 @@ export default function FreeCaseEvaluationPage({ lang = "en" }) {
         description: "",
         consent: false,
       });
+      trackGoogleConversion();
       router.push(redirectTo);
       return;
     } catch (err) {

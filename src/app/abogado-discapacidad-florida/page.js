@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 export default function AbogadoDiscapacidadFlorida() {
   const router = useRouter();
@@ -50,6 +51,7 @@ export default function AbogadoDiscapacidadFlorida() {
         }),
       });
       if (!res.ok) throw new Error("Error");
+      trackGoogleConversion();
       setFormStatus("success");
     } catch {
       setFormStatus("error");

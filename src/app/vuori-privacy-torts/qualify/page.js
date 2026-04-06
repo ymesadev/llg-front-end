@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ArrowLeft, Check, X, Shield } from "lucide-react";
 import styles from "./page.module.css";
-import { trackEvent } from "@/app/utils/analytics";
+import { trackEvent, trackGoogleConversion } from "@/app/utils/analytics";
 
 async function sha256(value) {
   const encoder = new TextEncoder();
@@ -100,6 +100,7 @@ export default function QualifyPage() {
     }
     localStorage.setItem('vuori-contact', JSON.stringify({ email: contactInfo.usedEmail, name: contactInfo.name, phone: contactInfo.phone }));
     trackEvent("qualify_contact_submitted", { case_type: "vuori" });
+    trackGoogleConversion();
     router.push("/vuori-privacy-torts/sign");
   };
 

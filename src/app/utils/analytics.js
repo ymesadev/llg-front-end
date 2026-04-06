@@ -30,12 +30,17 @@ export function trackConversion(formName, properties = {}) {
   if (typeof window === "undefined") return;
   // GA4 + GTM + OpenReplay via trackEvent
   trackEvent("form_submitted", { form: formName, ...properties });
-  // Google Ads conversion
+  // Google Ads conversions (both accounts)
   if (window.gtag) {
     window.gtag('event', 'conversion', {
       send_to: 'AW-722091953',
       event_category: 'Lead',
       event_label: formName,
+    });
+    window.gtag('event', 'conversion', {
+      send_to: 'AW-658866049/QM4gCN6ypZUcEIH_lboC',
+      value: 1.0,
+      currency: 'USD',
     });
   }
   // Facebook Pixel — Lead event
@@ -66,5 +71,19 @@ export function trackPhoneClick(phoneNumber) {
   }
   if (window.ttq) {
     window.ttq.track('Contact', { content_name: 'phone_click' });
+  }
+}
+
+/**
+ * Fire a Google Ads conversion event (AW-658866049).
+ * Requires gtag to be loaded via TrackingScripts.
+ */
+export function trackGoogleConversion() {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag('event', 'conversion', {
+      send_to: 'AW-658866049/QM4gCN6ypZUcEIH_lboC',
+      value: 1.0,
+      currency: 'USD',
+    });
   }
 }

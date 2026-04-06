@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import styles from "./caselaw.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 export default function PolicyReviewForm() {
   const [formData, setFormData] = useState({
@@ -51,6 +52,7 @@ export default function PolicyReviewForm() {
       });
 
       if (res.ok) {
+        trackGoogleConversion();
         setStatus("success");
         setFormData({ fullName: "", email: "", phone: "", message: "" });
         setFiles([]);

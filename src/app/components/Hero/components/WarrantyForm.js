@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FaTimesCircle, FaSpinner } from "react-icons/fa";
 import { trackConversion } from "@/app/utils/analytics";
 import styles from "./HeroForm.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 export default function FreeCaseEvaluationPage() {
   const router = useRouter();
@@ -93,6 +94,7 @@ export default function FreeCaseEvaluationPage() {
         timestamp: new Date().toISOString(),
       });
 
+      trackGoogleConversion();
       setFormStatus("success");
       // Fire conversion across all pixels (GA4, GTM, FB, TikTok, OpenReplay)
       trackConversion('warranty_form', { case_type: 'warranty', carrier: formData.filedCarrier, state: formData.state });

@@ -28,6 +28,7 @@ import {
   X
 } from "lucide-react";
 import styles from "./page.module.css";
+import { trackGoogleConversion } from "@/app/utils/analytics";
 
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
@@ -109,6 +110,7 @@ export default function KinPrivacyLanding() {
       name: contactInfo.name,
       phone: contactInfo.phone
     }));
+    trackGoogleConversion();
     router.push("/kin-insurance-privacy-torts/sign");
   };
 
