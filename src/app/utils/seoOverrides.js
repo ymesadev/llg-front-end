@@ -234,6 +234,64 @@ const SEO_OVERRIDES = {
     title: "Mold Damage Lawyer Florida: Fight Denied Insurance Claims (2026)",
     description: "Florida mold damage lawyer handling denied and underpaid mold claims. Insurance companies exclude mold — we fight back. Free case evaluation: (833) 657-4812.",
   },
+
+  // === TOWER HILL INSURANCE — SEO FIXES (2026-04-06) ===
+
+  // Pillar page — consolidation target for all TH claim denial content
+  "tower-hill-homeowners-insurance-florida": {
+    title: "Tower Hill Insurance Claim Denied? Florida Homeowner Rights (2026)",
+    description: "Tower Hill denied or underpaid your Florida homeowners claim? Know your rights under FL §627.70152. Steps to fight back + free case review: (833) 657-4812.",
+  },
+
+  // TH Exchange entity page — ranking at position 4.8-6.1
+  "tower-hill-insurance-exchange-in-florida": {
+    title: "Tower Hill Insurance Exchange Florida: Claims Guide (2026)",
+    description: "Tower Hill Insurance Exchange is a reciprocal insurer in FL. How to file claims, coverage details, and what to do if denied. Free attorney help: (833) 657-4812.",
+  },
+
+  // TH Preferred entity + phone number — ranking at 2.8 for claims phone number
+  "tower-hill-preferred-insurance-company-claims-phone-number-how-to-file-a-claim": {
+    title: "Tower Hill Preferred Claims Phone Number: (800) 342-3407 | How to File",
+    description: "Tower Hill Preferred Insurance claims phone: (800) 342-3407. Step-by-step filing guide, required documents, and what to do if your claim is denied in Florida.",
+  },
+
+  // === AMERICAN INTEGRITY INSURANCE — SEO FIXES (2026-04-06) ===
+
+  // Pillar page — consolidation target for all AI claims content
+  "american-integrity-claims-attorneys": {
+    title: "American Integrity Insurance Claims Attorney | Florida (2026)",
+    description: "American Integrity denied your Florida claim? Our attorneys fight denied & underpaid homeowners claims. Free case review: (833) 657-4812.",
+  },
+
+  // Claims email page — ranking at 3.1
+  "american-integrity-insurance-claims-email": {
+    title: "American Integrity Claims Email & Contact Info (2026)",
+    description: "American Integrity Insurance claims email: claims@americanintegrityinsurance.com. How to submit, follow up, and escalate your Florida property damage claim.",
+  },
+
+  // Claims phone number — consolidation target for phone queries
+  "american-integrity-insurance-claims-phone-number": {
+    title: "American Integrity Claims Phone Number: (866) 277-9871",
+    description: "American Integrity Insurance claims phone: (866) 277-9871. File a claim, check status, report damage. Denied? Get free legal help: (833) 657-4812.",
+  },
+
+  // Claims portal — ranking for myaii.com queries
+  "american-integrity-insurance-claims-portal-florida-guide": {
+    title: "American Integrity Claims Portal (MyAII.com) Florida Guide",
+    description: "Access the American Integrity claims portal at MyAII.com. Step-by-step guide to filing, tracking, and managing your Florida homeowners insurance claim online.",
+  },
+
+  // Florida claims hub
+  "american-integrity-insurance-claim-florida": {
+    title: "American Integrity Insurance Claims in Florida: Complete Guide (2026)",
+    description: "How to file an American Integrity Insurance claim in Florida. Coverage, deadlines, common denials, and when to hire a property damage attorney. Free consult.",
+  },
+
+  // Fort Lauderdale local page — ranking at 3.1 for claims email
+  "american-integrity-claims-fort-lauderdale": {
+    title: "American Integrity Claims Attorney Fort Lauderdale | Louis Law Group",
+    description: "Fort Lauderdale American Integrity Insurance claims lawyer. We handle denied roof, water, and hurricane damage claims. Free case review: (833) 657-4812.",
+  },
 };
 
 export function getSeoOverride(slug) {
