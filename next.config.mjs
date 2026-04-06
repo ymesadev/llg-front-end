@@ -29,6 +29,9 @@ const nextConfig = {
       { source: '/american-integrity-insurance-damage-claims-florida', destination: '/american-integrity-insurance-claim-florida', permanent: true },
       { source: '/american-integrity-insurance-file-a-claim-florida', destination: '/american-integrity-insurance-claim-florida', permanent: true },
       { source: '/american-integrity-claim-denials-orlando-florida-guide', destination: '/american-integrity-claims-attorneys', permanent: true },
+      // ── American Integrity additional consolidation (2026-04-06) ──
+      { source: '/american-integrity-insurance-damage-claims-florida', destination: '/american-integrity-insurance-claim-florida', permanent: true },
+      { source: '/american-integrity-insurance-file-a-claim-florida', destination: '/american-integrity-insurance-claim-florida', permanent: true },
       // ── AHS consolidation (2,568 thin city pages → 1 hub) ──
       // Redirects all AHS article variants to the privacy torts landing page.
       // The privacy torts page (/american-home-shield-privacy-torts) is a static
