@@ -211,10 +211,10 @@ export default function SSDICalificar() {
     const iconChar = isStrong ? "\u2713" : isPossible ? "~" : "!";
     const title = isStrong ? "Candidato fuerte para SSDI" : isPossible ? "Caso potencialmente calificable" : "Puede enfrentar desafios de elegibilidad";
     const sub = isStrong
-      ? "Hemos recibido su solicitud y la revisaremos lo antes posible. Para evitar demoras en la revision de su caso de SSDI, firme su contrato ahora — mientras mas rapido lo haga, mas rapido podremos comenzar a proteger su reclamo."
+      ? "Hemos recibido su solicitud y la revisaremos lo antes posible. Para evitar demoras en la revision de su caso de SSDI, programe su consulta gratuita ahora — mientras mas rapido lo haga, mas rapido podremos comenzar a proteger su reclamo."
       : isPossible
-      ? "Hemos recibido su solicitud y la revisaremos lo antes posible. Para evitar demoras en la revision de su caso, firme su contrato ahora para que nuestro equipo pueda comenzar a trabajar en su expediente de inmediato."
-      : "Hemos recibido su solicitud. Para evitar demoras, firme su contrato ahora y un especialista revisara su expediente y se comunicara con usted para discutir sus opciones.";
+      ? "Hemos recibido su solicitud y la revisaremos lo antes posible. Para evitar demoras en la revision de su caso, programe su consulta gratuita ahora para que nuestro equipo pueda comenzar a trabajar en su expediente de inmediato."
+      : "Hemos recibido su solicitud. Para evitar demoras, programe su consulta gratuita ahora y un especialista revisara su expediente y se comunicara con usted para discutir sus opciones.";
     const barColor = isStrong ? "#4caf50" : isPossible ? "#ffb800" : "#e57373";
 
     const tags = [];
@@ -255,13 +255,13 @@ export default function SSDICalificar() {
                 </div>
               )}
               <a
-                href="https://app.louislawgroup.com/ssdi-retainer/"
+                href="https://api.leadconnectorhq.com/widget/booking/c0DwL4k89z31qsfAFmJv"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${styles.btn} ${styles.btnGold}`}
                 style={{ display: "block", textAlign: "center", textDecoration: "none" }}
               >
-                Abrir Contrato — Asegure Su Caso Ahora &rarr;
+                Programar Consulta Gratuita &rarr;
               </a>
               <div className={styles.urgencyNote}>
                 Actue ahora — los plazos de SSDI son estrictos. Las demoras pueden poner en riesgo su ventana de apelacion.

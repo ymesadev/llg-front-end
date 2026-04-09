@@ -218,10 +218,10 @@ export default function SSDIQualify() {
     const iconChar = isStrong ? "✓" : isPossible ? "~" : "!";
     const title = isStrong ? "Strong SSDI candidate" : isPossible ? "Potentially qualifying case" : "May face eligibility challenges";
     const sub = isStrong
-      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your SSDI case review, sign your retainer now — the sooner you do, the faster we can start protecting your claim."
+      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your SSDI case review, schedule your free consultation now — the sooner you do, the faster we can start protecting your claim."
       : isPossible
-      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your case review, sign your retainer now so our team can begin working on your file immediately."
-      : "We have received your submission. To avoid any delay, sign your retainer now and a case specialist will review your file and reach out to discuss your options.";
+      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your case review, schedule your free consultation now so our team can begin working on your file immediately."
+      : "We have received your submission. To avoid any delay, schedule your free consultation now and a case specialist will review your file and reach out to discuss your options.";
     const barColor = isStrong ? "#4caf50" : isPossible ? "#ffb800" : "#e57373";
 
     const tags = [];
@@ -262,13 +262,13 @@ export default function SSDIQualify() {
                 </div>
               )}
               <a
-                href="https://app.louislawgroup.com/ssdi-retainer/"
+                href="https://api.leadconnectorhq.com/widget/booking/c0DwL4k89z31qsfAFmJv"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${styles.btn} ${styles.btnGold}`}
                 style={{ display: "block", textAlign: "center", textDecoration: "none" }}
               >
-                Open Retainer — Secure Your Case Now →
+                Schedule Free Consultation →
               </a>
               <div className={styles.urgencyNote}>
                 ⚡ Act now — SSDI deadlines are strict. Delays can jeopardize your appeal window.
