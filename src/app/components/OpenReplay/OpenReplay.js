@@ -25,6 +25,7 @@ const OpenReplay = () => {
         __DISABLE_SECURE_MODE: true,
         respectDoNotTrack: false,
         capturePerformance: true,
+        inlineCss: 3,
         network: {
           capturePayload: false,
           captureHeaders: false,
