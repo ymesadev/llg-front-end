@@ -1,7 +1,22 @@
 import fs from 'fs';
 import path from 'path';
+import NOINDEX_SLUGS from '../utils/noindexSlugs';
 
 export const SITE  = 'https://www.louislawgroup.com';
+
+/**
+ * Check if a URL should be excluded from the sitemap.
+ * Matches explicit noindex list + dedup suffix pattern (-N where N >= 2).
+ */
+function shouldExcludeFromSitemap(loc) {
+  const slug = loc.replace(SITE + '/', '').replace(/\/$/, '');
+  if (!slug) return false; // keep root
+  if (NOINDEX_SLUGS.has(slug)) return true;
+  // Dedup suffix: slug ending in -N where N is 2-999
+  const m = slug.match(/^(.+)-(\d{1,3})$/);
+  if (m && parseInt(m[2]) >= 2 && parseInt(m[2]) <= 999) return true;
+  return false;
+}
 const STRAPI = (process.env.NEXT_PUBLIC_STRAPI_API_URL || process.env.STRAPI_URL || 'https://login.louislawgroup.com').replace(/\/+$/,'');
 const TOKEN = process.env.STRAPI_API_TOKEN || '';
 
@@ -275,7 +290,8 @@ export async function collectUrlsRange(startIndex, limit, fetchPageSize = 200) {
 export function toUrlsetXml(urls) {
   const head = `<?xml version="1.0" encoding="UTF-8"?>`;
   const open = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
-  const body = urls.map(u => {
+  const filtered = urls.filter(u => !shouldExcludeFromSitemap(u.loc));
+  const body = filtered.map(u => {
     const last = u.lastmod ? `<lastmod>${new Date(u.lastmod).toISOString()}</lastmod>` : '';
     return `<url><loc>${u.loc}</loc>${last}<changefreq>weekly</changefreq><priority>0.7</priority></url>`;
   }).join('');

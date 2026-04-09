@@ -21,6 +21,7 @@ import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA
 import Testimonials from "../components/Testimonials/Testimonials";
 import { getSeoOverride } from "../utils/seoOverrides";
 import { getFaqOverride } from "../utils/faqOverrides";
+import { shouldNoindex } from "../utils/noindexSlugs";
 import ArticlePageMarker from "../components/ArticlePageMarker";
 import MobileExitIntent from "../components/MobileExitIntent/MobileExitIntent";
 import ReadingProgress from "../components/ReadingProgress/ReadingProgress";
@@ -517,7 +518,7 @@ export async function generateMetadata({ params }) {
             title: `${finalTitle} | Louis Law Group`,
             description,
             alternates: { canonical: canonicalUrl },
-            ...(isDupSlug && { robots: { index: false, follow: true } }),
+            ...((isDupSlug || shouldNoindex(slug)) && { robots: { index: false, follow: true } }),
             openGraph: {
               title: `${finalTitle} | Louis Law Group`,
               description,
