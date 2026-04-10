@@ -26,12 +26,12 @@ const CARRIERS = [
 const DAMAGE_LABELS = ["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"];
 const RESPONSE_LABELS = ["Denied claim entirely","Underpaid / lowballed","Delaying or not responding","Claim pending — no decision yet","No claim filed yet"];
 const TOTAL_STEPS = 5;
-const STEP_NAMES = ["damage_type","owner_check","florida_check","carrier_select","date_of_loss","contact_info"];
+const STEP_NAMES = ["damage_type","owner_check","florida_check","date_of_loss","insurer_response","contact_info"];
 
 export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [carrier, setCarrier] = useState("");
+  const [// carrier removed, setCarrier] = useState("");
   const [ddQuery, setDdQuery] = useState("");
   const [ddOpen, setDdOpen] = useState(false);
   const [dateVal, setDateVal] = useState("");
@@ -125,7 +125,7 @@ export default function PropertyDamageQualify() {
     }
     setAnswer(4, val);
     const bucket = yrs > 5 ? "over_5y" : yrs > 3 ? "3_to_5y" : yrs > 1 ? "1_to_3y" : "under_1y";
-    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 4, step_name: "date_of_loss", answer: bucket, years_ago: Math.round(yrs * 10) / 10 });
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "date_of_loss", answer: bucket, years_ago: Math.round(yrs * 10) / 10 });
     if (yrs > 5) setDateNote({ msg: "Warning: Over 5 years ago. Florida statute of limitations may bar your claim.", warn: true });
     else if (yrs > 3) setDateNote({ msg: "Note: Over 3 years ago. We will review applicable deadlines carefully.", warn: true });
     else setDateNote({ msg: `Date recorded: ${loss.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, warn: false });
@@ -137,8 +137,8 @@ export default function PropertyDamageQualify() {
       const yrs = (today - new Date(answers[4])) / (365 * 86400000);
       if (yrs <= 0.5) s += 20; else if (yrs <= 1) s += 17; else if (yrs <= 3) s += 12; else if (yrs <= 5) s += 5;
     }
-    // Insurer response step removed — base score adjusted
-    s += 15;
+    const insMap = [22, 20, 15, 8, 3];
+    s += insMap[answers[5]] !== undefined ? insMap[answers[5]] : 0;
     s += 18;
     return Math.min(Math.max(s, 0), 100);
   };
@@ -161,10 +161,10 @@ export default function PropertyDamageQualify() {
           name: contact.name,
           phone: contact.phone,
           email: contact.email,
-          carrier,
+          // carrier removed
           damageType: answers[3],
           dateOfLoss: answers[4] || dateVal,
-          // insurerResponse removed
+          insurerResponse: answers[5],
           score,
         }),
       });
@@ -247,7 +247,10 @@ export default function PropertyDamageQualify() {
     const tags = [];
     if (answers[3] !== undefined) tags.push({ label: DAMAGE_LABELS[answers[3]] || "Damage reported", cls: styles.tagGreen });
     if (carrier) tags.push({ label: carrier.replace(" Insurance","").replace(" Property & Casualty",""), cls: styles.tagYellow });
-    // Insurer response tags removed
+    if (answers[5] === 0) tags.push({ label: "Denial — strong case", cls: styles.tagGreen });
+    if (answers[5] === 1) tags.push({ label: "Underpayment dispute", cls: styles.tagGreen });
+    if (answers[5] === 2) tags.push({ label: "Bad faith potential", cls: styles.tagGreen });
+    if (answers[5] === 4) tags.push({ label: "No claim filed yet", cls: styles.tagYellow });
     if (answers[4]) {
       const yrs = (today - new Date(answers[4])) / (365 * 86400000);
       tags.push(yrs > 3 ? { label: "Limitations risk", cls: styles.tagRed } : { label: "Within limitations", cls: styles.tagGreen });
@@ -367,47 +370,10 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 3: Insurance carrier */}
+          {/* Step 4: Date of loss */}
           {cur === 3 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Question 4 of 6</div>
-              <div className={styles.question}>Who is your insurance company?</div>
-              <div className={styles.hint}>Search or scroll to find your carrier</div>
-              <div className={styles.ddWrap} ref={ddRef}>
-                <input
-                  className={styles.ddSearch}
-                  placeholder="Type to search carriers..."
-                  value={ddQuery}
-                  onChange={(e) => setDdQuery(e.target.value)}
-                  onFocus={() => setDdOpen(true)}
-                  autoComplete="off"
-                />
-                <div className={`${styles.ddList} ${ddOpen ? styles.open : ""}`}>
-                  {filteredCarriers.length === 0
-                    ? <div className={styles.ddEmpty}>No carriers found</div>
-                    : filteredCarriers.map((c) => (
-                      <div key={c} className={`${styles.ddItem} ${carrier === c ? styles.ddItemActive : ""}`}
-                        onClick={() => { setCarrier(c); setAnswer(2, c); setDdQuery(""); setDdOpen(false); trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "carrier_select", answer: c }); }}>
-                        {c}
-                      </div>
-                    ))
-                  }
-                </div>
-                {carrier && (
-                  <div className={`${styles.ddSelected} ${styles.show}`}>
-                    <span>{carrier}</span>
-                    <button className={styles.ddClear} onClick={() => { setCarrier(""); setAnswer(2, undefined); }}>×</button>
-                  </div>
-                )}
-              </div>
-              <button className={styles.btn} onClick={next} disabled={!carrier}>Continue →</button>
-            </div>
-          )}
-
-          {/* Step 4: Date of loss */}
-          {cur === 4 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 5 of 6</div>
               <div className={styles.question}>When did the damage occur?</div>
               <div className={styles.hint}>Select the exact or approximate date of loss</div>
               <input type="date" className={styles.dateInput} value={dateVal} max={todayStr}
@@ -417,7 +383,25 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 6: Contact info */}
+
+          {/* Step 4: Insurer response */}
+          {cur === 4 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Question 5 of 6</div>
+              <div className={styles.question}>What has your insurance company done with your claim?</div>
+              <div className={styles.hint}>Select the option that best describes your situation</div>
+              <div className={styles.opts}>
+                {RESPONSE_LABELS.map((label, i) => (
+                  <button key={i} className={`${styles.opt} ${answers[5] === i ? styles.selected : ""}`}
+                    onClick={() => handlePickAndNext(5, i)}>
+                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 5: Contact info */}
           {cur === 5 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Last step</div>
