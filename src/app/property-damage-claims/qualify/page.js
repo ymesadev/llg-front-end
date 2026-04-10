@@ -25,8 +25,8 @@ const CARRIERS = [
 
 const DAMAGE_LABELS = ["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"];
 const RESPONSE_LABELS = ["Denied claim entirely","Underpaid / lowballed","Delaying or not responding","Claim pending — no decision yet","No claim filed yet"];
-const TOTAL_STEPS = 5;
-const STEP_NAMES = ["damage_type","owner_check","florida_check","carrier_select","date_of_loss","contact_info"];
+const TOTAL_STEPS = 6;
+const STEP_NAMES = ["damage_type","owner_check","florida_check","carrier_select","date_of_loss","insurer_response","contact_info"];
 
 export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
@@ -137,8 +137,8 @@ export default function PropertyDamageQualify() {
       const yrs = (today - new Date(answers[4])) / (365 * 86400000);
       if (yrs <= 0.5) s += 20; else if (yrs <= 1) s += 17; else if (yrs <= 3) s += 12; else if (yrs <= 5) s += 5;
     }
-    // Insurer response step removed — base score adjusted
-    s += 15;
+    const insMap = [22, 20, 15, 8, 3];
+    s += insMap[answers[5]] !== undefined ? insMap[answers[5]] : 0;
     s += 18;
     return Math.min(Math.max(s, 0), 100);
   };
@@ -164,7 +164,7 @@ export default function PropertyDamageQualify() {
           carrier,
           damageType: answers[3],
           dateOfLoss: answers[4] || dateVal,
-          // insurerResponse removed
+          insurerResponse: answers[5],
           score,
         }),
       });
@@ -199,7 +199,7 @@ export default function PropertyDamageQualify() {
   const trackContactStart = () => {
     if (!contactStartedRef.current) {
       contactStartedRef.current = true;
-      trackEvent("qualify_step_answered", { case_type: "property-damage", step: 5, step_name: "contact_info", answer: "started_typing" });
+      trackEvent("qualify_step_answered", { case_type: "property-damage", step: 6, step_name: "contact_info", answer: "started_typing" });
     }
   };
 
@@ -247,7 +247,10 @@ export default function PropertyDamageQualify() {
     const tags = [];
     if (answers[3] !== undefined) tags.push({ label: DAMAGE_LABELS[answers[3]] || "Damage reported", cls: styles.tagGreen });
     if (carrier) tags.push({ label: carrier.replace(" Insurance","").replace(" Property & Casualty",""), cls: styles.tagYellow });
-    // Insurer response tags removed
+    if (answers[5] === 0) tags.push({ label: "Denial — strong case", cls: styles.tagGreen });
+    if (answers[5] === 1) tags.push({ label: "Underpayment dispute", cls: styles.tagGreen });
+    if (answers[5] === 2) tags.push({ label: "Bad faith potential", cls: styles.tagGreen });
+    if (answers[5] === 4) tags.push({ label: "No claim filed yet", cls: styles.tagYellow });
     if (answers[4]) {
       const yrs = (today - new Date(answers[4])) / (365 * 86400000);
       tags.push(yrs > 3 ? { label: "Limitations risk", cls: styles.tagRed } : { label: "Within limitations", cls: styles.tagGreen });
@@ -319,7 +322,7 @@ export default function PropertyDamageQualify() {
           {/* Step 0: Type of damage (engaging opener) */}
           {cur === 0 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 1 of 6</div>
+              <div className={styles.stepLabel}>Question 1 of 7</div>
               <div className={styles.question}>What type of damage occurred?</div>
               <div className={styles.hint}>Select the primary cause of loss</div>
               <div className={styles.optsGrid}>
@@ -336,7 +339,7 @@ export default function PropertyDamageQualify() {
           {/* Step 1: Owner check */}
           {cur === 1 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 2 of 6</div>
+              <div className={styles.stepLabel}>Question 2 of 7</div>
               <div className={styles.question}>Are you the owner of the damaged property?</div>
               <div className={styles.hint}>Only property owners can initiate an insurance claim dispute</div>
               <div className={styles.opts}>
@@ -353,7 +356,7 @@ export default function PropertyDamageQualify() {
           {/* Step 2: Florida check */}
           {cur === 2 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 3 of 6</div>
+              <div className={styles.stepLabel}>Question 3 of 7</div>
               <div className={styles.question}>Is the damaged property located in Florida?</div>
               <div className={styles.hint}>We exclusively handle Florida property insurance claims</div>
               <div className={styles.opts}>
@@ -370,7 +373,7 @@ export default function PropertyDamageQualify() {
           {/* Step 3: Insurance carrier */}
           {cur === 3 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 4 of 6</div>
+              <div className={styles.stepLabel}>Question 4 of 7</div>
               <div className={styles.question}>Who is your insurance company?</div>
               <div className={styles.hint}>Search or scroll to find your carrier</div>
               <div className={styles.ddWrap} ref={ddRef}>
@@ -407,7 +410,7 @@ export default function PropertyDamageQualify() {
           {/* Step 4: Date of loss */}
           {cur === 4 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 5 of 6</div>
+              <div className={styles.stepLabel}>Question 5 of 7</div>
               <div className={styles.question}>When did the damage occur?</div>
               <div className={styles.hint}>Select the exact or approximate date of loss</div>
               <input type="date" className={styles.dateInput} value={dateVal} max={todayStr}
@@ -417,8 +420,25 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 6: Contact info */}
+          {/* Step 5: Insurer response */}
           {cur === 5 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Question 6 of 7</div>
+              <div className={styles.question}>What has your insurance company done with your claim?</div>
+              <div className={styles.hint}>Select the option that best describes your situation</div>
+              <div className={styles.opts}>
+                {RESPONSE_LABELS.map((label, i) => (
+                  <button key={i} className={`${styles.opt} ${answers[5] === i ? styles.selected : ""}`}
+                    onClick={() => handlePickAndNext(5, i)}>
+                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 6: Contact info */}
+          {cur === 6 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Last step</div>
               <div className={styles.question}>How should we reach you?</div>
@@ -453,7 +473,7 @@ export default function PropertyDamageQualify() {
           <button className={styles.backBtn} onClick={back} style={{ visibility: cur > 0 && cur <= TOTAL_STEPS ? "visible" : "hidden" }}>
             ← Back
           </button>
-          <span className={styles.stepCounter}>{cur <= TOTAL_STEPS ? `Step ${cur + 1} of 6` : ""}</span>
+          <span className={styles.stepCounter}>{cur <= TOTAL_STEPS ? `Step ${cur + 1} of 7` : ""}</span>
         </div>
       </div>
 
