@@ -7,6 +7,7 @@ export const metadata = {
     "Denied Social Security disability benefits? Louis Law Group fights for SSDI claimants nationwide. Representation triples your approval odds. No fees unless you win.",
   keywords:
     "SSDI lawyer, social security disability attorney, SSDI denial appeal, disability benefits lawyer, social security disability claim, SSDI hearing representation, SSI attorney, disability lawyer",
+  alternates: { canonical: "https://www.louislawgroup.com/ssdi-lawyers" },
   openGraph: {
     title: "SSDI Disability Lawyers | Louis Law Group",
     description:
@@ -419,6 +420,22 @@ export default function SSDILawyersPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CROSS-PRACTICE — Property Damage */}
+      <section className={styles.steps}>
+        <div className={styles.sectionInner} style={{ paddingBottom: "3rem" }}>
+          <h3 style={{ fontFamily: "Anton, sans-serif", fontSize: "1.5rem", fontWeight: 400, color: "#1a2b49", marginBottom: "1rem" }}>
+            Also Handling Property Damage Claims
+          </h3>
+          <p style={{ fontSize: "1rem", color: "#3a4a6a", lineHeight: 1.7, maxWidth: "680px", margin: "0 auto 1.5rem" }}>
+            Louis Law Group also represents Florida homeowners with denied or underpaid
+            property insurance claims — hurricane damage, roof damage, water damage, mold, and more.
+          </p>
+          <Link href="/property-damage-claims" className={styles.ctaSecondary} style={{ marginTop: 0 }}>
+            Learn about our property damage practice &rarr;
+          </Link>
         </div>
       </section>
 

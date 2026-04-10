@@ -13,6 +13,7 @@ export const metadata = {
     "Daily case law and industry insights on Florida property insurance litigation, public adjuster regulations, bad faith claims, and carrier disputes. Curated for public adjusters and claims professionals.",
   keywords:
     "florida property insurance case law, insurance litigation updates, public adjuster case law, bad faith insurance florida, property insurance court decisions, industry insights",
+  alternates: { canonical: "https://www.louislawgroup.com/case-law-updates" },
   openGraph: {
     title: "Case Law & Industry Insights | Louis Law Group",
     description:

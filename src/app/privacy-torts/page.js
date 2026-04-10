@@ -6,6 +6,7 @@ export const metadata = {
   title: "Privacy Torts | Louis Law Group",
   description:
     "Louis Law Group represents victims of unauthorized online tracking and privacy violations. Learn about your rights and check if you qualify for compensation.",
+  alternates: { canonical: "https://www.louislawgroup.com/privacy-torts" },
 };
 
 const cases = [

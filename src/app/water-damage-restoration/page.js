@@ -7,6 +7,7 @@ export const metadata = {
     "Suffering from water damage, mold, or roof leaks in Miami-Dade, Broward, or Palm Beach? Louis Law Group fights insurance companies to get you the compensation you deserve. Free case evaluation.",
   keywords:
     "water damage restoration, water damage repair, mold removal service, mold remediation, roof leak repair, emergency water restoration, flood damage, water damage miami, water damage fort lauderdale, water damage west palm beach",
+  alternates: { canonical: "https://www.louislawgroup.com/water-damage-restoration" },
   openGraph: {
     title: "Water Damage Restoration Claims | Louis Law Group",
     description:

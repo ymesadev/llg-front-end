@@ -7,6 +7,7 @@ export const metadata = {
     "Essential resources for Florida public adjusters: regulatory updates, carrier actions, claims data, statutes, and legal support. Submit a policy for review or ask our attorneys a question.",
   keywords:
     "public adjuster resources, florida public adjuster, PA resources florida, property claim resources, insurance claim adjuster, public adjuster attorney, florida OIR, 626.854, 627.70131",
+  alternates: { canonical: "https://www.louislawgroup.com/public-adjuster-resources-florida" },
   openGraph: {
     title: "Florida Public Adjuster Resources | Louis Law Group",
     description:

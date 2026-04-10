@@ -2,6 +2,7 @@ export const metadata = {
   title: "Check If You Qualify — Free Property Damage Case Review | Louis Law Group",
   description:
     "Answer 7 quick questions to see if your Florida property damage claim qualifies for legal representation. Free evaluation — no fees unless we win.",
+  alternates: { canonical: "https://www.louislawgroup.com/property-damage-claims/qualify" },
   openGraph: {
     title: "Check If You Qualify — Free Property Damage Case Review",
     description:

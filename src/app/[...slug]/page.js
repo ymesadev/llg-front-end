@@ -1570,6 +1570,22 @@ export default async function Page(props) {
                   </nav>
                 );
               })()}
+              {/* Hub link — property damage city/topic pages link back to hub */}
+              {(() => {
+                const s = slug.toLowerCase();
+                const hubKeywords = ["property-damage", "insurance-claim", "mold-damage", "flood-damage", "hurricane-damage", "roof-damage", "water-damage"];
+                const isPropertyHub = articleType === "property-damage" && hubKeywords.some(k => s.includes(k));
+                if (!isPropertyHub) return null;
+                return (
+                  <nav style={{background:"#f9f7f4",borderRadius:"12px",padding:"20px 24px",margin:"24px 0"}} aria-label="Practice area hub">
+                    <p style={{margin:0,fontSize:"0.95rem",color:"#3a4a6a",lineHeight:"1.7"}}>
+                      This page is part of our <a href="/property-damage-claims" style={{color:"#1a2b49",fontWeight:700}}>Florida Property Damage Claims</a> practice.
+                      Learn how our attorneys fight denied and underpaid insurance claims across Florida, or{" "}
+                      <a href="/property-damage-claims/qualify" style={{color:"#c2410c",fontWeight:600}}>check if you qualify for a free case review</a>.
+                    </p>
+                  </nav>
+                );
+              })()}
               {/* End-of-article CTA */}
               {(() => {
                 const intakeHref = getIntakeHref(slug, articleType);
