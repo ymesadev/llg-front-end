@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, phone, email, carrier, damageType, dateOfLoss, insurerResponse, score } = body;
+    const { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score } = body;
 
     if (!name || !phone || !email) {
       return NextResponse.json({ error: "Missing required contact fields" }, { status: 400 });
@@ -18,6 +18,7 @@ export async function POST(request) {
       `Score: ${score}/100 — ${scoreLabel}`,
       `Insurance Carrier: ${carrier || "Not provided"}`,
       `Type of Damage: ${damageLabels[damageType] ?? "Not provided"}`,
+      `Property Address: ${propertyAddress || "Not provided"}`,
       `Date of Loss: ${dateOfLoss || "Not provided"}`,
       `Insurer Response: ${responseLabels[insurerResponse] ?? "Not provided"}`,
     ].join("\n");
@@ -30,7 +31,7 @@ export async function POST(request) {
       const n8nRes = await fetch(n8nWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, email, carrier, damageType, dateOfLoss, insurerResponse, score }),
+        body: JSON.stringify({ name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score }),
       });
       if (n8nRes.ok) sent = true;
       else console.error("[qualify-intake] n8n webhook returned:", n8nRes.status);

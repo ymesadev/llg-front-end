@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
-import { trackEvent, trackConversion, trackGoogleConversion } from "@/app/utils/analytics";
+import { trackEvent, trackConversion } from "@/app/utils/analytics";
 
 const CARRIERS = [
   "Allstate Insurance","American Integrity Insurance","American Traditions Insurance",
@@ -36,7 +36,7 @@ export default function PropertyDamageQualify() {
   const [ddOpen, setDdOpen] = useState(false);
   const [dateVal, setDateVal] = useState("");
   const [dateNote, setDateNote] = useState({ msg: "", warn: false });
-  const [contact, setContact] = useState({ name: "", phone: "", email: "" });
+  const [contact, setContact] = useState({ name: "", phone: "", email: "", propertyAddress: "" });
   const [result, setResult] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -150,7 +150,7 @@ export default function PropertyDamageQualify() {
   };
 
   const handleSubmit = async () => {
-    if (!contact.name || !contact.phone || !contact.email.includes("@")) return;
+    if (!contact.name || !contact.phone || !contact.email.includes("@") || !contact.propertyAddress.trim()) return;
     setSubmitting(true);
     const score = calcScore();
     try {
@@ -161,6 +161,7 @@ export default function PropertyDamageQualify() {
           name: contact.name,
           phone: contact.phone,
           email: contact.email,
+          propertyAddress: contact.propertyAddress,
           carrier,
           damageType: answers[3],
           dateOfLoss: answers[4] || dateVal,
@@ -172,7 +173,6 @@ export default function PropertyDamageQualify() {
     trackEvent("qualify_submitted", { case_type: "property-damage", score });
     // Fire conversion across all pixels (GA4, GTM, FB, TikTok, OpenReplay)
     trackConversion('pd_qualify', { case_type: 'property-damage', score });
-    trackGoogleConversion();
     // Identify user in OpenReplay
     if (window.__or_identify) {
       window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'property-damage', score });
@@ -186,7 +186,7 @@ export default function PropertyDamageQualify() {
   const restart = () => {
     setAnswers({}); setCarrier(""); setDdQuery(""); setDdOpen(false);
     setDateVal(""); setDateNote({ msg: "", warn: false });
-    setContact({ name: "", phone: "", email: "" });
+    setContact({ name: "", phone: "", email: "", propertyAddress: "" });
     setResult(null); setSubmitted(false); setCur(0);
   };
 
@@ -194,7 +194,7 @@ export default function PropertyDamageQualify() {
     ? CARRIERS.filter((c) => c.toLowerCase().includes(ddQuery.toLowerCase()))
     : CARRIERS;
 
-  const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@");
+  const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@") && contact.propertyAddress.trim();
   const contactStartedRef = useRef(false);
   const trackContactStart = () => {
     if (!contactStartedRef.current) {
@@ -458,6 +458,11 @@ export default function PropertyDamageQualify() {
                   <label className={styles.inputLabel}>Email address</label>
                   <input className={styles.input} type="email" placeholder="jane@example.com" value={contact.email}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }} />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label className={styles.inputLabel}>Property address</label>
+                  <input className={styles.input} placeholder="123 Main St, Miami, FL 33101" value={contact.propertyAddress}
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyAddress: e.target.value })); }} />
                 </div>
               </div>
               <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleSubmit}
