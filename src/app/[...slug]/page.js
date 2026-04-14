@@ -1650,7 +1650,7 @@ export default async function Page(props) {
               </Link>
             </div>
           )}
-          <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} />
+          <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} articleType={articleType} />
           <SocialProofToast />
           <PushOptIn />
           <Testimonials />
