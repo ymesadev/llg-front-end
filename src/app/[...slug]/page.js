@@ -30,6 +30,7 @@ import SaveArticle from "../components/SaveArticle/SaveArticle";
 import PushOptIn from "../components/PushOptIn/PushOptIn";
 import SocialProofToast from "../components/SocialProofToast/SocialProofToast";
 import FPPChecker from "../components/FPPChecker/FPPChecker";
+import ChecklistCTA from "../components/ChecklistCTA/ChecklistCTA";
 
 // Resilient fetch: retry once after a short delay on network/server errors
 async function resilientFetch(url, options = {}, retries = 1) {
@@ -1477,6 +1478,7 @@ export default async function Page(props) {
                         </div>
                       )}
                       {showFPP && index === midpoint && <FPPChecker />}
+                      {index === midpoint && <ChecklistCTA articleType={articleType} />}
                     </div>
                   ));
                 })()}

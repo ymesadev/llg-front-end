@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSDI Approval Checklist — Louis Law Group</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Georgia',serif;background:#fafaf7;color:#2c2c2c;line-height:1.6}
+.wrap{max-width:720px;margin:0 auto;padding:24px 20px 60px}
+.brand{text-align:center;color:#c9a84c;font-family:'Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+h1{text-align:center;font-size:26px;color:#1a2b49;margin-bottom:4px;line-height:1.3}
+.subtitle{text-align:center;color:#777;font-size:13px;margin-bottom:20px}
+.gold-line{height:3px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin:12px 0 20px;border:none}
+.progress-wrap{background:#e8e8e4;border-radius:20px;height:8px;margin-bottom:24px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,#c9a84c,#1a2b49);border-radius:20px;transition:width .4s ease;width:0%}
+.progress-text{text-align:center;font-family:'Courier New',monospace;font-size:11px;color:#999;margin-bottom:20px}
+.section{margin-bottom:28px}
+.section-title{font-size:18px;color:#1a2b49;border-bottom:2px solid #1a2b49;padding-bottom:6px;margin-bottom:4px}
+.section-sub{font-size:14px;color:#1a2b49;font-weight:bold;margin:14px 0 6px;padding-left:2px}
+.item{display:flex;align-items:flex-start;padding:10px 12px;margin:4px 0;border-radius:8px;cursor:pointer;transition:background .15s;border:1px solid transparent}
+.item:hover{background:#f0efe8}
+.item.done{background:#f4f8f4;border-color:#d4e8d4}
+.item.done .checkbox{background:#2e7d32;border-color:#2e7d32;color:#fff}
+.item.done .text{color:#555}
+.item.done .text strong{text-decoration:line-through;color:#888}
+.checkbox{width:22px;height:22px;min-width:22px;border:2px solid #bbb;border-radius:5px;margin-right:12px;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;color:transparent}
+.text{flex:1}
+.text strong{display:block;font-size:14px;color:#2c2c2c;font-family:'Georgia',serif}
+.tip{font-size:12px;color:#888;font-family:'Courier New',monospace;margin-top:3px;line-height:1.5}
+.tip::before{content:'→ ';color:#c9a84c}
+.cta-box{background:#1a2b49;color:#fff;border-radius:12px;padding:28px 24px;text-align:center;margin-top:32px}
+.cta-box h2{font-size:20px;color:#c9a84c;margin-bottom:8px}
+.cta-box p{font-size:14px;color:#ccc;margin-bottom:14px}
+.cta-btn{display:inline-block;background:#c9a84c;color:#1a2b49;font-weight:bold;font-size:15px;padding:12px 32px;border-radius:8px;text-decoration:none;transition:opacity .15s}
+.cta-btn:hover{opacity:.85}
+.cta-phone{display:block;margin-top:10px;color:#c9a84c;font-family:'Courier New',monospace;font-size:13px}
+.footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#999;font-family:'Courier New',monospace;line-height:1.8}
+@media print{.cta-box{break-inside:avoid}.progress-wrap,.progress-text{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="brand">Louis Law Group</div>
+<h1>Personal Injury<br>Action Checklist</h1>
+<hr class="gold-line">
+<p class="subtitle">Critical steps to protect your rights after an accident in Florida</p>
+<div class="progress-wrap"><div class="progress-bar" id="prog"></div></div>
+<p class="progress-text" id="prog-text">0 completed</p>
+
+<div class="section">
+<div class="section-title">At the Scene / Immediately After</div>
+<div class="section-sub">Safety and Evidence</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Call 911 — get a police report or incident report filed</strong><div class="tip">A police report is one of the strongest pieces of evidence. Do not skip this.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Seek medical attention immediately — even if you feel fine</strong><div class="tip">You have only 14 days to seek treatment to preserve PIP benefits (F.S. 627.736).</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Photograph the scene — vehicle damage, road conditions, your injuries</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Get names, phone numbers, and insurance info from ALL parties</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Get contact information from witnesses</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Do NOT admit fault or apologize at the scene</strong><div class="tip">Even "I'm sorry" can be twisted into an admission of liability.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Do NOT discuss the accident on social media</strong><div class="tip">Defense lawyers and insurance adjusters monitor Facebook, Instagram, and TikTok.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Report the accident to your own insurance (keep it brief and factual)</strong></div></div>
+</div>
+
+<div class="section">
+<div class="section-title">In the First 72 Hours</div>
+<div class="section-sub">Medical Care</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Follow up with your doctor or urgent care within 72 hours</strong><div class="tip">If you waited to see a doctor, insurers argue you weren't really hurt.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Tell EVERY doctor your injuries are from the accident</strong><div class="tip">If records don't connect injuries to the accident, the insurer will deny the claim.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Follow ALL prescribed treatment — PT, specialists, medications</strong><div class="tip">Gaps in treatment are the #1 way insurance companies reduce claim values.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Start a daily pain journal — rate pain 1-10, note limitations</strong><div class="tip">This becomes powerful evidence of pain and suffering at settlement or trial.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Save ALL medical bills and receipts — even copays and pharmacy</strong></div></div>
+
+<div class="section-sub">Protect Your Claim</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Do NOT give a recorded statement to the other driver's insurance</strong><div class="tip">They are not on your side. Anything you say will be used to minimize your payout.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Do NOT sign any documents from the other party's insurer</strong><div class="tip">Signing a medical authorization gives them access to your ENTIRE medical history.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Do NOT accept a quick settlement offer</strong><div class="tip">Insurance companies rush settlements before you know the full extent of your injuries.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Track all lost wages — get a letter from your employer</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Document how the injury affects daily life, hobbies, family</strong></div></div>
+</div>
+
+<div class="section">
+<div class="section-title">Know Your Rights — Florida Law</div>
+<div class="section-sub">Critical Deadlines</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Statute of limitations: 2 years from date of injury (F.S. 95.11)</strong><div class="tip">Miss this deadline and you lose your right to sue — permanently.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>PIP benefits: 14 days to seek treatment (F.S. 627.736)</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>51%+ at fault = recover NOTHING under modified comparative negligence</strong><div class="tip">Florida's 2023 tort reform. Having an attorney is more important than ever.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>You can recover: medical bills, lost wages, pain & suffering, future care</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>PI lawyers work on contingency — no upfront cost to you</strong></div></div>
+</div>
+
+<div class="cta-box">
+<h2>Injured in Florida?</h2>
+<p>Louis Law Group fights for maximum compensation for accident victims.<br>Free consultation. No fees unless we win.</p>
+<a href="https://www.louislawgroup.com/personal-injury/qualify" class="cta-btn">Check If You Have a Case — Free</a>
+<a href="tel:8336574812" class="cta-phone">(833) 657-4812</a>
+</div>
+
+<div class="footer">
+Louis Law Group, PLLC &nbsp;|&nbsp; 12 SE 7th St, Suite 805 &nbsp;|&nbsp; Fort Lauderdale, FL 33301<br>
+This checklist is for informational purposes only and does not constitute legal advice.
+</div>
+</div>
+<script>
+const KEY='llg_pi_checklist';
+function load(){const d=JSON.parse(localStorage.getItem(KEY)||'{}');document.querySelectorAll('.item').forEach((el,i)=>{if(d[i])el.classList.add('done')});update()}
+function toggle(el){el.classList.toggle('done');save();update()}
+function save(){const d={};document.querySelectorAll('.item').forEach((el,i)=>{if(el.classList.contains('done'))d[i]=1});localStorage.setItem(KEY,JSON.stringify(d))}
+function update(){const items=document.querySelectorAll('.item');const done=document.querySelectorAll('.item.done').length;const pct=Math.round(done/items.length*100);document.getElementById('prog').style.width=pct+'%';document.getElementById('prog-text').textContent=done+' of '+items.length+' completed — '+pct+'%'}
+load();
+</script>
+</body>
+</html>

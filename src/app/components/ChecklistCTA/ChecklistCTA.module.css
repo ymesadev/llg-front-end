@@ -1,0 +1,121 @@
+.wrap {
+  margin: 32px 0;
+  display: flex;
+  justify-content: center;
+}
+.card {
+  background: linear-gradient(135deg, #1a2b49 0%, #243656 100%);
+  border-radius: 14px;
+  padding: 32px 28px;
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+}
+.emoji {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.title {
+  color: #c9a84c;
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  font-family: 'Georgia', serif;
+}
+.subtitle {
+  color: #b0b8c8;
+  font-size: 13px;
+  margin: 0 0 18px;
+  line-height: 1.5;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.input {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Georgia', serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.input::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+.input:focus {
+  border-color: #c9a84c;
+}
+.btn {
+  background: #c9a84c;
+  color: #1a2b49;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 20px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: 'Georgia', serif;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  margin-top: 4px;
+}
+.btn:hover {
+  opacity: 0.88;
+}
+.btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.disclaimer {
+  color: rgba(255,255,255,0.3);
+  font-size: 11px;
+  margin-top: 10px;
+  font-family: 'Courier New', monospace;
+}
+.successIcon {
+  font-size: 42px;
+  color: #c9a84c;
+  margin-bottom: 8px;
+}
+.successText {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-family: 'Georgia', serif;
+}
+.downloadBtn {
+  display: inline-block;
+  background: #c9a84c;
+  color: #1a2b49;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+  font-family: 'Georgia', serif;
+}
+.downloadBtn:hover {
+  opacity: 0.88;
+}
+.hint {
+  color: rgba(255,255,255,0.4);
+  font-size: 12px;
+  margin-top: 12px;
+  font-family: 'Courier New', monospace;
+}
+
+@media (max-width: 500px) {
+  .card {
+    padding: 24px 18px;
+  }
+  .title {
+    font-size: 18px;
+  }
+}

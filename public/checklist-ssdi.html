@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSDI Approval Checklist — Louis Law Group</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Georgia',serif;background:#fafaf7;color:#2c2c2c;line-height:1.6}
+.wrap{max-width:720px;margin:0 auto;padding:24px 20px 60px}
+.brand{text-align:center;color:#c9a84c;font-family:'Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:4px}
+h1{text-align:center;font-size:26px;color:#1a2b49;margin-bottom:4px;line-height:1.3}
+.subtitle{text-align:center;color:#777;font-size:13px;margin-bottom:20px}
+.gold-line{height:3px;background:linear-gradient(90deg,transparent,#c9a84c,transparent);margin:12px 0 20px;border:none}
+.progress-wrap{background:#e8e8e4;border-radius:20px;height:8px;margin-bottom:24px;overflow:hidden}
+.progress-bar{height:100%;background:linear-gradient(90deg,#c9a84c,#1a2b49);border-radius:20px;transition:width .4s ease;width:0%}
+.progress-text{text-align:center;font-family:'Courier New',monospace;font-size:11px;color:#999;margin-bottom:20px}
+.section{margin-bottom:28px}
+.section-title{font-size:18px;color:#1a2b49;border-bottom:2px solid #1a2b49;padding-bottom:6px;margin-bottom:4px}
+.section-sub{font-size:14px;color:#1a2b49;font-weight:bold;margin:14px 0 6px;padding-left:2px}
+.item{display:flex;align-items:flex-start;padding:10px 12px;margin:4px 0;border-radius:8px;cursor:pointer;transition:background .15s;border:1px solid transparent}
+.item:hover{background:#f0efe8}
+.item.done{background:#f4f8f4;border-color:#d4e8d4}
+.item.done .checkbox{background:#2e7d32;border-color:#2e7d32;color:#fff}
+.item.done .text{color:#555}
+.item.done .text strong{text-decoration:line-through;color:#888}
+.checkbox{width:22px;height:22px;min-width:22px;border:2px solid #bbb;border-radius:5px;margin-right:12px;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .15s;color:transparent}
+.text{flex:1}
+.text strong{display:block;font-size:14px;color:#2c2c2c;font-family:'Georgia',serif}
+.tip{font-size:12px;color:#888;font-family:'Courier New',monospace;margin-top:3px;line-height:1.5}
+.tip::before{content:'→ ';color:#c9a84c}
+.cta-box{background:#1a2b49;color:#fff;border-radius:12px;padding:28px 24px;text-align:center;margin-top:32px}
+.cta-box h2{font-size:20px;color:#c9a84c;margin-bottom:8px}
+.cta-box p{font-size:14px;color:#ccc;margin-bottom:14px}
+.cta-btn{display:inline-block;background:#c9a84c;color:#1a2b49;font-weight:bold;font-size:15px;padding:12px 32px;border-radius:8px;text-decoration:none;transition:opacity .15s}
+.cta-btn:hover{opacity:.85}
+.cta-phone{display:block;margin-top:10px;color:#c9a84c;font-family:'Courier New',monospace;font-size:13px}
+.footer{text-align:center;margin-top:32px;padding-top:16px;border-top:1px solid #ddd;font-size:11px;color:#999;font-family:'Courier New',monospace;line-height:1.8}
+@media print{.cta-box{break-inside:avoid}.progress-wrap,.progress-text{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="brand">Louis Law Group</div>
+<h1>SSDI Approval Checklist</h1>
+<hr class="gold-line">
+<p class="subtitle">Everything you need to file and win your Social Security Disability claim</p>
+<div class="progress-wrap"><div class="progress-bar" id="prog"></div></div>
+<p class="progress-text" id="prog-text">0 of 28 completed</p>
+
+<div class="section">
+<div class="section-title">Before You Apply</div>
+<div class="section-sub">Eligibility Check</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Confirm your medical condition prevents you from working</strong><div class="tip">The SSA requires your condition to last at least 12 months or be terminal.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Verify you have enough work credits (typically 40 credits, 20 in last 10 years)</strong><div class="tip">Check your Social Security Statement at ssa.gov/myaccount for your exact credits.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Confirm earnings are below SGA ($1,620/month in 2026)</strong><div class="tip">Even part-time work above this threshold will result in automatic denial.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Identify your condition in the SSA Blue Book listings</strong><div class="tip">If your condition matches a Blue Book listing, approval is significantly faster.</div></div></div>
+
+<div class="section-sub">Medical Evidence to Gather</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Complete medical records from all treating physicians (last 2+ years)</strong><div class="tip">Request records NOW — doctor offices can take 2-4 weeks to process.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>List of all medications with dosages and prescribing doctors</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Lab results, imaging (MRI, X-ray, CT), and test results</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Mental health treatment records (therapist, psychiatrist) if applicable</strong><div class="tip">Mental health conditions are among the most commonly approved — document everything.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Hospital admission and discharge summaries</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Doctor's statement about functional limitations (RFC form)</strong><div class="tip">This is the single most important document. Ask your doctor to be specific about what you CANNOT do.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>List of all medical providers with addresses and phone numbers</strong></div></div>
+
+<div class="section-sub">Personal Documentation</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Social Security number and birth certificate</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Proof of U.S. citizenship or lawful residency</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>W-2 forms or tax returns (last 2 years)</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Workers' comp or other disability benefit information</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Completed Function Report (SSA-3373) — describe your WORST days</strong><div class="tip">Be honest but thorough. Describe how your condition affects daily activities in detail.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Work history report (SSA-3369) for last 15 years</strong></div></div>
+</div>
+
+<div class="section">
+<div class="section-title">During the Process</div>
+<div class="section-sub">After Filing</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Keep copies of everything you submit to the SSA</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Attend all consultative exams (CE) if scheduled</strong><div class="tip">Missing a CE is grounds for automatic denial.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Continue all medical treatment — no gaps</strong><div class="tip">The SSA will argue: if you're not treating, you must not be that disabled.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Do NOT post physical activities on social media</strong><div class="tip">SSA investigators check Facebook, Instagram, and TikTok.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Track symptoms and bad days in a daily journal</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Respond to all SSA correspondence within deadlines</strong></div></div>
+
+<div class="section-sub">If Denied</div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>File appeal within 60 days — DO NOT MISS THIS DEADLINE</strong><div class="tip">After 60 days, you must start a brand new application from scratch.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Request a hearing before an Administrative Law Judge (ALJ)</strong><div class="tip">Claimants with attorneys win at the ALJ hearing level at significantly higher rates.</div></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Gather new medical evidence not in your original application</strong></div></div>
+<div class="item" onclick="toggle(this)"><div class="checkbox">✓</div><div class="text"><strong>Consider hiring a disability attorney (no fee unless you win)</strong></div></div>
+</div>
+
+<div class="cta-box">
+<h2>Need Help With Your SSDI Claim?</h2>
+<p>Louis Law Group represents disability claimants nationwide.<br>Free consultation. No fees unless we win.</p>
+<a href="https://www.louislawgroup.com/ssdi/qualify" class="cta-btn">Check If You Qualify — Free</a>
+<a href="tel:8336574812" class="cta-phone">(833) 657-4812</a>
+</div>
+
+<div class="footer">
+Louis Law Group, PLLC &nbsp;|&nbsp; 12 SE 7th St, Suite 805 &nbsp;|&nbsp; Fort Lauderdale, FL 33301<br>
+This checklist is for informational purposes only and does not constitute legal advice.
+</div>
+</div>
+<script>
+const KEY='llg_ssdi_checklist';
+function load(){const d=JSON.parse(localStorage.getItem(KEY)||'{}');document.querySelectorAll('.item').forEach((el,i)=>{if(d[i])el.classList.add('done')});update()}
+function toggle(el){el.classList.toggle('done');save();update()}
+function save(){const d={};document.querySelectorAll('.item').forEach((el,i)=>{if(el.classList.contains('done'))d[i]=1});localStorage.setItem(KEY,JSON.stringify(d))}
+function update(){const items=document.querySelectorAll('.item');const done=document.querySelectorAll('.item.done').length;const pct=Math.round(done/items.length*100);document.getElementById('prog').style.width=pct+'%';document.getElementById('prog-text').textContent=done+' of '+items.length+' completed — '+pct+'%'}
+load();
+</script>
+</body>
+</html>
