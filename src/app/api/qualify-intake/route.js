@@ -24,7 +24,11 @@ export async function POST(request) {
     ].join("\n");
 
     // Primary: n8n webhook → Microsoft Outlook
-    const n8nWebhookUrl = process.env.N8N_INTAKE_WEBHOOK_URL || "https://n8n.louislawgroup.com/webhook/llg-intake-qualifier";
+    // Route to correct n8n workflow based on case type
+    const isPI = body.caseType === "personal-injury";
+    const n8nWebhookUrl = isPI
+      ? "https://n8n.louislawgroup.com/webhook/llg-pi-intake-qualifier"
+      : (process.env.N8N_INTAKE_WEBHOOK_URL || "https://n8n.louislawgroup.com/webhook/llg-intake-qualifier");
     let sent = false;
 
     try {
