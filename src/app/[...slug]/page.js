@@ -72,6 +72,11 @@ function getArticleType(slug) {
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
     return "ssdi";
   }
+  // Personal injury detection
+  const piKeywords = ["personal-injury","car-accident","auto-accident","slip-and-fall","slip-trip","premises-liability","wrongful-death","dog-bite","animal-attack","product-liability","negligence","bodily-injury","accident-attorney","accident-lawyer","injury-claim","injury-attorney","injury-lawyer","motorcycle-accident","truck-accident","bicycle-accident","pedestrian-accident","uber-accident","lyft-accident","rideshare-accident","hit-and-run","rear-end","drunk-driver","distracted-driving","pain-and-suffering","medical-malpractice"];
+  if (piKeywords.some(k => s.includes(k))) {
+    return "personal-injury";
+  }
   return "property-damage";
 }
 
@@ -1257,8 +1262,8 @@ export default async function Page(props) {
               <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
                 <Link href="/">Home</Link>
                 <span aria-hidden="true"> › </span>
-                <Link href={articleType === "case-law" ? "/case-law-updates" : articleType === "ssdi" ? "/social-security-disability" : "/property-damage-insurance-claim"}>
-                  {articleType === "case-law" ? "Case Law Updates" : articleType === "ssdi" ? "SSDI" : "Property Damage"}
+                <Link href={articleType === "case-law" ? "/case-law-updates" : articleType === "ssdi" ? "/social-security-disability" : articleType === "personal-injury" ? "/personal-injury" : "/property-damage-insurance-claim"}>
+                  {articleType === "case-law" ? "Case Law Updates" : articleType === "ssdi" ? "SSDI" : articleType === "personal-injury" ? "Personal Injury" : "Property Damage"}
                 </Link>
                 <span aria-hidden="true"> › </span>
                 <span>{page.title}</span>
@@ -1925,7 +1930,7 @@ export default async function Page(props) {
                       </svg>
                     );
 
-                    const sectionFallbackHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : '/free-case-evaluation';
+                    const sectionFallbackHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : articleType === 'personal-injury' ? '/personal-injury/qualify' : '/free-case-evaluation';
                     return isExternal ? (
                       <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
                         {label} <Icon />
