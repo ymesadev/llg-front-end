@@ -7,7 +7,7 @@ import styles from "./Popup.module.css";
 import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
 import { trackEvent } from "@/app/utils/analytics";
 
-const POPUP_EXCLUDED_PATHS = ["/property-damage-claims/qualify"];
+const POPUP_EXCLUDED_PATHS = ["/property-damage-claims/qualify", "/personal-injury/qualify"];
 
 const Popup = () => {
   const pathname = usePathname();

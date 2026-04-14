@@ -11,6 +11,7 @@ const INTAKE_ROUTES = {
   "slide":              "/slide-insurance-privacy-torts/qualify",
   "tower-hill":         "/tower-hill-insurance-privacy-torts/qualify",
   "american-integrity": "/american-integrity-insurance-privacy-torts/qualify",
+  "personal-injury":    "/personal-injury/qualify",
 };
 
 export default function UrgencyBanner({ articleType = "property-damage", small = false }) {

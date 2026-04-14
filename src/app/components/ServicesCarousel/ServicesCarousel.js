@@ -9,6 +9,7 @@ import { ArrowRight } from "../../../../public/icons";
 const INTAKE_MAP = {
   "ssdi":               "/ssdi/qualify",
   "property-damage":    "/property-damage-claims/qualify",
+  "personal-injury":    "/personal-injury/qualify",
   "ahs":                "/american-home-shield-privacy-torts/qualify",
   "vuori":              "/vuori-privacy-torts/qualify",
   "kin":                "/kin-insurance-privacy-torts/qualify",

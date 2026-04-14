@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
  *   window.__or_identify(userId, metadata)  — identify a user (e.g. after form submit)
  *   window.__or_event(name, payload)         — track a custom event
  */
-const CONSENT_FREE_PATHS = ['/property-damage-claims/qualify'];
+const CONSENT_FREE_PATHS = ['/property-damage-claims/qualify', '/personal-injury/qualify'];
 
 const OpenReplay = () => {
   const pathname = usePathname();
@@ -25,7 +25,6 @@ const OpenReplay = () => {
         __DISABLE_SECURE_MODE: true,
         respectDoNotTrack: false,
         capturePerformance: true,
-        inlineCss: 3,
         network: {
           capturePayload: false,
           captureHeaders: false,
