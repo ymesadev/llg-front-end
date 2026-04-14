@@ -21,36 +21,42 @@ const SERVICES = [
   {
     icon: "\u{1F697}",
     title: "Auto Accidents",
+    href: "/car-accident-lawyer-florida-2026",
     keywords: ["car accident lawyer", "auto accident attorney", "rear-end collision"],
     desc: "Car crashes are the leading cause of personal injury claims in Florida. Whether you were rear-ended, T-boned, or hit by a distracted driver, we fight to recover full compensation for medical bills, lost wages, and pain and suffering.",
   },
   {
     icon: "\u{1FA78}",
     title: "Slip & Fall Injuries",
+    href: "/slip-and-fall-lawyer-florida-2026",
     keywords: ["slip and fall lawyer", "trip and fall attorney", "premises accident"],
     desc: "Property owners in Florida have a legal duty to maintain safe conditions. If you were injured due to wet floors, uneven surfaces, poor lighting, or other hazards, you may be entitled to significant compensation.",
   },
   {
     icon: "\u{1F3E2}",
     title: "Premises Liability",
+    href: "/premises-liability-lawyer-florida-2026",
     keywords: ["premises liability attorney", "unsafe property injury", "negligent security"],
     desc: "From inadequate security to dangerous conditions at stores, restaurants, and apartments — property owners are liable when their negligence causes injuries. We hold them accountable.",
   },
   {
     icon: "\u26B0\uFE0F",
     title: "Wrongful Death",
+    href: "/wrongful-death-lawyer-florida-2026",
     keywords: ["wrongful death lawyer", "wrongful death attorney florida", "fatal accident"],
     desc: "When negligence takes a life, surviving family members deserve justice. We pursue wrongful death claims with the seriousness and sensitivity these cases demand — fighting for the compensation your family needs.",
   },
   {
     icon: "\u{1F415}",
     title: "Dog Bites & Animal Attacks",
+    href: "/dog-bite-lawyer-florida-2026",
     keywords: ["dog bite lawyer", "animal attack attorney", "dog owner liability"],
     desc: "Florida has strict liability for dog bites — the owner is responsible regardless of the dog's history. We handle claims for medical treatment, scarring, reconstructive surgery, and emotional trauma.",
   },
   {
     icon: "\u2696\uFE0F",
     title: "Product Liability",
+    href: "/personal-injury-lawyer-florida-2026",
     keywords: ["defective product lawyer", "product liability attorney", "dangerous product injury"],
     desc: "Defective or dangerous products cause thousands of injuries every year. From medical devices to consumer goods, we hold manufacturers, distributors, and retailers accountable for the harm their products cause.",
   },
@@ -297,11 +303,12 @@ export default function PersonalInjuryPage() {
           </p>
           <div className={styles.dayOneGrid}>
             {SERVICES.map((s) => (
-              <div key={s.title} className={styles.dayOneCard}>
+              <Link key={s.title} href={s.href} className={styles.dayOneCard} style={{ textDecoration: "none", color: "inherit" }}>
                 <div className={styles.dayOneIcon}>{s.icon}</div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
-              </div>
+                <span className={styles.serviceArrow}>Learn More →</span>
+              </Link>
             ))}
           </div>
           <div className={styles.dayOneCta}>
