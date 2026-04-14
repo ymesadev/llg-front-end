@@ -32,10 +32,13 @@ export async function POST(request) {
     let sent = false;
 
     try {
+      const n8nPayload = isPI
+        ? body  // Send full PI payload (injuryType, dateOfInjury, medicalTreatment, etc.)
+        : { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score };
       const n8nRes = await fetch(n8nWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score }),
+        body: JSON.stringify(n8nPayload),
       });
       if (n8nRes.ok) sent = true;
       else console.error("[qualify-intake] n8n webhook returned:", n8nRes.status);
