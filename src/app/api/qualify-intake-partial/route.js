@@ -12,7 +12,7 @@ export async function POST(request) {
     const damageLabels = ["Hurricane / Wind", "Water / Flood", "Roof Damage", "Fire / Smoke", "Plumbing Leak", "Mold", "Other"];
 
     // Send to partial lead n8n webhook
-    const webhookUrl = "https://n8n.louislawgroup.com/webhook/llg-intake-partial";
+    const webhookUrl = "https://n8n.louislawgroup.com/webhook/llg-fpp-partial-lead";
     let sent = false;
 
     try {
