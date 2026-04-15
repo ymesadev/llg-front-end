@@ -25,8 +25,10 @@ const CARRIERS = [
 
 const DAMAGE_LABELS = ["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"];
 const RESPONSE_LABELS = ["Denied claim entirely","Underpaid / lowballed","Delaying or not responding","Claim pending — no decision yet","No claim filed yet"];
+
+// NEW FLOW: 0=damage, 1=owner, 2=florida, 3=CONTACT, 4=carrier, 5=date, 6=insurer response
 const TOTAL_STEPS = 6;
-const STEP_NAMES = ["damage_type","owner_check","florida_check","carrier_select","date_of_loss","insurer_response","contact_info"];
+const STEP_NAMES = ["damage_type","owner_check","florida_check","contact_info","carrier_select","date_of_loss","insurer_response"];
 
 export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
@@ -39,6 +41,7 @@ export default function PropertyDamageQualify() {
   const [contact, setContact] = useState({ name: "", phone: "", email: "", propertyAddress: "" });
   const [result, setResult] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [partialSent, setPartialSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const ddRef = useRef(null);
   const today = new Date();
@@ -56,14 +59,12 @@ export default function PropertyDamageQualify() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Track each step view
   useEffect(() => {
     if (cur <= TOTAL_STEPS) {
       trackEvent("qualify_step_viewed", { case_type: "property-damage", step: cur, step_name: STEP_NAMES[cur] });
     }
   }, [cur]);
 
-  // Track abandonment on page exit
   const curRef = useRef(cur);
   const submittedRef = useRef(submitted);
   const answersRef = useRef(answers);
@@ -86,9 +87,7 @@ export default function PropertyDamageQualify() {
   }, []);
 
   const progress = Math.min((cur / TOTAL_STEPS) * 100, 100);
-
   const setAnswer = (key, val) => setAnswers((a) => ({ ...a, [key]: val }));
-
   const next = () => setCur((c) => c + 1);
   const back = () => setCur((c) => Math.max(0, c - 1));
 
@@ -125,7 +124,7 @@ export default function PropertyDamageQualify() {
     }
     setAnswer(4, val);
     const bucket = yrs > 5 ? "over_5y" : yrs > 3 ? "3_to_5y" : yrs > 1 ? "1_to_3y" : "under_1y";
-    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 4, step_name: "date_of_loss", answer: bucket, years_ago: Math.round(yrs * 10) / 10 });
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: cur, step_name: "date_of_loss", answer: bucket, years_ago: Math.round(yrs * 10) / 10 });
     if (yrs > 5) setDateNote({ msg: "Warning: Over 5 years ago. Florida statute of limitations may bar your claim.", warn: true });
     else if (yrs > 3) setDateNote({ msg: "Note: Over 3 years ago. We will review applicable deadlines carefully.", warn: true });
     else setDateNote({ msg: `Date recorded: ${loss.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, warn: false });
@@ -149,8 +148,37 @@ export default function PropertyDamageQualify() {
     setCur(TOTAL_STEPS + 1);
   };
 
-  const handleSubmit = async () => {
-    if (!contact.name || !contact.phone || !contact.email.includes("@") || !contact.propertyAddress.trim()) return;
+  // ── PARTIAL LEAD CAPTURE (fires at step 3 — contact info) ──
+  const handleContactSubmit = async () => {
+    if (!contact.name || !contact.phone || !contact.email.includes("@")) return;
+    setSubmitting(true);
+
+    // Fire partial lead webhook immediately
+    try {
+      await fetch("/api/qualify-intake-partial", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: contact.name,
+          phone: contact.phone,
+          email: contact.email,
+          propertyAddress: contact.propertyAddress,
+          damageType: answers[3],
+          caseType: "property-damage",
+          partialLead: true,
+        }),
+      });
+    } catch {/* silent */}
+
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "contact_info", answer: "submitted" });
+    trackEvent("qualify_contact_captured", { case_type: "property-damage" });
+    setPartialSent(true);
+    setSubmitting(false);
+    next();
+  };
+
+  // ── FULL SUBMISSION (fires at end — step 6 insurer response auto-advances) ──
+  const handleFullSubmit = async () => {
     setSubmitting(true);
     const score = calcScore();
     try {
@@ -169,11 +197,9 @@ export default function PropertyDamageQualify() {
           score,
         }),
       });
-    } catch {/* silent — still show result */}
+    } catch {/* silent */}
     trackEvent("qualify_submitted", { case_type: "property-damage", score });
-    // Fire conversion across all pixels (GA4, GTM, FB, TikTok, OpenReplay)
     trackConversion('pd_qualify', { case_type: 'property-damage', score });
-    // Identify user in OpenReplay
     if (window.__or_identify) {
       window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'property-damage', score });
     }
@@ -183,27 +209,34 @@ export default function PropertyDamageQualify() {
     setSubmitting(false);
   };
 
+  // Auto-submit full form when insurer response is answered (last step)
+  const handleInsurer = (val) => {
+    setAnswer(5, val);
+    trackEvent("qualify_step_answered", { case_type: "property-damage", step: cur, step_name: "insurer_response", answer: RESPONSE_LABELS[val] });
+    setTimeout(() => handleFullSubmit(), 400);
+  };
+
   const restart = () => {
     setAnswers({}); setCarrier(""); setDdQuery(""); setDdOpen(false);
     setDateVal(""); setDateNote({ msg: "", warn: false });
     setContact({ name: "", phone: "", email: "", propertyAddress: "" });
-    setResult(null); setSubmitted(false); setCur(0);
+    setResult(null); setSubmitted(false); setPartialSent(false); setCur(0);
   };
 
   const filteredCarriers = ddQuery
     ? CARRIERS.filter((c) => c.toLowerCase().includes(ddQuery.toLowerCase()))
     : CARRIERS;
 
-  const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@") && contact.propertyAddress.trim();
+  const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@");
   const contactStartedRef = useRef(false);
   const trackContactStart = () => {
     if (!contactStartedRef.current) {
       contactStartedRef.current = true;
-      trackEvent("qualify_step_answered", { case_type: "property-damage", step: 6, step_name: "contact_info", answer: "started_typing" });
+      trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "contact_info", answer: "started_typing" });
     }
   };
 
-  // Result screen
+  // ── RESULT SCREENS (same as before) ──
   if (result) {
     if (result.dq) {
       const msgs = {
@@ -297,6 +330,7 @@ export default function PropertyDamageQualify() {
     );
   }
 
+  // ── FORM STEPS ──
   return (
     <div className={styles.wrapper}>
       <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: `${progress}%` }} /></div>
@@ -319,14 +353,14 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 0: Type of damage (engaging opener) */}
+          {/* Step 0: Damage type */}
           {cur === 0 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Question 1 of 7</div>
               <div className={styles.question}>What type of damage occurred?</div>
               <div className={styles.hint}>Select the primary cause of loss</div>
               <div className={styles.optsGrid}>
-                {["Hurricane / Wind","Water / Flood","Roof Damage","Fire / Smoke","Plumbing Leak","Mold","Other"].map((label, i) => (
+                {DAMAGE_LABELS.map((label, i) => (
                   <button key={i} className={`${styles.opt} ${answers[3] === i ? styles.selected : ""}`}
                     onClick={() => handlePickAndNext(3, i)}>
                     <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
@@ -370,79 +404,12 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 3: Insurance carrier */}
+          {/* Step 3: CONTACT INFO (moved up from step 6) */}
           {cur === 3 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 4 of 7</div>
-              <div className={styles.question}>Who is your insurance company?</div>
-              <div className={styles.hint}>Search or scroll to find your carrier</div>
-              <div className={styles.ddWrap} ref={ddRef}>
-                <input
-                  className={styles.ddSearch}
-                  placeholder="Type to search carriers..."
-                  value={ddQuery}
-                  onChange={(e) => setDdQuery(e.target.value)}
-                  onFocus={() => setDdOpen(true)}
-                  autoComplete="off"
-                />
-                <div className={`${styles.ddList} ${ddOpen ? styles.open : ""}`}>
-                  {filteredCarriers.length === 0
-                    ? <div className={styles.ddEmpty}>No carriers found</div>
-                    : filteredCarriers.map((c) => (
-                      <div key={c} className={`${styles.ddItem} ${carrier === c ? styles.ddItemActive : ""}`}
-                        onClick={() => { setCarrier(c); setAnswer(2, c); setDdQuery(""); setDdOpen(false); trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "carrier_select", answer: c }); }}>
-                        {c}
-                      </div>
-                    ))
-                  }
-                </div>
-                {carrier && (
-                  <div className={`${styles.ddSelected} ${styles.show}`}>
-                    <span>{carrier}</span>
-                    <button className={styles.ddClear} onClick={() => { setCarrier(""); setAnswer(2, undefined); }}>×</button>
-                  </div>
-                )}
-              </div>
-              <button className={styles.btn} onClick={next} disabled={!carrier}>Continue →</button>
-            </div>
-          )}
-
-          {/* Step 4: Date of loss */}
-          {cur === 4 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 5 of 7</div>
-              <div className={styles.question}>When did the damage occur?</div>
-              <div className={styles.hint}>Select the exact or approximate date of loss</div>
-              <input type="date" className={styles.dateInput} value={dateVal} max={todayStr}
-                onChange={(e) => handleDate(e.target.value)} />
-              {dateNote.msg && <div className={`${styles.dateNote} ${dateNote.warn ? styles.dateWarn : ""}`}>{dateNote.msg}</div>}
-              <button className={styles.btn} onClick={next} disabled={!dateVal || new Date(dateVal) > today}>Continue →</button>
-            </div>
-          )}
-
-          {/* Step 5: Insurer response */}
-          {cur === 5 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 6 of 7</div>
-              <div className={styles.question}>What has your insurance company done with your claim?</div>
-              <div className={styles.hint}>Select the option that best describes your situation</div>
-              <div className={styles.opts}>
-                {RESPONSE_LABELS.map((label, i) => (
-                  <button key={i} className={`${styles.opt} ${answers[5] === i ? styles.selected : ""}`}
-                    onClick={() => handlePickAndNext(5, i)}>
-                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Step 6: Contact info */}
-          {cur === 6 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Last step</div>
-              <div className={styles.question}>How should we reach you?</div>
-              <div className={styles.hint}>A case review specialist will contact you within 24 hours</div>
+              <div className={styles.stepLabel}>Almost there — Step 4 of 7</div>
+              <div className={styles.question}>You may qualify for a free case review</div>
+              <div className={styles.hint}>Based on your answers, your claim appears eligible. Enter your details so our team can begin evaluating your case.</div>
               <div className={styles.inputRow}>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Full name</label>
@@ -465,10 +432,80 @@ export default function PropertyDamageQualify() {
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyAddress: e.target.value })); }} />
                 </div>
               </div>
-              <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleSubmit}
+              <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleContactSubmit}
                 disabled={!contactComplete || submitting}>
-                {submitting ? "Submitting..." : "Submit for review →"}
+                {submitting ? "Saving..." : "Continue to qualify your claim →"}
               </button>
+              <div className={styles.hint} style={{ marginTop: "8px", fontSize: "12px" }}>
+                🔒 Your information is confidential and protected by attorney-client privilege.
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Insurance carrier */}
+          {cur === 4 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Question 5 of 7</div>
+              <div className={styles.question}>Who is your insurance company?</div>
+              <div className={styles.hint}>Search or scroll to find your carrier</div>
+              <div className={styles.ddWrap} ref={ddRef}>
+                <input
+                  className={styles.ddSearch}
+                  placeholder="Type to search carriers..."
+                  value={ddQuery}
+                  onChange={(e) => setDdQuery(e.target.value)}
+                  onFocus={() => setDdOpen(true)}
+                  autoComplete="off"
+                />
+                <div className={`${styles.ddList} ${ddOpen ? styles.open : ""}`}>
+                  {filteredCarriers.length === 0
+                    ? <div className={styles.ddEmpty}>No carriers found</div>
+                    : filteredCarriers.map((c) => (
+                      <div key={c} className={`${styles.ddItem} ${carrier === c ? styles.ddItemActive : ""}`}
+                        onClick={() => { setCarrier(c); setAnswer(2, c); setDdQuery(""); setDdOpen(false); trackEvent("qualify_step_answered", { case_type: "property-damage", step: 4, step_name: "carrier_select", answer: c }); }}>
+                        {c}
+                      </div>
+                    ))
+                  }
+                </div>
+                {carrier && (
+                  <div className={`${styles.ddSelected} ${styles.show}`}>
+                    <span>{carrier}</span>
+                    <button className={styles.ddClear} onClick={() => { setCarrier(""); setAnswer(2, undefined); }}>×</button>
+                  </div>
+                )}
+              </div>
+              <button className={styles.btn} onClick={next} disabled={!carrier}>Continue →</button>
+            </div>
+          )}
+
+          {/* Step 5: Date of loss */}
+          {cur === 5 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Question 6 of 7</div>
+              <div className={styles.question}>When did the damage occur?</div>
+              <div className={styles.hint}>Select the exact or approximate date of loss</div>
+              <input type="date" className={styles.dateInput} value={dateVal} max={todayStr}
+                onChange={(e) => handleDate(e.target.value)} />
+              {dateNote.msg && <div className={`${styles.dateNote} ${dateNote.warn ? styles.dateWarn : ""}`}>{dateNote.msg}</div>}
+              <button className={styles.btn} onClick={next} disabled={!dateVal || new Date(dateVal) > today}>Continue →</button>
+            </div>
+          )}
+
+          {/* Step 6: Insurer response (final — auto-submits on click) */}
+          {cur === 6 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Last question — 7 of 7</div>
+              <div className={styles.question}>What has your insurance company done with your claim?</div>
+              <div className={styles.hint}>Select the option that best describes your situation</div>
+              <div className={styles.opts}>
+                {RESPONSE_LABELS.map((label, i) => (
+                  <button key={i} className={`${styles.opt} ${answers[5] === i ? styles.selected : ""}`}
+                    onClick={() => handleInsurer(i)}>
+                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 
