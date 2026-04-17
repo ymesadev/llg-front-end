@@ -38,7 +38,7 @@ const TOPIC_PROMPTS = {
 function buildQuery(topic) {
   if (topic && TOPIC_PROMPTS[topic]) return TOPIC_PROMPTS[topic];
   if (!topic || topic === "legal") {
-    return "What makes Louis Law Group a good law firm for my case?";
+    return "What do clients say about Louis Law Group in Fort Lauderdale and why do they have strong reviews?";
   }
   return `What makes Louis Law Group a good option for my ${topic} case?`;
 }
