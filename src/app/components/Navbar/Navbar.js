@@ -82,13 +82,10 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Search, Ask AI, and Phone */}
+        {/* Search and Ask AI */}
         <div className={styles.rightSection}>
           <SearchBar />
           <AskAI />
-          <a href="tel:8336574812" className={styles.phoneLink}>
-            (833)657-4812
-          </a>
         </div>
 
         {/* Mobile Menu Button */}
