@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Navbar.module.css";
 import SearchBar from "./components/SearchBar/SearchBar";
+import AskAI from "../AskAI/AskAI";
 
 export default function Navbar() {
   const [navBackground, setNavBackground] = useState(false);
@@ -81,9 +82,10 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Search and Phone */}
+        {/* Search, Ask AI, and Phone */}
         <div className={styles.rightSection}>
           <SearchBar />
+          <AskAI />
           <a href="tel:8336574812" className={styles.phoneLink}>
             (833)657-4812
           </a>
@@ -102,6 +104,9 @@ export default function Navbar() {
         <button className={styles.closeButton} onClick={toggleMenu}>
           ×
         </button>
+        <div className={styles.mobileAskAi}>
+          <AskAI />
+        </div>
         <ul>
           {navLinks.map((link) => (
             <li key={link.id} className={styles.mobileNavItem}>

@@ -1,0 +1,67 @@
+.askAiBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2rem;
+  padding: 0.35rem 0.75rem;
+}
+
+.label {
+  color: #ffb800;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.icons {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.iconLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  transition: background 0.2s, transform 0.15s;
+  text-decoration: none;
+}
+
+.iconLink:hover {
+  background: #ffb800;
+  color: #1a2b49;
+  transform: scale(1.1);
+}
+
+.iconLink:active {
+  transform: scale(0.95);
+}
+
+/* Mobile: show in mobile menu area too */
+@media (max-width: 1024px) {
+  .askAiBar {
+    padding: 0.3rem 0.6rem;
+  }
+
+  .label {
+    font-size: 0.65rem;
+  }
+
+  .iconLink {
+    width: 28px;
+    height: 28px;
+  }
+
+  .iconLink svg {
+    width: 18px;
+    height: 18px;
+  }
+}
