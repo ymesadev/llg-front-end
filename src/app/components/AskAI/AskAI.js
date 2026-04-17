@@ -32,6 +32,7 @@ function getTopicFromPath(pathname) {
 const TOPIC_PROMPTS = {
   "property damage": "Why do Florida homeowners choose Louis Law Group for denied or underpaid property insurance claims?",
   "SSDI disability": "Why do Florida claimants choose Louis Law Group to fight denied Social Security Disability claims?",
+  "personal injury": "Why do injury victims in South Florida trust Louis Law Group to pursue maximum compensation?",
 };
 
 function buildQuery(topic) {
