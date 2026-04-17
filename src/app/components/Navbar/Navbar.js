@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Navbar.module.css";
-import SearchBar from "./components/SearchBar/SearchBar";
 import AskAI from "../AskAI/AskAI";
 
 export default function Navbar() {
@@ -82,9 +81,8 @@ export default function Navbar() {
           </ul>
         </nav>
 
-        {/* Search and Ask AI */}
+        {/* Ask AI */}
         <div className={styles.rightSection}>
-          <SearchBar />
           <AskAI />
         </div>
 
