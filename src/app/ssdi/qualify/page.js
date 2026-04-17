@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
-import { trackEvent, trackConversion, trackGoogleConversion } from "@/app/utils/analytics";
+import { trackEvent, trackConversion } from "@/app/utils/analytics";
 
 const TOTAL_STEPS = 9; // steps 0–9 (plus branches 5b, 7b)
 
@@ -38,6 +38,10 @@ const DQ_MESSAGES = {
   attorney: {
     title: "Active attorney — no release on file",
     msg: "You are currently represented by an attorney on this SSDI claim and do not have a signed release. We are ethically prohibited from taking on representation while another attorney is actively on your case. Please obtain a written release from your current attorney before contacting us.",
+  },
+  multiple_denials: {
+    title: "Multiple prior denials / hearing-level case",
+    msg: "Cases denied multiple times or already at the hearing level require specialized appellate representation that falls outside the scope of our intake at this time. We recommend consulting with an SSDI appeals specialist who handles ALJ hearings and Appeals Council reviews.",
   },
 };
 
@@ -163,7 +167,6 @@ export default function SSDIQualify() {
     trackEvent("qualify_submitted", { case_type: "ssdi", score });
     // Fire conversion across all pixels (GA4, GTM, FB, TikTok, OpenReplay)
     trackConversion('ssdi_qualify', { case_type: 'ssdi', score });
-    trackGoogleConversion();
     // Identify user in OpenReplay
     if (window.__or_identify) {
       window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: 'ssdi', score });
@@ -218,10 +221,10 @@ export default function SSDIQualify() {
     const iconChar = isStrong ? "✓" : isPossible ? "~" : "!";
     const title = isStrong ? "Strong SSDI candidate" : isPossible ? "Potentially qualifying case" : "May face eligibility challenges";
     const sub = isStrong
-      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your SSDI case review, schedule your free consultation now — the sooner you do, the faster we can start protecting your claim."
+      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your SSDI case review, sign your retainer now — the sooner you do, the faster we can start protecting your claim."
       : isPossible
-      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your case review, schedule your free consultation now so our team can begin working on your file immediately."
-      : "We have received your submission. To avoid any delay, schedule your free consultation now and a case specialist will review your file and reach out to discuss your options.";
+      ? "We have received your submission and will review it as soon as possible. To avoid any delay in your case review, sign your retainer now so our team can begin working on your file immediately."
+      : "We have received your submission. To avoid any delay, sign your retainer now and a case specialist will review your file and reach out to discuss your options.";
     const barColor = isStrong ? "#4caf50" : isPossible ? "#ffb800" : "#e57373";
 
     const tags = [];
@@ -262,13 +265,13 @@ export default function SSDIQualify() {
                 </div>
               )}
               <a
-                href="https://api.leadconnectorhq.com/widget/booking/c0DwL4k89z31qsfAFmJv"
+                href="https://app.louislawgroup.com/ssdi-retainer/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`${styles.btn} ${styles.btnGold}`}
                 style={{ display: "block", textAlign: "center", textDecoration: "none" }}
               >
-                Schedule Free Consultation →
+                Open Retainer — Secure Your Case Now →
               </a>
               <div className={styles.urgencyNote}>
                 ⚡ Act now — SSDI deadlines are strict. Delays can jeopardize your appeal window.
@@ -508,7 +511,7 @@ export default function SSDIQualify() {
                 <button className={styles.opt} onClick={() => pick("denial", "denied_expired", 9)}>
                   <span className={styles.optKey}>C</span> Denied once — appeal window may have passed
                 </button>
-                <button className={styles.opt} onClick={() => pick("denial", "multiple", 9)}>
+                <button className={styles.opt} onClick={() => { setTimeout(() => dq("multiple_denials"), 320); }}>
                   <span className={styles.optKey}>D</span> Denied multiple times / at hearing level
                 </button>
                 <button className={styles.opt} onClick={() => pick("denial", "pending", 9)}>
