@@ -53,6 +53,10 @@ const nextConfig = {
       // ── Personal Injury section (2026-04-13) ──
       // Nav link in Strapi points to /personal-injury-attorneys → redirect to new static PI page
       { source: '/personal-injury-attorneys', destination: '/personal-injury', permanent: true },
+
+      // ── SSDI section (2026-04-17) ──
+      // Nav link in Strapi points to /social-security-disability-lawyers → redirect to static SSDI page
+      { source: '/social-security-disability-lawyers', destination: '/ssdi-lawyers', permanent: true },
     ];
   },
 
