@@ -646,6 +646,17 @@ export default async function Page(props) {
     return null;
   }
 
+  // Block competitor law firm articles — return 404
+  const BLOCKED_SLUGS = [
+    "morgan-morgan-pensacola-2026",
+    "morgan-morgan-law-firm-coral-springs-2026",
+    "morgan-morgan-miami-2026",
+  ];
+  if (BLOCKED_SLUGS.includes(slug)) {
+    const { notFound } = await import("next/navigation");
+    notFound();
+  }
+
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL || "https://login.louislawgroup.com";
   let apiUrl;
   let isAttorneyPage = false;
