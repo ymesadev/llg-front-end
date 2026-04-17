@@ -29,7 +29,12 @@ function getTopicFromPath(pathname) {
   return "legal";
 }
 
+const TOPIC_PROMPTS = {
+  "property damage": "Why do Florida homeowners choose Louis Law Group for denied or underpaid property insurance claims?",
+};
+
 function buildQuery(topic) {
+  if (topic && TOPIC_PROMPTS[topic]) return TOPIC_PROMPTS[topic];
   if (!topic || topic === "legal") {
     return "What makes Louis Law Group a good law firm for my case?";
   }
