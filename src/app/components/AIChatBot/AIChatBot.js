@@ -204,29 +204,48 @@ const AIChatBot = () => {
     }
   }, [isOpen]);
 
-  // Handle mobile keyboard resize via visualViewport API
+  // Lock body scroll when chat is open + handle mobile keyboard
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    }
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
+    };
+  }, [isOpen]);
+
   useEffect(() => {
     if (typeof window === 'undefined' || !window.visualViewport) return;
-    const handleResize = () => {
+    const update = () => {
       const chatbox = document.querySelector('[data-chatbox]');
-      if (chatbox && isOpen) {
-        chatbox.style.height = `${window.visualViewport.height}px`;
-      }
+      if (!chatbox || !isOpen) return;
+      const vv = window.visualViewport;
+      chatbox.style.height = `${vv.height}px`;
+      chatbox.style.top = `${vv.offsetTop}px`;
     };
-    const handleScrollRestore = () => {
-      const chatbox = document.querySelector('[data-chatbox]');
-      if (chatbox && isOpen) {
-        chatbox.style.height = `${window.visualViewport.height}px`;
-      }
-    };
-    window.visualViewport.addEventListener('resize', handleResize);
-    window.visualViewport.addEventListener('scroll', handleScrollRestore);
+    window.visualViewport.addEventListener('resize', update);
+    window.visualViewport.addEventListener('scroll', update);
     return () => {
-      window.visualViewport.removeEventListener('resize', handleResize);
-      window.visualViewport.removeEventListener('scroll', handleScrollRestore);
-      // Reset height when closing
+      window.visualViewport.removeEventListener('resize', update);
+      window.visualViewport.removeEventListener('scroll', update);
       const chatbox = document.querySelector('[data-chatbox]');
-      if (chatbox) chatbox.style.height = '';
+      if (chatbox) { chatbox.style.height = ''; chatbox.style.top = ''; }
     };
   }, [isOpen]);
 
