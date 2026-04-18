@@ -27,21 +27,10 @@ export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
   const [answers, setAnswers] = useState({});
   const [contact, setContact] = useState({ name: "", phone: "", email: "", propertyAddress: "" });
-  const [dateVal, setDateVal] = useState("");
-  const [dateNote, setDateNote] = useState({ msg: "", warn: false });
   const [result, setResult] = useState(null);
   const [partialSent, setPartialSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [bookingEmbedded, setBookingEmbedded] = useState(false);
-  const today = new Date();
-  const todayStr = today.toISOString().split("T")[0];
-
-  // Convert YYYY-MM-DD → MM/DD/YYYY for cal.com prefill
-  const formatDateForCal = (iso) => {
-    if (!iso) return "";
-    const [y, m, d] = iso.split("-");
-    return (m && d && y) ? `${m}/${d}/${y}` : iso;
-  };
 
   useEffect(() => {
     trackEvent("qualify_page_view", { case_type: "property-damage" });
@@ -113,29 +102,8 @@ export default function PropertyDamageQualify() {
     setTimeout(next, 320);
   };
 
-  // Q4 date-of-loss picker with SOL-aware notes
-  const handleDate = (val) => {
-    setDateVal(val);
-    if (!val) { setDateNote({ msg: "", warn: false }); return; }
-    const loss = new Date(val);
-    const diffDays = Math.floor((today - loss) / 86400000);
-    const yrs = diffDays / 365;
-    if (diffDays < 0) {
-      setDateNote({ msg: "Date appears to be in the future — please double-check.", warn: true });
-      return;
-    }
-    const bucket = yrs > 5 ? "over_5y" : yrs > 3 ? "3_to_5y" : yrs > 1 ? "1_to_3y" : "under_1y";
-    trackEvent("qualify_step_answered", {
-      case_type: "property-damage", step: 3, step_name: "date_of_loss",
-      answer: bucket, years_ago: Math.round(yrs * 10) / 10,
-    });
-    if (yrs > 5) setDateNote({ msg: "⚠ Over 5 years ago — Florida statute of limitations may bar your claim.", warn: true });
-    else if (yrs > 3) setDateNote({ msg: "Note: Over 3 years ago. We will review applicable deadlines carefully.", warn: true });
-    else setDateNote({ msg: `Date recorded: ${loss.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, warn: false });
-  };
-
-  // Q4: Contact info + date of loss — fires partial webhook on submit, then advances to booking
-  const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@") && dateVal && new Date(dateVal) <= today;
+  // Q4: Contact info — fires partial webhook on submit, then advances to booking
+  const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@");
   const contactStartedRef = useRef(false);
   const trackContactStart = () => {
     if (!contactStartedRef.current) {
@@ -157,7 +125,6 @@ export default function PropertyDamageQualify() {
           phone: contact.phone,
           email: contact.email,
           propertyAddress: contact.propertyAddress,
-          dateOfLoss: dateVal,
           damageType: damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : null,
           caseType: "property-damage",
           partialLead: true,
@@ -227,7 +194,6 @@ export default function PropertyDamageQualify() {
           email: c.email || "",
           "callback-phone": c.phone || "",
           "property-address": c.propertyAddress || "",
-          "date-of-loss": formatDateForCal(dateVal),
           "damage-type": damageLabel,
         },
       });
@@ -257,7 +223,6 @@ export default function PropertyDamageQualify() {
   const restart = () => {
     setAnswers({}); setResult(null); setPartialSent(false); setBookingEmbedded(false);
     setContact({ name: "", phone: "", email: "", propertyAddress: "" });
-    setDateVal(""); setDateNote({ msg: "", warn: false });
     setCur(0);
   };
 
@@ -397,17 +362,7 @@ export default function PropertyDamageQualify() {
                   <input className={styles.input} placeholder="123 Main St, Miami, FL 33101" value={contact.propertyAddress}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyAddress: e.target.value })); }} />
                 </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Date of loss</label>
-                  <input type="date" className={styles.input} value={dateVal} max={todayStr}
-                    onChange={(e) => { trackContactStart(); handleDate(e.target.value); }} />
-                </div>
               </div>
-              {dateNote.msg && (
-                <div className={`${styles.dateNote} ${dateNote.warn ? styles.dateWarn : ""}`} style={{ marginTop: "8px" }}>
-                  {dateNote.msg}
-                </div>
-              )}
               <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleContactSubmit}
                 disabled={!contactComplete || submitting}>
                 {submitting ? "Saving..." : "Continue to booking →"}
