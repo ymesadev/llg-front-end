@@ -28,6 +28,7 @@ import RelatedArticles from "../components/RelatedArticles/RelatedArticles";
 import PrefetchLinks from "../components/PrefetchLinks/PrefetchLinks";
 import SaveArticle from "../components/SaveArticle/SaveArticle";
 import PushOptIn from "../components/PushOptIn/PushOptIn";
+import OpenChatButton from "../components/OpenChatButton/OpenChatButton";
 import SocialProofToast from "../components/SocialProofToast/SocialProofToast";
 import FPPChecker from "../components/FPPChecker/FPPChecker";
 import ChecklistCTA from "../components/ChecklistCTA/ChecklistCTA";
@@ -1699,9 +1700,9 @@ export default async function Page(props) {
                       {isES ? "Sin costo a menos que ganemos · 100% confidencial · Respuesta el mismo día" : isCaseLaw ? "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential" : "No fees unless we win · 100% confidential · Same-day response"}
                     </p>
                     <div style={{display:"flex",gap:"12px",flexWrap:"wrap",justifyContent:"center"}}>
-                      <button onClick={() => { if (typeof window !== 'undefined') window.dispatchEvent(new Event('openSmileyChat')); }} className={styles.endCtaBtn} style={{cursor:"pointer",border:"none"}}>
+                      <OpenChatButton className={styles.endCtaBtn}>
                         {isES ? "Pregúntenos en Vivo →" : "Ask Us a Question Live →"}
-                      </button>
+                      </OpenChatButton>
                       <Link href={intakeHref} className={styles.endCtaBtnSecondary}>
                         {isES ? "Vea Si Califica →" : "See If You Qualify →"}
                       </Link>
@@ -1738,7 +1739,7 @@ export default async function Page(props) {
           )}
           {/* Sticky mobile CTA — routes to correct intake form per article type */}
           <div className={styles.stickyMobileCta}>
-            <button onClick={() => { if (typeof window !== 'undefined') window.dispatchEvent(new Event('openSmileyChat')); }} className={styles.stickyCall} style={{cursor:"pointer",border:"none"}}>{articleLang === "es" ? "Pregúntenos en Vivo" : "Ask Us a Question Live"}</button>
+            <OpenChatButton className={styles.stickyCall}>{articleLang === "es" ? "Pregúntenos en Vivo" : "Ask Us a Question Live"}</OpenChatButton>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →"}</Link>
           </div>
           {/* Sticky desktop CTA for SSDI articles — above-fold qualify prompt */}
@@ -1747,9 +1748,9 @@ export default async function Page(props) {
               <span className={styles.stickyDesktopText}>
                 {articleLang === "es" ? "¿Tiene una discapacidad? Podría calificar para beneficios de SSDI." : "Living with a disability? You may qualify for SSDI benefits."}
               </span>
-              <button onClick={() => { if (typeof window !== 'undefined') window.dispatchEvent(new Event('openSmileyChat')); }} className={styles.stickyDesktopBtn} style={{cursor:"pointer",border:"none"}}>
+              <OpenChatButton className={styles.stickyDesktopBtn}>
                 {articleLang === "es" ? "Pregúntenos en Vivo →" : "Ask Us a Question Live →"}
-              </button>
+              </OpenChatButton>
             </div>
           )}
           <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} articleType={articleType} />
