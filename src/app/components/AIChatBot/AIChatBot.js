@@ -48,34 +48,47 @@ function getContextFromUrl(pathname) {
     if (slug.includes(key)) { insurer = name; break; }
   }
 
-  let opener;
+  let opener, suggestions;
+
   if (/qualify/.test(slug)) {
     opener = "I see you started the qualification form. Need help with any of the questions? I'm here.";
+    suggestions = ["What do I need to qualify?", "How long does the process take?", "Is the consultation really free?", "What happens after I submit?"];
   } else if (insurer) {
     opener = `Having trouble with ${insurer}? You're not alone — I can check if you have a case in about 30 seconds.`;
+    suggestions = [`${insurer} denied my claim`, "My claim was underpaid", "They're taking too long to respond", "I need help filing a claim"];
   } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
     opener = "Roof damage is one of the most common claims we handle. Has your insurance company responded yet?";
+    suggestions = ["My roof claim was denied", "Insurance says it's pre-existing", "How do I file a roof claim?", "Storm damaged my roof"];
   } else if (/water[-_]?damage|flood|pipe/.test(slug)) {
     opener = "Water damage can get expensive fast. Let me check if your insurance should be covering this.";
+    suggestions = ["My water damage claim was denied", "Pipe burst in my home", "Insurance won't cover the full cost", "How do I document water damage?"];
   } else if (/mold/.test(slug)) {
     opener = "Mold damage is stressful, and insurance companies love to deny these. Want me to check if you qualify for help?";
+    suggestions = ["Insurance denied my mold claim", "I found mold after water damage", "How much does mold remediation cost?", "Is mold covered by insurance?"];
   } else if (/hurricane|storm|wind/.test(slug)) {
     opener = "Storm damage claims have strict deadlines in Florida. Has your insurance company made you an offer yet?";
+    suggestions = ["Hurricane damaged my property", "Insurance lowballed my claim", "How long do I have to file?", "They sent an adjuster but denied it"];
   } else if (/fire[-_]?damage|smoke|lightning/.test(slug)) {
     opener = "Fire damage claims can be complex. I can check if you qualify for legal help — takes about 30 seconds.";
+    suggestions = ["My fire damage claim was denied", "Insurance isn't covering everything", "Lightning struck my home", "How do I file a fire claim?"];
   } else if (/denied|denial|bad[-_]?faith|underpaid/.test(slug)) {
     opener = "A denied claim doesn't mean it's over. Want me to check if you have options?";
+    suggestions = ["My claim was denied", "They underpaid my claim", "Insurance is acting in bad faith", "Can I appeal a denial?"];
   } else if (/ssdi|disability|social[-_]?security/.test(slug)) {
     opener = "The disability process can be overwhelming. Want me to check if you qualify for help with your claim?";
+    suggestions = ["I was denied disability benefits", "How do I apply for SSDI?", "My disability appeal was rejected", "How long does the process take?"];
   } else if (/personal[-_]?injury|accident/.test(slug)) {
     opener = "Dealing with an injury is hard enough without the legal stress. I can help you figure out your options.";
+    suggestions = ["I was in a car accident", "How do I know if I have a case?", "What compensation can I get?", "Is the consultation free?"];
   } else if (/property[-_]?damage/.test(slug)) {
     opener = "Dealing with a property damage claim? I can check if you qualify for legal help — takes 30 seconds.";
+    suggestions = ["My property was damaged", "Insurance denied my claim", "They're offering too little", "How does the process work?"];
   } else {
-    opener = "Hi — I'm here if you have questions. How can I help?";
+    opener = "Hi — I'm here if you have questions about your situation. How can I help?";
+    suggestions = ["I have a property damage claim", "I need help with disability benefits", "I was injured in an accident", "How does the free consultation work?"];
   }
 
-  return { opener, insurer };
+  return { opener, insurer, suggestions };
 }
 
 const AIChatBot = () => {
@@ -500,11 +513,11 @@ const AIChatBot = () => {
     }
   };
 
-  const quickReplies = [
-    "What services do you offer?",
-    "How can I get a free consultation?",
-    "What are your office hours?",
-    "Do you handle personal injury cases?",
+  const quickReplies = getContextFromUrl(pathname).suggestions || [
+    "I have a property damage claim",
+    "I need help with disability benefits",
+    "I was injured in an accident",
+    "How does the free consultation work?",
   ];
 
   const handleQuickReply = (reply) => {
