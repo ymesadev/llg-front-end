@@ -675,10 +675,15 @@ const AIChatBot = () => {
         >
           <div className={styles.dragHandle}></div>
           <div className={styles.headerInfo}>
-            <div className={styles.title}>Live Chat</div>
-            <div className={styles.statusContainer}>
-              <div className={styles.onlineStatus}></div>
-              <p>Online</p>
+            <div className={styles.headerAvatar}>
+              <img src="https://login.louislawgroup.com/uploads/pierre_louis_new_003bb95e9b.jpg" alt="Louis Law Group" className={styles.headerAvatarImg} />
+            </div>
+            <div className={styles.headerDetails}>
+              <div className={styles.title}>Louis Law Group</div>
+              <div className={styles.statusContainer}>
+                <div className={styles.onlineStatus}></div>
+                <p>Online now</p>
+              </div>
             </div>
           </div>
           <div className={styles.headerActions}>
