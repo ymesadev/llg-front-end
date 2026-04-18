@@ -122,37 +122,49 @@ export default function PropertyDamageQualify() {
     }
   };
 
-  const handleContactSubmit = async () => {
+  const handleContactSubmit = () => {
     if (!contactComplete) return;
-    setSubmitting(true);
     const damageIdx = answers.damage_type_idx;
+    const payload = JSON.stringify({
+      name: contact.name,
+      phone: contact.phone,
+      email: contact.email,
+      propertyAddress: `${contact.propertyStreet}, ${contact.propertyCity}, ${contact.propertyState} ${contact.propertyZip}`,
+      propertyStreet: contact.propertyStreet,
+      propertyCity: contact.propertyCity,
+      propertyState: contact.propertyState,
+      propertyZip: contact.propertyZip,
+      damageType: damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : null,
+      caseType: "property-damage",
+      partialLead: true,
+    });
+    // Fire-and-forget: prefer sendBeacon (non-blocking, survives nav), fallback to fetch keepalive
+    let queued = false;
     try {
-      await fetch("/api/qualify-intake-partial", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: contact.name,
-          phone: contact.phone,
-          email: contact.email,
-          propertyAddress: `${contact.propertyStreet}, ${contact.propertyCity}, ${contact.propertyState} ${contact.propertyZip}`,
-          propertyStreet: contact.propertyStreet,
-          propertyCity: contact.propertyCity,
-          propertyState: contact.propertyState,
-          propertyZip: contact.propertyZip,
-          damageType: damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : null,
-          caseType: "property-damage",
-          partialLead: true,
-        }),
-      });
-    } catch { /* silent */ }
+      if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
+        queued = navigator.sendBeacon(
+          "/api/qualify-intake-partial",
+          new Blob([payload], { type: "application/json" })
+        );
+      }
+    } catch { /* ignore */ }
+    if (!queued) {
+      try {
+        fetch("/api/qualify-intake-partial", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {});
+      } catch { /* ignore */ }
+    }
     trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "contact_info", answer: "submitted" });
     trackEvent("qualify_contact_captured", { case_type: "property-damage" });
     if (typeof window !== "undefined" && window.__or_identify) {
       window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: "property-damage" });
     }
     setPartialSent(true);
-    setSubmitting(false);
-    next();
+    next(); // advance to booking step immediately — don't wait for webhook
   };
 
   // Q5: Mount cal.com inline embed with all prefills when user reaches booking step
@@ -405,8 +417,8 @@ export default function PropertyDamageQualify() {
                 </div>
               </div>
               <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleContactSubmit}
-                disabled={!contactComplete || submitting}>
-                {submitting ? "Saving..." : "Continue to booking →"}
+                disabled={!contactComplete}>
+                Continue to booking →
               </button>
               <div className={styles.hint} style={{ marginTop: "8px", fontSize: "12px" }}>
                 🔒 Your information is confidential and protected by attorney-client privilege.
