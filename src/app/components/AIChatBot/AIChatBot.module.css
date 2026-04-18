@@ -485,7 +485,54 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* ═══ Mobile: Bottom Sheet Chat ═══ */
+/* Booking slot buttons */
+.bookingMessage {
+  max-width: 95% !important;
+}
+
+.slotGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+
+.slotButton {
+  background: linear-gradient(135deg, #1a2b49 0%, #173a77 100%);
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.slotButton:hover {
+  background: linear-gradient(135deg, #0f1d33 0%, #122e66 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(26, 43, 73, 0.3);
+}
+
+.slotButton:active {
+  transform: translateY(0);
+}
+
+/* Drag handle for swipe-down dismiss */
+.dragHandle {
+  width: 2.5rem;
+  height: 0.25rem;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 0.125rem;
+  margin: 0 auto 0.5rem;
+  display: none;
+}
+
+/* Mobile Responsive */
 @media (max-width: 768px) {
   .container {
     right: 1rem;
@@ -498,9 +545,9 @@
     font-size: 0.8125rem;
     height: 2.25rem;
     padding: 0 0.875rem;
-    z-index: 9998;
   }
 
+  /* Push button above cookie consent banner on mobile */
   .container.cookieBump {
     bottom: 8rem;
   }
@@ -513,65 +560,45 @@
     font-size: 0.875rem;
   }
 
-  /* Overlay behind the bottom sheet — tap to close */
-  .chatOverlay {
-    display: block;
-  }
-
-  /* Bottom sheet — 75% height, rounded top corners */
   .chatbox {
     position: fixed;
+    bottom: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    top: auto;
     width: 100%;
-    height: 75vh;
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile browsers */
     max-width: 100%;
-    max-height: 75vh;
-    border-radius: 1.25rem 1.25rem 0 0;
+    border-radius: 0;
     transform: translateY(100%);
-    opacity: 1;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    background: white;
-    overflow: hidden;
-    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.15);
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   .fadeIn {
     transform: translateY(0);
-    opacity: 1;
   }
 
   .fadeOut {
     transform: translateY(100%);
-    opacity: 1;
-    pointer-events: none;
   }
 
-  /* Drag handle at top of sheet */
   .dragHandle {
-    display: flex;
-    justify-content: center;
-    padding: 0.5rem 0 0.25rem;
-    background: white;
-    border-radius: 1.25rem 1.25rem 0 0;
-    flex-shrink: 0;
-    cursor: grab;
-  }
-
-  .dragBar {
-    width: 2.5rem;
-    height: 0.25rem;
-    background: #d1d5db;
-    border-radius: 0.125rem;
+    display: block;
   }
 
   .header {
-    flex-shrink: 0;
-    padding: 0.5rem 1rem 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 0.75rem 1rem 1rem;
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+    min-height: 3.5rem;
+    cursor: grab;
+  }
+
+  .slotGrid {
+    grid-template-columns: 1fr;
   }
 
   .title {
@@ -579,16 +606,15 @@
   }
 
   .statusContainer p {
-    font-size: 0.75rem;
+    font-size: 0.8125rem;
   }
 
   .messages {
     flex: 1;
     min-height: 0;
-    overflow-y: auto;
-    padding: 0.75rem 1rem;
-    background: #f8fafc;
+    padding: 1rem;
     overscroll-behavior: contain;
+    touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -597,41 +623,30 @@
   }
 
   .messageText {
-    font-size: 0.9375rem;
-    padding: 0.75rem 1rem;
-    line-height: 1.5;
+    font-size: 0.875rem;
+    padding: 0.625rem 0.875rem;
   }
 
   .messageTime {
     font-size: 0.6875rem;
   }
 
-  .suggestions {
-    flex-shrink: 0;
-    padding: 0.5rem 1rem;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    background: #f8fafc;
-    border-top: none;
-    flex-wrap: wrap;
-  }
-
-  .suggestionButton {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8125rem;
-  }
-
   .inputContainer {
-    flex-shrink: 0;
-    padding: 0.625rem 1rem;
-    padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
+    position: sticky;
+    bottom: 0;
+    padding: 0.875rem 1rem;
+    padding-bottom: max(0.875rem, env(safe-area-inset-bottom));
     background: white;
     border-top: 1px solid #e5e7eb;
   }
 
+  .inputWrapper {
+    padding: 0.25rem;
+  }
+
   .input {
     padding: 0.625rem 0.875rem;
-    font-size: 1rem;
+    font-size: 0.875rem;
   }
 
   .sendButton {
@@ -639,41 +654,79 @@
     height: 2.25rem;
   }
 
+  .suggestions {
+    padding: 0.625rem 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .suggestionButton {
+    padding: 0.4375rem 0.625rem;
+    font-size: 0.6875rem;
+  }
+
   .clearButton,
   .closeButton {
-    width: 2.25rem;
-    height: 2.25rem;
-    font-size: 1.25rem;
+    width: 1.875rem;
+    height: 1.875rem;
+    font-size: 1.125rem;
   }
 
   .chatToast {
     right: 1rem;
     left: 1rem;
     max-width: none;
-    bottom: 5rem;
+    bottom: 5rem; /* Above chat button */
   }
 }
 
-/* Overlay — hidden on desktop, shown on mobile when chat is open */
-.chatOverlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 9998;
-  animation: overlayFadeIn 0.3s ease;
-}
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .chatbox {
+    background: #1f2937;
+    border-color: #374151;
+  }
 
-@keyframes overlayFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
+  .header {
+    background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
+  }
 
-/* Drag handle — hidden on desktop */
-.dragHandle {
-  display: none;
-}
+  .messages {
+    background: #111827;
+  }
 
-.dragBar {
-  display: none;
+  .botMessage .messageText {
+    background: #374151;
+    color: #f9fafb;
+    border-color: #4b5563;
+  }
+
+  .inputContainer {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .inputWrapper {
+    background: #374151;
+    border-color: #4b5563;
+  }
+
+  .input {
+    color: #f9fafb;
+  }
+
+  .suggestions {
+    background: #1f2937;
+    border-color: #374151;
+  }
+
+  .suggestionButton {
+    background: #374151;
+    color: #d1d5db;
+    border-color: #4b5563;
+  }
+
+  .suggestionButton:hover:not(:disabled) {
+    background: #4b5563;
+  }
 }

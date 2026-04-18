@@ -208,7 +208,9 @@ export async function POST(request) {
       success: true,
       response: hyperlinkURLs(data.response || data.message || 'I received your message but couldn\'t generate a response.'),
       conversationId: payload.conversationId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      qualified: data.qualified || false,
+      lead: data.lead || null,
     };
     
     console.log('Final API response:', JSON.stringify(finalResponse, null, 2));

@@ -48,47 +48,34 @@ function getContextFromUrl(pathname) {
     if (slug.includes(key)) { insurer = name; break; }
   }
 
-  let opener, suggestions;
-
+  let opener;
   if (/qualify/.test(slug)) {
     opener = "I see you started the qualification form. Need help with any of the questions? I'm here.";
-    suggestions = ["What do I need to qualify?", "How long does the process take?", "Is the consultation really free?", "What happens after I submit?"];
   } else if (insurer) {
     opener = `Having trouble with ${insurer}? You're not alone — I can check if you have a case in about 30 seconds.`;
-    suggestions = [`${insurer} denied my claim`, "My claim was underpaid", "They're taking too long to respond", "I need help filing a claim"];
   } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
     opener = "Roof damage is one of the most common claims we handle. Has your insurance company responded yet?";
-    suggestions = ["My roof claim was denied", "Insurance says it's pre-existing", "How do I file a roof claim?", "Storm damaged my roof"];
   } else if (/water[-_]?damage|flood|pipe/.test(slug)) {
     opener = "Water damage can get expensive fast. Let me check if your insurance should be covering this.";
-    suggestions = ["My water damage claim was denied", "Pipe burst in my home", "Insurance won't cover the full cost", "How do I document water damage?"];
   } else if (/mold/.test(slug)) {
     opener = "Mold damage is stressful, and insurance companies love to deny these. Want me to check if you qualify for help?";
-    suggestions = ["Insurance denied my mold claim", "I found mold after water damage", "How much does mold remediation cost?", "Is mold covered by insurance?"];
   } else if (/hurricane|storm|wind/.test(slug)) {
     opener = "Storm damage claims have strict deadlines in Florida. Has your insurance company made you an offer yet?";
-    suggestions = ["Hurricane damaged my property", "Insurance lowballed my claim", "How long do I have to file?", "They sent an adjuster but denied it"];
   } else if (/fire[-_]?damage|smoke|lightning/.test(slug)) {
     opener = "Fire damage claims can be complex. I can check if you qualify for legal help — takes about 30 seconds.";
-    suggestions = ["My fire damage claim was denied", "Insurance isn't covering everything", "Lightning struck my home", "How do I file a fire claim?"];
   } else if (/denied|denial|bad[-_]?faith|underpaid/.test(slug)) {
     opener = "A denied claim doesn't mean it's over. Want me to check if you have options?";
-    suggestions = ["My claim was denied", "They underpaid my claim", "Insurance is acting in bad faith", "Can I appeal a denial?"];
   } else if (/ssdi|disability|social[-_]?security/.test(slug)) {
     opener = "The disability process can be overwhelming. Want me to check if you qualify for help with your claim?";
-    suggestions = ["I was denied disability benefits", "How do I apply for SSDI?", "My disability appeal was rejected", "How long does the process take?"];
   } else if (/personal[-_]?injury|accident/.test(slug)) {
     opener = "Dealing with an injury is hard enough without the legal stress. I can help you figure out your options.";
-    suggestions = ["I was in a car accident", "How do I know if I have a case?", "What compensation can I get?", "Is the consultation free?"];
   } else if (/property[-_]?damage/.test(slug)) {
     opener = "Dealing with a property damage claim? I can check if you qualify for legal help — takes 30 seconds.";
-    suggestions = ["My property was damaged", "Insurance denied my claim", "They're offering too little", "How does the process work?"];
   } else {
-    opener = "Hi — I'm here if you have questions about your situation. How can I help?";
-    suggestions = ["I have a property damage claim", "I need help with disability benefits", "I was injured in an accident", "How does the free consultation work?"];
+    opener = "Hi — I'm here if you have questions. How can I help?";
   }
 
-  return { opener, insurer, suggestions };
+  return { opener, insurer };
 }
 
 const AIChatBot = () => {
@@ -271,20 +258,6 @@ const AIChatBot = () => {
     };
   }, [isOpen]);
 
-  // Mobile keyboard handling — resize chat when keyboard opens/closes
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.visualViewport || !isOpen) return;
-    const handleResize = () => {
-      const chatbox = document.querySelector('[data-chatbox]');
-      if (chatbox) {
-        chatbox.style.height = `${window.visualViewport.height}px`;
-      }
-    };
-    window.visualViewport.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.visualViewport.removeEventListener('resize', handleResize);
-  }, [isOpen]);
-
   // Scroll-based engagement triggers
   useEffect(() => {
     let lastCheck = 0;
@@ -341,6 +314,96 @@ const AIChatBot = () => {
     }, 180000); // 3 minutes
     return () => clearTimeout(timer);
   }, [isOpen]);
+
+  const fetchCalSlots = async (lead) => {
+    try {
+      const now = new Date();
+      const startTime = now.toISOString();
+      const endTime = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000).toISOString();
+
+      const res = await fetch(
+        `https://bookings.louislawgroup.com/api/v2/slots/available?startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}&eventTypeSlug=property-insurance-claim-consultation&username=pierre-louislawgroup.com`,
+        {
+          headers: {
+            'Authorization': 'Bearer cal_27d4a14aa24a92b4deb38bbc9ab89e0a22e5bd2a61b3c9e2',
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error('Cal.com API error');
+      const data = await res.json();
+
+      // Flatten slots from all dates and pick the first 4
+      const allSlots = [];
+      const slots = data?.data?.slots || data?.slots || {};
+      for (const [date, daySlots] of Object.entries(slots)) {
+        if (Array.isArray(daySlots)) {
+          for (const slot of daySlots) {
+            allSlots.push(slot.time || slot);
+          }
+        }
+      }
+
+      const nextSlots = allSlots.slice(0, 4);
+      if (nextSlots.length === 0) return;
+
+      const slotButtons = nextSlots.map(t => {
+        const d = new Date(t);
+        const day = d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        const time = d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        return { label: `${day} at ${time}`, time: t };
+      });
+
+      const bookingMsg = {
+        id: Date.now() + 2,
+        text: 'Choose a time for your free consultation:',
+        sender: 'bot',
+        timestamp: new Date(),
+        isBooking: true,
+        slots: slotButtons,
+        lead,
+      };
+      setMessages(prev => [...prev, bookingMsg]);
+    } catch (err) {
+      console.error('Cal.com slot fetch error:', err);
+      // Fallback: show direct booking link
+      const fallbackMsg = {
+        id: Date.now() + 2,
+        text: '<a href="https://bookings.louislawgroup.com/pierre-louislawgroup.com/property-insurance-claim-consultation" target="_blank" rel="noopener noreferrer" style="color:#0078ff;text-decoration:underline;font-weight:600;">Click here to schedule your free consultation</a>',
+        sender: 'bot',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, fallbackMsg]);
+    }
+  };
+
+  const handleBookSlot = async (slot, lead) => {
+    // Open cal.com booking page with prefilled data
+    const params = new URLSearchParams({
+      name: lead?.name || '',
+      phone: lead?.phone || '',
+      'damage-type': lead?.damage || '',
+    });
+    const bookingUrl = `https://bookings.louislawgroup.com/pierre-louislawgroup.com/property-insurance-claim-consultation?${params.toString()}&date=${encodeURIComponent(slot.time)}`;
+    window.open(bookingUrl, '_blank', 'noopener,noreferrer');
+
+    // Confirm in chat
+    const confirmMsg = {
+      id: Date.now() + 3,
+      text: `Opening booking for <strong>${slot.label}</strong>. Complete the form in the new tab to confirm your free consultation.`,
+      sender: 'bot',
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, confirmMsg]);
+
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'booking_slot_selected', {
+        event_category: 'Chat',
+        event_label: slot.label,
+        value: 1
+      });
+    }
+  };
 
   const sendMessage = async (messageText) => {
     if (!messageText.trim() || isLoading) return;
@@ -441,10 +504,15 @@ const AIChatBot = () => {
         };
 
         setMessages(prev => [...prev, botMessage]);
-        
+
         // Set conversation ID if this is the first message
         if (!conversationId) {
           setConversationId(data.conversationId);
+        }
+
+        // If qualified, fetch cal.com slots and show booking options
+        if (data.qualified && data.lead) {
+          fetchCalSlots(data.lead);
         }
 
         // Track bot response for marketing
@@ -454,6 +522,13 @@ const AIChatBot = () => {
             event_label: 'Bot Response',
             value: 1
           });
+          if (data.qualified) {
+            window.gtag('event', 'lead_qualified', {
+              event_category: 'Chat',
+              event_label: data.lead?.damage || 'unknown',
+              value: 1
+            });
+          }
         }
       } else {
         // Handle different types of errors from the API
@@ -527,11 +602,11 @@ const AIChatBot = () => {
     }
   };
 
-  const quickReplies = getContextFromUrl(pathname).suggestions || [
-    "I have a property damage claim",
-    "I need help with disability benefits",
-    "I was injured in an accident",
-    "How does the free consultation work?",
+  const quickReplies = [
+    "What services do you offer?",
+    "How can I get a free consultation?",
+    "What are your office hours?",
+    "Do you handle personal injury cases?",
   ];
 
   const handleQuickReply = (reply) => {
@@ -586,27 +661,44 @@ const AIChatBot = () => {
         </button>
       )}
 
-      {/* Overlay — tap to close on mobile */}
-      {isOpen && (
-        <div
-          className={styles.chatOverlay}
-          onClick={() => setIsOpen(false)}
-          aria-label="Close chat"
-        />
-      )}
-
       {/* Chat Window */}
       <div
         className={`${styles.chatbox} ${isOpen ? styles.fadeIn : styles.fadeOut}`}
         data-chatbox
       >
-        {/* Drag handle — mobile bottom sheet indicator */}
-        <div className={styles.dragHandle} onClick={() => setIsOpen(false)}>
-          <div className={styles.dragBar} />
-        </div>
+        {/* Header with swipe-down dismiss */}
+        <div
+          className={styles.header}
+          onTouchStart={(e) => {
+            const touch = e.touches[0];
+            e.currentTarget._swipeStartY = touch.clientY;
+            e.currentTarget._swipeStartTime = Date.now();
+          }}
+          onTouchMove={(e) => {
+            if (!e.currentTarget._swipeStartY) return;
+            const deltaY = e.touches[0].clientY - e.currentTarget._swipeStartY;
+            if (deltaY > 0) {
+              const chatbox = e.currentTarget.closest('[data-chatbox]');
+              if (chatbox) chatbox.style.transform = `translateY(${deltaY}px)`;
+            }
+          }}
+          onTouchEnd={(e) => {
+            const startY = e.currentTarget._swipeStartY;
+            const startTime = e.currentTarget._swipeStartTime;
+            if (!startY) return;
+            const endY = e.changedTouches[0].clientY;
+            const deltaY = endY - startY;
+            const elapsed = Date.now() - startTime;
+            const chatbox = e.currentTarget.closest('[data-chatbox]');
+            e.currentTarget._swipeStartY = null;
 
-        {/* Header */}
-        <div className={styles.header}>
+            if (deltaY > 100 || (deltaY > 40 && elapsed < 300)) {
+              setIsOpen(false);
+            }
+            if (chatbox) chatbox.style.transform = '';
+          }}
+        >
+          <div className={styles.dragHandle}></div>
           <div className={styles.headerInfo}>
             <div className={styles.title}>Live Chat</div>
             <div className={styles.statusContainer}>
@@ -663,25 +755,28 @@ const AIChatBot = () => {
             </div>
           ) : (
             <>
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`${styles.message} ${
-                    message.sender === "user" ? styles.userMessage : styles.botMessage
-                  } ${message.isError ? styles.errorMessage : ""}`}
-                >
-                  <div
-                    className={styles.messageText}
-                    dangerouslySetInnerHTML={{ __html: message.text }}
-                  ></div>
+              {messages.map((message) => {
+                const msgClasses = [styles.message, message.sender === "user" ? styles.userMessage : styles.botMessage];
+                if (message.isError) msgClasses.push(styles.errorMessage);
+                if (message.isBooking) msgClasses.push(styles.bookingMessage);
+                return (
+                <div key={message.id} className={msgClasses.join(' ')}>
+                  <div className={styles.messageText} dangerouslySetInnerHTML={{__html: message.text}}></div>
+                  {message.isBooking && message.slots && (
+                    <div className={styles.slotGrid}>
+                      {message.slots.map((slot, i) => (
+                        <button key={i} className={styles.slotButton} onClick={() => handleBookSlot(slot, message.lead)}>
+                          {slot.label}
+                        </button>
+                      ))}
+                    </div>
+                  )}
                   <div className={styles.messageTime}>
-                    {message?.timestamp ? new Date(message.timestamp)?.toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    }) : ''}
+                    {message?.timestamp ? new Date(message.timestamp)?.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : ''}
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </>
           )}
 

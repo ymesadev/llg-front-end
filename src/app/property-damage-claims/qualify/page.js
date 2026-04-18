@@ -14,9 +14,9 @@ const DAMAGE_LABELS = [
   "Other",
 ];
 
-// Flow: 0=damage, 1=owner, 2=florida, 3=contact, 4=booking
-const TOTAL_STEPS = 4;
-const STEP_NAMES = ["damage_type", "owner_check", "florida_check", "contact_info", "book_consultation"];
+// Shortened flow: damage → owner → florida → booking
+const TOTAL_STEPS = 3;
+const STEP_NAMES = ["damage_type", "owner_check", "florida_check", "book_consultation"];
 
 // Cal.com embed config
 const CAL_ORIGIN = "https://bookings.louislawgroup.com";
@@ -26,14 +26,9 @@ const CAL_NAMESPACE = "llg-fpp-booker";
 export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [contact, setContact] = useState({
-    name: "", phone: "", email: "",
-    propertyStreet: "", propertyCity: "", propertyState: "FL", propertyZip: "",
-  });
   const [result, setResult] = useState(null);
-  const [partialSent, setPartialSent] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
   const [bookingEmbedded, setBookingEmbedded] = useState(false);
+  const today = new Date();
 
   useEffect(() => {
     trackEvent("qualify_page_view", { case_type: "property-damage" });
@@ -41,16 +36,18 @@ export default function PropertyDamageQualify() {
 
   useEffect(() => {
     if (cur <= TOTAL_STEPS) {
-      trackEvent("qualify_step_viewed", { case_type: "property-damage", step: cur, step_name: STEP_NAMES[cur] });
+      trackEvent("qualify_step_viewed", {
+        case_type: "property-damage",
+        step: cur,
+        step_name: STEP_NAMES[cur],
+      });
     }
   }, [cur]);
 
   const curRef = useRef(cur);
   const answersRef = useRef(answers);
-  const contactRef = useRef(contact);
   useEffect(() => { curRef.current = cur; }, [cur]);
   useEffect(() => { answersRef.current = answers; }, [answers]);
-  useEffect(() => { contactRef.current = contact; }, [contact]);
   useEffect(() => {
     const handleExit = () => {
       if (curRef.current < TOTAL_STEPS) {
@@ -105,74 +102,12 @@ export default function PropertyDamageQualify() {
     setTimeout(next, 320);
   };
 
-  // Q4: Contact info — fires partial webhook on submit, then advances to booking
-  const contactComplete =
-    contact.name.trim() &&
-    contact.phone.trim() &&
-    contact.email.includes("@") &&
-    contact.propertyStreet.trim() &&
-    contact.propertyCity.trim() &&
-    contact.propertyState.trim() &&
-    contact.propertyZip.trim();
-  const contactStartedRef = useRef(false);
-  const trackContactStart = () => {
-    if (!contactStartedRef.current) {
-      contactStartedRef.current = true;
-      trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "contact_info", answer: "started_typing" });
-    }
-  };
-
-  const handleContactSubmit = () => {
-    if (!contactComplete) return;
-    const damageIdx = answers.damage_type_idx;
-    const payload = JSON.stringify({
-      name: contact.name,
-      phone: contact.phone,
-      email: contact.email,
-      propertyAddress: `${contact.propertyStreet}, ${contact.propertyCity}, ${contact.propertyState} ${contact.propertyZip}`,
-      propertyStreet: contact.propertyStreet,
-      propertyCity: contact.propertyCity,
-      propertyState: contact.propertyState,
-      propertyZip: contact.propertyZip,
-      damageType: damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : null,
-      caseType: "property-damage",
-      partialLead: true,
-    });
-    // Fire-and-forget: prefer sendBeacon (non-blocking, survives nav), fallback to fetch keepalive
-    let queued = false;
-    try {
-      if (typeof navigator !== "undefined" && typeof navigator.sendBeacon === "function") {
-        queued = navigator.sendBeacon(
-          "/api/qualify-intake-partial",
-          new Blob([payload], { type: "application/json" })
-        );
-      }
-    } catch { /* ignore */ }
-    if (!queued) {
-      try {
-        fetch("/api/qualify-intake-partial", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: payload,
-          keepalive: true,
-        }).catch(() => {});
-      } catch { /* ignore */ }
-    }
-    trackEvent("qualify_step_answered", { case_type: "property-damage", step: 3, step_name: "contact_info", answer: "submitted" });
-    trackEvent("qualify_contact_captured", { case_type: "property-damage" });
-    if (typeof window !== "undefined" && window.__or_identify) {
-      window.__or_identify(contact.email, { name: contact.name, phone: contact.phone, case_type: "property-damage" });
-    }
-    setPartialSent(true);
-    next(); // advance to booking step immediately — don't wait for webhook
-  };
-
-  // Q5: Mount cal.com inline embed with all prefills when user reaches booking step
+  // Mount cal.com inline embed when user reaches booking step
   useEffect(() => {
     if (cur !== TOTAL_STEPS || bookingEmbedded) return;
 
     const damageIdx = answersRef.current.damage_type_idx;
-    const damageLabel = damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : "";
+    const damageLabel = (damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : "") || "";
 
     trackEvent("qualify_booking_shown", {
       case_type: "property-damage",
@@ -208,7 +143,6 @@ export default function PropertyDamageQualify() {
 
     const mount = () => {
       if (!window.Cal) { setTimeout(mount, 120); return; }
-      const c = contactRef.current || {};
       window.Cal("init", CAL_NAMESPACE, { origin: CAL_ORIGIN });
       window.Cal.ns[CAL_NAMESPACE]("inline", {
         elementOrSelector: "#llg-cal-inline",
@@ -216,13 +150,7 @@ export default function PropertyDamageQualify() {
         config: {
           theme: "light",
           layout: "month_view",
-          name: c.name || "",
-          email: c.email || "",
-          "callback-phone": c.phone || "",
-          "property-street": c.propertyStreet || "",
-          "property-city": c.propertyCity || "",
-          "property-state": c.propertyState || "FL",
-          "property-zip": c.propertyZip || "",
+          // Prefills — cal.com uses field slugs as keys
           "damage-type": damageLabel,
         },
       });
@@ -237,10 +165,14 @@ export default function PropertyDamageQualify() {
           },
         },
       });
+      // Track booking success via cal.com event listener
       window.Cal.ns[CAL_NAMESPACE]("on", {
         action: "bookingSuccessful",
-        callback: () => {
-          trackEvent("qualify_submitted", { case_type: "property-damage", via: "cal_booking" });
+        callback: (e) => {
+          trackEvent("qualify_submitted", {
+            case_type: "property-damage",
+            via: "cal_booking",
+          });
           trackConversion("pd_qualify", { case_type: "property-damage", via: "cal_booking" });
         },
       });
@@ -250,9 +182,7 @@ export default function PropertyDamageQualify() {
   }, [cur, bookingEmbedded]);
 
   const restart = () => {
-    setAnswers({}); setResult(null); setPartialSent(false); setBookingEmbedded(false);
-    setContact({ name: "", phone: "", email: "", propertyStreet: "", propertyCity: "", propertyState: "FL", propertyZip: "" });
-    setCur(0);
+    setAnswers({}); setResult(null); setCur(0);
   };
 
   // ── DISQUALIFIED SCREEN ──
@@ -283,7 +213,7 @@ export default function PropertyDamageQualify() {
     );
   }
 
-  // ── FORM STEPS ──
+  // ── QUALIFIER STEPS + BOOKING UI ──
   return (
     <div className={styles.wrapper}>
       <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: `${progress}%` }} /></div>
@@ -313,10 +243,10 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Q1: Damage type */}
+          {/* Step 0: Damage type */}
           {cur === 0 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 1 of 5</div>
+              <div className={styles.stepLabel}>Question 1 of 3</div>
               <div className={styles.question}>What type of damage occurred?</div>
               <div className={styles.hint}>Select the primary cause of loss</div>
               <div className={styles.optsGrid}>
@@ -330,15 +260,15 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Q2: Owner check */}
+          {/* Step 1: Owner check */}
           {cur === 1 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 2 of 5</div>
+              <div className={styles.stepLabel}>Question 2 of 3</div>
               <div className={styles.question}>Are you the owner of the damaged property?</div>
               <div className={styles.hint}>Only property owners can initiate an insurance claim dispute</div>
               <div className={styles.opts}>
                 <button className={`${styles.opt} ${answers.owner === true ? styles.selected : ""}`} onClick={() => handleOwner(true)}>
-                  <span className={styles.optKey}>A</span> Yes — I am the homeowner
+                  <span className={styles.optKey}>A</span> Yes — I am the property owner
                 </button>
                 <button className={`${styles.opt} ${answers.owner === false ? styles.selected : ""}`} onClick={() => handleOwner(false)}>
                   <span className={styles.optKey}>B</span> No — I am a tenant or other party
@@ -347,10 +277,10 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Q3: Florida check */}
+          {/* Step 2: Florida check */}
           {cur === 2 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 3 of 5</div>
+              <div className={styles.stepLabel}>Question 3 of 3</div>
               <div className={styles.question}>Is the damaged property located in Florida?</div>
               <div className={styles.hint}>We exclusively handle Florida property insurance claims</div>
               <div className={styles.opts}>
@@ -364,75 +294,15 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Q4: Contact info — fires partial webhook */}
-          {cur === 3 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 4 of 5 — Contact Details</div>
-              <div className={styles.question}>You may qualify for a free case review</div>
-              <div className={styles.hint}>Enter your contact details so we can prefill your consultation booking.</div>
-              <div className={styles.inputRow}>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Full name</label>
-                  <input className={styles.input} placeholder="Jane Smith" value={contact.name}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, name: e.target.value })); }} />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Phone number</label>
-                  <input className={styles.input} placeholder="(954) 555-0100" value={contact.phone}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, phone: e.target.value })); }} />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Email address</label>
-                  <input className={styles.input} type="email" placeholder="jane@example.com" value={contact.email}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }} />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Property street address</label>
-                  <input className={styles.input} placeholder="123 Main Street" value={contact.propertyStreet}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyStreet: e.target.value })); }} />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>City</label>
-                  <input className={styles.input} placeholder="Miami" value={contact.propertyCity}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyCity: e.target.value })); }} />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>State</label>
-                  <select className={styles.input} value={contact.propertyState}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyState: e.target.value })); }}>
-                    <option value="FL">FL — Florida</option>
-                    <option value="AL">AL</option>
-                    <option value="GA">GA</option>
-                    <option value="SC">SC</option>
-                    <option value="NC">NC</option>
-                    <option value="TN">TN</option>
-                    <option value="MS">MS</option>
-                    <option value="LA">LA</option>
-                  </select>
-                </div>
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>ZIP code</label>
-                  <input className={styles.input} placeholder="33101" inputMode="numeric" value={contact.propertyZip}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyZip: e.target.value })); }} />
-                </div>
-              </div>
-              <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleContactSubmit}
-                disabled={!contactComplete}>
-                Continue to booking →
-              </button>
-              <div className={styles.hint} style={{ marginTop: "8px", fontSize: "12px" }}>
-                🔒 Your information is confidential and protected by attorney-client privilege.
-              </div>
-            </div>
-          )}
-
-          {/* Q5: BOOKING — cal.com inline embed with prefills */}
+          {/* Step 3: BOOKING (final step — cal.com inline embed) */}
           {cur === TOTAL_STEPS && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 5 of 5 — Book Your Free Consultation</div>
+              <div className={styles.stepLabel}>Final Step — Book Your Free Consultation</div>
               <div className={styles.question}>You qualify. Pick a time that works for you.</div>
               <div className={styles.hint}>
-                Your answers have been pre-filled below. Just pick a time and confirm the remaining details.
+                Based on your answers, your claim appears eligible. Your selected damage type
+                ({answers.damage_type_idx !== undefined ? DAMAGE_LABELS[answers.damage_type_idx] : ""})
+                will be passed to the consultation form.
               </div>
               <div id="llg-cal-inline" className={styles.calEmbed} />
               <div className={styles.hint} style={{ marginTop: "10px", fontSize: "12px" }}>
@@ -451,7 +321,7 @@ export default function PropertyDamageQualify() {
             ← Back
           </button>
           <span className={styles.stepCounter}>
-            {cur <= TOTAL_STEPS ? `Step ${cur + 1} of ${TOTAL_STEPS + 1}` : ""}
+            {cur < TOTAL_STEPS ? `Step ${cur + 1} of ${TOTAL_STEPS + 1}` : `Step ${TOTAL_STEPS + 1} of ${TOTAL_STEPS + 1}`}
           </span>
         </div>
       </div>
