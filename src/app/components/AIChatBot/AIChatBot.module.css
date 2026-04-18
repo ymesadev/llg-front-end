@@ -360,6 +360,51 @@
   cursor: not-allowed;
 }
 
+/* Welcome state */
+.welcomeWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+
+.welcomeSuggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Interactive quick reply buttons */
+.quickReplyButton {
+  background: white;
+  color: #1a2b49;
+  padding: 0.75rem 1rem;
+  border: 2px solid #1a2b49;
+  border-radius: 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.quickReplyButton:hover:not(:disabled) {
+  background: #1a2b49;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(26, 43, 73, 0.25);
+}
+
+.quickReplyButton:active {
+  transform: translateY(0);
+}
+
+.quickReplyButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .inputContainer {
   padding: 1rem;
   background: white;

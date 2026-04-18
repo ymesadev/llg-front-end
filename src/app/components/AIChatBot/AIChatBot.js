@@ -72,7 +72,7 @@ function getContextFromUrl(pathname) {
   } else if (/property[-_]?damage/.test(slug)) {
     opener = "Dealing with a property damage claim? I can check if you qualify for legal help — takes 30 seconds.";
   } else {
-    opener = "Hi — I'm here if you have questions. How can I help?";
+    opener = "Hi, I'm with Louis Law Group. Tell me what's going on and I'll let you know how we can help — property damage, personal injury, disability, or anything else.";
   }
 
   return { opener, insurer };
@@ -123,7 +123,7 @@ const AIChatBot = () => {
 
     // Check for welcome message update version
     const welcomeMessageVersion = localStorage.getItem('chatbot_welcome_version');
-    const currentVersion = '3.1'; // Qualify-page-aware welcome messages
+    const currentVersion = '4.0'; // Full practice area awareness + interactive welcome
 
     // Load chat history
     const savedMessages = localStorage.getItem(`chatbot_messages_${storedUserId}`);
@@ -578,10 +578,10 @@ const AIChatBot = () => {
   };
 
   const quickReplies = [
-    "What services do you offer?",
-    "How can I get a free consultation?",
-    "What are your office hours?",
-    "Do you handle personal injury cases?",
+    "My insurance denied my claim",
+    "I was in a car accident",
+    "I need help with disability benefits",
+    "I have a question about my case",
   ];
 
   const handleQuickReply = (reply) => {
@@ -706,21 +706,15 @@ const AIChatBot = () => {
         <div ref={messagesContainerRef} className={`${styles.messages} ${messages.length === 1 ? styles.welcomeState : ''}`}>
           {messages.length === 1 ? (
             <div className={styles.welcomeWrapper}>
-              <div className={styles.welcomeAvatar}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                </svg>
+              <div className={`${styles.message} ${styles.botMessage}`}>
+                <div className={styles.messageText}>{messages[0].text}</div>
               </div>
-              <div
-                className={styles.messageText}
-                dangerouslySetInnerHTML={{ __html: messages[0].text }}
-              ></div>
               <div className={styles.welcomeSuggestions}>
                 {quickReplies.map((reply, index) => (
                   <button
                     key={index}
                     onClick={() => handleQuickReply(reply)}
-                    className={styles.suggestionButton}
+                    className={styles.quickReplyButton}
                     disabled={isLoading}
                   >
                     {reply}
