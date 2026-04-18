@@ -707,7 +707,7 @@ const AIChatBot = () => {
           {messages.length === 1 ? (
             <div className={styles.welcomeWrapper}>
               <div className={`${styles.message} ${styles.botMessage}`}>
-                <div className={styles.messageText}>{messages[0].text}</div>
+                <div className={styles.messageText} dangerouslySetInnerHTML={{__html: messages[0].text}}></div>
               </div>
               <div className={styles.welcomeSuggestions}>
                 {quickReplies.map((reply, index) => (
