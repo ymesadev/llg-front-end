@@ -9,6 +9,10 @@ body[data-article-page="true"] [data-floating-cta] {
   box-sizing: border-box;
 }
 
+html, body {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   font-family: var(--font-work-sans), "Work Sans", serif;
