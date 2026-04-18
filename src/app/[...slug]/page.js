@@ -332,12 +332,91 @@ function extractFaqSchema(blocks) {
   let currentQ = null;
   let currentA = [];
 
+  function pushCurrent() {
+    if (currentQ) {
+      const answer = currentA.join(" ").trim();
+      if (answer) faqItems.push({ q: currentQ, a: answer });
+      currentQ = null;
+      currentA = [];
+    }
+  }
+
+  // Strip HTML tags, decode common entities
+  function stripHtml(s) {
+    return s
+      .replace(/<br\s*\/?>/gi, " ")
+      .replace(/<[^>]+>/g, "")
+      .replace(/&amp;/g, "&")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&quot;/g, '"')
+      .replace(/&#x27;/g, "'")
+      .replace(/&rsquo;/g, "\u2019")
+      .replace(/&mdash;/g, "\u2014")
+      .replace(/&ndash;/g, "\u2013")
+      .replace(/&nbsp;/g, " ")
+      .trim();
+  }
+
+  // Clean markdown formatting from a string
+  function cleanMd(s) {
+    return s
+      .replace(/\*\*|__/g, "")
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+      .trim();
+  }
+
+  // Detect a question line from various FAQ formats.
+  // Returns { q, inlineAnswer } or null.
+  function matchQuestion(line) {
+    const trimmed = line.trim();
+    // Skip FAQ section headers
+    if (/Frequently Asked Questions|^#{1,4}\s*\**\s*FAQ\b|Common Questions/i.test(trimmed)) return null;
+    // Format 1: Markdown H2-H4 with Q: prefix — ## **Q: Question?**
+    const mdQPrefix = trimmed.match(/^#{2,4}\s*\**Q:\s*(.+?)\**\s*$/);
+    if (mdQPrefix) {
+      return { q: cleanMd(mdQPrefix[1]) };
+    }
+    // Format 1b: Markdown H3/H4 — ### **1. Q** or ### **Q** or ### Q
+    const mdH3 = trimmed.match(/^#{3,4}\s*\**(?:\d+\.\s*)?(.+?)\**\s*$/);
+    if (mdH3) {
+      const q = cleanMd(mdH3[1]).replace(/\??\s*$/, "?");
+      if (q.includes("?")) return { q };
+      if (/^(how|what|why|when|where|who|can|does|do|is|are|should|will|could|would|which)\b/i.test(q)) return { q };
+    }
+    // Format 2: HTML <h3>Question</h3>
+    const htmlH3 = trimmed.match(/<h3[^>]*>(.*?)<\/h3>/i);
+    if (htmlH3) {
+      const q = stripHtml(htmlH3[1]);
+      if (q.length > 10 && q.length < 300) return { q };
+    }
+    // Format 3: Numbered list — 1. **Question** - Answer
+    const numList = trimmed.match(/^\d+\.\s*\*\*(.+?)\*\*\s*[-\u2013\u2014]?\s*(.*)$/);
+    if (numList) {
+      const q = numList[1].trim();
+      if (q.includes("?") || /^(how|what|why|when|where|who|can|does|do|is|are|should)\b/i.test(q)) {
+        return { q, inlineAnswer: numList[2] ? cleanMd(numList[2]) : null };
+      }
+    }
+    // Format 4: Bold Q/A — **Q: Question?** or **Question?**
+    const boldQ = trimmed.match(/^\*\*(?:Q:\s*)?(.+?\?)\*\*\s*$/);
+    if (boldQ) {
+      return { q: cleanMd(boldQ[1]) };
+    }
+    // Format 5: HTML <p><strong>Question?</strong> — inline in paragraph
+    const htmlStrong = trimmed.match(/^<p>\s*<strong>(.*?\?)<\/strong>/i);
+    if (htmlStrong) {
+      return { q: stripHtml(htmlStrong[1]) };
+    }
+    return null;
+  }
+
   for (const block of blocks) {
     if (block.__component !== "shared.rich-text") continue;
     const body = block.body || "";
 
     if (!inFaqSection) {
-      if (body.includes("Frequently Asked Questions") || body.includes("## **FAQ")) {
+      if (body.includes("Frequently Asked Questions") || body.includes("## **FAQ") || body.includes("Common Questions")) {
         inFaqSection = true;
       } else {
         continue;
@@ -346,23 +425,35 @@ function extractFaqSchema(blocks) {
 
     const lines = body.split("\n");
     for (const line of lines) {
-      const qMatch = line.match(/^#{3,4}\s*\**\d+\.\s*(.+?)\**\s*$/);
-      if (qMatch) {
-        if (currentQ) {
-          faqItems.push({ q: currentQ, a: currentA.join(" ").trim() });
-          currentA = [];
-        }
-        currentQ = qMatch[1].replace(/\*\*/g, "").trim();
-      } else if (currentQ && line.trim() && !line.startsWith("#")) {
-        const clean = line
-          .replace(/\*\*|__/g, "")
-          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-          .trim();
-        if (clean) currentA.push(clean);
+      // Stop at Conclusion or next major section after FAQ (but not FAQ sub-questions)
+      const lt = line.trim();
+      if (inFaqSection && faqItems.length > 0 && (
+        (/^#{1,2}\s+(?!\*\*Q)/.test(lt) && !/Frequently Asked|FAQ|Common Questions/i.test(lt)) ||
+        (/^<h[12][^>]*>/i.test(lt) && !/Frequently Asked|FAQ|Common Questions/i.test(lt))
+      )) {
+        pushCurrent();
+        break;
+      }
+
+      const qResult = matchQuestion(line);
+      if (qResult) {
+        pushCurrent();
+        currentQ = qResult.q;
+        if (qResult.inlineAnswer) currentA.push(qResult.inlineAnswer);
+      } else if (currentQ && line.trim()) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("#")) continue;
+        // Handle HTML answer content
+        const htmlContent = stripHtml(trimmed);
+        const clean = cleanMd(htmlContent);
+        if (/^Frequently Asked|^FAQ$|^Common Questions/i.test(clean)) continue;
+        // Strip A: prefix from Q/A style
+        const withoutPrefix = clean.replace(/^A:\s*/i, "");
+        if (withoutPrefix) currentA.push(withoutPrefix);
       }
     }
-    if (inFaqSection && currentQ) {
-      faqItems.push({ q: currentQ, a: currentA.join(" ").trim() });
+    if (inFaqSection) {
+      pushCurrent();
       break;
     }
   }
