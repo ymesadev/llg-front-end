@@ -49,7 +49,9 @@ function getContextFromUrl(pathname) {
   }
 
   let opener;
-  if (insurer) {
+  if (/qualify/.test(slug)) {
+    opener = "I see you started the qualification form. Need help with any of the questions? I'm here.";
+  } else if (insurer) {
     opener = `Having trouble with ${insurer}? You're not alone — I can check if you have a case in about 30 seconds.`;
   } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
     opener = "Roof damage is one of the most common claims we handle. Has your insurance company responded yet?";
@@ -111,7 +113,7 @@ const AIChatBot = () => {
 
     // Check for welcome message update version
     const welcomeMessageVersion = localStorage.getItem('chatbot_welcome_version');
-    const currentVersion = '3.0'; // Context-aware welcome messages
+    const currentVersion = '3.1'; // Qualify-page-aware welcome messages
 
     // Load chat history
     const savedMessages = localStorage.getItem(`chatbot_messages_${storedUserId}`);
