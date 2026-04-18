@@ -271,6 +271,20 @@ const AIChatBot = () => {
     };
   }, [isOpen]);
 
+  // Mobile keyboard handling — resize chat when keyboard opens/closes
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport || !isOpen) return;
+    const handleResize = () => {
+      const chatbox = document.querySelector('[data-chatbox]');
+      if (chatbox) {
+        chatbox.style.height = `${window.visualViewport.height}px`;
+      }
+    };
+    window.visualViewport.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.visualViewport.removeEventListener('resize', handleResize);
+  }, [isOpen]);
+
   // Scroll-based engagement triggers
   useEffect(() => {
     let lastCheck = 0;
