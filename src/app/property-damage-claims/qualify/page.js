@@ -26,7 +26,10 @@ const CAL_NAMESPACE = "llg-fpp-booker";
 export default function PropertyDamageQualify() {
   const [cur, setCur] = useState(0);
   const [answers, setAnswers] = useState({});
-  const [contact, setContact] = useState({ name: "", phone: "", email: "", propertyAddress: "" });
+  const [contact, setContact] = useState({
+    name: "", phone: "", email: "",
+    propertyStreet: "", propertyCity: "", propertyState: "FL", propertyZip: "",
+  });
   const [result, setResult] = useState(null);
   const [partialSent, setPartialSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -103,7 +106,14 @@ export default function PropertyDamageQualify() {
   };
 
   // Q4: Contact info — fires partial webhook on submit, then advances to booking
-  const contactComplete = contact.name.trim() && contact.phone.trim() && contact.email.includes("@");
+  const contactComplete =
+    contact.name.trim() &&
+    contact.phone.trim() &&
+    contact.email.includes("@") &&
+    contact.propertyStreet.trim() &&
+    contact.propertyCity.trim() &&
+    contact.propertyState.trim() &&
+    contact.propertyZip.trim();
   const contactStartedRef = useRef(false);
   const trackContactStart = () => {
     if (!contactStartedRef.current) {
@@ -124,7 +134,11 @@ export default function PropertyDamageQualify() {
           name: contact.name,
           phone: contact.phone,
           email: contact.email,
-          propertyAddress: contact.propertyAddress,
+          propertyAddress: `${contact.propertyStreet}, ${contact.propertyCity}, ${contact.propertyState} ${contact.propertyZip}`,
+          propertyStreet: contact.propertyStreet,
+          propertyCity: contact.propertyCity,
+          propertyState: contact.propertyState,
+          propertyZip: contact.propertyZip,
           damageType: damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : null,
           caseType: "property-damage",
           partialLead: true,
@@ -193,7 +207,10 @@ export default function PropertyDamageQualify() {
           name: c.name || "",
           email: c.email || "",
           "callback-phone": c.phone || "",
-          "property-address": c.propertyAddress || "",
+          "property-street": c.propertyStreet || "",
+          "property-city": c.propertyCity || "",
+          "property-state": c.propertyState || "FL",
+          "property-zip": c.propertyZip || "",
           "damage-type": damageLabel,
         },
       });
@@ -222,7 +239,7 @@ export default function PropertyDamageQualify() {
 
   const restart = () => {
     setAnswers({}); setResult(null); setPartialSent(false); setBookingEmbedded(false);
-    setContact({ name: "", phone: "", email: "", propertyAddress: "" });
+    setContact({ name: "", phone: "", email: "", propertyStreet: "", propertyCity: "", propertyState: "FL", propertyZip: "" });
     setCur(0);
   };
 
@@ -358,9 +375,33 @@ export default function PropertyDamageQualify() {
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Property address</label>
-                  <input className={styles.input} placeholder="123 Main St, Miami, FL 33101" value={contact.propertyAddress}
-                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyAddress: e.target.value })); }} />
+                  <label className={styles.inputLabel}>Property street address</label>
+                  <input className={styles.input} placeholder="123 Main Street" value={contact.propertyStreet}
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyStreet: e.target.value })); }} />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label className={styles.inputLabel}>City</label>
+                  <input className={styles.input} placeholder="Miami" value={contact.propertyCity}
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyCity: e.target.value })); }} />
+                </div>
+                <div className={styles.inputGroup}>
+                  <label className={styles.inputLabel}>State</label>
+                  <select className={styles.input} value={contact.propertyState}
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyState: e.target.value })); }}>
+                    <option value="FL">FL — Florida</option>
+                    <option value="AL">AL</option>
+                    <option value="GA">GA</option>
+                    <option value="SC">SC</option>
+                    <option value="NC">NC</option>
+                    <option value="TN">TN</option>
+                    <option value="MS">MS</option>
+                    <option value="LA">LA</option>
+                  </select>
+                </div>
+                <div className={styles.inputGroup}>
+                  <label className={styles.inputLabel}>ZIP code</label>
+                  <input className={styles.input} placeholder="33101" inputMode="numeric" value={contact.propertyZip}
+                    onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, propertyZip: e.target.value })); }} />
                 </div>
               </div>
               <button className={`${styles.btn} ${styles.btnGold}`} onClick={handleContactSubmit}
