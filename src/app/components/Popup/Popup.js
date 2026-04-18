@@ -121,17 +121,19 @@ const Popup = () => {
           </div>
         </div>
       )}
-      {/* Floating SMS Button — hidden on article pages that have their own CTAs */}
+      {/* Floating Chat Button — hidden on article pages that have their own CTAs */}
       {!isArticlePage && (
-        <a
-          href="sms:8336574812"
+        <button
           className={styles.textUsButton}
-          data-floating-cta="text-us"
-          onClick={() => trackEvent("floating_sms_clicked")}
+          data-floating-cta="ask-question"
+          onClick={() => {
+            trackEvent("floating_chat_clicked");
+            window.dispatchEvent(new Event('openSmileyChat'));
+          }}
         >
-          <p>Text Us</p>
-          <TextUsPopup className={styles.textUsIcon} />
-        </a>
+          <p>Ask a Question</p>
+          <ChatUsPopup className={styles.textUsIcon} />
+        </button>
       )}
     </>
   );
