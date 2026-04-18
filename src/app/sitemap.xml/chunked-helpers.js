@@ -1,24 +1,65 @@
 import fs from 'fs';
 import path from 'path';
-import NOINDEX_SLUGS from '../utils/noindexSlugs';
 
 export const SITE  = 'https://www.louislawgroup.com';
-
-/**
- * Check if a URL should be excluded from the sitemap.
- * Matches explicit noindex list + dedup suffix pattern (-N where N >= 2).
- */
-function shouldExcludeFromSitemap(loc) {
-  const slug = loc.replace(SITE + '/', '').replace(/\/$/, '');
-  if (!slug) return false; // keep root
-  if (NOINDEX_SLUGS.has(slug)) return true;
-  // Dedup suffix: slug ending in -N where N is 2-999
-  const m = slug.match(/^(.+)-(\d{1,3})$/);
-  if (m && parseInt(m[2]) >= 2 && parseInt(m[2]) <= 999) return true;
-  return false;
-}
 const STRAPI = (process.env.NEXT_PUBLIC_STRAPI_API_URL || process.env.STRAPI_URL || 'https://login.louislawgroup.com').replace(/\/+$/,'');
 const TOKEN = process.env.STRAPI_API_TOKEN || '';
+
+// ── Redirect exclusion filter ──────────────────────────────────────
+// Prevents redirected/dead pages from appearing in the sitemap,
+// saving Google crawl budget. Loads once and caches in memory.
+let _redirectSet = null;
+let _redirectPrefixes = null;
+
+function loadRedirectExclusions() {
+  if (_redirectSet) return;
+  _redirectSet = new Set();
+  _redirectPrefixes = [];
+
+  const srcDir = path.join(process.cwd(), 'src');
+
+  // Load JSON redirect maps (key = source path)
+  for (const file of ['dead-page-redirects.json', 'pi-redirects.json']) {
+    try {
+      const raw = fs.readFileSync(path.join(srcDir, file), 'utf-8');
+      const map = JSON.parse(raw);
+      if (map && typeof map === 'object') {
+        for (const key of Object.keys(map)) {
+          _redirectSet.add((key || '/').replace(/\/+$/, '') || '/');
+        }
+      }
+    } catch (e) { /* file may not exist in dev */ }
+  }
+
+  // Parse wildcard redirect prefixes from next.config.mjs
+  try {
+    const configPath = path.join(process.cwd(), 'next.config.mjs');
+    const configContent = fs.readFileSync(configPath, 'utf-8');
+    for (const m of configContent.matchAll(/source:\s*'([^']+)'/g)) {
+      const src = m[1];
+      if (src === '/:slug*' || src === '/api/:path*') continue;
+      if (src.includes(':slug') || src.includes(':path') || src.includes('(')) {
+        const prefix = src.split(/[:([]/)[0];
+        if (prefix && prefix !== '/') _redirectPrefixes.push(prefix);
+      } else {
+        _redirectSet.add((src || '/').replace(/\/+$/, '') || '/');
+      }
+    }
+  } catch (e) { /* non-fatal */ }
+
+  console.log(`[sitemap] Loaded ${_redirectSet.size} exact + ${_redirectPrefixes.length} wildcard redirect exclusions`);
+}
+
+export function isRedirectSource(urlPath) {
+  loadRedirectExclusions();
+  const normalized = (urlPath || '/').replace(/\/+$/, '') || '/';
+  if (_redirectSet.has(normalized)) return true;
+  for (const prefix of _redirectPrefixes) {
+    if (normalized.startsWith(prefix)) return true;
+  }
+  return false;
+}
+// ── End redirect exclusion filter ──────────────────────────────────
 
 /**
  * Dynamically discover all static pages from the app directory
@@ -166,6 +207,7 @@ export async function collectAllUrls() {
       const val = pick(attrs, fields);
       const path = toLoc(MAP.find(m => m.endpoint === endpoint)?.prefix || '', val);
       if (!path) continue;
+      if (isRedirectSource(path)) continue; // skip redirected pages
       const lastmod = attrs.updatedAt || attrs.publishedAt || attrs.createdAt || undefined;
       all.push({ loc: `${SITE}${path}`, lastmod });
     }
@@ -178,6 +220,7 @@ export async function collectAllUrls() {
   const staticPages = getStaticPages();
   const TODAY = new Date().toISOString();
   for (const pagePath of staticPages) {
+    if (isRedirectSource(pagePath)) continue; // skip redirected pages
     const lastmod = pagePath === '/faq' ? TODAY : null;
     all.push({ loc: `${SITE}${pagePath}`, lastmod });
   }
@@ -185,113 +228,41 @@ export async function collectAllUrls() {
   return all;
 }
 
-// --- New optimized helpers ---
+// ── Cached filtered URL list ────────────────────────────────────────
+// Since we filter out redirects, offset-based pagination against Strapi
+// counts would be inaccurate. Instead, we cache the full filtered list
+// and slice from it. Cache refreshes every request (force-dynamic).
+let _cachedFilteredUrls = null;
+let _cacheTime = 0;
+const CACHE_TTL_MS = 5 * 60 * 1000; // 5 min in-process cache
+
+async function getFilteredUrls() {
+  const now = Date.now();
+  if (_cachedFilteredUrls && (now - _cacheTime) < CACHE_TTL_MS) {
+    return _cachedFilteredUrls;
+  }
+  _cachedFilteredUrls = await collectAllUrls();
+  _cacheTime = now;
+  return _cachedFilteredUrls;
+}
+
+// --- Optimized helpers (redirect-aware) ---
 export async function getEndpointCounts() {
-  // Fetch all endpoint counts in parallel
-  const results = await Promise.all(
-    MAP.map(async (m) => {
-      const res = await fetchPage(m.endpoint, 1, 1);
-      const total = res?.meta?.pagination?.total ?? 0;
-      return { endpoint: m.endpoint, count: Number(total || 0), fields: m.fields, prefix: m.prefix };
-    })
-  );
-  // Add dynamically discovered static pages count
-  const staticPages = getStaticPages();
-  results.push({ endpoint: 'static', count: staticPages.length, fields: [], prefix: '' });
-  return results;
+  // Return a single synthetic count based on the filtered list
+  const urls = await getFilteredUrls();
+  return [{ endpoint: 'all', count: urls.length, fields: [], prefix: '' }];
 }
 
 // collect urls for a flattened range [start, start+limit)
-export async function collectUrlsRange(startIndex, limit, fetchPageSize = 200) {
-  let remaining = limit;
-  let offset = startIndex; // 0-based
-  const out = [];
-
-  // root occupies index 0
-  if (offset === 0 && remaining > 0) {
-    out.push({ loc: `${SITE}/`, lastmod: null });
-    offset = 0; // subsequent logic will treat endpoints starting at index 0 after root
-    remaining -= 1;
-    // if limit was 1, we're done
-    if (remaining <= 0) return out;
-    // move offset to account for root already consumed
-    // subsequent endpoint offsets are zero-based relative to first endpoint
-    offset = Math.max(0, startIndex - 1);
-  } else {
-    // if startIndex > 0, adjust for root's presence
-    offset = Math.max(0, startIndex - 1);
-  }
-
-  const counts = await getEndpointCounts();
-
-  for (const c of counts) {
-    if (offset >= c.count) {
-      offset -= c.count;
-      continue;
-    }
-
-    // Handle static pages specially
-    if (c.endpoint === 'static') {
-      const staticPages = getStaticPages();
-      const need = Math.min(remaining, c.count - offset);
-      for (let i = offset; i < offset + need && i < staticPages.length; i++) {
-        out.push({ loc: `${SITE}${staticPages[i]}`, lastmod: null });
-        remaining -= 1;
-      }
-      offset = 0;
-      if (remaining <= 0) break;
-      continue;
-    }
-
-    // need items from this endpoint starting at offset, up to remaining or end
-    const need = Math.min(remaining, c.count - offset);
-    // determine which pages to fetch from this endpoint
-    const firstPage = Math.floor(offset / fetchPageSize) + 1;
-    const idxInFirstPage = offset % fetchPageSize;
-    const lastPage = Math.ceil((offset + need) / fetchPageSize) + firstPage - Math.floor(offset / fetchPageSize);
-    const totalPagesToFetch = lastPage - firstPage;
-
-    // Fetch all needed pages in parallel (batches of 5)
-    const allData = [];
-    for (let batchStart = firstPage; batchStart <= firstPage + totalPagesToFetch; batchStart += 5) {
-      const batchEnd = Math.min(batchStart + 5, firstPage + totalPagesToFetch + 1);
-      const batch = [];
-      for (let p = batchStart; p < batchEnd; p++) {
-        batch.push(fetchPage(c.endpoint, p, fetchPageSize));
-      }
-      const results = await Promise.all(batch);
-      for (const res of results) {
-        allData.push(...(res?.data || []));
-      }
-    }
-
-    // Extract items from fetched data
-    let fetched = 0;
-    for (let i = idxInFirstPage; i < allData.length && fetched < need; i++) {
-      const item = allData[i];
-      const attrs = item?.attributes ?? item ?? {};
-      const val = pick(attrs, c.fields);
-      const path = toLoc(c.prefix || '', val);
-      if (!path) continue;
-      const lastmod = attrs.updatedAt || attrs.publishedAt || attrs.createdAt || undefined;
-      out.push({ loc: `${SITE}${path}`, lastmod });
-      fetched += 1;
-      remaining -= 1;
-    }
-
-    // we've consumed offset in this endpoint
-    offset = 0;
-    if (remaining <= 0) break;
-  }
-
-  return out;
+export async function collectUrlsRange(startIndex, limit) {
+  const urls = await getFilteredUrls();
+  return urls.slice(startIndex, startIndex + limit);
 }
 
 export function toUrlsetXml(urls) {
   const head = `<?xml version="1.0" encoding="UTF-8"?>`;
   const open = `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
-  const filtered = urls.filter(u => !shouldExcludeFromSitemap(u.loc));
-  const body = filtered.map(u => {
+  const body = urls.map(u => {
     const last = u.lastmod ? `<lastmod>${new Date(u.lastmod).toISOString()}</lastmod>` : '';
     return `<url><loc>${u.loc}</loc>${last}<changefreq>weekly</changefreq><priority>0.7</priority></url>`;
   }).join('');
