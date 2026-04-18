@@ -50,29 +50,29 @@ function getContextFromUrl(pathname) {
 
   let opener;
   if (/qualify/.test(slug)) {
-    opener = "I see you started the qualification form. Need help with any of the questions? I'm here.";
+    opener = "Hey! I see you're checking if you qualify. Need a hand with anything? I'm right here.";
   } else if (insurer) {
-    opener = `Having trouble with ${insurer}? You're not alone — I can check if you have a case in about 30 seconds.`;
+    opener = `Ugh, ${insurer}. We deal with them all the time. What happened with your claim?`;
   } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
-    opener = "Roof damage is one of the most common claims we handle. Has your insurance company responded yet?";
+    opener = "Roof damage? That's a huge one for us. What's your insurance company doing about it?";
   } else if (/water[-_]?damage|flood|pipe/.test(slug)) {
-    opener = "Water damage can get expensive fast. Let me check if your insurance should be covering this.";
+    opener = "Water damage is the worst — it just keeps getting more expensive. Has your insurance responded yet?";
   } else if (/mold/.test(slug)) {
-    opener = "Mold damage is stressful, and insurance companies love to deny these. Want me to check if you qualify for help?";
+    opener = "Mold claims are tough, insurance companies fight these hard. What's going on with yours?";
   } else if (/hurricane|storm|wind/.test(slug)) {
-    opener = "Storm damage claims have strict deadlines in Florida. Has your insurance company made you an offer yet?";
+    opener = "Storm damage? There are deadlines on these in Florida so you're smart to look into it now. What happened?";
   } else if (/fire[-_]?damage|smoke|lightning/.test(slug)) {
-    opener = "Fire damage claims can be complex. I can check if you qualify for legal help — takes about 30 seconds.";
+    opener = "Fire damage is serious. Are you dealing with your insurance on this? Tell me what's going on.";
   } else if (/denied|denial|bad[-_]?faith|underpaid/.test(slug)) {
-    opener = "A denied claim doesn't mean it's over. Want me to check if you have options?";
+    opener = "A denial isn't the end of the road. What did they deny you for?";
   } else if (/ssdi|disability|social[-_]?security/.test(slug)) {
-    opener = "The disability process can be overwhelming. Want me to check if you qualify for help with your claim?";
+    opener = "Disability claims can be a process. Where are you at with yours — just starting or dealing with a denial?";
   } else if (/personal[-_]?injury|accident/.test(slug)) {
-    opener = "Dealing with an injury is hard enough without the legal stress. I can help you figure out your options.";
+    opener = "Sorry to hear about your situation. What happened? I can point you in the right direction.";
   } else if (/property[-_]?damage/.test(slug)) {
-    opener = "Dealing with a property damage claim? I can check if you qualify for legal help — takes 30 seconds.";
+    opener = "Property damage claim? Tell me what happened and I'll let you know if we can help.";
   } else {
-    opener = "Hi, I'm with Louis Law Group. Tell me what's going on and I'll let you know how we can help — property damage, personal injury, disability, or anything else.";
+    opener = "Hey! What's going on? Tell me a little about your situation and I'll see what we can do for you.";
   }
 
   return { opener, insurer };
@@ -123,7 +123,7 @@ const AIChatBot = () => {
 
     // Check for welcome message update version
     const welcomeMessageVersion = localStorage.getItem('chatbot_welcome_version');
-    const currentVersion = '4.0'; // Full practice area awareness + interactive welcome
+    const currentVersion = '4.1'; // Conversational tone — feels like texting someone you know
 
     // Load chat history
     const savedMessages = localStorage.getItem(`chatbot_messages_${storedUserId}`);
@@ -578,10 +578,10 @@ const AIChatBot = () => {
   };
 
   const quickReplies = [
-    "My insurance denied my claim",
-    "I was in a car accident",
-    "I need help with disability benefits",
-    "I have a question about my case",
+    "My insurance is giving me the runaround",
+    "I was in an accident",
+    "I need help with disability",
+    "Can I just ask a quick question?",
   ];
 
   const handleQuickReply = (reply) => {
