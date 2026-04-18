@@ -192,6 +192,32 @@ const AIChatBot = () => {
     }
   }, [isOpen]);
 
+  // Handle mobile keyboard resize via visualViewport API
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.visualViewport) return;
+    const handleResize = () => {
+      const chatbox = document.querySelector('[data-chatbox]');
+      if (chatbox && isOpen) {
+        chatbox.style.height = `${window.visualViewport.height}px`;
+      }
+    };
+    const handleScrollRestore = () => {
+      const chatbox = document.querySelector('[data-chatbox]');
+      if (chatbox && isOpen) {
+        chatbox.style.height = `${window.visualViewport.height}px`;
+      }
+    };
+    window.visualViewport.addEventListener('resize', handleResize);
+    window.visualViewport.addEventListener('scroll', handleScrollRestore);
+    return () => {
+      window.visualViewport.removeEventListener('resize', handleResize);
+      window.visualViewport.removeEventListener('scroll', handleScrollRestore);
+      // Reset height when closing
+      const chatbox = document.querySelector('[data-chatbox]');
+      if (chatbox) chatbox.style.height = '';
+    };
+  }, [isOpen]);
+
   // Prevent scroll propagation to parent document
   useEffect(() => {
     const messagesContainer = messagesContainerRef.current;
@@ -522,6 +548,7 @@ const AIChatBot = () => {
       {/* Chat Window */}
       <div
         className={`${styles.chatbox} ${isOpen ? styles.fadeIn : styles.fadeOut}`}
+        data-chatbox
       >
         {/* Header */}
         <div className={styles.header}>
@@ -554,27 +581,55 @@ const AIChatBot = () => {
         </div>
 
         {/* Messages */}
-        <div ref={messagesContainerRef} className={styles.messages}>
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`${styles.message} ${
-                message.sender === "user" ? styles.userMessage : styles.botMessage
-              } ${message.isError ? styles.errorMessage : ""}`}
-            >
+        <div ref={messagesContainerRef} className={`${styles.messages} ${messages.length === 1 ? styles.welcomeState : ''}`}>
+          {messages.length === 1 ? (
+            <div className={styles.welcomeWrapper}>
+              <div className={styles.welcomeAvatar}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
               <div
                 className={styles.messageText}
-                dangerouslySetInnerHTML={{ __html: message.text }}
+                dangerouslySetInnerHTML={{ __html: messages[0].text }}
               ></div>
-              <div className={styles.messageTime}>
-                {message?.timestamp ? new Date(message.timestamp)?.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }) : ''}
+              <div className={styles.welcomeSuggestions}>
+                {quickReplies.map((reply, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleQuickReply(reply)}
+                    className={styles.suggestionButton}
+                    disabled={isLoading}
+                  >
+                    {reply}
+                  </button>
+                ))}
               </div>
             </div>
-          ))}
-          
+          ) : (
+            <>
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`${styles.message} ${
+                    message.sender === "user" ? styles.userMessage : styles.botMessage
+                  } ${message.isError ? styles.errorMessage : ""}`}
+                >
+                  <div
+                    className={styles.messageText}
+                    dangerouslySetInnerHTML={{ __html: message.text }}
+                  ></div>
+                  <div className={styles.messageTime}>
+                    {message?.timestamp ? new Date(message.timestamp)?.toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }) : ''}
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
+
           {/* Loading indicator */}
           {isLoading && (
             <div className={`${styles.message} ${styles.botMessage}`}>
@@ -585,25 +640,9 @@ const AIChatBot = () => {
               </div>
             </div>
           )}
-          
+
           <div ref={messagesEndRef} />
         </div>
-
-        {/* Quick Replies */}
-        {messages.length === 1 && (
-          <div className={styles.suggestions}>
-            {quickReplies.map((reply, index) => (
-              <button
-                key={index}
-                onClick={() => handleQuickReply(reply)}
-                className={styles.suggestionButton}
-                disabled={isLoading}
-              >
-                {reply}
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* Input */}
         <div className={styles.inputContainer}>

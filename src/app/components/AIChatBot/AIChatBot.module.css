@@ -485,6 +485,61 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* Welcome state — vertically center when only welcome message is shown */
+.welcomeState {
+  justify-content: center;
+  align-items: center;
+}
+
+.welcomeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+  max-width: 20rem;
+  padding: 1.5rem 1rem;
+}
+
+.welcomeAvatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #173a77 0%, #1a2b49 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(23, 58, 119, 0.25);
+}
+
+.welcomeWrapper .messageText {
+  background: white;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+  border-radius: 1.25rem;
+  padding: 0.875rem 1.125rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  text-align: left;
+}
+
+.welcomeSuggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.welcomeSuggestions .suggestionButton {
+  white-space: normal;
+  text-align: center;
+}
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .container {
@@ -494,7 +549,7 @@
 
   .chatButton {
     right: 1rem;
-    bottom: 1rem;
+    bottom: 5rem;
     font-size: 0.8125rem;
     height: 2.25rem;
     padding: 0 0.875rem;
@@ -506,7 +561,7 @@
   }
 
   .chatButton.cookieBump {
-    bottom: 5.5rem;
+    bottom: 8rem;
   }
 
   .chatButton p {
@@ -515,17 +570,20 @@
 
   .chatbox {
     position: fixed;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
     height: 100vh;
-    height: 100dvh; /* Dynamic viewport height for mobile browsers */
+    height: 100dvh;
     max-width: 100%;
+    max-height: none;
     border-radius: 0;
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    padding-bottom: env(safe-area-inset-bottom);
+    background: white;
+    overflow: hidden;
   }
 
   .fadeIn {
@@ -540,9 +598,9 @@
     position: sticky;
     top: 0;
     z-index: 10;
-    padding: 1rem;
-    padding-top: max(1rem, env(safe-area-inset-top));
-    min-height: 3.5rem;
+    padding: 0.75rem 1rem;
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+    min-height: 3rem;
   }
 
   .title {
@@ -556,7 +614,8 @@
   .messages {
     flex: 1;
     min-height: 0;
-    padding: 1rem;
+    padding: 1.25rem 1rem;
+    background: #f8fafc;
     overscroll-behavior: contain;
     touch-action: pan-y;
     -webkit-overflow-scrolling: touch;
@@ -567,8 +626,8 @@
   }
 
   .messageText {
-    font-size: 0.875rem;
-    padding: 0.625rem 0.875rem;
+    font-size: 0.9375rem;
+    padding: 0.75rem 1rem;
   }
 
   .messageTime {
@@ -578,10 +637,11 @@
   .inputContainer {
     position: sticky;
     bottom: 0;
-    padding: 0.875rem 1rem;
-    padding-bottom: max(0.875rem, env(safe-area-inset-bottom));
+    padding: 0.75rem 1rem;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     background: white;
     border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
   }
 
   .inputWrapper {
@@ -590,7 +650,7 @@
 
   .input {
     padding: 0.625rem 0.875rem;
-    font-size: 0.875rem;
+    font-size: 1rem;
   }
 
   .sendButton {
@@ -599,21 +659,48 @@
   }
 
   .suggestions {
-    padding: 0.625rem 1rem;
+    padding: 0.75rem 1rem;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    border-top: none;
+    background: #f8fafc;
   }
 
   .suggestionButton {
-    padding: 0.4375rem 0.625rem;
-    font-size: 0.6875rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .welcomeWrapper {
+    padding: 2rem 1.5rem;
+    max-width: none;
+  }
+
+  .welcomeWrapper .messageText {
+    font-size: 1rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .welcomeSuggestions {
+    gap: 0.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .welcomeSuggestions .suggestionButton {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.8125rem;
+    border-radius: 1.25rem;
+    background: white;
+    border: 1px solid #cbd5e1;
+    color: #1a2b49;
+    font-weight: 500;
   }
 
   .clearButton,
   .closeButton {
-    width: 1.875rem;
-    height: 1.875rem;
-    font-size: 1.125rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1.25rem;
   }
 
   .chatToast {
@@ -624,8 +711,8 @@
   }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
+/* Dark mode support — disabled on mobile to keep chat light and inviting */
+@media (prefers-color-scheme: dark) and (min-width: 769px) {
   .chatbox {
     background: #1f2937;
     border-color: #374151;
