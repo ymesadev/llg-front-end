@@ -317,35 +317,9 @@ const AIChatBot = () => {
 
   const fetchCalSlots = async (lead) => {
     try {
-      const now = new Date();
-      const startTime = now.toISOString();
-      const endTime = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000).toISOString();
-
-      const res = await fetch(
-        `https://bookings.louislawgroup.com/api/v2/slots/available?startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}&eventTypeId=4`,
-        {
-          headers: {
-            'Authorization': 'Bearer cal_27d4a14aa24a92b4deb38bbc9ab89e0a22e5bd2a61b3c9e2',
-          },
-        }
-      );
-
-      if (res.status === 401 || res.status === 403) throw new Error('Cal.com auth error');
-      const resData = await res.json();
-      if (resData.status === 'error') throw new Error(resData.error?.message || 'Cal.com error');
-
-      // Flatten slots from all dates and pick the first 4
-      const allSlots = [];
-      const slots = resData?.data?.slots || resData?.slots || {};
-      for (const [date, daySlots] of Object.entries(slots)) {
-        if (Array.isArray(daySlots)) {
-          for (const slot of daySlots) {
-            allSlots.push(slot.time || slot);
-          }
-        }
-      }
-
-      const nextSlots = allSlots.slice(0, 4);
+      const res = await fetch('/api/cal-slots');
+      const data = await res.json();
+      const nextSlots = (data?.slots || []).slice(0, 4);
       if (nextSlots.length === 0) return;
 
       const slotButtons = nextSlots.map(t => {
