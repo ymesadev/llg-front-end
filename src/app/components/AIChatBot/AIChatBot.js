@@ -254,6 +254,16 @@ const AIChatBot = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isOpen]);
 
+  // Listen for "open chatbot" events from article page buttons
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setIsOpen(true);
+      setShowToast(false);
+    };
+    window.addEventListener('openSmileyChat', handleOpenChat);
+    return () => window.removeEventListener('openSmileyChat', handleOpenChat);
+  }, []);
+
   // Dwell time re-engagement
   useEffect(() => {
     const timer = setTimeout(() => {
