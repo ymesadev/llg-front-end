@@ -99,6 +99,22 @@ export default function PropertyDamageQualify() {
       answer: isFL ? "yes" : "no", disqualified: !isFL,
     });
     if (!isFL) { setTimeout(() => showDQ("out-of-state"), 320); return; }
+    // Fire partial/milestone webhook on Q3 (Florida) pass — captures funnel stage before booker
+    try {
+      const damageIdx = answersRef.current.damage_type_idx;
+      fetch("/api/qualify-intake-partial", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          caseType: "property-damage",
+          partialLead: true,
+          step: "florida_passed",
+          damageType: damageIdx !== undefined ? DAMAGE_LABELS[damageIdx] : null,
+          ownerConfirmed: true,
+          floridaConfirmed: true,
+        }),
+      }).catch(() => {});
+    } catch { /* silent */ }
     setTimeout(next, 320);
   };
 
@@ -246,7 +262,7 @@ export default function PropertyDamageQualify() {
           {/* Step 0: Damage type */}
           {cur === 0 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 1 of 3</div>
+              <div className={styles.stepLabel}>Question 1 of 4</div>
               <div className={styles.question}>What type of damage occurred?</div>
               <div className={styles.hint}>Select the primary cause of loss</div>
               <div className={styles.optsGrid}>
@@ -263,7 +279,7 @@ export default function PropertyDamageQualify() {
           {/* Step 1: Owner check */}
           {cur === 1 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 2 of 3</div>
+              <div className={styles.stepLabel}>Question 2 of 4</div>
               <div className={styles.question}>Are you the owner of the damaged property?</div>
               <div className={styles.hint}>Only property owners can initiate an insurance claim dispute</div>
               <div className={styles.opts}>
@@ -280,7 +296,7 @@ export default function PropertyDamageQualify() {
           {/* Step 2: Florida check */}
           {cur === 2 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 3 of 3</div>
+              <div className={styles.stepLabel}>Question 3 of 4</div>
               <div className={styles.question}>Is the damaged property located in Florida?</div>
               <div className={styles.hint}>We exclusively handle Florida property insurance claims</div>
               <div className={styles.opts}>
@@ -297,7 +313,7 @@ export default function PropertyDamageQualify() {
           {/* Step 3: BOOKING (final step — cal.com inline embed) */}
           {cur === TOTAL_STEPS && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Final Step — Book Your Free Consultation</div>
+              <div className={styles.stepLabel}>Question 4 of 4 — Book Your Free Consultation</div>
               <div className={styles.question}>You qualify. Pick a time that works for you.</div>
               <div className={styles.hint}>
                 Based on your answers, your claim appears eligible. Your selected damage type
