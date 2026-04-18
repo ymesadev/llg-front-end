@@ -156,4 +156,9 @@ public/*
 # allow package.json for nodemailer
 !package.json
 !package-lock.json
+
+# allow PI/SSDI redirect middleware
+!src/middleware.js
+!src/pi-redirects.json
+
 .vercel
