@@ -326,7 +326,7 @@ export default function PropertyDamageQualify() {
               <div className={styles.hint}>Only property owners can initiate an insurance claim dispute</div>
               <div className={styles.opts}>
                 <button className={`${styles.opt} ${answers.owner === true ? styles.selected : ""}`} onClick={() => handleOwner(true)}>
-                  <span className={styles.optKey}>A</span> Yes — I am the property owner
+                  <span className={styles.optKey}>A</span> Yes — I am the homeowner
                 </button>
                 <button className={`${styles.opt} ${answers.owner === false ? styles.selected : ""}`} onClick={() => handleOwner(false)}>
                   <span className={styles.optKey}>B</span> No — I am a tenant or other party
