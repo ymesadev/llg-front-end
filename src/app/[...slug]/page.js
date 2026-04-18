@@ -1408,14 +1408,14 @@ export default async function Page(props) {
                     </span>
                     <span className={styles.caseLawTopCtaBtn}>Submit for Review →</span>
                   </Link>
-                  <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerCta}>
+                  <OpenChatButton className={styles.askLawyerCta}>
                     <span className={styles.askLawyerCtaIcon}>💬</span>
                     <span className={styles.askLawyerCtaText}>
                       <strong>Ask A Lawyer</strong>{" "}
-                      Text us directly with questions about your claim.
+                      Ask us anything about your claim — we're online now.
                     </span>
-                    <span className={styles.askLawyerCtaBtn}>Text Us Now →</span>
-                  </a>
+                    <span className={styles.askLawyerCtaBtn}>Ask Us a Question →</span>
+                  </OpenChatButton>
                 </>
               ) : (
                 <UrgencyBanner articleType={articleType} />

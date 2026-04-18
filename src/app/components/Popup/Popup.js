@@ -104,15 +104,18 @@ const Popup = () => {
                 <p>Free Case Review!</p>
               </div>
               <div className={styles.chatButtonContainer}>
-                <a
-                  href="sms:8336574812"
+                <button
                   className={styles.chatButton}
-                  onClick={() => { handleMessageUs(); trackEvent("consultation_chat_clicked"); }}
+                  onClick={() => {
+                    handleMessageUs();
+                    trackEvent("consultation_chat_clicked");
+                    window.dispatchEvent(new Event('openSmileyChat'));
+                  }}
                 >
                   <p>Talk to a Lawyer</p>
                   <ChatUsPopup className={styles.icon} />
-                </a>
-               
+                </button>
+
               </div>
             </div>
           </div>

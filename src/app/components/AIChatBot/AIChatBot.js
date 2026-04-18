@@ -93,6 +93,16 @@ const AIChatBot = () => {
   const inputRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
+  // Detect article pages (which have their own sticky CTA)
+  const [hasStickyCta, setHasStickyCta] = useState(false);
+  useEffect(() => {
+    const check = () => setHasStickyCta(document.body.hasAttribute("data-article-page"));
+    check();
+    const observer = new MutationObserver(check);
+    observer.observe(document.body, { attributes: true, attributeFilter: ["data-article-page"] });
+    return () => observer.disconnect();
+  }, []);
+
   // Track cookie consent banner visibility so we can avoid overlap on mobile
   useEffect(() => {
     const check = () => setCookieVisible(!localStorage.getItem("cookieConsent"));
@@ -528,8 +538,8 @@ const AIChatBot = () => {
 
   return (
     <div className={`${styles.container} ${cookieVisible ? styles.cookieBump : ""}`} data-floating-cta="lets-chat">
-      {/* Toast notification */}
-      {showToast && !isOpen && (
+      {/* Toast notification — only on non-article pages */}
+      {!hasStickyCta && showToast && !isOpen && (
         <div className={styles.chatToast}>
           <button className={styles.toastDismiss} onClick={() => setShowToast(false)} aria-label="Dismiss">&times;</button>
           <p>{toastMessage || getContextFromUrl(pathname).opener}</p>
@@ -537,15 +547,17 @@ const AIChatBot = () => {
         </div>
       )}
 
-      {/* Chat Button */}
-      <button
-        onClick={toggleChat}
-        className={`${styles.chatButton} ${isOpen ? styles.buttonClicked : ""} ${cookieVisible ? styles.cookieBump : ""}`}
-        aria-label="Open chat"
-      >
-        <p>Let's Chat</p>
-        <ChatUsPopup />
-      </button>
+      {/* Only show floating button on non-article pages */}
+      {!hasStickyCta && (
+        <button
+          onClick={toggleChat}
+          className={`${styles.chatButton} ${isOpen ? styles.buttonClicked : ""} ${cookieVisible ? styles.cookieBump : ""}`}
+          aria-label="Open chat"
+        >
+          <p>Let's Chat</p>
+          <ChatUsPopup />
+        </button>
+      )}
 
       {/* Chat Window */}
       <div
