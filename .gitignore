@@ -95,10 +95,6 @@ public/*
 !src/app/components/FPPChecker/
 !src/app/components/FPPChecker/**
 
-# allow Ask AI widget
-!src/app/components/AskAI/
-!src/app/components/AskAI/**
-
 # allow OpenReplay session tracking
 !src/app/components/OpenReplay/
 !src/app/components/OpenReplay/**
@@ -141,24 +137,13 @@ public/*
 !src/app/case-law-updates/
 !src/app/case-law-updates/**
 
-# allow water damage lawyer florida landing page
-!src/app/water-damage-lawyer-florida/
-!src/app/water-damage-lawyer-florida/**
-
-# allow roof damage lawyer florida landing page
-!src/app/roof-damage-lawyer-florida/
-!src/app/roof-damage-lawyer-florida/**
-
-# allow catch-all slug page (hub link changes)
-!src/app/[...slug]/
-!src/app/[...slug]/**
-
 # allow package.json for nodemailer
 !package.json
 !package-lock.json
 
-# allow PI/SSDI redirect middleware
+# allow PI/SSDI redirect middleware + dead page redirects
 !src/middleware.js
 !src/pi-redirects.json
+!src/dead-page-redirects.json
 
 .vercel
