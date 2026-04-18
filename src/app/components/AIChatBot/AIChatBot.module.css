@@ -485,7 +485,7 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
-/* Mobile Responsive */
+/* ═══ Mobile: Bottom Sheet Chat ═══ */
 @media (max-width: 768px) {
   .container {
     right: 1rem;
@@ -498,9 +498,9 @@
     font-size: 0.8125rem;
     height: 2.25rem;
     padding: 0 0.875rem;
+    z-index: 9998;
   }
 
-  /* Push button above cookie consent banner on mobile */
   .container.cookieBump {
     bottom: 8rem;
   }
@@ -513,42 +513,65 @@
     font-size: 0.875rem;
   }
 
+  /* Overlay behind the bottom sheet — tap to close */
+  .chatOverlay {
+    display: block;
+  }
+
+  /* Bottom sheet — 75% height, rounded top corners */
   .chatbox {
     position: fixed;
-    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
+    top: auto;
     width: 100%;
-    height: 100%;
+    height: 75vh;
     max-width: 100%;
-    max-height: none;
-    border-radius: 0;
-    opacity: 0;
+    max-height: 75vh;
+    border-radius: 1.25rem 1.25rem 0 0;
     transform: translateY(100%);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    opacity: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     background: white;
     overflow: hidden;
+    box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.15);
   }
 
   .fadeIn {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
   }
 
   .fadeOut {
-    opacity: 0;
     transform: translateY(100%);
+    opacity: 1;
     pointer-events: none;
+  }
+
+  /* Drag handle at top of sheet */
+  .dragHandle {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0 0.25rem;
+    background: white;
+    border-radius: 1.25rem 1.25rem 0 0;
+    flex-shrink: 0;
+    cursor: grab;
+  }
+
+  .dragBar {
+    width: 2.5rem;
+    height: 0.25rem;
+    background: #d1d5db;
+    border-radius: 0.125rem;
   }
 
   .header {
     flex-shrink: 0;
-    z-index: 10;
-    padding: 0.75rem 1rem;
-    padding-top: max(0.75rem, env(safe-area-inset-top));
+    padding: 0.5rem 1rem 0.75rem;
   }
 
   .title {
@@ -563,7 +586,7 @@
     flex: 1;
     min-height: 0;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 0.75rem 1rem;
     background: #f8fafc;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
@@ -600,24 +623,20 @@
 
   .inputContainer {
     flex-shrink: 0;
-    padding: 0.75rem 1rem;
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    padding: 0.625rem 1rem;
+    padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
     background: white;
     border-top: 1px solid #e5e7eb;
   }
 
-  .inputWrapper {
-    padding: 0.25rem;
-  }
-
   .input {
-    padding: 0.75rem 1rem;
-    font-size: 1rem; /* 16px prevents iOS zoom on focus */
+    padding: 0.625rem 0.875rem;
+    font-size: 1rem;
   }
 
   .sendButton {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
   }
 
   .clearButton,
@@ -635,4 +654,26 @@
   }
 }
 
-/* Dark mode DISABLED for chat — always light for trust and readability */
+/* Overlay — hidden on desktop, shown on mobile when chat is open */
+.chatOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9998;
+  animation: overlayFadeIn 0.3s ease;
+}
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Drag handle — hidden on desktop */
+.dragHandle {
+  display: none;
+}
+
+.dragBar {
+  display: none;
+}

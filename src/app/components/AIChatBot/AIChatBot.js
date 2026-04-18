@@ -586,11 +586,25 @@ const AIChatBot = () => {
         </button>
       )}
 
+      {/* Overlay — tap to close on mobile */}
+      {isOpen && (
+        <div
+          className={styles.chatOverlay}
+          onClick={() => setIsOpen(false)}
+          aria-label="Close chat"
+        />
+      )}
+
       {/* Chat Window */}
       <div
         className={`${styles.chatbox} ${isOpen ? styles.fadeIn : styles.fadeOut}`}
         data-chatbox
       >
+        {/* Drag handle — mobile bottom sheet indicator */}
+        <div className={styles.dragHandle} onClick={() => setIsOpen(false)}>
+          <div className={styles.dragBar} />
+        </div>
+
         {/* Header */}
         <div className={styles.header}>
           <div className={styles.headerInfo}>
