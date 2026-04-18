@@ -15,7 +15,9 @@ export async function POST(request) {
       utm_campaign,
       utm_content,
       utm_term,
-      referrer
+      referrer,
+      article_slug,
+      page_title
     } = await request.json();
 
     // Validate input
@@ -34,7 +36,7 @@ export async function POST(request) {
     }
 
     // N8N webhook URL - configured for Louis Law Group
-    const n8nWebhookUrl = 'https://dev-n8n.louislawgroup.com/webhook/chatbot';
+    const n8nWebhookUrl = 'https://smiley.louislawgroup.com/webhook/chatbot';
 
     // Prepare payload for n8n with attribution data
     const payload = {
@@ -57,6 +59,8 @@ export async function POST(request) {
       utm_content: utm_content || null,
       utm_term: utm_term || null,
       referrer: referrer || null,
+      article_slug: article_slug || null,
+      page_title: page_title || null,
     };
 
     // Log the payload being sent to N8N

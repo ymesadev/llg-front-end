@@ -30,6 +30,52 @@ function normalizeMessageText(text) {
   }
 }
 
+const INSURER_MAP = {
+  'allstate': 'Allstate', 'state-farm': 'State Farm', 'castle-key': 'Castle Key',
+  'kin-insurance': 'Kin Insurance', 'american-integrity': 'American Integrity',
+  'citizens': 'Citizens Property Insurance', 'universal-property': 'Universal Property & Casualty',
+  'heritage-insurance': 'Heritage Insurance', 'tower-hill': 'Tower Hill',
+  'manatee': 'Manatee Insurance', 'great-lakes': 'Great Lakes Insurance',
+  'american-home-shield': 'American Home Shield', 'homeowners-choice': 'Homeowners Choice',
+  'security-first': 'Security First', 'fednat': 'FedNat',
+};
+
+function getContextFromUrl(pathname) {
+  const slug = (pathname || '').toLowerCase().replace(/^\//, '');
+
+  let insurer = null;
+  for (const [key, name] of Object.entries(INSURER_MAP)) {
+    if (slug.includes(key)) { insurer = name; break; }
+  }
+
+  let opener;
+  if (insurer) {
+    opener = `Having trouble with ${insurer}? You're not alone — I can check if you have a case in about 30 seconds.`;
+  } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
+    opener = "Roof damage is one of the most common claims we handle. Has your insurance company responded yet?";
+  } else if (/water[-_]?damage|flood|pipe/.test(slug)) {
+    opener = "Water damage can get expensive fast. Let me check if your insurance should be covering this.";
+  } else if (/mold/.test(slug)) {
+    opener = "Mold damage is stressful, and insurance companies love to deny these. Want me to check if you qualify for help?";
+  } else if (/hurricane|storm|wind/.test(slug)) {
+    opener = "Storm damage claims have strict deadlines in Florida. Has your insurance company made you an offer yet?";
+  } else if (/fire[-_]?damage|smoke|lightning/.test(slug)) {
+    opener = "Fire damage claims can be complex. I can check if you qualify for legal help — takes about 30 seconds.";
+  } else if (/denied|denial|bad[-_]?faith|underpaid/.test(slug)) {
+    opener = "A denied claim doesn't mean it's over. Want me to check if you have options?";
+  } else if (/ssdi|disability|social[-_]?security/.test(slug)) {
+    opener = "The disability process can be overwhelming. Want me to check if you qualify for help with your claim?";
+  } else if (/personal[-_]?injury|accident/.test(slug)) {
+    opener = "Dealing with an injury is hard enough without the legal stress. I can help you figure out your options.";
+  } else if (/property[-_]?damage/.test(slug)) {
+    opener = "Dealing with a property damage claim? I can check if you qualify for legal help — takes 30 seconds.";
+  } else {
+    opener = "Hi — I'm here if you have questions. How can I help?";
+  }
+
+  return { opener, insurer };
+}
+
 const AIChatBot = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +85,8 @@ const AIChatBot = () => {
   const [conversationId, setConversationId] = useState(null);
   const [userId, setUserId] = useState(null);
   const [cookieVisible, setCookieVisible] = useState(false);
-  const [isArticlePage, setIsArticlePage] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -50,15 +97,6 @@ const AIChatBot = () => {
     check();
     window.addEventListener("consentUpdated", check);
     return () => window.removeEventListener("consentUpdated", check);
-  }, []);
-
-  // Hide floating chat button on article pages that have their own CTAs
-  useEffect(() => {
-    const check = () => setIsArticlePage(document.body.hasAttribute("data-article-page"));
-    check();
-    const observer = new MutationObserver(check);
-    observer.observe(document.body, { attributes: true, attributeFilter: ["data-article-page"] });
-    return () => observer.disconnect();
   }, []);
 
   // Generate unique user ID and load chat history
@@ -73,7 +111,7 @@ const AIChatBot = () => {
 
     // Check for welcome message update version
     const welcomeMessageVersion = localStorage.getItem('chatbot_welcome_version');
-    const currentVersion = '2.0'; // Updated version for new welcome message
+    const currentVersion = '3.0'; // Context-aware welcome messages
 
     // Load chat history
     const savedMessages = localStorage.getItem(`chatbot_messages_${storedUserId}`);
@@ -97,7 +135,7 @@ const AIChatBot = () => {
         setMessages([
           {
             id: 1,
-            text: normalizeMessageText("Hello, how can I assist you with your case"),
+            text: normalizeMessageText(getContextFromUrl(window.location.pathname).opener),
             sender: "bot",
             timestamp: new Date(),
           },
@@ -108,7 +146,7 @@ const AIChatBot = () => {
       setMessages([
         {
           id: 1,
-          text: normalizeMessageText("Hello, how can I assist you with your case"),
+          text: normalizeMessageText(getContextFromUrl(window.location.pathname).opener),
           sender: "bot",
           timestamp: new Date(),
         },
@@ -182,6 +220,53 @@ const AIChatBot = () => {
     };
   }, [isOpen]);
 
+  // Scroll-based engagement triggers
+  useEffect(() => {
+    let lastCheck = 0;
+    const handleScroll = () => {
+      const now = Date.now();
+      if (now - lastCheck < 200) return;
+      lastCheck = now;
+
+      const scrollable = document.body.scrollHeight - window.innerHeight;
+      if (scrollable <= 0) return;
+      const scrollPct = window.scrollY / scrollable;
+      const engagements = parseInt(sessionStorage.getItem('chatbot_engagements') || '0');
+
+      // 30% trigger
+      if (scrollPct > 0.3 && !isOpen && engagements === 0 && !sessionStorage.getItem('chatbot_30')) {
+        sessionStorage.setItem('chatbot_30', '1');
+        sessionStorage.setItem('chatbot_engagements', '1');
+        setToastMessage(null); // use default opener
+        setShowToast(true);
+      }
+
+      // 70% re-engagement
+      if (scrollPct > 0.7 && !isOpen && engagements === 1 && !sessionStorage.getItem('chatbot_70')) {
+        sessionStorage.setItem('chatbot_70', '1');
+        sessionStorage.setItem('chatbot_engagements', '2');
+        setToastMessage("Still reading? I can give you a quick answer about your specific situation if you want.");
+        setShowToast(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isOpen]);
+
+  // Dwell time re-engagement
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const engagements = parseInt(sessionStorage.getItem('chatbot_engagements') || '0');
+      if (!isOpen && engagements < 2) {
+        sessionStorage.setItem('chatbot_engagements', String(engagements + 1));
+        setToastMessage("Take your time — when you're ready, I can check if your claim qualifies. No commitment.");
+        setShowToast(true);
+      }
+    }, 180000); // 3 minutes
+    return () => clearTimeout(timer);
+  }, [isOpen]);
+
   const sendMessage = async (messageText) => {
     if (!messageText.trim() || isLoading) return;
 
@@ -237,6 +322,8 @@ const AIChatBot = () => {
           conversationId: conversationId,
           userId: userId,
           ...attributionData,
+          article_slug: window.location.pathname.replace(/^\//, ''),
+          page_title: document.title,
         }),
       });
 
@@ -380,7 +467,7 @@ const AIChatBot = () => {
     if (window.confirm('Are you sure you want to clear your chat history? This action cannot be undone.')) {
       const welcomeMessage = {
         id: 1,
-        text: "Hello, how can I assist you with your case",
+        text: getContextFromUrl(window.location.pathname).opener,
         sender: "bot",
         timestamp: new Date(),
       };
@@ -396,13 +483,22 @@ const AIChatBot = () => {
     }
   };
 
-  // Hide AIChatBot on live-chat page or article pages (which have their own CTAs)
-  if (pathname === "/live-chat" || isArticlePage) {
+  // Hide AIChatBot on live-chat page
+  if (pathname === "/live-chat") {
     return null;
   }
 
   return (
     <div className={`${styles.container} ${cookieVisible ? styles.cookieBump : ""}`} data-floating-cta="lets-chat">
+      {/* Toast notification */}
+      {showToast && !isOpen && (
+        <div className={styles.chatToast}>
+          <button className={styles.toastDismiss} onClick={() => setShowToast(false)} aria-label="Dismiss">&times;</button>
+          <p>{toastMessage || getContextFromUrl(pathname).opener}</p>
+          <button className={styles.toastReply} onClick={() => { setIsOpen(true); setShowToast(false); }}>Reply</button>
+        </div>
+      )}
+
       {/* Chat Button */}
       <button
         onClick={toggleChat}
