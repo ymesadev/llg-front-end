@@ -191,6 +191,62 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Service Areas Column */}
+          <div className={styles.column}>
+            <div className={styles.sectionHeader}>
+              <Link href="/property-damage-claims" className={styles.sectionLink}>
+                <h2>Service Areas</h2>
+              </Link>
+            </div>
+            <ul className={styles.navList}>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-fort-lauderdale" className={styles.navLink}>
+                  Fort Lauderdale
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-miami" className={styles.navLink}>
+                  Miami
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-west-palm-beach" className={styles.navLink}>
+                  West Palm Beach
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-attorney-boca-raton" className={styles.navLink}>
+                  Boca Raton
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-hollywood" className={styles.navLink}>
+                  Hollywood
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-pembroke-pines" className={styles.navLink}>
+                  Pembroke Pines
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-coral-springs" className={styles.navLink}>
+                  Coral Springs
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-hialeah" className={styles.navLink}>
+                  Hialeah
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-lawyer-homestead" className={styles.navLink}>
+                  Homestead
+                </Link>
+              </li>
+            </ul>
+          </div>
+
           {/* Español Column */}
           <div className={styles.column}>
             <div className={styles.sectionHeader}>

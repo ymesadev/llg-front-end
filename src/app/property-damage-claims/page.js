@@ -423,67 +423,6 @@ export default function PropertyDamageClaimsPage() {
         </div>
       </section>
 
-      {/* CITY PAGES — Hub & Spoke */}
-      <section className={styles.steps}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionEyebrow}>Serving All of South Florida</div>
-          <h2 className={styles.sectionTitle}>
-            Property Damage Lawyers <span className={styles.gold}>Near You</span>
-          </h2>
-          <p className={styles.sectionSubtitle}>
-            Louis Law Group represents property owners across South Florida.
-            Find a property damage attorney in your city.
-          </p>
-          <div className={styles.dayOneGrid}>
-            {[
-              { href: "/property-damage-lawyer-fort-lauderdale", city: "Fort Lauderdale" },
-              { href: "/property-damage-lawyer-miami", city: "Miami" },
-              { href: "/property-damage-lawyer-west-palm-beach", city: "West Palm Beach" },
-              { href: "/property-damage-attorney-boca-raton", city: "Boca Raton" },
-              { href: "/property-damage-lawyer-hollywood", city: "Hollywood" },
-              { href: "/property-damage-lawyer-pembroke-pines", city: "Pembroke Pines" },
-              { href: "/property-damage-lawyer-coral-springs", city: "Coral Springs" },
-              { href: "/property-damage-lawyer-hialeah", city: "Hialeah" },
-              { href: "/property-damage-lawyer-homestead", city: "Homestead" },
-            ].map((c) => (
-              <div key={c.city} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>📍</div>
-                <h3><Link href={c.href}>Property Damage Lawyer in {c.city}</Link></h3>
-                <p>Denied or underpaid property damage claim in {c.city}? Our attorneys fight insurance companies for homeowners across {c.city} and surrounding areas.</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* RELATED PRACTICE AREAS */}
-      <section className={styles.faq}>
-        <div className={styles.sectionInner}>
-          <div className={styles.sectionEyebrow}>Related Practice Areas</div>
-          <h2 className={styles.sectionTitle}>
-            More Ways We <span className={styles.gold}>Fight for You</span>
-          </h2>
-          <div className={styles.faqGrid}>
-            <div className={styles.faqItem}>
-              <h3 className={styles.faqQ}><Link href="/water-damage-lawyer-florida">Water Damage Lawyer Florida</Link></h3>
-              <p className={styles.faqA}>Pipe bursts, flooding, plumbing leaks, and storm water intrusion. We fight denied and underpaid water damage insurance claims statewide.</p>
-            </div>
-            <div className={styles.faqItem}>
-              <h3 className={styles.faqQ}><Link href="/roof-damage-lawyer-florida">Roof Damage Lawyer Florida</Link></h3>
-              <p className={styles.faqA}>Hurricane roof damage, wind damage, hail damage, and aging roof disputes. We maximize your roof damage insurance recovery.</p>
-            </div>
-            <div className={styles.faqItem}>
-              <h3 className={styles.faqQ}><Link href="/water-damage-restoration">Water Damage Restoration Claims</Link></h3>
-              <p className={styles.faqA}>Water damage restoration and mold remediation insurance disputes in Miami-Dade, Broward, and Palm Beach counties.</p>
-            </div>
-            <div className={styles.faqItem}>
-              <h3 className={styles.faqQ}><Link href="/ssdi-lawyers">SSDI Disability Lawyers</Link></h3>
-              <p className={styles.faqA}>Denied Social Security disability benefits? Our SSDI attorneys fight for your benefits at every stage of the process.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* FINAL CTA */}
       <section className={styles.finalCta}>
         <div className={styles.finalCtaInner}>
