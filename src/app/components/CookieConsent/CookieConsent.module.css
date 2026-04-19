@@ -10,7 +10,7 @@
     justify-content: space-around;
     align-items: center;
     font-size: 14px;
-    z-index: 9999;
+    z-index: 10002;
   }
   
   .cookieConsent p {

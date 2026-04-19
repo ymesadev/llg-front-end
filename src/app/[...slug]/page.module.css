@@ -923,7 +923,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 10001;
+    z-index: 10000;
     background: #1a2b49;
     border-top: 2px solid #c9a84c;
   }
@@ -978,7 +978,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 10001;
+    z-index: 10000;
     background: #1a2b49;
     border-top: 2px solid #c9a84c;
     padding: 0.75rem 2rem;
