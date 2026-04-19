@@ -1739,7 +1739,7 @@ export default async function Page(props) {
           )}
           {/* Sticky mobile CTA */}
           <div className={styles.stickyMobileCta}>
-            <Link href="/live-chat" className={styles.stickyCall}>{articleLang === "es" ? "Pregúntenos en Vivo" : "Ask Us a Question Live"}</Link>
+            <OpenChatButton className={styles.stickyCall}>{articleLang === "es" ? "Pregúntenos en Vivo" : "Ask Us a Question Live"}</OpenChatButton>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →"}</Link>
           </div>
           {/* Sticky desktop CTA — all article types */}
@@ -1751,9 +1751,9 @@ export default async function Page(props) {
                 : articleType === "personal-injury" ? "Injured? Find out if you have a case — free, no obligation."
                 : "Insurance claim issues? Find out if you have a case — free, no obligation."}
             </span>
-            <Link href="/live-chat" className={styles.stickyDesktopBtn}>
+            <OpenChatButton className={styles.stickyDesktopBtn}>
               {articleLang === "es" ? "Pregúntenos en Vivo →" : "Ask Us a Question Live →"}
-            </Link>
+            </OpenChatButton>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyDesktopBtn}>
               {articleLang === "es" ? "Vea Si Califica →" : "Check Your Eligibility →"}
             </Link>
