@@ -73,11 +73,21 @@ export default function PropertyDamageQualify() {
     trackEvent("qualify_step_answered", {
       case_type: "property-damage", step: 0, step_name: "damage_type", answer: DAMAGE_LABELS[idx],
     });
+    // Retargeting pixels — Step 1 (damage type selected)
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep1Complete", { damage_type: DAMAGE_LABELS[idx] });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_step_1", { event_category: "Qualifier", damage_type: DAMAGE_LABELS[idx] });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_step_complete", step: 1, step_name: "damage_type", damage_type: DAMAGE_LABELS[idx] });
     setTimeout(next, 320);
   };
 
   const showDQ = (reason) => {
     trackEvent("qualify_disqualified", { case_type: "property-damage", reason });
+    // Retargeting pixels — Disqualified
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyDQ", { reason });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_dq", { event_category: "Qualifier", reason });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_dq", reason });
     setResult({ dq: true, reason });
     setCur(TOTAL_STEPS + 1);
   };
@@ -88,6 +98,11 @@ export default function PropertyDamageQualify() {
       case_type: "property-damage", step: 1, step_name: "owner_check",
       answer: isOwner ? "yes" : "no", disqualified: !isOwner,
     });
+    // Retargeting pixels — Step 2 (owner confirmation)
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep2Complete", { is_owner: isOwner ? "yes" : "no" });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_step_2", { event_category: "Qualifier", is_owner: isOwner ? "yes" : "no" });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_step_complete", step: 2, step_name: "owner_check", is_owner: isOwner ? "yes" : "no" });
     if (!isOwner) { setTimeout(() => showDQ("not-owner"), 320); return; }
     setTimeout(next, 320);
   };
@@ -98,6 +113,11 @@ export default function PropertyDamageQualify() {
       case_type: "property-damage", step: 2, step_name: "florida_check",
       answer: isFL ? "yes" : "no", disqualified: !isFL,
     });
+    // Retargeting pixels — Step 3 (Florida check)
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep3Complete", { in_florida: isFL ? "yes" : "no" });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_step_3", { event_category: "Qualifier", in_florida: isFL ? "yes" : "no" });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_step_complete", step: 3, step_name: "florida_check", in_florida: isFL ? "yes" : "no" });
     if (!isFL) { setTimeout(() => showDQ("out-of-state"), 320); return; }
     setTimeout(next, 320);
   };
@@ -113,6 +133,11 @@ export default function PropertyDamageQualify() {
       case_type: "property-damage",
       damage_type: damageLabel,
     });
+    // Retargeting pixels — Booking shown (qualified, sees cal.com)
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyBookingShown", { damage_type: damageLabel });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_booking_shown", { event_category: "Qualifier", damage_type: damageLabel });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_booking_shown", damage_type: damageLabel });
 
     (function (C, A, L) {
       let p = function (a, ar) { a.q.push(ar); };
@@ -205,6 +230,19 @@ export default function PropertyDamageQualify() {
               <div className={styles.dqBadge}>Disqualified</div>
               <div className={styles.resultTitle}>{titles[result.reason]}</div>
               <div className={styles.resultSub}>{msgs[result.reason]}</div>
+              <div className={styles.resultSub} style={{ marginTop: "12px", fontWeight: 500 }}>
+                {result.reason === "not-owner"
+                  ? "Are you a spouse, family member, or authorized representative? Call us to discuss your situation."
+                  : "We may be able to help or refer you to a qualified attorney in your state. Call us."}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "16px", alignItems: "center" }}>
+                <a href="tel:+18336574812" className={styles.restartBtn} style={{ textDecoration: "none", textAlign: "center" }}>
+                  Call (833) 657-4812
+                </a>
+                <button className={styles.restartBtn} onClick={() => { window.dispatchEvent(new Event('openSmileyChat')); }}>
+                  Chat with us
+                </button>
+              </div>
               <button className={styles.restartBtn} onClick={restart}>← Start over</button>
             </div>
           </div>
@@ -233,7 +271,7 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {cur === 0 && (
+          {cur <= TOTAL_STEPS && (
             <div className={styles.trustBar}>
               <span>Free consultation</span>
               <span className={styles.trustDot} />
@@ -327,7 +365,13 @@ export default function PropertyDamageQualify() {
       </div>
 
       <div className={styles.phoneCta}>
-        Prefer to talk? Call <a href="tel:8336574812">(833) 657-4812</a> for a free case review
+        Prefer to talk? Call <a href="tel:8336574812" onClick={() => {
+          if (typeof window !== 'undefined' && window.gtag) {
+            window.gtag('event', 'phone_click', { event_category: 'Conversion', event_label: 'qualifier_page' });
+          }
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({ event: 'phone_click', page: '/property-damage-claims/qualify' });
+        }}>(833) 657-4812</a> for a free case review
       </div>
     </div>
   );

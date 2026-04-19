@@ -112,7 +112,7 @@ const Popup = () => {
                     window.dispatchEvent(new Event('openSmileyChat'));
                   }}
                 >
-                  <p>Talk to a Lawyer</p>
+                  <p>Chat with Us</p>
                   <ChatUsPopup className={styles.icon} />
                 </button>
 

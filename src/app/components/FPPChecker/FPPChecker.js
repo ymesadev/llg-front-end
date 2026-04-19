@@ -435,11 +435,11 @@ export default function FPPChecker() {
           </h3>
           <p className={styles.ctaDesc}>Free case review. No fees unless we win. Licensed in Florida, DC, TX, and CO.</p>
           <div className={styles.ctaButtons}>
-            <a href="https://louislawgroup.com/contact" target="_blank" rel="noopener noreferrer" className={styles.ctaBtnPrimary}>
-              Free case review →
+            <a href="/property-damage-claims/qualify" className={styles.ctaBtnPrimary}>
+              Check if you qualify →
             </a>
-            <a href="tel:+19545127069" className={styles.ctaBtnSecondary}>
-              Call us now
+            <a href="tel:+18336574812" className={styles.ctaBtnSecondary}>
+              Call (833) 657-4812
             </a>
           </div>
         </div>
