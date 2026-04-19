@@ -78,6 +78,24 @@ function getContextFromUrl(pathname) {
   return { opener, insurer };
 }
 
+// Lightweight analytics: pushes to dataLayer + OpenReplay + beacons to n8n
+function trackChat(event, data = {}) {
+  if (typeof window === 'undefined') return;
+  const payload = { event, page: window.location.pathname, ts: Date.now(), ...data };
+  // GA4 via dataLayer
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(payload);
+  // OpenReplay
+  if (window.__or_event) try { window.__or_event(event, payload); } catch {}
+  // Beacon to n8n for learning pipeline (fire-and-forget)
+  try {
+    navigator.sendBeacon(
+      'https://smiley.louislawgroup.com/webhook/chat-analytics',
+      JSON.stringify(payload)
+    );
+  } catch {}
+}
+
 const AIChatBot = () => {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -292,8 +310,9 @@ const AIChatBot = () => {
       if (scrollPct > 0.3 && !isOpen && engagements === 0 && !sessionStorage.getItem('chatbot_30')) {
         sessionStorage.setItem('chatbot_30', '1');
         sessionStorage.setItem('chatbot_engagements', '1');
-        setToastMessage(null); // use default opener
+        setToastMessage(null);
         setShowToast(true);
+        trackChat('toast_shown', { trigger: 'scroll_30', scroll_pct: 30 });
       }
 
       // 70% re-engagement
@@ -302,6 +321,7 @@ const AIChatBot = () => {
         sessionStorage.setItem('chatbot_engagements', '2');
         setToastMessage("Still reading? I can give you a quick answer about your specific situation if you want.");
         setShowToast(true);
+        trackChat('toast_shown', { trigger: 'scroll_70', scroll_pct: 70 });
       }
     };
 
@@ -314,6 +334,8 @@ const AIChatBot = () => {
     const handleOpenChat = () => {
       setIsOpen(true);
       setShowToast(false);
+      if (!sessionStorage.getItem('chat_start_ts')) sessionStorage.setItem('chat_start_ts', String(Date.now()));
+      trackChat('chat_opened', { trigger: 'cta_button', article_slug: window.location.pathname });
     };
     window.addEventListener('openSmileyChat', handleOpenChat);
     return () => window.removeEventListener('openSmileyChat', handleOpenChat);
@@ -379,6 +401,11 @@ const AIChatBot = () => {
     const bookingUrl = `https://bookings.louislawgroup.com/pierre-louislawgroup.com/property-insurance-claim-consultation?${params.toString()}&date=${encodeURIComponent(slot.time)}`;
     window.open(bookingUrl, '_blank', 'noopener,noreferrer');
 
+    trackChat('booking_slot_clicked', {
+      slot_label: slot.label,
+      damage_type: lead?.damage || null,
+    });
+
     // Confirm in chat
     const confirmMsg = {
       id: Date.now() + 3,
@@ -411,22 +438,11 @@ const AIChatBot = () => {
     setInputMessage("");
     setIsLoading(true);
 
-    // Track message sent for marketing
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'message_sent', {
-        event_category: 'Chat',
-        event_label: 'User Message',
-        value: 1
-      });
-    }
-
-    // Track chatbot interaction in OpenReplay
-    if (typeof window !== 'undefined' && window.__or_event) {
-      window.__or_event('chatbot_message', {
-        page: window.location.pathname,
-        message_length: messageText.trim().length,
-      });
-    }
+    trackChat('chat_message_sent', {
+      message_num: messages.filter(m => m.sender === 'user').length + 1,
+      message_length: messageText.trim().length,
+      is_quick_reply: quickReplies.includes(messageText.trim()),
+    });
 
     try {
       // Get attribution data from localStorage
@@ -507,20 +523,18 @@ const AIChatBot = () => {
           fetchCalSlots(data.lead);
         }
 
-        // Track bot response for marketing
-        if (typeof window !== 'undefined' && window.gtag) {
-          window.gtag('event', 'message_received', {
-            event_category: 'Chat',
-            event_label: 'Bot Response',
-            value: 1
+        trackChat('chat_response_received', {
+          message_num: messages.filter(m => m.sender === 'bot').length + 1,
+          qualified: !!data.qualified,
+        });
+
+        if (data.qualified) {
+          trackChat('lead_qualified', {
+            damage_type: data.lead?.damage || 'unknown',
+            insurer: data.lead?.insurer || null,
+            message_count: messages.length + 2,
+            time_to_qualify_sec: Math.floor((Date.now() - (parseInt(sessionStorage.getItem('chat_start_ts') || Date.now()))) / 1000),
           });
-          if (data.qualified) {
-            window.gtag('event', 'lead_qualified', {
-              event_category: 'Chat',
-              event_label: data.lead?.damage || 'unknown',
-              value: 1
-            });
-          }
         }
       } else {
         // Handle different types of errors from the API
@@ -582,16 +596,12 @@ const AIChatBot = () => {
   };
 
   const toggleChat = () => {
-    setIsOpen(!isOpen);
-    
-    // Track chat button click for marketing
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'chat_button_click', {
-        event_category: 'Chat',
-        event_label: 'Modal Button',
-        value: 1
-      });
-    }
+    const opening = !isOpen;
+    setIsOpen(opening);
+    trackChat(opening ? 'chat_opened' : 'chat_closed', {
+      trigger: 'floating_button',
+      message_count: messages.length,
+    });
   };
 
   const quickReplies = [
@@ -605,24 +615,23 @@ const AIChatBot = () => {
     sendMessage(reply);
   };
 
-  const clearChatHistory = () => {
-    if (window.confirm('Are you sure you want to clear your chat history? This action cannot be undone.')) {
-      const welcomeMessage = {
-        id: 1,
-        text: getContextFromUrl(window.location.pathname).opener,
-        sender: "bot",
-        timestamp: new Date(),
-      };
-      
-      setMessages([welcomeMessage]);
-      setConversationId(null);
-      
-      // Clear from localStorage
-      if (userId) {
-        localStorage.removeItem(`chatbot_messages_${userId}`);
-        localStorage.removeItem(`chatbot_conversation_${userId}`);
-      }
+  const clearChatHistory = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Reset chat without confirm dialog (iOS Safari blocks confirm in fixed elements)
+    const welcomeMessage = {
+      id: 1,
+      text: getContextFromUrl(window.location.pathname).opener,
+      sender: "bot",
+      timestamp: new Date(),
+    };
+    setMessages([welcomeMessage]);
+    setConversationId(null);
+    if (userId) {
+      localStorage.removeItem(`chatbot_messages_${userId}`);
+      localStorage.removeItem(`chatbot_conversation_${userId}`);
     }
+    trackChat('chat_cleared', { message_count: messages.length });
   };
 
   // Hide AIChatBot on pages where it's distracting
@@ -708,6 +717,7 @@ const AIChatBot = () => {
             {messages.length > 1 && (
               <button
                 onClick={clearChatHistory}
+                onTouchEnd={clearChatHistory}
                 className={styles.clearButton}
                 aria-label="Clear chat history"
                 title="Clear chat history"

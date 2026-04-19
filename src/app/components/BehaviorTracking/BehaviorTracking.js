@@ -89,12 +89,25 @@ export default function BehaviorTracking() {
       // Track CTA clicks
       const isCTA = ["BUTTON", "A"].includes(target) || e.target?.closest("button,a");
       if (isCTA) {
+        const href = e.target?.closest("a")?.href || null;
+        const ctaEl = e.target?.closest("[class*=stickyCall],[class*=stickyReview],[class*=stickyDesktopBtn],[class*=endCtaBtn],[class*=endCtaBtnSecondary]");
+        const ctaType = ctaEl
+          ? (ctaEl.className.includes("stickyCall") || ctaEl.className.includes("endCtaBtn__"))
+            ? "chat"
+            : (href && href.includes("/qualify"))
+              ? "qualify"
+              : "other_cta"
+          : null;
+
         push("cta_click", {
           element: target,
           text,
           x: Math.round(x),
           y: Math.round(y),
-          href: e.target?.closest("a")?.href || null,
+          href,
+          cta_type: ctaType,
+          scroll_depth: Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100) || 0,
+          time_on_page_sec: Math.floor((Date.now() - sessionStart.current) / 1000),
         });
       }
 
