@@ -82,6 +82,61 @@ function getArticleType(slug) {
   return "property-damage";
 }
 
+// Extract insurer, damage type, and city from slug for personalized CTAs
+const SLUG_INSURER_MAP = {
+  "state-farm": "State Farm",
+  "allstate": "Allstate",
+  "citizens": "Citizens",
+  "usaa": "USAA",
+  "nationwide": "Nationwide",
+  "progressive": "Progressive",
+  "geico": "GEICO",
+  "liberty-mutual": "Liberty Mutual",
+  "farmers": "Farmers",
+  "heritage": "Heritage",
+  "universal-property": "Universal Property",
+  "people-s-trust": "People's Trust",
+  "security-first": "Security First",
+  "federated-national": "Federated National",
+  "castle-key": "Castle Key",
+  "american-coastal": "American Coastal",
+  "safepoint": "SafePoint",
+  "homeowners-choice": "Homeowners Choice",
+};
+
+const SLUG_DAMAGE_MAP = {
+  "roof": "roof",
+  "water-damage": "water damage",
+  "fire-damage": "fire damage",
+  "hurricane": "hurricane",
+  "flood": "flood",
+  "mold": "mold",
+  "wind-damage": "wind damage",
+  "hail": "hail",
+  "sinkhole": "sinkhole",
+  "pipe-burst": "pipe burst",
+  "plumbing": "plumbing",
+  "storm": "storm",
+  "lightning": "lightning",
+};
+
+function getArticleContext(slug, cityInfo) {
+  const s = (slug || "").toLowerCase();
+  let insurer = null;
+  let damageType = null;
+
+  for (const [key, name] of Object.entries(SLUG_INSURER_MAP)) {
+    if (s.includes(key)) { insurer = name; break; }
+  }
+  for (const [key, name] of Object.entries(SLUG_DAMAGE_MAP)) {
+    if (s.includes(key)) { damageType = name; break; }
+  }
+
+  const city = cityInfo ? cityInfo.name : null;
+
+  return { insurer, damageType, city };
+}
+
 // Detect Spanish articles by slug patterns
 function isSpanishArticle(slug) {
   const s = (slug || "").toLowerCase();
@@ -1123,6 +1178,7 @@ export default async function Page(props) {
   // Compute article type early — used in schema injection + content rendering
   const articleType = getArticleType(slug);
   const articleLang = isSpanishArticle(slug) ? "es" : "en";
+  const articleContext = getArticleContext(slug, getCityFromSlug(slug));
   const isSSAFormPage = /^ssa-\d+/.test(slug) || slug === 'request-for-reconsideration-form-ssa-561';
 
   // Debug: log keys so we can see what's coming from Strapi in server logs
@@ -1327,7 +1383,7 @@ export default async function Page(props) {
                   <Link href="/">Home</Link> &rsaquo; <Link href="/faq">FAQ</Link> &rsaquo; <span>{page.title}</span>
                 </nav>
                 <h1 className={styles.blogTitle}>{page.title}</h1>
-                <UrgencyBanner articleType={articleType} />
+                <UrgencyBanner articleType={articleType} insurer={articleContext.insurer} damageType={articleContext.damageType} city={articleContext.city} />
                 <div className={styles.blogContent}>
                   <div className={styles.blogText}>
                     <p>{page.description}</p>
@@ -1418,7 +1474,7 @@ export default async function Page(props) {
                   </OpenChatButton>
                 </>
               ) : (
-                <UrgencyBanner articleType={articleType} />
+                <UrgencyBanner articleType={articleType} insurer={articleContext.insurer} damageType={articleContext.damageType} city={articleContext.city} />
               )}
               {/* Author byline */}
               <Link href="/pierre-a-louis-esq" className={styles.authorByline}>
@@ -1539,7 +1595,7 @@ export default async function Page(props) {
                 );
               })()}
               <div className={styles.blogContent}>
-                {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} lang={articleLang} />}
+                {articleType !== "case-law" && <DocumentUploadCTA articleType={articleType} lang={articleLang} insurer={articleContext.insurer} damageType={articleContext.damageType} city={articleContext.city} />}
                 {(() => {
                   // articleType computed above via getArticleType(slug)
                   // Demote H1 in article body to H2 (page template already has the H1)
@@ -1686,18 +1742,42 @@ export default async function Page(props) {
                 const isCaseLaw = articleType === "case-law";
                 const isSSDI = articleType === "ssdi";
                 const isES = articleLang === "es";
-                const ctaTitle = isES
-                  ? (isSSDI ? "Descubra Si Califica para Beneficios de SSDI" : "Descubra Si Califica — Evaluación Gratis")
-                  : isCaseLaw
-                    ? "Submit a Policy or Denial Letter for Review"
-                    : isSSDI
-                      ? "Find Out If You Qualify for SSDI Benefits"
-                      : "Find Out If You Qualify — Free Case Review";
+                const isPD = articleType === "property-damage";
+                const { insurer: ctaInsurer, damageType: ctaDamage, city: ctaCity } = articleContext;
+
+                let ctaTitle;
+                if (isES) {
+                  ctaTitle = isSSDI ? "Descubra Si Califica para Beneficios de SSDI" : "Descubra Si Califica — Evaluación Gratis";
+                } else if (isCaseLaw) {
+                  ctaTitle = "Submit a Policy or Denial Letter for Review";
+                } else if (isSSDI) {
+                  ctaTitle = "Find Out If You Qualify for SSDI Benefits";
+                } else if (isPD && ctaInsurer) {
+                  ctaTitle = `${ctaInsurer} Gave You a Hard Time? Let Us Review Your Case — Free`;
+                } else if (isPD && ctaDamage) {
+                  ctaTitle = `${ctaDamage.charAt(0).toUpperCase() + ctaDamage.slice(1)} Claim? Find Out If You Qualify — Free Case Review`;
+                } else if (isPD && ctaCity) {
+                  ctaTitle = `${ctaCity} Homeowner? Get a Free Case Review`;
+                } else {
+                  ctaTitle = "Find Out If You Qualify — Free Case Review";
+                }
+
+                let ctaSubtext;
+                if (isES) {
+                  ctaSubtext = "Sin costo a menos que ganemos · 100% confidencial · Respuesta el mismo día";
+                } else if (isCaseLaw) {
+                  ctaSubtext = "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential";
+                } else if (isPD && ctaInsurer) {
+                  ctaSubtext = `We've recovered millions from ${ctaInsurer} for Florida homeowners · No fees unless we win · Same-day response`;
+                } else {
+                  ctaSubtext = "No fees unless we win · 100% confidential · Same-day response";
+                }
+
                 return (
                   <div className={styles.endCta}>
                     <h3 className={styles.endCtaTitle}>{ctaTitle}</h3>
                     <p className={styles.endCtaSubtext}>
-                      {isES ? "Sin costo a menos que ganemos · 100% confidencial · Respuesta el mismo día" : isCaseLaw ? "Our property damage attorneys will review your case and respond within 24 hours · Free · Confidential" : "No fees unless we win · 100% confidential · Same-day response"}
+                      {ctaSubtext}
                     </p>
                     <div style={{display:"flex",gap:"12px",flexWrap:"wrap",justifyContent:"center"}}>
                       <OpenChatButton className={styles.endCtaBtn}>

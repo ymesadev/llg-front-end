@@ -14,15 +14,65 @@ const INTAKE_ROUTES = {
   "personal-injury":    "/personal-injury/qualify",
 };
 
-export default function UrgencyBanner({ articleType = "property-damage", small = false }) {
+function getPersonalizedMessage({ articleType, insurer, damageType, city }) {
+  // Insurer-specific messaging takes priority
+  if (insurer && articleType === "property-damage") {
+    const insurerMessages = {
+      "State Farm": `${insurer} denied your claim? We've fought them before — and won.`,
+      "Allstate": `${insurer} lowballing your claim? We know their tactics.`,
+      "Citizens": `${insurer} delayed or denied your claim? Florida law is on your side.`,
+      "USAA": `${insurer} denied your claim? Even military families deserve a fair payout.`,
+      "Nationwide": `${insurer} not on your side? We can help you fight back.`,
+      "Progressive": `${insurer} undervaluing your damage? Get what you're owed.`,
+    };
+    if (insurerMessages[insurer]) return insurerMessages[insurer];
+    return `${insurer} denied or underpaid your claim? We can help.`;
+  }
+
+  // Damage-type-specific messaging
+  if (damageType && articleType === "property-damage") {
+    const damageMessages = {
+      "roof": "Roof damage claims have strict deadlines in Florida. Don't wait.",
+      "water damage": "Water damage gets worse every day. Act before the insurer uses delay against you.",
+      "fire damage": "Fire damage claims are complex. Insurers know that — and use it against you.",
+      "hurricane": "Hurricane claim denied? Florida has some of the strongest policyholder protections.",
+      "flood": "Flood damage claims have tight filing deadlines. Check your eligibility now.",
+      "mold": "Mold claims are routinely denied. A strong legal strategy changes that.",
+      "wind damage": "Wind damage claims are time-sensitive under Florida law.",
+      "hail": "Hail damage often looks minor but costs thousands. Don't settle for less.",
+      "sinkhole": "Sinkhole claims require specialized expertise. We handle them.",
+      "pipe burst": "Pipe burst damage adds up fast. Don't let the insurer minimize your loss.",
+    };
+    if (damageMessages[damageType]) return damageMessages[damageType];
+  }
+
+  // City-specific messaging
+  if (city && articleType === "property-damage") {
+    return `Serving ${city} homeowners with denied or underpaid claims.`;
+  }
+
+  // Default per article type
+  if (articleType === "ssdi") return "SSDI claims have strict deadlines. See if you qualify before time runs out.";
+  if (articleType === "personal-injury") return "Injury claims have a statute of limitations. Don't wait to find out your rights.";
+
+  return null;
+}
+
+export default function UrgencyBanner({ articleType = "property-damage", small = false, insurer = null, damageType = null, city = null }) {
   const href = INTAKE_ROUTES[articleType] || "/property-damage-claims/qualify";
+  const personalizedMsg = getPersonalizedMessage({ articleType, insurer, damageType, city });
+
+  const headline = personalizedMsg || "Statute of limitations may apply.";
+  const subtext = personalizedMsg
+    ? "Free eligibility check — takes under 2 minutes, no obligation."
+    : "See if you qualify — free eligibility check, takes under 2 minutes.";
 
   return (
     <Link href={href} className={`${styles.banner} ${small ? styles.small : ''}`}>
       <span className={styles.icon}>⚠️</span>
       <span className={styles.text}>
-        <strong>Statute of limitations may apply.</strong>{" "}
-        See if you qualify — free eligibility check, takes under 2 minutes.
+        <strong>{headline}</strong>{" "}
+        {subtext}
       </span>
       <span className={styles.cta}>See If You Qualify →</span>
     </Link>

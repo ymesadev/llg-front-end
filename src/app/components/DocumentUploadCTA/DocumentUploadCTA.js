@@ -19,10 +19,46 @@ const INTAKE_MAP_ES = {
   "property-damage": { href: "/reclamos-propiedad/calificar",  headline: "Vea Si Tiene un Reclamo de Seguro Fuerte",                  sub: "Complete nuestro calificador de 2 minutos y descubra si es un candidato fuerte para representacion — sin costo." },
 };
 
-export default function DocumentUploadCTA({ articleType = "property-damage", lang = "en" }) {
+function getPersonalizedHeadline({ insurer, damageType, city, baseHeadline }) {
+  if (insurer) {
+    return `${insurer} Denied Your Claim? See If You Have a Case`;
+  }
+  if (damageType) {
+    const dt = damageType.charAt(0).toUpperCase() + damageType.slice(1);
+    return `${dt} Claim Denied or Underpaid? Check Your Options`;
+  }
+  if (city) {
+    return `${city} Homeowner? See If You Have a Strong Claim`;
+  }
+  return baseHeadline;
+}
+
+function getPersonalizedSub({ insurer, damageType, city, baseSub }) {
+  if (insurer) {
+    return `We've handled hundreds of ${insurer} disputes. Find out in 2 minutes if you qualify for representation — at no cost.`;
+  }
+  if (damageType) {
+    return `${damageType.charAt(0).toUpperCase() + damageType.slice(1)} claims require fast action. Take our 2-minute qualifier — free, no obligation.`;
+  }
+  if (city) {
+    return `We represent ${city} homeowners against insurance companies. See if you qualify — free, takes under 2 minutes.`;
+  }
+  return baseSub;
+}
+
+export default function DocumentUploadCTA({ articleType = "property-damage", lang = "en", insurer = null, damageType = null, city = null }) {
   const isSpanish = lang === "es";
   const map = isSpanish ? INTAKE_MAP_ES : INTAKE_MAP;
   const config = map[articleType] || (isSpanish ? INTAKE_MAP_ES["property-damage"] : INTAKE_MAP["property-damage"]);
+
+  // Personalize headline/sub for property-damage English articles
+  const shouldPersonalize = !isSpanish && articleType === "property-damage" && (insurer || damageType || city);
+  const headline = shouldPersonalize
+    ? getPersonalizedHeadline({ insurer, damageType, city, baseHeadline: config.headline })
+    : config.headline;
+  const sub = shouldPersonalize
+    ? getPersonalizedSub({ insurer, damageType, city, baseSub: config.sub })
+    : config.sub;
 
   const btnText = isSpanish
     ? "Vea Si Califica — Evaluacion Gratis \u2192"
@@ -34,8 +70,8 @@ export default function DocumentUploadCTA({ articleType = "property-damage", lan
   return (
     <Link href={config.href} className={styles.ctaBox}>
       <div className={styles.inner}>
-        <h3 className={styles.headline}>{config.headline}</h3>
-        <p className={styles.subtitle}>{config.sub}</p>
+        <h3 className={styles.headline}>{headline}</h3>
+        <p className={styles.subtitle}>{sub}</p>
         <span className={styles.btn}>
           {btnText}
         </span>
