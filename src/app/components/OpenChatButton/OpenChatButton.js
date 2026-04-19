@@ -3,13 +3,19 @@
 export default function OpenChatButton({ children, className, ...props }) {
   const handleClick = (e) => {
     e.preventDefault();
-    e.stopPropagation();
     window.dispatchEvent(new Event("openSmileyChat"));
   };
 
   return (
-    <button type="button" onClick={handleClick} className={className} {...props}>
+    <a
+      href="#chat"
+      role="button"
+      onClick={handleClick}
+      onTouchEnd={(e) => { e.preventDefault(); window.dispatchEvent(new Event("openSmileyChat")); }}
+      className={className}
+      {...props}
+    >
       {children}
-    </button>
+    </a>
   );
 }
