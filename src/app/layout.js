@@ -13,6 +13,12 @@ const anton = Anton({ weight: "400", subsets: ["latin"], display: "swap", variab
 const montserrat = Montserrat({ subsets: ["latin"], display: "swap", variable: "--font-montserrat" });
 const workSans = Work_Sans({ subsets: ["latin"], display: "swap", variable: "--font-work-sans" });
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export const metadata = {
   title: "Louis Law Group | Florida Property Damage & SSDI Attorneys",
   description: "Louis Law Group helps Florida residents fight denied insurance claims and win SSDI/SSI benefits. Free consultation — no fees unless we win.",
