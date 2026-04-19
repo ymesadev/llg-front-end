@@ -1742,17 +1742,22 @@ export default async function Page(props) {
             <OpenChatButton className={styles.stickyCall}>{articleLang === "es" ? "Pregúntenos en Vivo" : "Ask Us a Question Live"}</OpenChatButton>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →"}</Link>
           </div>
-          {/* Sticky desktop CTA for SSDI articles — above-fold qualify prompt */}
-          {articleType === "ssdi" && (
-            <div className={styles.stickyDesktopCta}>
-              <span className={styles.stickyDesktopText}>
-                {articleLang === "es" ? "¿Tiene una discapacidad? Podría calificar para beneficios de SSDI." : "Living with a disability? You may qualify for SSDI benefits."}
-              </span>
-              <OpenChatButton className={styles.stickyDesktopBtn}>
-                {articleLang === "es" ? "Pregúntenos en Vivo →" : "Ask Us a Question Live →"}
-              </OpenChatButton>
-            </div>
-          )}
+          {/* Sticky desktop CTA — all article types */}
+          <div className={styles.stickyDesktopCta}>
+            <span className={styles.stickyDesktopText}>
+              {articleLang === "es"
+                ? (articleType === "ssdi" ? "¿Tiene una discapacidad? Podría calificar para beneficios de SSDI." : "¿Problemas con su reclamo de seguro? Podemos ayudarle.")
+                : articleType === "ssdi" ? "Living with a disability? You may qualify for SSDI benefits."
+                : articleType === "personal-injury" ? "Injured? Find out if you have a case — free, no obligation."
+                : "Insurance claim issues? Find out if you have a case — free, no obligation."}
+            </span>
+            <OpenChatButton className={styles.stickyDesktopBtn}>
+              {articleLang === "es" ? "Pregúntenos en Vivo →" : "Ask Us a Question Live →"}
+            </OpenChatButton>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyDesktopBtn}>
+              {articleLang === "es" ? "Vea Si Califica →" : "Check Your Eligibility →"}
+            </Link>
+          </div>
           <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} articleType={articleType} />
           <SocialProofToast />
           <PushOptIn />
