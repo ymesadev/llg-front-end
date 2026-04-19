@@ -201,8 +201,12 @@ export async function POST(request) {
 
     function hyperlinkURLs(text) {
       if (typeof text !== 'string') return text;
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const withLinks = text.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+      // Don't double-wrap URLs already inside <a> tags
+      const withLinks = text.replace(/(https?:\/\/[^\s<]+)/g, (url, _, offset) => {
+        const before = text.substring(Math.max(0, offset - 10), offset);
+        if (before.includes('href="') || before.includes("href='")) return url;
+        return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+      });
       return withLinks.replace(/\n/g, '<br/>');
     }
 
