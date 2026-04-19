@@ -926,6 +926,7 @@
     z-index: 10000;
     background: #1a2b49;
     border-top: 2px solid #c9a84c;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .stickyCall,
