@@ -121,8 +121,8 @@ const Popup = () => {
           </div>
         </div>
       )}
-      {/* Floating Chat Button — hidden on article pages that have their own CTAs */}
-      {!isArticlePage && (
+      {/* Floating Chat Button — hidden on article pages and qualifier forms */}
+      {!isArticlePage && !isExcludedPage && !/\/qualify\b/.test(pathname) && (
         <button
           className={styles.textUsButton}
           data-floating-cta="ask-question"

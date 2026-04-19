@@ -625,8 +625,9 @@ const AIChatBot = () => {
     }
   };
 
-  // Hide AIChatBot on live-chat page
-  if (pathname === "/live-chat") {
+  // Hide AIChatBot on pages where it's distracting
+  const isQualifyPage = /\/qualify\b/.test(pathname);
+  if (pathname === "/live-chat" || isQualifyPage) {
     return null;
   }
 

@@ -923,7 +923,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 999;
+    z-index: 10001;
     background: #1a2b49;
     border-top: 2px solid #c9a84c;
   }
@@ -937,6 +937,9 @@
     font-weight: 700;
     text-decoration: none;
     color: #fff;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
   }
 
   .stickyCall {
@@ -975,7 +978,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 998;
+    z-index: 10001;
     background: #1a2b49;
     border-top: 2px solid #c9a84c;
     padding: 0.75rem 2rem;
