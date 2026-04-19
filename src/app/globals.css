@@ -1,7 +1,7 @@
 /* Fonts self-hosted via next/font/google — no external font requests */
 
-/* Hide floating CTAs on article pages — instant CSS, no React render delay */
-body[data-article-page="true"] [data-floating-cta] {
+/* Hide floating CTA buttons on article pages — but keep chatbot container functional */
+body[data-article-page="true"] [data-floating-cta="ask-question"] {
   display: none !important;
 }
 
