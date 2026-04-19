@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 
 export async function POST(request) {
   try {
-    const { 
-      message, 
-      conversationId, 
+    const {
+      message,
+      conversationId,
       userId,
       // Attribution fields from localStorage
       page_url,
@@ -17,7 +17,8 @@ export async function POST(request) {
       utm_term,
       referrer,
       article_slug,
-      page_title
+      page_title,
+      language
     } = await request.json();
 
     // Validate input
@@ -61,6 +62,7 @@ export async function POST(request) {
       referrer: referrer || null,
       article_slug: article_slug || null,
       page_title: page_title || null,
+      language: language || 'en',
     };
 
     // Log the payload being sent to N8N

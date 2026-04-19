@@ -40,8 +40,24 @@ const INSURER_MAP = {
   'security-first': 'Security First', 'fednat': 'FedNat',
 };
 
+const ES_SLUG_KEYWORDS = [
+  "abogado", "abogados", "discapacidad", "seguro-social", "negaron",
+  "apelar", "calificar", "beneficios-discapacidad", "consulta-gratis",
+  "danos-por-agua", "denegacion", "reclamar-seguro", "hispanos",
+  "accidente", "laboral", "derechos-legales", "asesoria-legal",
+  "reclamo-negado", "seguros-florida", "dano-propiedad",
+  "huracan", "inundacion", "techo-danado", "incendio",
+  "compania-seguros", "poliza", "indemnizacion", "reclamos-propiedad",
+];
+
+function isSpanishPage(pathname) {
+  const s = (pathname || '').toLowerCase();
+  return ES_SLUG_KEYWORDS.some(k => s.includes(k));
+}
+
 function getContextFromUrl(pathname) {
   const slug = (pathname || '').toLowerCase().replace(/^\//, '');
+  const isES = isSpanishPage(pathname);
 
   let insurer = null;
   for (const [key, name] of Object.entries(INSURER_MAP)) {
@@ -49,33 +65,57 @@ function getContextFromUrl(pathname) {
   }
 
   let opener;
-  if (/qualify/.test(slug)) {
-    opener = "Hey! I see you're checking if you qualify. Need a hand with anything? I'm right here.";
-  } else if (insurer) {
-    opener = `Ugh, ${insurer}. We deal with them all the time. What happened with your claim?`;
-  } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
-    opener = "Roof damage? That's a huge one for us. What's your insurance company doing about it?";
-  } else if (/water[-_]?damage|flood|pipe/.test(slug)) {
-    opener = "Water damage is the worst — it just keeps getting more expensive. Has your insurance responded yet?";
-  } else if (/mold/.test(slug)) {
-    opener = "Mold claims are tough, insurance companies fight these hard. What's going on with yours?";
-  } else if (/hurricane|storm|wind/.test(slug)) {
-    opener = "Storm damage? There are deadlines on these in Florida so you're smart to look into it now. What happened?";
-  } else if (/fire[-_]?damage|smoke|lightning/.test(slug)) {
-    opener = "Fire damage is serious. Are you dealing with your insurance on this? Tell me what's going on.";
-  } else if (/denied|denial|bad[-_]?faith|underpaid/.test(slug)) {
-    opener = "A denial isn't the end of the road. What did they deny you for?";
-  } else if (/ssdi|disability|social[-_]?security/.test(slug)) {
-    opener = "Disability claims can be a process. Where are you at with yours — just starting or dealing with a denial?";
-  } else if (/personal[-_]?injury|accident/.test(slug)) {
-    opener = "Sorry to hear about your situation. What happened? I can point you in the right direction.";
-  } else if (/property[-_]?damage/.test(slug)) {
-    opener = "Property damage claim? Tell me what happened and I'll let you know if we can help.";
+  if (isES) {
+    // Spanish openers
+    if (/calificar/.test(slug)) {
+      opener = "Hola, veo que esta verificando si califica. Necesita ayuda con algo? Estoy aqui para usted.";
+    } else if (insurer) {
+      opener = `Problemas con ${insurer}? Los conocemos bien. Cuenteme que paso con su reclamo.`;
+    } else if (/techo|roof/.test(slug)) {
+      opener = "Dano en el techo? Eso es muy comun aqui en Florida. Que le dijo su compania de seguros?";
+    } else if (/agua|water|inundacion|flood/.test(slug)) {
+      opener = "Danos por agua son terribles y solo empeoran con el tiempo. Ya le respondio su seguro?";
+    } else if (/huracan|storm|hurricane/.test(slug)) {
+      opener = "Danos por tormenta? Hay plazos legales en Florida, asi que es bueno que este investigando. Que paso?";
+    } else if (/negaron|denied|denegacion/.test(slug)) {
+      opener = "Que le negaron el reclamo no significa que se acabo. Cuenteme que paso.";
+    } else if (/discapacidad|ssdi|seguro-social/.test(slug)) {
+      opener = "Los reclamos de discapacidad pueden ser un proceso largo. En que etapa esta — apenas empezando o lidiando con una negacion?";
+    } else if (/dano-propiedad|property|reclamos-propiedad/.test(slug)) {
+      opener = "Tiene un reclamo por danos a su propiedad? Cuenteme que paso y le digo si podemos ayudarle.";
+    } else {
+      opener = "Hola! Cuenteme su situacion y veo como podemos ayudarle.";
+    }
   } else {
-    opener = "Hey! What's going on? Tell me a little about your situation and I'll see what we can do for you.";
+    // English openers
+    if (/qualify/.test(slug)) {
+      opener = "Hey! I see you're checking if you qualify. Need a hand with anything? I'm right here.";
+    } else if (insurer) {
+      opener = `Ugh, ${insurer}. We deal with them all the time. What happened with your claim?`;
+    } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
+      opener = "Roof damage? That's a huge one for us. What's your insurance company doing about it?";
+    } else if (/water[-_]?damage|flood|pipe/.test(slug)) {
+      opener = "Water damage is the worst — it just keeps getting more expensive. Has your insurance responded yet?";
+    } else if (/mold/.test(slug)) {
+      opener = "Mold claims are tough, insurance companies fight these hard. What's going on with yours?";
+    } else if (/hurricane|storm|wind/.test(slug)) {
+      opener = "Storm damage? There are deadlines on these in Florida so you're smart to look into it now. What happened?";
+    } else if (/fire[-_]?damage|smoke|lightning/.test(slug)) {
+      opener = "Fire damage is serious. Are you dealing with your insurance on this? Tell me what's going on.";
+    } else if (/denied|denial|bad[-_]?faith|underpaid/.test(slug)) {
+      opener = "A denial isn't the end of the road. What did they deny you for?";
+    } else if (/ssdi|disability|social[-_]?security/.test(slug)) {
+      opener = "Disability claims can be a process. Where are you at with yours — just starting or dealing with a denial?";
+    } else if (/personal[-_]?injury|accident/.test(slug)) {
+      opener = "Sorry to hear about your situation. What happened? I can point you in the right direction.";
+    } else if (/property[-_]?damage/.test(slug)) {
+      opener = "Property damage claim? Tell me what happened and I'll let you know if we can help.";
+    } else {
+      opener = "Hey! What's going on? Tell me a little about your situation and I'll see what we can do for you.";
+    }
   }
 
-  return { opener, insurer };
+  return { opener, insurer, isES };
 }
 
 // Lightweight analytics: pushes to dataLayer + OpenReplay + beacons to n8n
@@ -470,6 +510,7 @@ const AIChatBot = () => {
           ...attributionData,
           article_slug: window.location.pathname.replace(/^\//, ''),
           page_title: document.title,
+          language: isES ? 'es' : 'en',
         }),
       });
 
@@ -604,7 +645,14 @@ const AIChatBot = () => {
     });
   };
 
-  const quickReplies = [
+  const isES = isSpanishPage(pathname);
+
+  const quickReplies = isES ? [
+    "Mi seguro me esta dando vueltas",
+    "Tuve un accidente",
+    "Necesito ayuda con discapacidad",
+    "Puedo hacer una pregunta rapida?",
+  ] : [
     "My insurance is giving me the runaround",
     "I was in an accident",
     "I need help with disability",
@@ -805,7 +853,7 @@ const AIChatBot = () => {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Type your message..."
+              placeholder={isES ? "Escriba su mensaje..." : "Type your message..."}
               className={styles.input}
               disabled={isLoading}
             />
