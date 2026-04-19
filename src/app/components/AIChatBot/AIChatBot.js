@@ -204,29 +204,27 @@ const AIChatBot = () => {
     }
   }, [isOpen]);
 
-  // Lock body scroll when chat is open + handle mobile keyboard
+  // Lock body scroll when chat is open
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (isOpen) {
+      document.body.dataset.chatScrollY = String(window.scrollY);
       document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${window.scrollY}px`;
     } else {
-      const scrollY = document.body.style.top;
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      const savedY = document.body.dataset.chatScrollY;
+      if (savedY) {
+        window.scrollTo(0, parseInt(savedY));
+        delete document.body.dataset.chatScrollY;
+      }
     }
     return () => {
-      const scrollY = document.body.style.top;
       document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      if (scrollY) window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      const savedY = document.body.dataset.chatScrollY;
+      if (savedY) {
+        window.scrollTo(0, parseInt(savedY));
+        delete document.body.dataset.chatScrollY;
+      }
     };
   }, [isOpen]);
 

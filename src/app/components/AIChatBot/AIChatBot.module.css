@@ -632,8 +632,8 @@
     overflow: hidden;
   }
 
-  .fadeIn { transform: translateY(0); }
-  .fadeOut { transform: translateY(100%); }
+  .fadeIn { transform: translateY(0); opacity: 1; pointer-events: auto; }
+  .fadeOut { transform: translateY(100%); opacity: 0; pointer-events: none; }
 
   .dragHandle { display: block; }
 
