@@ -14,9 +14,9 @@ const DAMAGE_LABELS = [
   "Other",
 ];
 
-// Shortened flow: damage → owner → florida → booking
-const TOTAL_STEPS = 3;
-const STEP_NAMES = ["damage_type", "owner_check", "florida_check", "book_consultation"];
+// Flow: damage → owner → florida → contact → booking
+const TOTAL_STEPS = 4;
+const STEP_NAMES = ["damage_type", "owner_check", "florida_check", "contact_info", "book_consultation"];
 
 // Cal.com embed config
 const CAL_ORIGIN = "https://bookings.louislawgroup.com";
@@ -28,6 +28,10 @@ export default function PropertyDamageQualify() {
   const [answers, setAnswers] = useState({});
   const [result, setResult] = useState(null);
   const [bookingEmbedded, setBookingEmbedded] = useState(false);
+  const [contact, setContact] = useState({ name: "", email: "", phone: "", propertyAddress: "" });
+  const [contactConsent, setContactConsent] = useState(false);
+  const [contactSubmitting, setContactSubmitting] = useState(false);
+  const [contactError, setContactError] = useState("");
   const today = new Date();
 
   useEffect(() => {
@@ -122,6 +126,82 @@ export default function PropertyDamageQualify() {
     setTimeout(next, 320);
   };
 
+  const handleContactSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setContactError("");
+
+    const name = contact.name.trim();
+    const email = contact.email.trim();
+    const phone = contact.phone.trim();
+    const propertyAddress = contact.propertyAddress.trim();
+
+    if (!name || name.length < 2) { setContactError("Please enter your full name."); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setContactError("Please enter a valid email address."); return; }
+    if (phone.replace(/\D/g, "").length < 10) { setContactError("Please enter a valid phone number."); return; }
+
+    const damageIdx = answers.damage_type_idx;
+
+    setContactSubmitting(true);
+
+    // Persist contact in answers so the booking embed can read them
+    setAnswers((a) => ({ ...a, name, email, phone, propertyAddress }));
+
+    trackEvent("qualify_step_answered", {
+      case_type: "property-damage", step: 3, step_name: "contact_info",
+      sms_consent: contactConsent,
+    });
+    // Retargeting pixels — Step 4 (contact captured)
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep4Complete", { sms_consent: contactConsent ? "yes" : "no" });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_step_4", { event_category: "Qualifier", sms_consent: contactConsent ? "yes" : "no" });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_step_complete", step: 4, step_name: "contact_info" });
+
+    const partialPayload = {
+      name, phone, email, propertyAddress,
+      damageType: damageIdx,
+      caseType: "property-damage",
+      smsConsent: contactConsent,
+    };
+
+    const fullPayload = {
+      name, phone, email, propertyAddress,
+      damageType: damageIdx,
+      caseType: "property-damage",
+      smsConsent: contactConsent,
+      // Fields the qualify-intake route accepts but this short flow doesn't capture yet:
+      carrier: "",
+      dateOfLoss: "",
+      insurerResponse: null,
+      // Score: passed all DQ gates → automatic STRONG CANDIDATE
+      score: 80,
+    };
+
+    // Fire both webhooks in parallel — partial captures the lead immediately
+    // (so we have it even if they bail on the calendar), full sends to the
+    // qualified-lead pipeline for Outlook + downstream automation.
+    try {
+      await Promise.allSettled([
+        fetch("/api/qualify-intake-partial", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(partialPayload),
+        }),
+        fetch("/api/qualify-intake", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(fullPayload),
+        }),
+      ]);
+    } catch (err) {
+      // Don't block the booking flow on webhook errors — the lead is still
+      // valuable even if the intake POST failed; cal.com booking will be the backup.
+      console.error("[qualify] contact webhook error:", err && err.message);
+    }
+
+    setContactSubmitting(false);
+    setTimeout(next, 200);
+  };
+
   // Mount cal.com inline embed when user reaches booking step
   useEffect(() => {
     if (cur !== TOTAL_STEPS || bookingEmbedded) return;
@@ -169,13 +249,18 @@ export default function PropertyDamageQualify() {
     const mount = () => {
       if (!window.Cal) { setTimeout(mount, 120); return; }
       window.Cal("init", CAL_NAMESPACE, { origin: CAL_ORIGIN });
+      const a = answersRef.current;
       window.Cal.ns[CAL_NAMESPACE]("inline", {
         elementOrSelector: "#llg-cal-inline",
         calLink: CAL_LINK,
         config: {
           theme: "light",
           layout: "month_view",
-          // Prefills — cal.com uses field slugs as keys
+          // Standard cal.com prefills (collected in Step 3 contact form)
+          ...(a.name ? { name: a.name } : {}),
+          ...(a.email ? { email: a.email } : {}),
+          ...(a.phone ? { smsReminderNumber: a.phone } : {}),
+          // Custom field prefill — cal.com uses field slugs as keys
           "damage-type": damageLabel,
         },
       });
@@ -332,7 +417,93 @@ export default function PropertyDamageQualify() {
             </div>
           )}
 
-          {/* Step 3: BOOKING (final step — cal.com inline embed) */}
+          {/* Step 3: Contact info (captures lead before booking) */}
+          {cur === 3 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Almost done</div>
+              <div className={styles.question}>Where can our attorney reach you?</div>
+              <div className={styles.hint}>
+                We&rsquo;ll use this to confirm your consultation and prepare for your call.
+              </div>
+              <form onSubmit={handleContactSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "16px" }}>
+                <input
+                  type="text"
+                  required
+                  autoComplete="name"
+                  placeholder="Full name"
+                  value={contact.name}
+                  onChange={(e) => setContact((c) => ({ ...c, name: e.target.value }))}
+                  style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }}
+                />
+                <input
+                  type="email"
+                  required
+                  autoComplete="email"
+                  placeholder="Email address"
+                  value={contact.email}
+                  onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
+                  style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }}
+                />
+                <input
+                  type="tel"
+                  required
+                  autoComplete="tel"
+                  placeholder="Phone number"
+                  value={contact.phone}
+                  onChange={(e) => setContact((c) => ({ ...c, phone: e.target.value.replace(/[^\d+\-() ]/g, "") }))}
+                  maxLength={20}
+                  style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }}
+                />
+                <input
+                  type="text"
+                  autoComplete="street-address"
+                  placeholder="Property address (optional)"
+                  value={contact.propertyAddress}
+                  onChange={(e) => setContact((c) => ({ ...c, propertyAddress: e.target.value }))}
+                  style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }}
+                />
+                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", color: "#475467", lineHeight: 1.45 }}>
+                  <input
+                    type="checkbox"
+                    checked={contactConsent}
+                    onChange={(e) => setContactConsent(e.target.checked)}
+                    style={{ marginTop: "3px", flexShrink: 0 }}
+                  />
+                  <span>
+                    I agree to receive text messages from Louis Law Group about my case. Msg &amp; data rates may apply. Reply STOP to opt out.
+                  </span>
+                </label>
+                {contactError && (
+                  <div style={{ color: "#b42318", fontSize: "13px", padding: "8px 12px", background: "#fef3f2", borderRadius: "6px", border: "1px solid #fecdca" }}>
+                    {contactError}
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  disabled={contactSubmitting}
+                  style={{
+                    padding: "14px 20px",
+                    fontSize: "16px",
+                    fontWeight: 600,
+                    color: "#1a2b49",
+                    background: contactSubmitting ? "#e8c97a" : "#ffb800",
+                    border: "none",
+                    borderRadius: "8px",
+                    cursor: contactSubmitting ? "wait" : "pointer",
+                    marginTop: "4px",
+                    transition: "background 0.2s",
+                  }}
+                >
+                  {contactSubmitting ? "Saving…" : "Continue to scheduling →"}
+                </button>
+                <div style={{ fontSize: "12px", color: "#667085", textAlign: "center", marginTop: "4px" }}>
+                  🔒 Confidential — protected by attorney-client privilege.
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Step 4: BOOKING (final step — cal.com inline embed) */}
           {cur === TOTAL_STEPS && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Final Step — Book Your Free Consultation</div>
