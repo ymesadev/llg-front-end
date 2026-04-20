@@ -250,18 +250,25 @@ export default function PropertyDamageQualify() {
       if (!window.Cal) { setTimeout(mount, 120); return; }
       window.Cal("init", CAL_NAMESPACE, { origin: CAL_ORIGIN });
       const a = answersRef.current;
+      // Build calLink with URL query params — cal.com's inline embed `config` object
+      // does NOT reliably prefill custom booking fields (like damage-type). URL params do.
+      // Keys must match the exact field slugs on the event type.
+      const prefill = new URLSearchParams();
+      if (a.name) prefill.set("name", a.name);
+      if (a.email) prefill.set("email", a.email);
+      if (a.phone) prefill.set("smsReminderNumber", a.phone);
+      if (a.phone) prefill.set("callback-phone", a.phone);
+      if (damageLabel) prefill.set("damage-type", damageLabel);
+      if (a.insurer) prefill.set("insurance-carrier", a.insurer);
+      if (a.city) prefill.set("property-city", a.city);
+      const qs = prefill.toString();
+      const calLinkWithPrefill = qs ? `${CAL_LINK}?${qs}` : CAL_LINK;
       window.Cal.ns[CAL_NAMESPACE]("inline", {
         elementOrSelector: "#llg-cal-inline",
-        calLink: CAL_LINK,
+        calLink: calLinkWithPrefill,
         config: {
           theme: "light",
           layout: "month_view",
-          // Standard cal.com prefills (collected in Step 3 contact form)
-          ...(a.name ? { name: a.name } : {}),
-          ...(a.email ? { email: a.email } : {}),
-          ...(a.phone ? { smsReminderNumber: a.phone } : {}),
-          // Custom field prefill — cal.com uses field slugs as keys
-          "damage-type": damageLabel,
         },
       });
       window.Cal.ns[CAL_NAMESPACE]("ui", {
