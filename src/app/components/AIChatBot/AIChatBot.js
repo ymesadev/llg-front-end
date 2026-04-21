@@ -138,6 +138,7 @@ function trackChat(event, data = {}) {
 
 const AIChatBot = () => {
   const pathname = usePathname();
+  const isSsdiPage = /ssdi|disability|social[-_]?security|discapacidad/.test(pathname);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -559,9 +560,20 @@ const AIChatBot = () => {
           setConversationId(data.conversationId);
         }
 
-        // If qualified, fetch cal.com slots and show booking options
+        // If qualified, route based on practice area
         if (data.qualified && data.lead) {
-          fetchCalSlots(data.lead);
+          if (isSsdiPage) {
+            // SSDI leads go to retainer flow, not FPP booking
+            const ssdiMsg = {
+              id: Date.now() + 2,
+              text: `Great news — it sounds like we may be able to help! <a href="https://app.louislawgroup.com/ssdi-retainer/?name=${encodeURIComponent(data.lead.name || '')}&phone=${encodeURIComponent(data.lead.phone || '')}&email=${encodeURIComponent(data.lead.email || '')}" target="_blank" rel="noopener noreferrer" style="color:#0078ff;text-decoration:underline;font-weight:600;">Click here to start your disability application</a>`,
+              sender: 'bot',
+              timestamp: new Date(),
+            };
+            setMessages(prev => [...prev, ssdiMsg]);
+          } else {
+            fetchCalSlots(data.lead);
+          }
         }
 
         trackChat('chat_response_received', {
