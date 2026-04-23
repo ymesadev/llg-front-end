@@ -4,6 +4,7 @@ import Link from "next/link";
 import Results from "../components/Results/Results";
 import Steps from "../components/Steps/Steps";
 import PolicyReviewForm from "./PolicyReviewForm";
+import CaseLawGrid from "./CaseLawGrid";
 
 export const revalidate = 60;
 
@@ -134,57 +135,24 @@ export default async function CaseLawUpdatesPage({ searchParams }) {
           {/* Article Grid */}
           {posts.length > 0 && (
             <>
-              {/* Category Filter Bar */}
-              <div className={styles.filterBar}>
-                <span className={styles.filterLabel}>Categories:</span>
-                {["All", "Property Insurance", "Bad Faith", "PA Regulations", "Carrier Disputes", "Appraisal", "Legislative"].map((cat) => (
-                  <span key={cat} className={styles.filterTag}>{cat}</span>
-                ))}
-              </div>
-
-              <div className={styles.grid}>
-                {posts.map((post) => {
-                  const tag = getCategoryTag(post.title || "", post.slug || "");
-                  const tagColor = getTagColor(tag);
-                  const date = post.publishedAt
-                    ? new Date(post.publishedAt).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })
-                    : "";
-
-                  return (
-                    <Link key={post.id} href={`/${post.slug}`} className={styles.postCard}>
-                      {post.cover && (
-                        <img
-                          src={`https://login.louislawgroup.com${post.cover.url}`}
-                          alt={post.title}
-                          className={styles.postImage}
-                        />
-                      )}
-                      <div className={styles.postContent}>
-                        <div className={styles.postMeta}>
-                          <span
-                            className={styles.postTag}
-                            style={{
-                              background: tagColor.bg,
-                              color: tagColor.text,
-                              borderColor: tagColor.border,
-                            }}
-                          >
-                            {tag}
-                          </span>
-                          {date && <span className={styles.postDate}>{date}</span>}
-                        </div>
-                        <h2 className={styles.postTitle}>{post.title}</h2>
-                        <p className={styles.postExcerpt}>{post.description}</p>
-                        <span className={styles.readMore}>Read Analysis →</span>
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
+              {(() => {
+                const enrichedPosts = posts.map((post) => {
+                  const category = getCategoryTag(post.title || "", post.slug || "");
+                  return {
+                    ...post,
+                    category,
+                    tagColor: getTagColor(category),
+                    dateLabel: post.publishedAt
+                      ? new Date(post.publishedAt).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                      : "",
+                  };
+                });
+                return <CaseLawGrid posts={enrichedPosts} />;
+              })()}
 
               {/* Pagination */}
               {totalPages > 1 && (

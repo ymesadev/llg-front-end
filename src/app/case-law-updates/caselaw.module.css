@@ -55,6 +55,7 @@
 }
 
 .filterTag {
+  font-family: inherit;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 0.3rem 0.75rem;
@@ -66,13 +67,14 @@
   transition: all 0.2s;
 }
 
-.filterTag:first-of-type {
+.filterTag:hover {
   background: #1a2b49;
   color: #fff;
   border-color: #1a2b49;
 }
 
-.filterTag:hover {
+.filterTagActive,
+.filterTagActive:hover {
   background: #1a2b49;
   color: #fff;
   border-color: #1a2b49;
