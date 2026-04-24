@@ -12,25 +12,51 @@
 
 | Decision | Choice | Rationale |
 |----------|--------|-----------|
-| Strapi content types | Use existing `articles` table | No schema changes needed, compatible with SEO pipeline |
+| Strapi content types | Use existing `articles` table | No schema changes needed, compatible with SEO pipelines |
 | Cluster/FAQ data | Static JS data files in repo | Simple, version-controlled, no Strapi schema changes |
 | Author data | Reuse `team-pages` content type | Already exists, default author: Pierre Louis |
 | Cal.com | Event type 4 + URL prefill params | Single booking flow, fire context passed via params |
 | Styling | CSS Modules (no Tailwind) | Matches existing site patterns |
 | Qualifier backend | POST to `/api/qualify-intake` | Existing n8n webhook integration |
 | Analytics | Existing `trackEvent()`/`trackConversion()` | GA4 + GTM dataLayer, no new infra |
+| Article CTAs | Reuse existing site CTA components | Same CTAs as main resources page and article pages |
+| Article generation | Two separate pipelines | GKP pipeline + autocomplete pipeline, both 50/day |
 
 ---
 
-## 2. URL Routes & File Structure
+## 2. Site Integration
+
+### Footer Addition
+
+Add "Fire Insurance Claims" link to the Footer component (`src/app/components/Footer/Footer.js`) in the **Resources** column (Column 3), linking to `/fire-insurance-claims/`.
+
+Current Resources column:
+- Blog
+- Careers
+- Water Damage Claims
+- SSDI Disability Lawyers
+- Public Adjuster Resources
+- Case Law Updates
+- FL Insurance Market Report
+- FL Pre-Suit Notice Report
+- Fee Reform Case Outcomes
+- **Fire Insurance Claims** ← NEW
+
+### Subdirectory Confirmation
+
+All fire claims content lives under `/fire-insurance-claims/` as a subdirectory of the main louislawgroup.com domain. This is NOT a subdomain — it inherits all root domain SEO equity.
+
+---
+
+## 3. URL Routes & File Structure
 
 ```
 app/fire-insurance-claims/
-  layout.js                           # shared layout: breadcrumbs, disclaimer, sticky CTA
+  layout.js                           # shared layout: breadcrumbs, disclaimer
   page.js                             # pillar hub: hero, cluster grid, trust signals, FAQ sample
   resources/
-    page.js                           # resource library index with cluster filter
-    [slug]/page.js                    # individual article (fetched from Strapi articles table)
+    page.js                           # resource library index (same CTAs as main /resources/ page)
+    [slug]/page.js                    # individual article (same CTAs as main article pages)
   types-of-damage/page.js             # cluster pillar (static)
   denied-claims/page.js               # cluster pillar
   claim-process/page.js               # cluster pillar
@@ -41,17 +67,14 @@ app/fire-insurance-claims/
   faqs/page.js                        # FAQ hub
 
 components/fire-hub/
-  FirePillarHero.js + .module.css      # hero + primary Cal.com CTA
-  FireClaimQualifier.js + .module.css  # 4-question gating widget
+  FirePillarHero.js + .module.css      # hero + primary Cal.com CTA (hub page only)
+  FireClaimQualifier.js + .module.css  # 4-question gating widget (hub page only)
   CalBookingEmbed.js + .module.css     # Cal.com inline embed wrapper
-  StickyBookingCTA.js + .module.css    # scroll-triggered sticky bar
   ClusterGrid.js + .module.css         # 7 cluster cards on hub
   ResourceCard.js + .module.css        # article card for resource library
-  RelatedArticles.js + .module.css     # bottom-of-article internal links
   ArticleTOC.js + .module.css          # sticky sidebar TOC (desktop) / collapsible (mobile)
   FireFAQ.js + .module.css             # accordion FAQ + FAQPage JSON-LD
   TrustSignals.js + .module.css        # bar admissions, years, focus
-  AuthorBio.js + .module.css           # from team-pages Strapi data
   BreadcrumbNav.js + .module.css       # visual + BreadcrumbList JSON-LD
   FireDisclaimer.js + .module.css      # Florida Bar compliant disclaimer
 
@@ -60,11 +83,30 @@ data/
   fire-faqs.js                         # FAQ entries with cluster associations
 ```
 
+### Reused CTA Components (no new fire-specific versions)
+
+These existing components are reused directly on fire resources/article pages:
+
+**On resources index page (`/fire-insurance-claims/resources/`):**
+- `Results` — "$200,000,000 recovered for clients" case statistics
+- `Steps` — "How it Works" / "No Win, No Fee" 3-step carousel + "Free Case Evaluation" button
+- `Contact` — Contact form with phone number (833-657-4812) + HeroForm
+
+**On individual article pages (`/fire-insurance-claims/resources/[slug]/`):**
+- `UrgencyBanner` — "Statute of limitations may apply. See if you qualify..." top banner
+- `DocumentUploadCTA` — Mid-article "See If You Qualify — Free Eligibility Check" card
+- `ChecklistCTA` — Mid-article checklist download (property damage variant: "Get Your Free Property Damage Checklist")
+- `RelatedArticles` — Related fire articles at bottom
+- End-of-article CTA: "Find Out If You Qualify — Free Case Review" + OpenChatButton ("Ask Us a Question Live") + "See If You Qualify" link to `/fire-insurance-claims/qualify` or `/property-damage-claims/qualify`
+- Sticky mobile CTA: OpenChatButton + "See If You Qualify"
+- Sticky desktop CTA: "Insurance claim issues? Find out if you have a case — free, no obligation." + buttons
+- `MobileExitIntent` — Exit-intent modal with property damage messaging
+
 ---
 
-## 3. Component Specifications
+## 4. Component Specifications (Fire-Hub Specific Only)
 
-### 3.1 FirePillarHero
+### 4.1 FirePillarHero
 
 - H1: "Florida Fire Insurance Claim Lawyers"
 - Value proposition paragraph
@@ -73,9 +115,9 @@ data/
 - Above the fold on pillar hub page only
 - Uses Anton font for H1, Work Sans for body (existing pattern)
 
-### 3.2 FireClaimQualifier
+### 4.2 FireClaimQualifier
 
-Client component with 4 steps:
+Client component with 4 steps. Used on hub page and optionally at end of articles.
 
 **Step 1 — Claim status:**
 - Not yet filed / Pending / Denied / Underpaid or partially paid / Closed and unresolved
@@ -93,94 +135,68 @@ Client component with 4 steps:
 - Qualified (denied/underpaid/pending AND loss < 3 years): Show CalBookingEmbed inline with prefilled params
 - Out-of-scope (loss > 3 years OR no dispute): Lead capture form (name, email, phone), POST to `/api/qualify-intake` with `caseType: "fire"`
 
-**Analytics:** `fire_qualifier_start`, `fire_qualifier_step_{n}`, `fire_qualifier_qualified`, `fire_qualifier_offramp`
-
-### 3.3 CalBookingEmbed
+### 4.3 CalBookingEmbed
 
 - Wraps Cal.com inline embed via `<iframe>` to `https://bookings.louislawgroup.com/team/event-type-4`
 - Props: `prefillParams` object (claimType, claimStatus, carrier, lossDate, claimValue)
 - Params appended as URL query string
 - Responsive: 100% width, min-height 600px
 
-### 3.4 StickyBookingCTA
-
-- Fixed bottom bar, appears after 40% scroll depth
-- Copy: "Denied fire claim? Talk to an attorney — free."
-- CTA button: "Book Free Consultation" → Cal.com modal
-- X dismiss button, stores `fireStickyCTADismissed` in sessionStorage
-- Does not reappear in same session after dismiss
-- Analytics: `fire_sticky_cta_impression`, `fire_sticky_cta_click`, `fire_sticky_cta_dismiss`
-
-### 3.5 ClusterGrid
+### 4.4 ClusterGrid
 
 - 7 cards in CSS Grid (3 columns desktop, 2 tablet, 1 mobile)
 - Each card: lucide-react icon, cluster title, short description, link to cluster pillar
 - Data sourced from `data/fire-clusters.js`
 
-### 3.6 ResourceCard
+### 4.5 ResourceCard
 
 - Title (link), excerpt (2 lines), cluster tag pill, read time estimate
-- Used on: resource index page, cluster pillar pages, related articles
+- Used on: resource index page, cluster pillar pages
 - Read time: `Math.ceil(wordCount / 200)` minutes
 
-### 3.7 RelatedArticles
-
-- 3 same-cluster articles + 1 cross-cluster article
-- Matching: keyword overlap between article slug/title and cluster topic terms
-- Falls back to most recent if insufficient matches
-- Rendered at bottom of article pages
-
-### 3.8 ArticleTOC
+### 4.6 ArticleTOC
 
 - Desktop: sticky sidebar, generated from H2 elements in article body
 - Mobile: collapsible accordion at top of article
 - Smooth scroll to section on click
 - Highlights active section on scroll (IntersectionObserver)
 
-### 3.9 FireFAQ
+### 4.7 FireFAQ
 
 - Accordion (details/summary or custom with CSS transitions)
 - Emits `FAQPage` JSON-LD when rendered
 - Props: `faqs` array, each with `question` and `answer` (HTML string)
-- Analytics: `fire_faq_expand` on each open
 
-### 3.10 TrustSignals
+### 4.8 TrustSignals
 
 - Horizontal bar: "Florida Bar | DC Bar | Texas Bar | Colorado Bar | 10+ Years | Fire Claim Focus"
 - Rendered on hub page and cluster pillars
 
-### 3.11 AuthorBio
-
-- Fetches from Strapi `team-pages` by slug (default: "pierre-louis")
-- Displays: headshot, name, title, short bio, link to `/team/{slug}`
-- Rendered at bottom of article pages above RelatedArticles
-
-### 3.12 BreadcrumbNav
+### 4.9 BreadcrumbNav
 
 - Visual breadcrumbs: Home > Fire Insurance Claims > {Cluster or Resources} > {Article}
 - Emits `BreadcrumbList` JSON-LD
 - Rendered in layout.js for all fire hub pages
 
-### 3.13 FireDisclaimer
+### 4.10 FireDisclaimer
 
 - Text: "The information on this page is for general informational purposes only and does not constitute legal advice. Past results do not guarantee future outcomes. This is attorney advertising. Louis Law Group, PLLC is a Florida law firm."
 - Rendered in layout.js footer area
 
 ---
 
-## 4. Data Layer
+## 5. Data Layer
 
-### 4.1 Strapi Article Fetching
+### 5.1 Strapi Article Fetching
 
 **Resource index page:**
 
-The fire claims pipeline generates slugs with various fire-related terms (e.g., `house-fire-insurance-claim-denied-2026`, `smoke-damage-claim-florida-2026`). To reliably fetch fire articles, use an OR filter with multiple keywords:
+Both pipelines insert articles into the Strapi `articles` table. To reliably fetch fire articles, maintain a `fire-article-slugs.json` manifest that each pipeline appends to on every run. The resource index reads this manifest and fetches by exact slug list.
 
+Fallback: OR filter with multiple fire-related keywords:
 ```
 GET {STRAPI_URL}/api/articles?filters[$or][0][slug][$containsi]=fire&filters[$or][1][slug][$containsi]=smoke-damage&filters[$or][2][slug][$containsi]=arson&filters[$or][3][slug][$containsi]=soot&filters[$or][4][slug][$containsi]=lightning-strike&pagination[pageSize]=200&sort=publishedAt:desc
 ```
-
-Alternatively, maintain a `fire-article-slugs.json` manifest that the pipeline appends to on each run. The resource index reads this manifest and fetches by exact slug list. This is the more reliable approach and avoids false positives.
 
 **Individual article page:**
 ```
@@ -189,9 +205,7 @@ GET {STRAPI_URL}/api/articles?filters[slug][$eq]={slug}&populate=*
 
 **ISR:** `revalidate: 3600` (1 hour, matches existing pattern)
 
-**generateStaticParams:** Not used for fire articles (too many, use ISR on-demand)
-
-### 4.2 Static Data: fire-clusters.js
+### 5.2 Static Data: fire-clusters.js
 
 ```js
 export const FIRE_CLUSTERS = [
@@ -254,7 +268,7 @@ export const FIRE_CLUSTERS = [
 ]
 ```
 
-### 4.3 Static Data: fire-faqs.js
+### 5.3 Static Data: fire-faqs.js
 
 20-30 FAQ entries structured as:
 ```js
@@ -265,7 +279,7 @@ FAQ hub page renders all. Hub page renders those with `showOnHub: true` (top 5-7
 
 ---
 
-## 5. Structured Data (JSON-LD)
+## 6. Structured Data (JSON-LD)
 
 | Page | Schema |
 |------|--------|
@@ -278,67 +292,100 @@ Schemas emitted via `<script type="application/ld+json">` in page components. Re
 
 ---
 
-## 6. Conversion Flow
+## 7. Conversion Flow
 
-### Four touchpoints:
-1. **Hero CTA** (hub only) — "Book a Free Fire Claim Consultation" → Cal.com modal
-2. **Sticky bar** (articles + cluster pillars) — 40% scroll, sessionStorage dismiss
-3. **Mid-content CTA** (articles) — styled card between 2nd and 3rd H2
-4. **End-of-article qualifier** (articles) — FireClaimQualifier below body
+### Hub page (pillar):
+1. **FirePillarHero CTA** — "Book a Free Fire Claim Consultation" → Cal.com modal
+2. **FireClaimQualifier** — 4-question widget at bottom of hub
+
+### Resources index page:
+Same CTAs as main `/resources/` page:
+- `Results` component — case statistics
+- `Steps` component — "How it Works" + "Free Case Evaluation" button
+- `Contact` component — contact form + phone
+
+### Individual article pages:
+Same CTAs as main article pages via `[...slug]/page.js`:
+- `UrgencyBanner` — statute of limitations warning, top of article
+- `DocumentUploadCTA` — mid-article qualifier CTA
+- `ChecklistCTA` — mid-article checklist download (property damage variant)
+- End-of-article CTA block: "Find Out If You Qualify" + `OpenChatButton` + qualify link
+- Sticky mobile CTA bar: chat + qualify buttons
+- Sticky desktop CTA bar: "Insurance claim issues?" + buttons
+- `MobileExitIntent` — exit-intent modal
+- `RelatedArticles` — related fire articles
 
 ### Cal.com prefill URL params:
 ```
 ?claimType=fire&claimStatus={status}&carrier={carrier}&lossDate={range}&claimValue={range}
 ```
 
-### Qualifier → n8n integration:
-Qualified leads that don't book immediately also POST to `/api/qualify-intake`:
-```json
-{
-  "caseType": "fire",
-  "claimStatus": "denied",
-  "carrier": "Citizens",
-  "lossDate": "1-6 months",
-  "claimValue": "$100,000-$500,000",
-  "name": "...",
-  "email": "...",
-  "phone": "...",
-  "source": "fire-hub-qualifier"
-}
-```
-
 ---
 
-## 7. Analytics Events
+## 8. Two Article Generation Pipelines
 
-All via existing `trackEvent()` and `trackConversion()` from `/src/app/utils/analytics.js`.
+### Pipeline 1: Google Keyword Planner (GKP) Pipeline
 
-| Event | Trigger |
-|-------|---------|
-| `fire_qualifier_start` | User begins qualifier |
-| `fire_qualifier_step_{n}` | Step n completed |
-| `fire_qualifier_qualified` | Qualified outcome |
-| `fire_qualifier_offramp` | Out-of-scope outcome |
-| `fire_sticky_cta_impression` | Sticky bar appears |
-| `fire_sticky_cta_click` | Sticky bar click |
-| `fire_sticky_cta_dismiss` | Sticky bar dismissed |
-| `fire_booking_complete` | Cal.com booking confirmed |
-| `fire_article_scroll_{25/50/75/100}` | Scroll depth |
-| `fire_faq_expand` | FAQ opened |
-| `fire_internal_link_click` | Article → hub/cluster |
+**File:** `fire_claims_gkp_pipeline.py`
+**Schedule:** Daily, 50 articles/day
+**Keyword source:** Google Ads Keyword Planner API (direct pull)
+**Keyword file:** `fire_claims_gkp_keywords.json`
 
----
+Seeds for GKP pull:
+- "fire damage insurance claim Florida", "house fire insurance claim denied"
+- "smoke damage insurance claim", "fire insurance lawyer Florida"
+- "fire claim underpaid", "arson investigation insurance"
+- "electrical fire insurance claim", "kitchen fire claim"
+- "fire damage bad faith insurance", "additional living expenses fire"
+- "fire damage proof of loss", "fire claim public adjuster vs attorney"
+- "commercial fire insurance claim", "fire damage restoration dispute"
+- "lightning strike fire damage claim", "wildfire insurance claim Florida"
+- And 60+ more fire insurance-specific seeds
 
-## 8. SEO Pipeline Integration
+**Article CTA:** Same as main article pages (UrgencyBanner, DocumentUploadCTA, ChecklistCTA, end-of-article qualify + chat, sticky CTAs, exit intent)
 
-The existing `fire_claims_pipeline.py` (deployed at `/opt/openclaw-data/workspace/scripts/llg-seo-pipeline/`) generates 50 articles/day at 3 PM UTC. Articles are inserted into Strapi `articles` table with fire-related slugs.
+**Slug manifest:** Appends published slugs to `fire-article-slugs.json` for resource index fetching.
 
-**For articles to appear in the fire hub resource library:**
-- Resource index fetches articles where slug contains "fire"
-- Cluster matching uses `topicTerms` keyword overlap with article title/slug
-- No manual tagging required — fully automatic
+### Pipeline 2: Autocomplete + Sources Pipeline
 
-**Keyword pull:** `fire_claims_keyword_pull.py` pulls from Google Keyword Planner (90+ keywords).
+**File:** `fire_claims_autocomplete_pipeline.py`
+**Schedule:** Daily, 50 articles/day (offset by 1 hour from Pipeline 1)
+**Keyword sources:**
+- Google Autocomplete suggestions (primary)
+- Google Trends scoring
+- Competitor seed expansion (Nolo, FindLaw, Martindale fire claim pages)
+- "People Also Ask" style long-tail queries
+
+Seeds for autocomplete expansion:
+- "what to do after house fire", "fire insurance claim tips"
+- "how long does fire claim take", "fire damage claim checklist"
+- "can insurance deny fire claim", "fire claim adjuster won't pay"
+- "fire damage claim timeline Florida", "fire claim lawyer near me"
+- "smoke damage claim without fire", "fire insurance claim process step by step"
+- "fire department report for insurance", "fire claim depreciation"
+- And competitor-derived topics
+
+**Article CTA:** Same as main article pages (identical to Pipeline 1)
+
+**Slug manifest:** Same shared `fire-article-slugs.json`.
+
+### Shared Pipeline Infrastructure
+
+Both pipelines:
+- Insert into existing Strapi `articles` table
+- Use shared anti-cannibalization engine (`anti_cannibalize.py`)
+- Triple dedup: slug + title fingerprint + intent cluster
+- GSC guard against page 1 cannibalization
+- Telegram notifications on completion
+- Append to shared `fire-article-slugs.json` manifest
+- Submit sitemap after publishing
+- Separate state files per pipeline (slugs, titles, intents) to avoid conflicts
+
+### Dedup Across Pipelines
+
+Both pipelines read from a shared intent log (`fire_claims_shared_intents.json`) to prevent the autocomplete pipeline from generating articles on the same topics as the GKP pipeline. Each pipeline:
+1. Reads shared intents before selecting keywords
+2. Writes new intents back after publishing
 
 ---
 
@@ -348,15 +395,15 @@ The existing `fire_claims_pipeline.py` (deployed at `/opt/openclaw-data/workspac
 2. Every cluster pillar links up to the main fire hub via BreadcrumbNav
 3. Main hub links to all 7 cluster pillars via ClusterGrid
 4. Main hub links to 5-7 cornerstone articles (highest-traffic fire articles)
-5. RelatedArticles: 3 same-cluster + 1 cross-cluster at bottom of every article
-6. Mid-content CTA links to `/fire-insurance-claims/` hub
+5. RelatedArticles: related fire articles at bottom of every article
+6. Footer link: "Fire Insurance Claims" in Resources column
 
 ---
 
 ## 10. E-E-A-T & Florida Bar Compliance
 
-- AuthorBio on every article (Pierre Louis from `team-pages`)
-- Bar admissions visible on hub + author bio (FL, DC, TX, CO)
+- Author attribution via existing `team-pages` (Pierre Louis) on articles
+- Bar admissions visible on hub (FL, DC, TX, CO)
 - FireDisclaimer in layout footer on all fire hub pages
 - No guaranteed outcome language
 - No superlatives without qualification
@@ -370,30 +417,34 @@ The existing `fire_claims_pipeline.py` (deployed at `/opt/openclaw-data/workspac
 - Create `app/fire-insurance-claims/layout.js` with BreadcrumbNav, FireDisclaimer
 - Create data files (`fire-clusters.js`, `fire-faqs.js`)
 - Build CalBookingEmbed, FirePillarHero
-- Build pillar hub `page.js` with placeholder content
+- Build pillar hub `page.js`
 - Schema emission utilities
 
-### Phase 2: Hub Completion
-- Build ClusterGrid, TrustSignals, FireFAQ, StickyBookingCTA
+### Phase 2: Hub + Footer
+- Build ClusterGrid, TrustSignals, FireFAQ
 - Populate hub with final copy
 - Build 7 cluster pillar pages
+- Add "Fire Insurance Claims" link to Footer component
 
 ### Phase 3: Resource System
-- Build resource index page with cluster filter
-- Build article template `[slug]/page.js`
-- Build ResourceCard, RelatedArticles, ArticleTOC, AuthorBio
+- Build resource index page with cluster filter + Results/Steps/Contact CTAs
+- Build article template `[slug]/page.js` with all existing article CTAs (UrgencyBanner, DocumentUploadCTA, ChecklistCTA, sticky CTAs, exit intent, end-of-article CTA)
+- Build ResourceCard, ArticleTOC
 - Verify pipeline articles render correctly
 
-### Phase 4: Conversion
-- Build FireClaimQualifier with routing logic
-- Mid-content CTA insertion in article template
+### Phase 4: Pipelines
+- Build GKP keyword pull + pipeline (50/day)
+- Build autocomplete keyword pull + pipeline (50/day)
+- Shared `fire-article-slugs.json` manifest
+- Cross-pipeline dedup via shared intents
+- Cron entries for both pipelines
+- Verify articles appear in resource library
+
+### Phase 5: Conversion + Launch
+- Build FireClaimQualifier on hub page
 - Cal.com prefill integration
 - Analytics event instrumentation
-- Verify n8n webhook receives qualifier data
-
-### Phase 5: Polish & Launch
 - Internal linking audit
-- Schema validation (Google Rich Results Test)
-- Lighthouse audit (performance, accessibility)
-- Submit sitemap update to GSC
+- Schema validation
 - Deploy to Vercel production
+- Submit sitemap to GSC
