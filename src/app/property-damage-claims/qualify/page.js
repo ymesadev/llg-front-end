@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Script from "next/script";
 import styles from "./page.module.css";
 import { trackEvent, trackConversion } from "@/app/utils/analytics";
 import useGclid, { getStoredGclid } from "@/app/utils/useGclid";
@@ -331,6 +332,13 @@ export default function PropertyDamageQualify() {
     const titles = { "not-owner": "Not the property owner", "out-of-state": "Outside our practice area" };
     return (
       <div className={styles.wrapper}>
+        <Script
+          id="vtag-ai-js"
+          strategy="afterInteractive"
+          src="https://r2.leadsy.ai/tag.js"
+          data-pid="1zt0dyt08LfDX6JhM"
+          data-version="062024"
+        />
         <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: "100%" }} /></div>
         <div className={styles.card}>
           <div className={styles.cardHeader}>
@@ -366,6 +374,13 @@ export default function PropertyDamageQualify() {
   // ── QUALIFIER STEPS + BOOKING UI ──
   return (
     <div className={styles.wrapper}>
+      <Script
+        id="vtag-ai-js"
+        strategy="afterInteractive"
+        src="https://r2.leadsy.ai/tag.js"
+        data-pid="1zt0dyt08LfDX6JhM"
+        data-version="062024"
+      />
       <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: `${progress}%` }} /></div>
 
       <div className={styles.card}>
