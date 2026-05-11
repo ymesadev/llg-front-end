@@ -171,6 +171,31 @@ export default function PropertyDamageQualify() {
 
     const storedGclid = getStoredGclid();
 
+    // Identify this session in OpenReplay so future replays are searchable by
+    // email / name / gclid / damage type instead of being anonymous. The
+    // __or_identify helper is exposed by src/app/components/OpenReplay/OpenReplay.js
+    // once the tracker has started — guarded with typeof window check for safety.
+    try {
+      if (typeof window !== "undefined" && typeof window.__or_identify === "function") {
+        window.__or_identify(email, {
+          name,
+          phone,
+          property_address: propertyAddress,
+          damage_type: DAMAGE_LABELS[damageIdx] || "",
+          gclid: storedGclid || "",
+          case_type: "property-damage",
+          sms_consent: contactConsent ? "yes" : "no",
+        });
+      }
+      if (typeof window !== "undefined" && typeof window.__or_event === "function") {
+        window.__or_event("qualify_contact_submitted", {
+          email,
+          damage_type: DAMAGE_LABELS[damageIdx] || "",
+          gclid: storedGclid || "",
+        });
+      }
+    } catch (e) { /* OpenReplay tracker not ready yet — silent */ }
+
     const partialPayload = {
       name, phone, email, propertyAddress,
       damageType: damageIdx,
