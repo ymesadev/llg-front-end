@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score } = body;
+    const { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score, gclid } = body;
 
     if (!name || !phone || !email) {
       return NextResponse.json({ error: "Missing required contact fields" }, { status: 400 });
@@ -34,7 +34,7 @@ export async function POST(request) {
     try {
       const n8nPayload = isPI
         ? body  // Send full PI payload (injuryType, dateOfInjury, medicalTreatment, etc.)
-        : { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score };
+        : { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score, gclid };
       const n8nRes = await fetch(n8nWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

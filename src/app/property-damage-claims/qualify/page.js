@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import styles from "./page.module.css";
 import { trackEvent, trackConversion } from "@/app/utils/analytics";
+import useGclid, { getStoredGclid } from "@/app/utils/useGclid";
 
 const DAMAGE_LABELS = [
   "Hurricane / Wind",
@@ -33,6 +34,17 @@ export default function PropertyDamageQualify() {
   const [contactSubmitting, setContactSubmitting] = useState(false);
   const [contactError, setContactError] = useState("");
   const today = new Date();
+
+  // Capture Google Ads click ID (gclid) from URL → localStorage on mount.
+  // Forwarded with intake payloads to GHL (Ads GCLID custom field) so that
+  // when the contact later signs the FPP retainer in DocuSeal, the daily
+  // offline-conversion uploader can attribute the conversion to Google Ads.
+  const gclid = useGclid();
+  useEffect(() => {
+    if (gclid) {
+      trackEvent("gclid_captured", { gclid_short: gclid.slice(0, 12), case_type: "property-damage" });
+    }
+  }, [gclid]);
 
   useEffect(() => {
     trackEvent("qualify_page_view", { case_type: "property-damage" });
@@ -156,11 +168,14 @@ export default function PropertyDamageQualify() {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: "qualify_step_complete", step: 4, step_name: "contact_info" });
 
+    const storedGclid = getStoredGclid();
+
     const partialPayload = {
       name, phone, email, propertyAddress,
       damageType: damageIdx,
       caseType: "property-damage",
       smsConsent: contactConsent,
+      gclid: storedGclid || undefined,
     };
 
     const fullPayload = {
@@ -174,6 +189,7 @@ export default function PropertyDamageQualify() {
       insurerResponse: null,
       // Score: passed all DQ gates → automatic STRONG CANDIDATE
       score: 80,
+      gclid: storedGclid || undefined,
     };
 
     // Fire both webhooks in parallel — partial captures the lead immediately
@@ -261,6 +277,10 @@ export default function PropertyDamageQualify() {
       if (damageLabel) prefill.set("damage-type", damageLabel);
       if (a.insurer) prefill.set("insurance-carrier", a.insurer);
       if (a.city) prefill.set("property-city", a.city);
+      // Attach gclid to cal.com booking metadata so the cal → n8n → GHL pipeline
+      // also has it; primary join is still GHL contact by email at retainer-sign time.
+      const storedGclid = getStoredGclid();
+      if (storedGclid) prefill.set("gclid", storedGclid);
       const qs = prefill.toString();
       const calLinkWithPrefill = qs ? `${CAL_LINK}?${qs}` : CAL_LINK;
       window.Cal.ns[CAL_NAMESPACE]("inline", {

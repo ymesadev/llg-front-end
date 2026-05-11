@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, phone, email, propertyAddress, damageType, caseType } = body;
+    const { name, phone, email, propertyAddress, damageType, caseType, gclid } = body;
 
     if (!name || !phone || !email) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -24,6 +24,7 @@ export async function POST(request) {
           damageType: damageLabels[damageType] ?? damageType ?? "Not provided",
           caseType: caseType || "property-damage",
           partialLead: true,
+          gclid,
         }),
       });
       if (res.ok) sent = true;
