@@ -23,11 +23,8 @@ const teamMembers = [
   { name: "Olena Perez", photo: "/images/olena-perez.jpg", description: "Tallahassee, FL", link: "/olena-perez" },
   { name: "Matthew Mobley", photo: "/images/matthew-mobley.jpg", description: "Miami, FL", link: "/matthew-mobley"},
   { name: "Yonel Mesa", photo: "/images/yonel-mesa.jpg", description: "Miami, FL", link: "/yonel-mesa" },
-  { name: "Romina Murias", photo: "/images/romina-murias.jpg", description: "Miami, FL,", link: "/romina-murias" },
   { name: "Marie Augustin", photo: "/images/marie-augustine.jpg", description: "Miami, FL", link: "/marie-augustin" },
-  { name: "Kellei Johnson", photo: "/images/kellei-johnson.jpg", description: "Inverness, FL", link: "/kellei-johnson" },
-  { name: "Monica Abay", photo: "/images/Monica-Abay.jpg", description: "Homestead, FL",link: "/monica-abay" },
-   { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL",link: "/diana-vergara" },
+  { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL",link: "/diana-vergara" },
    
 
   

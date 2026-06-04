@@ -13,18 +13,6 @@ const teamMembers = [
     link: "/marie-augustin",
   },
   {
-    name: "Kellei Johnson",
-    photo: "/images/kellei-johnson.jpg",
-    description: "Litigation Paralegal ",
-    link: "/kellei-johnson",
-  },
-  {
-    name: "Monica Abay",
-    photo: "/images/Monica-Abay.jpg",
-    description: "Monica Abay",
-    link: "/monica-abay",
-  },
-  {
     name: "Daphney Souriac",
     photo: "/images/daphney-souriac.jpg",
     description: "Litigation Legal Assistant",
