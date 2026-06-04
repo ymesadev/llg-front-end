@@ -9,6 +9,14 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Removed former team members — bio pages redirect to /team
+      { source: '/romina-murias', destination: '/team', permanent: true },
+      { source: '/team/romina-murias', destination: '/team', permanent: true },
+      { source: '/kellei-johnson', destination: '/team', permanent: true },
+      { source: '/team/kellei-johnson', destination: '/team', permanent: true },
+      { source: '/monica-abay', destination: '/team', permanent: true },
+      { source: '/team/monica-abay', destination: '/team', permanent: true },
+
       // ── AHS consolidation (2,568 thin city pages → 1 hub) ──
       // Redirects all AHS article variants to the privacy torts landing page.
       // The privacy torts page (/american-home-shield-privacy-torts) is a static
