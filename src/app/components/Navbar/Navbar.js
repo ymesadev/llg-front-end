@@ -35,6 +35,29 @@ export default function Navbar() {
         const sortedNav = data.data
           .sort((a, b) => a.Order - b.Order)
           .filter((link) => !hiddenLabels.includes(link.label.toLowerCase()));
+
+        // Family Law lives on a separate site (family.louislawgroup.com) and is
+        // not part of the Strapi navigation, so inject it manually right after
+        // "Social Security" (i.e. between Social Security and Privacy Torts).
+        const familyLaw = {
+          id: "family-law-external",
+          label: "Family Law",
+          URL: "https://family.louislawgroup.com/",
+          external: true,
+        };
+        if (
+          !sortedNav.some((link) => link.label?.toLowerCase() === "family law")
+        ) {
+          const ssIndex = sortedNav.findIndex(
+            (link) => link.label?.toLowerCase() === "social security"
+          );
+          if (ssIndex !== -1) {
+            sortedNav.splice(ssIndex + 1, 0, familyLaw);
+          } else {
+            sortedNav.push(familyLaw);
+          }
+        }
+
         setNavLinks(sortedNav);
       } catch (error) {
         console.error("❌ Error fetching navigation:", error);
@@ -75,9 +98,15 @@ export default function Navbar() {
                     isActive ? styles.activeNavItem : ""
                   }`}
                 >
-                  <Link href={link.URL} className={styles.navLink}>
-                    {link.label}
-                  </Link>
+                  {link.external ? (
+                    <a href={link.URL} className={styles.navLink}>
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link href={link.URL} className={styles.navLink}>
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               );
             })}
@@ -108,9 +137,15 @@ export default function Navbar() {
         <ul>
           {navLinks.map((link) => (
             <li key={link.id} className={styles.mobileNavItem}>
-              <Link href={link.URL} onClick={toggleMenu}>
-                {link.label}
-              </Link>
+              {link.external ? (
+                <a href={link.URL} onClick={toggleMenu}>
+                  {link.label}
+                </a>
+              ) : (
+                <Link href={link.URL} onClick={toggleMenu}>
+                  {link.label}
+                </Link>
+              )}
             </li>
           ))}
         </ul>
