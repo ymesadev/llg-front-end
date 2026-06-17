@@ -112,6 +112,10 @@ public/*
 !src/app/property-damage-claims/
 !src/app/property-damage-claims/**
 
+# allow warranty claims flow
+!src/app/warranty-claims/
+!src/app/warranty-claims/**
+
 # allow qualify-intake API route
 !src/app/api/qualify-intake/
 !src/app/api/qualify-intake/**

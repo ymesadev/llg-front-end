@@ -1,0 +1,466 @@
+/* ============================================================
+   Sample Vehicle Service Contract — Florida
+   LLG design system: navy #1a2b49, gold #ffb800, white bg
+   ============================================================ */
+
+.page {
+  --navy: #1a2b49;
+  --navy-soft: #2a3f63;
+  --gold: #ffb800;
+  --ink: #2b2f38;
+  --muted: #5b6472;
+  --line: #e4e7ec;
+  --amber-bg: #fff8e6;
+  --amber-border: #ffcf4d;
+
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+  color: var(--ink);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* ---------------- HERO ---------------- */
+.hero {
+  padding: 36px 0 8px;
+}
+
+.breadcrumb {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.breadcrumb a {
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.sep {
+  color: var(--muted);
+}
+
+.current {
+  color: var(--muted);
+}
+
+.h1 {
+  color: var(--navy);
+  font-size: 2.35rem;
+  line-height: 1.18;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 18px;
+}
+
+.intro {
+  font-size: 1.18rem;
+  line-height: 1.6;
+  color: var(--navy-soft);
+  margin: 0 0 28px;
+}
+
+/* ---------------- DISCLAIMER (soft amber) ---------------- */
+.disclaimer {
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  border-left: 5px solid var(--gold);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin: 0 0 22px;
+}
+
+.disclaimerTitle {
+  color: var(--navy);
+  font-size: 1.02rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
+}
+
+.disclaimer p {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+  color: #5a4a16;
+}
+
+/* ---------------- CALLOUT (Florida non-binding) ---------------- */
+.callout {
+  background: #f3f6fb;
+  border: 1px solid #d6e0f0;
+  border-left: 5px solid var(--navy);
+  border-radius: 10px;
+  padding: 20px 22px;
+  margin: 0 0 30px;
+}
+
+.calloutTag {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+
+.callout p {
+  margin: 0;
+  font-size: 0.99rem;
+  line-height: 1.65;
+}
+
+.quote {
+  font-style: italic;
+  color: var(--navy);
+  font-weight: 600;
+}
+
+/* ---------------- CTA BUTTON ---------------- */
+.cta {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 1.02rem;
+  text-decoration: none;
+  padding: 14px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(255, 184, 0, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.cta:hover {
+  background: #ffc62e;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 184, 0, 0.45);
+}
+
+.cta:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 2px;
+}
+
+/* ---------------- TABLE OF CONTENTS ---------------- */
+.toc {
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--gold);
+  border-radius: 10px;
+  background: #fcfcfd;
+  padding: 20px 24px;
+  margin: 40px 0;
+}
+
+.tocTitle {
+  color: var(--navy);
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 12px;
+}
+
+.tocList {
+  margin: 0;
+  padding: 0 0 0 4px;
+  list-style: none;
+  columns: 2;
+  column-gap: 32px;
+}
+
+.tocList li {
+  margin: 0 0 8px;
+  break-inside: avoid;
+  font-size: 0.95rem;
+}
+
+.tocList a {
+  color: var(--navy-soft);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+
+.tocList a:hover {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* ---------------- CONTRACT BODY ---------------- */
+.contract {
+  margin-top: 8px;
+}
+
+.docMeta {
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--muted);
+  background: #f7f8fa;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin: 0 0 8px;
+}
+
+.section {
+  padding: 30px 0 6px;
+  border-top: 1px solid var(--line);
+  margin-top: 22px;
+  scroll-margin-top: 90px;
+}
+
+.section:first-of-type {
+  border-top: none;
+}
+
+.section h2 {
+  color: var(--navy);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+  margin: 0 0 14px;
+}
+
+.section h3 {
+  color: var(--navy-soft);
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin: 22px 0 8px;
+}
+
+.section p {
+  margin: 0 0 16px;
+}
+
+.lead {
+  font-size: 1.05rem;
+}
+
+/* Definition / exclusion lists */
+.defList {
+  list-style: none;
+  margin: 4px 0 18px;
+  padding: 0;
+}
+
+.defList li {
+  position: relative;
+  padding: 10px 0 10px 18px;
+  border-bottom: 1px solid var(--line);
+  line-height: 1.65;
+}
+
+.defList li:last-child {
+  border-bottom: none;
+}
+
+.defList li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 19px;
+  width: 7px;
+  height: 7px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+.defList strong {
+  color: var(--navy);
+}
+
+/* Numbered claim steps */
+.steps {
+  margin: 6px 0 18px;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  position: relative;
+  counter-increment: step;
+  padding: 4px 0 16px 46px;
+  line-height: 1.65;
+}
+
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 30px;
+  height: 30px;
+  background: var(--navy);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.steps strong {
+  color: var(--navy);
+}
+
+/* Florida cross-reference note inside Section IX */
+.flNote {
+  background: var(--amber-bg);
+  border-left: 4px solid var(--gold);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  color: #5a4a16;
+}
+
+.flNote strong {
+  color: var(--navy);
+}
+
+/* Florida amendment blocks */
+.flBlock {
+  margin: 18px 0;
+  padding: 4px 0 4px 18px;
+  border-left: 3px solid var(--line);
+}
+
+.flBlockHighlight {
+  margin: 24px 0 8px;
+  padding: 18px 22px;
+  background: var(--amber-bg);
+  border: 1px solid var(--amber-border);
+  border-left: 5px solid var(--gold);
+  border-radius: 10px;
+}
+
+.flBlockHighlight h3 {
+  margin-top: 0;
+  color: var(--navy);
+}
+
+.flQuote {
+  margin: 12px 0;
+  padding: 14px 20px;
+  background: #fff;
+  border: 1px solid var(--amber-border);
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-style: italic;
+  font-weight: 600;
+  color: var(--navy);
+  line-height: 1.55;
+}
+
+/* ---------------- CLOSING CTA ---------------- */
+.closing {
+  margin-top: 50px;
+  padding: 34px 30px;
+  background: var(--navy);
+  border-radius: 14px;
+  text-align: center;
+  color: #eef1f6;
+}
+
+.closingTitle {
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0 0 12px;
+  line-height: 1.3;
+}
+
+.closing p {
+  margin: 0 auto 20px;
+  max-width: 560px;
+  color: #cfd6e2;
+}
+
+.closing .cta {
+  margin: 4px 0 8px;
+}
+
+.finePrint {
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #9aa6ba !important;
+  margin-top: 20px !important;
+}
+
+/* ---------------- DESKTOP: sticky TOC ---------------- */
+@media (min-width: 1180px) {
+  .toc {
+    position: sticky;
+    top: 24px;
+    float: right;
+    width: 250px;
+    margin: 8px 0 24px 36px;
+  }
+
+  .tocList {
+    columns: 1;
+  }
+}
+
+/* ---------------- MOBILE ---------------- */
+@media (max-width: 600px) {
+  .page {
+    padding: 0 16px 56px;
+    font-size: 1rem;
+  }
+
+  .h1 {
+    font-size: 1.8rem;
+  }
+
+  .intro {
+    font-size: 1.06rem;
+  }
+
+  .tocList {
+    columns: 1;
+  }
+
+  .section h2 {
+    font-size: 1.3rem;
+  }
+
+  .cta {
+    display: block;
+    text-align: center;
+    width: 100%;
+    padding: 16px 24px;
+  }
+
+  .disclaimer,
+  .callout,
+  .flBlockHighlight,
+  .closing {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .steps li {
+    padding-left: 40px;
+  }
+}
