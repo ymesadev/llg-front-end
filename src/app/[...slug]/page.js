@@ -69,6 +69,12 @@ function getArticleType(slug) {
     // Generic privacy tort (no specific brand)
     return "privacy-tort";
   }
+  // American Home Shield (home warranty) — route to the AHS funnel even WITHOUT a
+  // privacy keyword, so the frontend-injected CTA matches the AHS qualifier these
+  // articles already link to in-body (1,975/1,990). Was defaulting to property-damage.
+  if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("-ahs-")) {
+    return "ahs";
+  }
   // Warranty-dispute detection (extended car warranty / home warranty / service contract claims)
   if (s.includes("warranty") || s.includes("service-contract") || s.includes("vehicle-service-contract")) {
     return "warranty";
