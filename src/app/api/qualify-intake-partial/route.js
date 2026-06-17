@@ -3,13 +3,14 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   try {
     const body = await request.json();
-    const { name, phone, email, propertyAddress, damageType, caseType, gclid } = body;
+    const { name, phone, email, propertyAddress, damageType, caseType, gclid, warrantyCompany, warrantyType } = body;
 
     if (!name || !phone || !email) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
     const damageLabels = ["Hurricane / Wind", "Water / Flood", "Roof Damage", "Fire / Smoke", "Plumbing Leak", "Mold", "Other"];
+    const isWarranty = caseType === "warranty";
 
     // Send to partial lead n8n webhook
     const webhookUrl = "https://n8n.louislawgroup.com/webhook/llg-fpp-partial-lead";
@@ -21,8 +22,11 @@ export async function POST(request) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name, phone, email, propertyAddress,
-          damageType: damageLabels[damageType] ?? damageType ?? "Not provided",
+          damageType: isWarranty
+            ? (warrantyType || "Not provided")
+            : (damageLabels[damageType] ?? damageType ?? "Not provided"),
           caseType: caseType || "property-damage",
+          warrantyCompany: isWarranty ? (warrantyCompany || "Not provided") : undefined,
           partialLead: true,
           gclid,
         }),
