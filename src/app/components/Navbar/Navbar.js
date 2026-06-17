@@ -58,6 +58,25 @@ export default function Navbar() {
           }
         }
 
+        // Warranty claims is a coded practice-area page (not yet in the Strapi
+        // navigation), so inject it manually right after "Property Damage".
+        const warranty = {
+          id: "warranty-claims-internal",
+          label: "Warranty",
+          URL: "/warranty-claims",
+          external: false,
+        };
+        if (!sortedNav.some((link) => link.label?.toLowerCase() === "warranty")) {
+          const pdIndex = sortedNav.findIndex((link) =>
+            (link.label?.toLowerCase() || "").includes("property damage")
+          );
+          if (pdIndex !== -1) {
+            sortedNav.splice(pdIndex + 1, 0, warranty);
+          } else {
+            sortedNav.push(warranty);
+          }
+        }
+
         setNavLinks(sortedNav);
       } catch (error) {
         console.error("❌ Error fetching navigation:", error);
