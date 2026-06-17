@@ -69,6 +69,10 @@ function getArticleType(slug) {
     // Generic privacy tort (no specific brand)
     return "privacy-tort";
   }
+  // Warranty-dispute detection (extended car warranty / home warranty / service contract claims)
+  if (s.includes("warranty") || s.includes("service-contract") || s.includes("vehicle-service-contract")) {
+    return "warranty";
+  }
   // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
@@ -252,6 +256,7 @@ function getIntakeHref(slug, articleType) {
     case "privacy-tort":    return "/privacy-torts";
     case "ssdi":            return "/ssdi/qualify";
     case "personal-injury":  return "/personal-injury/qualify";
+    case "warranty":        return "/warranty-claims/qualify";
     default:                return "/property-damage-claims/qualify";
   }
 }
@@ -2014,7 +2019,7 @@ export default async function Page(props) {
                       const deepHref = __heroButtonFromDeep?.href || null;
                       const deepLabel = __heroButtonFromDeep?.label || null;
 
-                      const defaultHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : articleType === 'personal-injury' ? '/personal-injury/qualify' : '/free-case-evaluation';
+                      const defaultHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : articleType === 'personal-injury' ? '/personal-injury/qualify' : articleType === 'warranty' ? '/warranty-claims/qualify' : '/free-case-evaluation';
                       let finalHref = href || deepHref || fallbackBtn?.href || defaultHref;
                       let finalLabel = label || deepLabel || fallbackBtn?.label || 'See if you qualify';
 

@@ -1,79 +1,79 @@
 // ---------------------------------------------------------------------------
 // SINGLE SOURCE OF TRUTH — Warranty companies Louis Law Group can represent
-// Florida clients AGAINST.
+// Florida clients AGAINST. The qualifier uses this as a HARD GATE.
 //
-// Derived verbatim from the case-intake source file `00_INDEX.md`
-// ("FL Warranty Agreements — NO BINDING ARBITRATION / litigation targets",
-// Louis Law Group, updated 2026-06-17). DO NOT add companies that are not in
-// that index. The qualifier uses this list as a HARD GATE: a claimant whose
-// provider is not on this list cannot advance past the company step.
+// SYNCED 2026-06-17 to the FULL vetted case-intake index (00_INDEX.md, "FL
+// Warranty Agreements — NO BINDING ARBITRATION"). All 49 litigation-target
+// companies are now listed so every warranty-dispute article's CTA resolves to a
+// covered company instead of the disqualification screen.
 //
-// Dedup note: the index lists "Bonded Builders Service Corp. DBA Bonded
-// Builders Risk Management" three times (files 06/07/08 — identical FL clause);
-// collapsed to one entry. Distinct DBAs (e.g. Centricity) are kept separate
-// because a consumer sees the brand printed on their own contract.
+// Generated from ~/warranty-pipeline/companies_warranty.py (the same spine that
+// builds the SEO keyword bank) so dropdown values == bank company_value exactly.
+// To change the list, edit companies_warranty.py and re-run gen_qualifier_js.py.
 //
-// DELIBERATE EXCLUSIONS (NOT shown in the dropdown) — each documented so the
-// decision is auditable and reversible in one edit:
-//   • American Auto Shield, Inc. / CarShield (source file 10) — the index flags
-//     this 🔴 UNRESOLVED: "BINDING BBB arbitration + class waiver in 2023+
-//     templates ... Don't rely on either verdict until the FL endorsement is
-//     reviewed." We do not gate a consumer IN on an unresolved litigability
-//     verdict. Move into WARRANTY_COMPANIES once the FL endorsement is
-//     confirmed non-binding.
-//   • First Extended Service Corporation of Florida (source file 30) — present
-//     in the source folder but NOT promoted into the 00_INDEX.md target table
-//     (low confidence, below the verification cutoff). Add once promoted.
+// NOTE (American Auto Shield / CarShield): added per Pierre's 2026-06-17 decision.
+// The final index dual-confirms the FL contract as NON-binding arbitration; pull
+// the client's executed FL endorsement to lock the read on any specific matter.
 // ---------------------------------------------------------------------------
 
 export const WARRANTY_COMPANIES = [
-  // A. Verified high-demand core (index section A)
-  { value: "endurance", label: "Endurance" },
-  { value: "carchex", label: "CARCHEX (Royal Administration)" },
-  { value: "protect-my-car", label: "Protect My Car" },
-  // B. No-binding-arbitration targets (index section B)
-  { value: "bonded-builders", label: "Bonded Builders" },
-  { value: "centricity-bonded-builders", label: "Centricity (issued by Bonded Builders Service Corp.)" },
-  { value: "aig-warranty-fl", label: "AIG Warranty Services of Florida" },
-  { value: "assurant-home-fl", label: "Assurant Home Solutions of Florida" },
-  { value: "complete-appliance-protection", label: "Complete Appliance Protection (Complete Protection)" },
-  { value: "broward-factory-service", label: "Broward Factory Service (Herd Enterprises)" },
-  { value: "homemembership", label: "HomeMembership" },
   { value: "4-warranty-corporation", label: "4 Warranty Corporation" },
   { value: "access-protection-fl", label: "Access Protection Company (FL)" },
-  { value: "centricity-bankers-warranty", label: "Centricity (issued by Bankers Warranty Group of Florida)" },
+  { value: "aig-warranty-fl", label: "AIG Warranty Services of Florida" },
+  { value: "american-auto-shield", label: "American Auto Shield / CarShield" },
+  { value: "apple", label: "Apple" },
+  { value: "applecare", label: "AppleCare" },
+  { value: "assurant-home-fl", label: "Assurant Home Solutions of Florida" },
+  { value: "badcock", label: "Badcock Home Furniture" },
+  { value: "bonded-builders", label: "Bonded Builders" },
+  { value: "broward-factory-service", label: "Broward Factory Service" },
+  { value: "carchex", label: "CARCHEX" },
+  { value: "centricity-bankers-warranty", label: "Centricity (Bankers Warranty Group of Florida)" },
+  { value: "centricity-bonded-builders", label: "Centricity (Bonded Builders Service Corp.)" },
+  { value: "cna-national-warranty", label: "CNA National Warranty Corporation" },
+  { value: "complete-appliance-protection", label: "Complete Appliance Protection" },
   { value: "domestic-general-usa", label: "Domestic & General USA" },
   { value: "east-coast-mechanical", label: "East Coast Mechanical (ECM)" },
   { value: "ecm-warranty", label: "ECM Warranty" },
-  { value: "apple", label: "Apple" },
-  { value: "applecare", label: "AppleCare (AppleCare Service Company)" },
-  { value: "cna-national-warranty", label: "CNA National Warranty Corporation" },
-  { value: "gai-warranty-fl", label: "GAI Warranty Company of Florida" },
-  { value: "hendrick-autoguard-fl", label: "Hendrick Autoguard Florida" },
+  { value: "endurance", label: "Endurance" },
+  { value: "first-extended", label: "First Extended Service Corporation of Florida" },
   { value: "flynns-air-conditioning", label: "Flynn's Air Conditioning Service" },
-  { value: "badcock", label: "Badcock Home Furniture (Badcock's)" },
+  { value: "gai-warranty-fl", label: "GAI Warranty Company of Florida" },
+  { value: "gopro-care", label: "GoPro Care Services" },
+  { value: "hendrick-autoguard-fl", label: "Hendrick Autoguard Florida" },
+  { value: "heritage-mechanical", label: "Heritage Mechanical Breakdown Corporation" },
+  { value: "homemembership", label: "HomeMembership" },
+  { value: "interstate-national", label: "Interstate National Dealer Services of Florida" },
+  { value: "ironwood-warranty-fl", label: "Ironwood Warranty of Florida" },
+  { value: "kubota", label: "Kubota Tractor Corporation" },
+  { value: "mercury-marine", label: "Mercury Marine (Brunswick)" },
+  { value: "mercury-select", label: "Mercury Select / American Mercury Warranty" },
+  { value: "minnehoma", label: "Minnehoma Automobile Association" },
+  { value: "nrg-protects", label: "NRG Protects" },
+  { value: "onpoint-warranty", label: "OnPoint Warranty Solutions" },
+  { value: "pds-warranty", label: "PDS Warranty Company" },
+  { value: "portfolio-se", label: "Portfolio SE" },
+  { value: "protect-my-car", label: "Protect My Car" },
+  { value: "qbe-admin", label: "QBE Administration Services" },
+  { value: "residential-warranty-home", label: "Residential Warranty Home Protection" },
+  { value: "risk-assurance-partners", label: "Risk Assurance Partners" },
+  { value: "safe-guard", label: "Safe-Guard Warranty Corporation" },
+  { value: "service-net-fl", label: "Service Net Solutions of Florida" },
+  { value: "signet-service-plans", label: "Signet Service Plans" },
+  { value: "total-appliance-ac", label: "Total Appliance & Air Conditioning Repairs" },
+  { value: "landcar-total-care", label: "Total Care Auto (Landcar Agency)" },
+  { value: "united-service-protection", label: "United Service Protection" },
+  { value: "vehicle-dealer-solutions-zurich", label: "Vehicle Dealer Solutions (Zurich Protection)" },
+  { value: "warranty-solutions-ge", label: "Warranty Solutions Administrative Services (GE Capital)" },
+  { value: "york-international", label: "York Heating & Air Conditioning (York International)" },
 ];
 
-// Sentinel rendered LAST in the dropdown. There is NO free-text entry, so this
-// is the only non-covered selection a user can make — and it routes straight to
-// the disqualification screen. Selecting it never advances the qualifier.
+// Sentinel rendered LAST in the dropdown. There is NO free-text entry, so this is
+// the only non-covered selection a user can make — it routes to disqualification.
 export const NOT_LISTED_VALUE = "__not_listed__";
 
-// Documented exclusions, exported for transparency / tests (NOT rendered in UI).
-export const EXCLUDED_FROM_GATE = [
-  {
-    label: "American Auto Shield / CarShield",
-    sourceFile: "10_AMERICAN_AUTO_SHIELD_INC_NONBIND_high.pdf",
-    reason:
-      "Litigability UNRESOLVED in the source index (possible binding BBB arbitration + class waiver in 2023+ templates). Excluded until the FL endorsement is confirmed non-binding.",
-  },
-  {
-    label: "First Extended Service Corporation of Florida",
-    sourceFile: "30_FIRST_EXTENDED_SERVICE_CORPORATION_OF_FLORIDA_NO_low.pdf",
-    reason:
-      "Present in the source folder but not promoted into the 00_INDEX.md target table (low confidence).",
-  },
-];
+// All source-folder companies are now in the gate; nothing is excluded.
+export const EXCLUDED_FROM_GATE = [];
 
 export function isCoveredCompany(value) {
   return WARRANTY_COMPANIES.some((c) => c.value === value);

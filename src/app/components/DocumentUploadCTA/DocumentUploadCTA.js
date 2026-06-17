@@ -12,11 +12,13 @@ const INTAKE_MAP = {
   "slide":              { href: "/slide-insurance-privacy-torts/qualify",            headline: "See If You Qualify — Slide Insurance Claim",         sub: "Check your eligibility for the Slide Insurance case in under 2 minutes." },
   "tower-hill":         { href: "/tower-hill-insurance-privacy-torts/qualify",       headline: "See If You Qualify — Tower Hill Insurance Claim",    sub: "Find out if your Tower Hill Insurance dispute qualifies — free eligibility check." },
   "american-integrity": { href: "/american-integrity-insurance-privacy-torts/qualify", headline: "See If You Qualify — American Integrity Claim",   sub: "Check your eligibility for the American Integrity Insurance case — takes under 2 minutes." },
+  "warranty":           { href: "/warranty-claims/qualify",                            headline: "Warranty Claim Denied? See If You Qualify",         sub: "Take our 2-minute qualifier and find out if your denied warranty or service-contract claim qualifies for representation — at no cost." },
 };
 
 const INTAKE_MAP_ES = {
   "ssdi":            { href: "/ssdi/calificar",                headline: "Descubra Si Califica para Beneficios de SSDI",              sub: "Responda 10 preguntas rapidas y obtenga su puntuacion de elegibilidad al instante — gratis, sin compromiso." },
   "property-damage": { href: "/reclamos-propiedad/calificar",  headline: "Vea Si Tiene un Reclamo de Seguro Fuerte",                  sub: "Complete nuestro calificador de 2 minutos y descubra si es un candidato fuerte para representacion — sin costo." },
+  "warranty":        { href: "/warranty-claims/qualify",       headline: "¿Le Negaron su Reclamo de Garantía? Vea Si Califica",       sub: "Complete nuestro calificador de 2 minutos y descubra si su reclamo de garantía negado califica para representación — sin costo." },
 };
 
 function getPersonalizedHeadline({ insurer, damageType, city, baseHeadline }) {
