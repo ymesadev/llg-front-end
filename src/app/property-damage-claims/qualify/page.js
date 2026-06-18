@@ -85,6 +85,18 @@ export default function PropertyDamageQualify() {
   const contactRef = useRef(contact);
   const completedRef = useRef(false);
   useEffect(() => { contactRef.current = contact; }, [contact]);
+  // Full Q&A the lead gave — included in the drop-off email.
+  const buildQA = () => {
+    const a = answersRef.current || {};
+    const c = contactRef.current || {};
+    const qa = [];
+    if (a.damage_type_idx !== undefined) qa.push({ q: "Damage type", a: DAMAGE_LABELS[a.damage_type_idx] });
+    if (a.owner !== undefined) qa.push({ q: "Property owner", a: a.owner ? "Yes" : "No" });
+    if (a.florida !== undefined) qa.push({ q: "Property in Florida", a: a.florida ? "Yes" : "No" });
+    const addr = a.propertyAddress || c.propertyAddress;
+    if (addr) qa.push({ q: "Property address", a: addr });
+    return qa;
+  };
   useDropoffBeacon(() => {
     const a = answersRef.current || {};
     const c = contactRef.current || {};
@@ -98,6 +110,7 @@ export default function PropertyDamageQualify() {
       name: (c.name || a.name || "").trim(),
       email: (c.email || a.email || "").trim(),
       phone: (c.phone || a.phone || "").trim(),
+      answers: buildQA(),
       gclid: getStoredGclid() || "",
     };
   });
@@ -143,6 +156,7 @@ export default function PropertyDamageQualify() {
       name: (c.name || a.name || "").trim(),
       email: (c.email || a.email || "").trim(),
       phone: (c.phone || a.phone || "").trim(),
+      answers: buildQA(),
       gclid: getStoredGclid() || "",
     });
   };

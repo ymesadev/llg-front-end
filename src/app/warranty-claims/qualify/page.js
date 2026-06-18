@@ -87,6 +87,18 @@ export default function WarrantyQualify() {
   const contactRef = useRef(contact);
   const completedRef = useRef(false);
   useEffect(() => { contactRef.current = contact; }, [contact]);
+  // Full Q&A the lead gave — included in the drop-off email.
+  const buildQA = () => {
+    const a = answersRef.current || {};
+    const c = contactRef.current || {};
+    const qa = [];
+    if (a.warranty_type_idx !== undefined) qa.push({ q: "Warranty type", a: WARRANTY_TYPE_LABELS[a.warranty_type_idx] });
+    if (a.company) qa.push({ q: "Warranty company", a: companyLabel(a.company) });
+    if (a.florida !== undefined) qa.push({ q: "Property in Florida", a: a.florida ? "Yes" : "No" });
+    const addr = a.propertyAddress || c.propertyAddress;
+    if (addr) qa.push({ q: "Property address", a: addr });
+    return qa;
+  };
   useDropoffBeacon(() => {
     const a = answersRef.current || {};
     const c = contactRef.current || {};
@@ -101,6 +113,7 @@ export default function WarrantyQualify() {
       email: (c.email || a.email || "").trim(),
       phone: (c.phone || a.phone || "").trim(),
       warrantyCompany: a.company ? companyLabel(a.company) : "",
+      answers: buildQA(),
       gclid: getStoredGclid() || "",
     };
   });
@@ -145,6 +158,7 @@ export default function WarrantyQualify() {
       email: (c.email || a.email || "").trim(),
       phone: (c.phone || a.phone || "").trim(),
       warrantyCompany: a.company ? companyLabel(a.company) : "",
+      answers: buildQA(),
       gclid: getStoredGclid() || "",
     });
   };
