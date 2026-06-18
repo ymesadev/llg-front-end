@@ -36,6 +36,27 @@ export async function POST(request) {
       console.error("[qualify-intake-partial] webhook failed:", err.message);
     }
 
+    // Also notify the drop-off watcher (emails Pierre if no consult is booked within ~1h).
+    // Fire-and-forget: never affects the partial-lead capture or the response.
+    try {
+      await fetch("https://n8n.louislawgroup.com/webhook/llg-dropoff-watch", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name, phone, email, propertyAddress,
+          damageType: isWarranty
+            ? (warrantyType || "Not provided")
+            : (damageLabels[damageType] ?? damageType ?? "Not provided"),
+          caseType: caseType || "property-damage",
+          warrantyCompany: isWarranty ? (warrantyCompany || "Not provided") : undefined,
+          partialLead: true,
+          gclid,
+        }),
+      });
+    } catch (err) {
+      console.error("[qualify-intake-partial] dropoff webhook failed:", err.message);
+    }
+
     return NextResponse.json({ success: sent });
   } catch (err) {
     console.error("[qualify-intake-partial]", err);
