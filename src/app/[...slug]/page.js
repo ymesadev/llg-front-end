@@ -895,26 +895,15 @@ export default async function Page(props) {
   }
 
   if (!res || !res.ok) {
-    return (
-      <Layout>
-        <div className={styles.error}>
-          <h1>404 - Page Not Found</h1>
-          <p>The page you are looking for does not exist..</p>
-        </div>
-      </Layout>
-    );
+    // SEO P0d 2026-06-18: real 404 (was a 200 soft-404 shell) for missing content
+    const { notFound } = await import("next/navigation");
+    notFound();
   }
 
   const data = await res.json();
   if (!data || !Array.isArray(data.data) || data.data.length === 0) {
-    return (
-      <Layout>
-        <div className={styles.error}>
-          <h1>404 - Page Not Found</h1>
-          <p>The page you are looking for does not exist.</p>
-        </div>
-      </Layout>
-    );
+    const { notFound } = await import("next/navigation");
+    notFound();
   }
 
   // Debug: log which IDs came back client-side (browser only)
@@ -935,14 +924,8 @@ export default async function Page(props) {
   const page = __unwrap(entity);
 
   if (!page) {
-    return (
-      <Layout>
-        <div className={styles.error}>
-          <h1>404 - Page Not Found</h1>
-          <p>The page you are looking for does not exist.</p>
-        </div>
-      </Layout>
-    );
+    const { notFound } = await import("next/navigation");
+    notFound();
   }
 
   // Reverted: no extra repopulate; keep deep result null
