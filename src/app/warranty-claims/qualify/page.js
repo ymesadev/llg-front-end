@@ -22,6 +22,30 @@ const WARRANTY_TYPE_LABELS = [
   "Other Warranty or Service Contract",
 ];
 
+// Maps a covered-company `value` → the index of its best-fit WARRANTY_TYPE_LABELS
+// entry. Lets an ad/article link (?company=<value>) pre-select BOTH the warranty
+// type and the company so the lead skips the first question. Derived from the
+// case-intake index categories (00_INDEX.md). Companies absent here still
+// pre-select the company; the type just stays unanswered.
+const COMPANY_TYPE_IDX = {
+  "aig-warranty-fl": 1, "assurant-home-fl": 1, "complete-appliance-protection": 1,
+  "broward-factory-service": 1, "homemembership": 1, "ironwood-warranty-fl": 1,
+  "nrg-protects": 1, "residential-warranty-home": 1,
+  "4-warranty-corporation": 2, "access-protection-fl": 2, "centricity-bankers-warranty": 2,
+  "domestic-general-usa": 2, "onpoint-warranty": 2, "apple": 2, "applecare": 2,
+  "gopro-care": 2, "risk-assurance-partners": 2, "service-net-fl": 2, "signet-service-plans": 2,
+  "bonded-builders": 3, "centricity-bonded-builders": 3,
+  "east-coast-mechanical": 4, "ecm-warranty": 4, "flynns-air-conditioning": 4,
+  "total-appliance-ac": 4, "york-international": 4,
+  "american-auto-shield": 0, "carchex": 0, "cna-national-warranty": 0, "endurance": 0,
+  "first-extended": 0, "gai-warranty-fl": 0, "hendrick-autoguard-fl": 0, "heritage-mechanical": 0,
+  "interstate-national": 0, "mercury-select": 0, "minnehoma": 0, "pds-warranty": 0,
+  "portfolio-se": 0, "protect-my-car": 0, "qbe-admin": 0, "safe-guard": 0,
+  "landcar-total-care": 0, "united-service-protection": 0, "vehicle-dealer-solutions-zurich": 0,
+  "warranty-solutions-ge": 0, "mercury-marine": 0,
+  "badcock": 5, "kubota": 5,
+};
+
 const DISPUTE_STATUS_LABELS = [
   "Denied — claim was refused",
   "Delayed — no decision yet",
@@ -59,6 +83,33 @@ export default function WarrantyQualify() {
 
   useEffect(() => {
     trackEvent("qualify_page_view", { case_type: "warranty" });
+  }, []);
+
+  // ── Ad / article prefill ── carry the provider (and its derived warranty type)
+  // from the click so the lead lands on the company step already preselected,
+  // skipping the warranty-type question. Best-effort: a missing/unknown company
+  // param leaves the normal flow untouched. The hard gate is preserved because we
+  // only prefill values that pass isCoveredCompany().
+  useEffect(() => {
+    try {
+      const company = new URLSearchParams(window.location.search).get("company");
+      if (!company || !isCoveredCompany(company)) return;
+      const typeIdx = COMPANY_TYPE_IDX[company];
+      setAnswers((a) => {
+        const nextA = { ...a, company };
+        if (typeIdx !== undefined && a.warranty_type_idx === undefined) nextA.warranty_type_idx = typeIdx;
+        return nextA;
+      });
+      // Land on the company step with the provider preselected (robust to step reordering).
+      const companyStep = STEP_NAMES.indexOf("warranty_company");
+      setCur(companyStep === -1 ? 1 : companyStep);
+      trackEvent("qualify_prefilled", {
+        case_type: "warranty",
+        company: companyLabel(company),
+        warranty_type: typeIdx !== undefined ? WARRANTY_TYPE_LABELS[typeIdx] : "",
+        source: "ad_click",
+      });
+    } catch (e) { /* prefill is best-effort; never block the form */ }
   }, []);
 
   useEffect(() => {
