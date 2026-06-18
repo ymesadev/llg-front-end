@@ -5,6 +5,7 @@ import Script from "next/script";
 import styles from "./page.module.css";
 import { trackEvent, trackConversion } from "@/app/utils/analytics";
 import useGclid, { getStoredGclid } from "@/app/utils/useGclid";
+import { useDropoffBeacon, sendDropoff } from "@/app/utils/dropoffBeacon";
 import {
   WARRANTY_COMPANIES,
   NOT_LISTED_VALUE,
@@ -82,6 +83,28 @@ export default function WarrantyQualify() {
     return () => window.removeEventListener("beforeunload", handleExit);
   }, []);
 
+  // ── Drop-off beacon ── notify Pierre the instant a client leaves un-booked.
+  const contactRef = useRef(contact);
+  const completedRef = useRef(false);
+  useEffect(() => { contactRef.current = contact; }, [contact]);
+  useDropoffBeacon(() => {
+    const a = answersRef.current || {};
+    const c = contactRef.current || {};
+    return {
+      flow: "Warranty",
+      status: "abandoned",
+      engaged: curRef.current >= 1,
+      completed: completedRef.current === true,
+      step: curRef.current,
+      stepName: STEP_NAMES[Math.min(curRef.current, STEP_NAMES.length - 1)],
+      name: (c.name || a.name || "").trim(),
+      email: (c.email || a.email || "").trim(),
+      phone: (c.phone || a.phone || "").trim(),
+      warrantyCompany: a.company ? companyLabel(a.company) : "",
+      gclid: getStoredGclid() || "",
+    };
+  });
+
   const progress = Math.min(((cur + 1) / (TOTAL_STEPS + 1)) * 100, 100);
   const setAnswer = (key, val) => setAnswers((a) => ({ ...a, [key]: val }));
   const next = () => setCur((c) => c + 1);
@@ -107,6 +130,23 @@ export default function WarrantyQualify() {
     window.dataLayer.push({ event: "qualify_dq", reason });
     setResult({ dq: true, reason });
     setCur(TOTAL_STEPS + 1);
+    // Disqualification is definitive — beacon immediately (which question DQ'd them).
+    const a = answersRef.current || {};
+    const c = contactRef.current || {};
+    sendDropoff({
+      flow: "Warranty",
+      status: "disqualified",
+      engaged: true,
+      completed: false,
+      step: curRef.current,
+      stepName: reason === "out-of-state" ? "florida_check" : "warranty_company",
+      dqReason: reason,
+      name: (c.name || a.name || "").trim(),
+      email: (c.email || a.email || "").trim(),
+      phone: (c.phone || a.phone || "").trim(),
+      warrantyCompany: a.company ? companyLabel(a.company) : "",
+      gclid: getStoredGclid() || "",
+    });
   };
 
   // ── HARD GATE ── company must be on the covered list, or the form cannot advance.
@@ -317,6 +357,7 @@ export default function WarrantyQualify() {
       window.Cal.ns[CAL_NAMESPACE]("on", {
         action: "bookingSuccessful",
         callback: () => {
+          completedRef.current = true; // booked -> suppress any drop-off beacon
           trackEvent("qualify_submitted", { case_type: "warranty", via: "cal_booking" });
           trackConversion("warranty_qualify", { case_type: "warranty", via: "cal_booking" });
           // Warranty-specific Google Ads conversion — "Consult Booked" (primary optimization signal)

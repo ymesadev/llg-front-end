@@ -5,6 +5,7 @@ import Script from "next/script";
 import styles from "./page.module.css";
 import { trackEvent, trackConversion } from "@/app/utils/analytics";
 import useGclid, { getStoredGclid } from "@/app/utils/useGclid";
+import { useDropoffBeacon, sendDropoff } from "@/app/utils/dropoffBeacon";
 
 const DAMAGE_LABELS = [
   "Hurricane / Wind",
@@ -80,6 +81,27 @@ export default function PropertyDamageQualify() {
     return () => window.removeEventListener("beforeunload", handleExit);
   }, []);
 
+  // ── Drop-off beacon ── notify Pierre the instant a client leaves un-booked.
+  const contactRef = useRef(contact);
+  const completedRef = useRef(false);
+  useEffect(() => { contactRef.current = contact; }, [contact]);
+  useDropoffBeacon(() => {
+    const a = answersRef.current || {};
+    const c = contactRef.current || {};
+    return {
+      flow: "Property Damage",
+      status: "abandoned",
+      engaged: curRef.current >= 1,
+      completed: completedRef.current === true,
+      step: curRef.current,
+      stepName: STEP_NAMES[Math.min(curRef.current, STEP_NAMES.length - 1)],
+      name: (c.name || a.name || "").trim(),
+      email: (c.email || a.email || "").trim(),
+      phone: (c.phone || a.phone || "").trim(),
+      gclid: getStoredGclid() || "",
+    };
+  });
+
   const progress = Math.min(((cur + 1) / (TOTAL_STEPS + 1)) * 100, 100);
   const setAnswer = (key, val) => setAnswers((a) => ({ ...a, [key]: val }));
   const next = () => setCur((c) => c + 1);
@@ -107,6 +129,22 @@ export default function PropertyDamageQualify() {
     window.dataLayer.push({ event: "qualify_dq", reason });
     setResult({ dq: true, reason });
     setCur(TOTAL_STEPS + 1);
+    // Disqualification is definitive — beacon immediately (which question DQ'd them).
+    const a = answersRef.current || {};
+    const c = contactRef.current || {};
+    sendDropoff({
+      flow: "Property Damage",
+      status: "disqualified",
+      engaged: true,
+      completed: false,
+      step: curRef.current,
+      stepName: reason === "not-owner" ? "owner_check" : reason === "out-of-state" ? "florida_check" : "damage_type",
+      dqReason: reason,
+      name: (c.name || a.name || "").trim(),
+      email: (c.email || a.email || "").trim(),
+      phone: (c.phone || a.phone || "").trim(),
+      gclid: getStoredGclid() || "",
+    });
   };
 
   const handleOwner = (isOwner) => {
@@ -332,6 +370,7 @@ export default function PropertyDamageQualify() {
       window.Cal.ns[CAL_NAMESPACE]("on", {
         action: "bookingSuccessful",
         callback: (e) => {
+          completedRef.current = true; // booked -> suppress any drop-off beacon
           trackEvent("qualify_submitted", {
             case_type: "property-damage",
             via: "cal_booking",
