@@ -20,6 +20,7 @@ import Script from "next/script";
 import DocumentUploadCTA from "../components/DocumentUploadCTA/DocumentUploadCTA";
 import Testimonials from "../components/Testimonials/Testimonials";
 import { getSeoOverride } from "../utils/seoOverrides";
+import { CANONICAL_EARNERS } from "../utils/canonicalEarners";
 import { getFaqOverride } from "../utils/faqOverrides";
 import ArticlePageMarker from "../components/ArticlePageMarker";
 import MobileExitIntent from "../components/MobileExitIntent/MobileExitIntent";
@@ -655,8 +656,10 @@ export async function generateMetadata({ params }) {
 
   // Canonical: strip dedup suffix (e.g. -5, -12) but NOT year suffixes (2024, 2025, 2026)
   // Match dedup suffixes up to 3 digits (2-999) — excludes 4-digit years (2024, 2026 etc.)
+  // EXCEPTION (SEO P0 2026-06-18): CANONICAL_EARNERS are the -N URL Google actually ranked
+  // for their topic; keep them index + self-canonical instead of noindex+canonical-to-twin.
   const canonicalMatch = slug.match(/^(.+)-(\d{1,3})$/);
-  const isDupSlug = canonicalMatch && parseInt(canonicalMatch[2]) >= 2 && parseInt(canonicalMatch[2]) <= 999;
+  const isDupSlug = canonicalMatch && parseInt(canonicalMatch[2]) >= 2 && parseInt(canonicalMatch[2]) <= 999 && !CANONICAL_EARNERS.has(slug);
   const canonicalSlug = isDupSlug ? canonicalMatch[1] : slug;
   const canonicalUrl = `${siteUrl}/${canonicalSlug}`;
 
