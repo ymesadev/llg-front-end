@@ -5,6 +5,9 @@
     },
     "src/app/api/sitemap/[page]/route.js": {
       "maxDuration": 60
+    },
+    "src/app/sitemap.xml/route.js": {
+      "maxDuration": 60
     }
   }
 }

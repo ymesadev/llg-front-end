@@ -197,9 +197,16 @@ export async function collectAllUrls() {
     const first = await fetchPage(endpoint, 1, pageSize);
     const totalPages = first?.meta?.pagination?.pageCount || 1;
     const data = [...(first?.data || [])];
-    for (let p = 2; p <= totalPages; p++) {
-      const res = await fetchPage(endpoint, p, pageSize);
-      if (res?.data) data.push(...res.data);
+    // SEO P0 2026-06-18: parallelize remaining pages (batched) so a large collection
+    // finishes well under the edge timeout instead of N sequential round-trips.
+    const restPages = [];
+    for (let p = 2; p <= totalPages; p++) restPages.push(p);
+    const CONCURRENCY = 8;
+    for (let i = 0; i < restPages.length; i += CONCURRENCY) {
+      const batch = await Promise.all(
+        restPages.slice(i, i + CONCURRENCY).map(p => fetchPage(endpoint, p, pageSize).catch(() => null))
+      );
+      for (const res of batch) if (res?.data) data.push(...res.data);
     }
 
     for (const item of data) {
