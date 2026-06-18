@@ -396,4 +396,5 @@ export const CANONICAL_EARNERS = new Set([
   "working-part-time-on-disability-pennsylvania-2026-2",
   "working-part-time-on-disability-south-dakota-2026-2",
   "working-part-time-on-disability-vermont-2026-6",
+  "insurance-company-lowball-offer-florida-2026-7",
 ]);
