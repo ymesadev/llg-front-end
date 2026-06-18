@@ -14,7 +14,7 @@ import { useEffect, useRef } from "react";
 //  - _sent dedupes to one beacon per page load (a DQ send suppresses the
 //    later pagehide send).
 
-const ENDPOINT = "https://n8n.louislawgroup.com/webhook/llg-dropoff-watch";
+const ENDPOINT = "https://n8n-new.louislawgroup.com/webhook/llg-dropoff-watch";
 let _sent = false;
 
 export function sendDropoff(snap) {
