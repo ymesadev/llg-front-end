@@ -251,6 +251,8 @@ export default function WarrantyQualify() {
     trackEvent("qualify_booking_shown", { case_type: "warranty", warranty_company: companyName });
     if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyBookingShown", { warranty_company: companyName });
     if (typeof gtag !== "undefined") gtag("event", "qualify_booking_shown", { event_category: "Qualifier", warranty_company: companyName });
+    // Warranty-specific Google Ads conversion — "Qualifier Completed" (passed qualifier, reached booking)
+    if (typeof gtag !== "undefined") gtag("event", "conversion", { send_to: "AW-658866049/vkM8CLv2tcEcEIH_lboC", value: 25.0, currency: "USD" });
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: "qualify_booking_shown", warranty_company: companyName });
 
@@ -317,6 +319,8 @@ export default function WarrantyQualify() {
         callback: () => {
           trackEvent("qualify_submitted", { case_type: "warranty", via: "cal_booking" });
           trackConversion("warranty_qualify", { case_type: "warranty", via: "cal_booking" });
+          // Warranty-specific Google Ads conversion — "Consult Booked" (primary optimization signal)
+          if (typeof gtag !== "undefined") gtag("event", "conversion", { send_to: "AW-658866049/1DHHCL72tcEcEIH_lboC", value: 200.0, currency: "USD" });
         },
       });
     };
