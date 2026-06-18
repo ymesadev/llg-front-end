@@ -22,9 +22,16 @@ const WARRANTY_TYPE_LABELS = [
   "Other Warranty or Service Contract",
 ];
 
-// Flow: type → company (HARD GATE) → florida → contact → booking
-const TOTAL_STEPS = 4;
-const STEP_NAMES = ["warranty_type", "warranty_company", "florida_check", "contact_info", "book_consultation"];
+const DISPUTE_STATUS_LABELS = [
+  "Denied — claim was refused",
+  "Delayed — no decision yet",
+  "Underpaid — paid less than owed",
+  "Not sure",
+];
+
+// Flow: type → company (HARD GATE) → dispute status → florida → contact → booking
+const TOTAL_STEPS = 5;
+const STEP_NAMES = ["warranty_type", "warranty_company", "dispute_status", "florida_check", "contact_info", "book_consultation"];
 
 // Cal.com embed config — warranty-specific event type, routed to Pierre's calendar
 const CAL_ORIGIN = "https://bookings.louislawgroup.com";
@@ -94,6 +101,7 @@ export default function WarrantyQualify() {
     const qa = [];
     if (a.warranty_type_idx !== undefined) qa.push({ q: "Warranty type", a: WARRANTY_TYPE_LABELS[a.warranty_type_idx] });
     if (a.company) qa.push({ q: "Warranty company", a: companyLabel(a.company) });
+    if (a.dispute_status_idx !== undefined) qa.push({ q: "Dispute status", a: DISPUTE_STATUS_LABELS[a.dispute_status_idx] });
     if (a.florida !== undefined) qa.push({ q: "Property in Florida", a: a.florida ? "Yes" : "No" });
     const addr = a.propertyAddress || c.propertyAddress;
     if (addr) qa.push({ q: "Property address", a: addr });
@@ -182,10 +190,22 @@ export default function WarrantyQualify() {
     setTimeout(next, 200);
   };
 
+  const handleDisputeStatus = (idx) => {
+    setAnswer("dispute_status_idx", idx);
+    trackEvent("qualify_step_answered", {
+      case_type: "warranty", step: 2, step_name: "dispute_status", answer: DISPUTE_STATUS_LABELS[idx],
+    });
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyDisputeStatusComplete", { dispute_status: DISPUTE_STATUS_LABELS[idx] });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_dispute_status", { event_category: "Qualifier", dispute_status: DISPUTE_STATUS_LABELS[idx] });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_step_complete", step_name: "dispute_status", dispute_status: DISPUTE_STATUS_LABELS[idx] });
+    setTimeout(next, 320);
+  };
+
   const handleFlorida = (isFL) => {
     setAnswer("florida", isFL);
     trackEvent("qualify_step_answered", {
-      case_type: "warranty", step: 2, step_name: "florida_check",
+      case_type: "warranty", step: 3, step_name: "florida_check",
       answer: isFL ? "yes" : "no", disqualified: !isFL,
     });
     if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep3Complete", { in_florida: isFL ? "yes" : "no" });
@@ -213,6 +233,8 @@ export default function WarrantyQualify() {
     const companyName = companyLabel(companyVal);
     const typeIdx = answers.warranty_type_idx;
     const warrantyType = (typeIdx !== undefined ? WARRANTY_TYPE_LABELS[typeIdx] : "") || "";
+    const dsIdx = answers.dispute_status_idx;
+    const disputeStatus = (dsIdx !== undefined ? DISPUTE_STATUS_LABELS[dsIdx] : "") || "";
 
     setContactSubmitting(true);
 
@@ -220,7 +242,7 @@ export default function WarrantyQualify() {
     setAnswers((a) => ({ ...a, name, email, phone, propertyAddress }));
 
     trackEvent("qualify_step_answered", {
-      case_type: "warranty", step: 3, step_name: "contact_info",
+      case_type: "warranty", step: 4, step_name: "contact_info",
       sms_consent: contactConsent,
     });
     if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep4Complete", { sms_consent: contactConsent ? "yes" : "no" });
@@ -237,6 +259,7 @@ export default function WarrantyQualify() {
           phone,
           warranty_company: companyName,
           warranty_type: warrantyType,
+          dispute_status: disputeStatus,
           gclid: storedGclid || "",
           case_type: "warranty",
           sms_consent: contactConsent ? "yes" : "no",
@@ -256,6 +279,7 @@ export default function WarrantyQualify() {
       caseType: "warranty",
       warrantyCompany: companyName,
       warrantyType,
+      disputeStatus,
       gclid: storedGclid || undefined,
     };
 
@@ -265,6 +289,7 @@ export default function WarrantyQualify() {
       warrantyCompany: companyName,
       warrantyCompanyValue: companyVal,
       warrantyType,
+      disputeStatus,
       // Passed all DQ gates (covered company + Florida) → automatic STRONG CANDIDATE
       score: 80,
       gclid: storedGclid || undefined,
@@ -301,6 +326,8 @@ export default function WarrantyQualify() {
     const companyName = companyLabel(a0.company);
     const typeIdx = a0.warranty_type_idx;
     const warrantyType = (typeIdx !== undefined ? WARRANTY_TYPE_LABELS[typeIdx] : "") || "";
+    const dsIdx = a0.dispute_status_idx;
+    const disputeStatus = (dsIdx !== undefined ? DISPUTE_STATUS_LABELS[dsIdx] : "") || "";
 
     trackEvent("qualify_booking_shown", { case_type: "warranty", warranty_company: companyName });
     if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyBookingShown", { warranty_company: companyName });
@@ -348,6 +375,7 @@ export default function WarrantyQualify() {
       if (a.phone) prefill.set("callback-phone", a.phone);
       if (companyName) prefill.set("warranty-company", companyName);
       if (warrantyType) prefill.set("warranty-type", warrantyType);
+      if (disputeStatus) prefill.set("dispute-status", disputeStatus);
       const storedGclid = getStoredGclid();
       if (storedGclid) prefill.set("gclid", storedGclid);
       const qs = prefill.toString();
@@ -461,7 +489,7 @@ export default function WarrantyQualify() {
           {/* Step 0: Warranty type */}
           {cur === 0 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 1 of 3</div>
+              <div className={styles.stepLabel}>Question 1 of 4</div>
               <div className={styles.question}>What kind of warranty or service contract is your claim about?</div>
               <div className={styles.hint}>Select the option that best fits</div>
               <div className={styles.optsGrid}>
@@ -478,7 +506,7 @@ export default function WarrantyQualify() {
           {/* Step 1: Warranty company — HARD GATE */}
           {cur === 1 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 2 of 3</div>
+              <div className={styles.stepLabel}>Question 2 of 4</div>
               <div className={styles.question}>Which company issued your warranty or service contract?</div>
               <div className={styles.hint}>Choose your provider from the list. We can only represent claims against the providers shown here.</div>
               <select
@@ -515,10 +543,27 @@ export default function WarrantyQualify() {
             </div>
           )}
 
-          {/* Step 2: Florida check */}
+          {/* Step 2: Dispute status */}
           {cur === 2 && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 3 of 3</div>
+              <div className={styles.stepLabel}>Question 3 of 4</div>
+              <div className={styles.question}>What&rsquo;s the status of your dispute?</div>
+              <div className={styles.hint}>Tell us where things stand with the company</div>
+              <div className={styles.opts}>
+                {DISPUTE_STATUS_LABELS.map((label, i) => (
+                  <button key={i} className={`${styles.opt} ${answers.dispute_status_idx === i ? styles.selected : ""}`}
+                    onClick={() => handleDisputeStatus(i)}>
+                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Step 3: Florida check */}
+          {cur === 3 && (
+            <div className={styles.step}>
+              <div className={styles.stepLabel}>Question 4 of 4</div>
               <div className={styles.question}>Are you a Florida resident, or is your contract a Florida-issued warranty?</div>
               <div className={styles.hint}>We handle Florida warranty and service-contract claims</div>
               <div className={styles.opts}>
@@ -532,8 +577,8 @@ export default function WarrantyQualify() {
             </div>
           )}
 
-          {/* Step 3: Contact info (captures lead before booking) */}
-          {cur === 3 && (
+          {/* Step 4: Contact info (captures lead before booking) */}
+          {cur === 4 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Almost done</div>
               <div className={styles.question}>Where can our team reach you?</div>
@@ -578,7 +623,7 @@ export default function WarrantyQualify() {
             </div>
           )}
 
-          {/* Step 4: BOOKING (final step — cal.com inline embed) */}
+          {/* Step 5: BOOKING (final step — cal.com inline embed) */}
           {cur === TOTAL_STEPS && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Final Step — Book Your Free Consultation</div>
