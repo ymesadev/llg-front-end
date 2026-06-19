@@ -12,6 +12,9 @@ const INTAKE_ROUTES = {
   "tower-hill":         "/tower-hill-insurance-privacy-torts/qualify",
   "american-integrity": "/american-integrity-insurance-privacy-torts/qualify",
   "personal-injury":    "/personal-injury/qualify",
+  "warranty":           "/warranty-claims/qualify",
+  "privacy-tort":       "/privacy-torts",
+  "case-law":           "/case-law-updates#submit-policy",
 };
 
 function getPersonalizedMessage({ articleType, insurer, damageType, city }) {

@@ -16,6 +16,9 @@ const INTAKE_MAP = {
   "slide":              "/slide-insurance-privacy-torts/qualify",
   "tower-hill":         "/tower-hill-insurance-privacy-torts/qualify",
   "american-integrity": "/american-integrity-insurance-privacy-torts/qualify",
+  "warranty":           "/warranty-claims/qualify",
+  "privacy-tort":       "/privacy-torts",
+  "case-law":           "/case-law-updates#submit-policy",
 };
 
 const ServicesCarousel = ({ services, articleType = "property-damage" }) => {
