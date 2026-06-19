@@ -17,6 +17,26 @@ const DAMAGE_LABELS = [
   "Other",
 ];
 
+// Maps a ?carrier=<slug> ad/article param -> display label. Lets a carrier ad
+// pre-attach the insurer to the lead (intake payload + cal booking) and show a
+// confirmation chip, with no extra question. Pierre's 6 carriers + other covered
+// FL carriers for article/ad links.
+const CARRIERS = {
+  "state-farm": "State Farm",
+  "american-integrity": "American Integrity Insurance",
+  "kin": "Kin Insurance",
+  "slide": "Slide Insurance",
+  "universal-property": "Universal Property & Casualty",
+  "homeowners-choice": "Homeowners Choice",
+  "hci": "Homeowners Choice",
+  "citizens": "Citizens Property Insurance",
+  "heritage": "Heritage Insurance",
+  "tower-hill": "Tower Hill Insurance",
+  "peoples-trust": "People's Trust Insurance",
+  "olympus": "Olympus Insurance",
+  "florida-peninsula": "Florida Peninsula Insurance",
+};
+
 // Flow: damage → owner → florida → contact → booking
 const TOTAL_STEPS = 4;
 const STEP_NAMES = ["damage_type", "owner_check", "florida_check", "contact_info", "book_consultation"];
@@ -50,6 +70,19 @@ export default function PropertyDamageQualify() {
 
   useEffect(() => {
     trackEvent("qualify_page_view", { case_type: "property-damage" });
+  }, []);
+
+  // ── Ad / article prefill ── capture the insurance carrier from ?carrier=<slug>
+  // so it is attached to the lead (intake + cal booking) and confirmed on-screen,
+  // with no extra question. Best-effort: unknown/absent param leaves the flow as-is.
+  useEffect(() => {
+    try {
+      const slug = (new URLSearchParams(window.location.search).get("carrier") || "").toLowerCase();
+      const label = CARRIERS[slug];
+      if (!label) return;
+      setAnswers((a) => (a.insurer ? a : { ...a, insurer: label, insurerSlug: slug }));
+      trackEvent("qualify_prefilled", { case_type: "property-damage", carrier: label, source: "ad_click" });
+    } catch (e) { /* prefill is best-effort; never block the form */ }
   }, []);
 
   useEffect(() => {
@@ -91,6 +124,7 @@ export default function PropertyDamageQualify() {
     const c = contactRef.current || {};
     const qa = [];
     if (a.damage_type_idx !== undefined) qa.push({ q: "Damage type", a: DAMAGE_LABELS[a.damage_type_idx] });
+    if (a.insurer) qa.push({ q: "Insurance carrier", a: a.insurer });
     if (a.owner !== undefined) qa.push({ q: "Property owner", a: a.owner ? "Yes" : "No" });
     if (a.florida !== undefined) qa.push({ q: "Property in Florida", a: a.florida ? "Yes" : "No" });
     const addr = a.propertyAddress || c.propertyAddress;
@@ -253,6 +287,7 @@ export default function PropertyDamageQualify() {
       damageType: damageIdx,
       caseType: "property-damage",
       smsConsent: contactConsent,
+      carrier: answers.insurer || "",
       gclid: storedGclid || undefined,
     };
 
@@ -262,7 +297,7 @@ export default function PropertyDamageQualify() {
       caseType: "property-damage",
       smsConsent: contactConsent,
       // Fields the qualify-intake route accepts but this short flow doesn't capture yet:
-      carrier: "",
+      carrier: answers.insurer || "",
       dateOfLoss: "",
       insurerResponse: null,
       // Score: passed all DQ gates → automatic STRONG CANDIDATE
@@ -466,6 +501,11 @@ export default function PropertyDamageQualify() {
           <div>
             <div className={styles.badge}>Louis Law Group · Claim Qualifier</div>
             <h1>Property Damage Case Evaluation</h1>
+            {answers.insurer && (
+              <div style={{ marginTop: "6px", display: "inline-block", fontSize: "13px", fontWeight: 600, color: "#1a2b49", background: "#eef4ff", border: "1px solid #cfe0ff", borderRadius: "999px", padding: "4px 12px" }}>
+                Regarding your {answers.insurer} claim
+              </div>
+            )}
           </div>
         </div>
 
