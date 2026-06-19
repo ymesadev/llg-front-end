@@ -644,6 +644,13 @@ export async function generateMetadata({ params }) {
   const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
   const siteUrl = "https://www.louislawgroup.com";
   const defaultImage = `${siteUrl}/og-default.jpg`;
+  // SEO P0e 2026-06-18: keep <title> <=60 chars so Google doesn't truncate it in SERPs.
+  const seoTitle = (t) => {
+    const full = `${t} | Louis Law Group`;
+    if (full.length <= 60) return full;
+    if (t.length <= 60) return t;
+    return t.slice(0, 57).replace(/\s+\S*$/, "") + "…";
+  };
 
   // Static report pages are served from /public — skip Strapi lookup
   if (slug.startsWith("reports/")) {
@@ -682,12 +689,12 @@ export async function generateMetadata({ params }) {
             article.description ||
             "Contact Louis Law Group for a free case evaluation. Florida\'s trusted property damage attorneys.";
           return {
-            title: `${finalTitle} | Louis Law Group`,
+            title: seoTitle(finalTitle),
             description,
             alternates: { canonical: canonicalUrl },
             ...(isDupSlug && { robots: { index: false, follow: true } }),
             openGraph: {
-              title: `${finalTitle} | Louis Law Group`,
+              title: seoTitle(finalTitle),
               description,
               url: `${siteUrl}/${slug}`,
               siteName: "Louis Law Group",
@@ -696,7 +703,7 @@ export async function generateMetadata({ params }) {
             },
             twitter: {
               card: "summary_large_image",
-              title: `${finalTitle} | Louis Law Group`,
+              title: seoTitle(finalTitle),
               description,
               images: [imageUrl],
             },
@@ -727,11 +734,11 @@ export async function generateMetadata({ params }) {
           const pageDesc = pageSeoOverride?.description || heroIntro.slice(0, 160) ||
             `${pageTitle} — Louis Law Group provides expert legal representation. Free consultation: (833) 657-4812.`;
           return {
-            title: `${pageTitle} | Louis Law Group`,
+            title: seoTitle(pageTitle),
             description: pageDesc,
             alternates: { canonical: `${siteUrl}/${slug}` },
             openGraph: {
-              title: `${pageTitle} | Louis Law Group`,
+              title: seoTitle(pageTitle),
               description: pageDesc,
               url: `${siteUrl}/${slug}`,
               siteName: "Louis Law Group",
@@ -740,7 +747,7 @@ export async function generateMetadata({ params }) {
             },
             twitter: {
               card: "summary_large_image",
-              title: `${pageTitle} | Louis Law Group`,
+              title: seoTitle(pageTitle),
               description: pageDesc,
               images: [defaultImage],
             },
@@ -754,12 +761,12 @@ export async function generateMetadata({ params }) {
   const fallbackOverride = getSeoOverride(slug);
   if (fallbackOverride) {
     return {
-      title: `${fallbackOverride.title} | Louis Law Group`,
+      title: seoTitle(fallbackOverride.title),
       description: fallbackOverride.description,
       alternates: { canonical: canonicalUrl },
       ...(isDupSlug && { robots: { index: false, follow: true } }),
       openGraph: {
-        title: `${fallbackOverride.title} | Louis Law Group`,
+        title: seoTitle(fallbackOverride.title),
         description: fallbackOverride.description,
         url: `${siteUrl}/${slug}`,
         siteName: "Louis Law Group",
@@ -768,7 +775,7 @@ export async function generateMetadata({ params }) {
       },
       twitter: {
         card: "summary_large_image",
-        title: `${fallbackOverride.title} | Louis Law Group`,
+        title: seoTitle(fallbackOverride.title),
         description: fallbackOverride.description,
         images: [defaultImage],
       },
