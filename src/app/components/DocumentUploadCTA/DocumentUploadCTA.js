@@ -13,6 +13,7 @@ const INTAKE_MAP = {
   "tower-hill":         { href: "/tower-hill-insurance-privacy-torts/qualify",       headline: "See If You Qualify — Tower Hill Insurance Claim",    sub: "Find out if your Tower Hill Insurance dispute qualifies — free eligibility check." },
   "american-integrity": { href: "/american-integrity-insurance-privacy-torts/qualify", headline: "See If You Qualify — American Integrity Claim",   sub: "Check your eligibility for the American Integrity Insurance case — takes under 2 minutes." },
   "warranty":           { href: "/warranty-claims/qualify",                            headline: "Warranty Claim Denied? See If You Qualify",         sub: "Take our 2-minute qualifier and find out if your denied warranty or service-contract claim qualifies for representation — at no cost." },
+  "privacy-tort":       { href: "/privacy-torts",                                       headline: "Your Privacy May Have Been Violated — Learn Your Rights", sub: "Find out if your data-privacy claim qualifies for legal action — review your options at no cost." },
 };
 
 const INTAKE_MAP_ES = {
