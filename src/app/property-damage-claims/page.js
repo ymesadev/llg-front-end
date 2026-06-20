@@ -1,20 +1,10 @@
+"use client";
 import styles from "./page.module.css";
 import Link from "next/link";
+import { XCircle, TrendingUp, DollarSign, Scale, Clock, ShieldCheck, Home, Droplets, Hammer, Flame, ClipboardList } from "lucide-react";
 
-export const metadata = {
-  title: "Florida Property Damage Attorney | Denied Claim Lawyers | Louis Law Group",
-  description:
-    "Florida property damage attorney fighting denied & underpaid insurance claims. Roof damage, water damage, hurricane claims — free case evaluation: (833) 657-4812.",
-  keywords:
-    "property damage attorney florida, florida property damage lawyer, denied insurance claim florida, underpaid insurance claim, hurricane damage attorney, roof damage lawyer florida, water damage attorney florida, insurance claim dispute lawyer",
-  alternates: { canonical: "https://www.louislawgroup.com/property-damage-claims" },
-  openGraph: {
-    title: "Florida Property Damage Attorney | Louis Law Group",
-    description:
-      "Denied or underpaid property damage claim? Florida property damage attorneys at Louis Law Group fight insurance companies. Free case evaluation — no fees unless we win.",
-    url: "https://www.louislawgroup.com/property-damage-claims",
-  },
-};
+const LUCIDE_ICON_MAP = { "❌": XCircle, "📈": TrendingUp, "💰": DollarSign, "⚖️": Scale, "⏰": Clock, "🛡️": ShieldCheck, "🏠": Home, "💧": Droplets, "🔨": Hammer, "🔥": Flame, "📋": ClipboardList };
+const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 const CTA_URL = "/property-damage-claims/qualify";
 
@@ -259,7 +249,7 @@ export default function PropertyDamageClaimsPage() {
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
               <a href={CTA_URL} key={s.label} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} /></div>
                 <h3 className={styles.statNumber}>{s.number}</h3>
                 <p className={styles.serviceDesc}>{s.label}</p>
                 <span className={styles.serviceArrow}>See If You Qualify →</span>
@@ -297,7 +287,7 @@ export default function PropertyDamageClaimsPage() {
           <div className={styles.dayOneGrid}>
             {SERVICES.map((s) => (
               <div key={s.title} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>{s.icon}</div>
+                <div className={styles.dayOneIcon}><LIcon name={s.icon} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>

@@ -1,4 +1,8 @@
 import styles from "./page.module.css";
+import { Car, Home, Wrench, Hammer, Snowflake, ClipboardList, Scale, DollarSign, ShieldCheck, ScrollText, CheckCircle2 } from "lucide-react";
+
+const LUCIDE_ICON_MAP = { "🚗": Car, "🏠": Home, "🧰": Wrench, "🏗️": Hammer, "❄️": Snowflake, "📋": ClipboardList, "⚖️": Scale, "💰": DollarSign, "🛡️": ShieldCheck, "📜": ScrollText, "✅": CheckCircle2 };
+const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const revalidate = 3600;
 
@@ -284,7 +288,7 @@ export default async function WarrantyClaimsPage() {
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
               <a href={CTA_URL} key={s.label} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} /></div>
                 <h3 className={styles.statNumber}>{s.number}</h3>
                 <p className={styles.serviceDesc}>{s.label}</p>
                 <span className={styles.serviceArrow}>See If You Qualify →</span>
@@ -322,7 +326,7 @@ export default async function WarrantyClaimsPage() {
           <div className={styles.dayOneGrid}>
             {SERVICES.map((s) => (
               <div key={s.title} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>{s.icon}</div>
+                <div className={styles.dayOneIcon}><LIcon name={s.icon} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
@@ -368,12 +372,12 @@ export default async function WarrantyClaimsPage() {
           </h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚖️</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" /></div>
               <h3>Licensed Trial Attorneys</h3>
               <p>We are licensed Florida attorneys — not a claims-consulting service. We can take a warranty company to court and litigate if they refuse to honor your contract.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>💰</div>
+              <div className={styles.whyCardIcon}><LIcon name="💰" /></div>
               <h3>Zero Upfront Cost</h3>
               <p>We work on contingency for qualifying cases. You pay nothing unless we recover for you. Our interests are aligned with yours.</p>
             </div>
@@ -383,7 +387,7 @@ export default async function WarrantyClaimsPage() {
               <p>Warranty and service contracts are dense and full of exclusions. We know how to find the coverage the company is trying to avoid paying.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📜</div>
+              <div className={styles.whyCardIcon}><LIcon name="📜" /></div>
               <h3>Florida Contract &amp; Consumer Law</h3>
               <p>From Chapter 634 service-warranty regulation to non-binding arbitration clauses, we use Florida law to keep your case in front of a judge when it counts.</p>
             </div>

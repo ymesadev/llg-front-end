@@ -1,5 +1,9 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import { Snowflake, Wrench, Home, Zap, Microscope, Search, XCircle, DollarSign, Clock, AlertTriangle, ShieldCheck } from "lucide-react";
+
+const LUCIDE_ICON_MAP = { "❄️": Snowflake, "🔧": Wrench, "🏠": Home, "⚡": Zap, "🦠": Microscope, "🔍": Search, "❌": XCircle, "💰": DollarSign, "⏰": Clock, "⚠️": AlertTriangle, "🛡️": ShieldCheck };
+const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const metadata = {
   title: "Florida Contractor Damage Attorney | Sue Your Contractor | Louis Law Group",
@@ -232,7 +236,7 @@ export default function ContractorDamageClaimsPage() {
 
       {/* URGENCY BANNER */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" size={20} /></span>
         <span>
           <strong>Florida Deadline Alert:</strong> Contractor damage claims expire in 4 years — and evidence degrades fast. Don&apos;t wait —{" "}
           <a href={CTA_URL} className={styles.urgencyLink}>
@@ -254,7 +258,7 @@ export default function ContractorDamageClaimsPage() {
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
               <a href={CTA_URL} key={s.label} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} /></div>
                 <h3 className={styles.statNumber}>{s.number}</h3>
                 <p className={styles.serviceDesc}>{s.label}</p>
                 <span className={styles.serviceArrow}>See If You Qualify →</span>
@@ -290,7 +294,7 @@ export default function ContractorDamageClaimsPage() {
           <div className={styles.dayOneGrid}>
             {SERVICES.map((s) => (
               <div key={s.title} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>{s.icon}</div>
+                <div className={styles.dayOneIcon}><LIcon name={s.icon} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
@@ -341,12 +345,12 @@ export default function ContractorDamageClaimsPage() {
               <p>We are licensed Florida attorneys who can take contractors and their insurers to court. We do not just write demand letters — we file lawsuits and win.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🔍</div>
+              <div className={styles.whyCardIcon}><LIcon name="🔍" /></div>
               <h3>Independent Engineers</h3>
               <p>We bring our own structural engineers and damage inspectors to document contractor fault and distinguish negligence from pre-existing conditions — so the insurer cannot dispute causation.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>💰</div>
+              <div className={styles.whyCardIcon}><LIcon name="💰" /></div>
               <h3>Zero Upfront Cost</h3>
               <p>We work on contingency — no fee unless we recover. Our interests are 100% aligned with getting you the maximum recovery from the contractor and their insurer.</p>
             </div>

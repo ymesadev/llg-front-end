@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import styles from "./ChecklistCTA.module.css";
+import { ClipboardList, Home, Scale } from "lucide-react";
 
 const CONFIG = {
   ssdi: {
@@ -25,6 +26,8 @@ const CONFIG = {
     emoji: "⚖️",
   },
 };
+
+const EMOJI_MAP = { "📋": ClipboardList, "🏠": Home, "⚖️": Scale };
 
 export default function ChecklistCTA({ articleType = "property-damage" }) {
   const [name, setName] = useState("");
@@ -93,7 +96,7 @@ export default function ChecklistCTA({ articleType = "property-damage" }) {
   return (
     <div className={styles.wrap}>
       <div className={styles.card}>
-        <div className={styles.emoji}>{config.emoji}</div>
+        <div className={styles.emoji}>{(() => { const C = EMOJI_MAP[config.emoji]; return C ? <C size={22} strokeWidth={1.5} /> : <span>{config.emoji}</span>; })()}</div>
         <h3 className={styles.title}>{config.title}</h3>
         <p className={styles.subtitle}>{config.subtitle}</p>
         <form onSubmit={handleSubmit} className={styles.form}>

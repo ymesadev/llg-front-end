@@ -1,5 +1,9 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import { Flame, XCircle, ClipboardList, Scale, Landmark, Zap, MapPin, TrendingUp, DollarSign, Clock, ShieldCheck, Phone, Search } from "lucide-react";
+
+const LUCIDE_ICON_MAP = { "🔥": Flame, "❌": XCircle, "📋": ClipboardList, "⚖️": Scale, "🏛️": Landmark, "⚡": Zap, "📍": MapPin, "📈": TrendingUp, "💰": DollarSign, "⏰": Clock, "🛡️": ShieldCheck, "📞": Phone, "🔍": Search };
+const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const metadata = {
   title: "Florida Fire Insurance Claim Lawyers | Denied Fire Claim Attorneys | Louis Law Group",
@@ -148,7 +152,7 @@ export default function FireInsuranceClaimsPage() {
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
               <a href={CTA_URL} key={s.label} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} /></div>
                 <h3 className={styles.statNumber}>{s.number}</h3>
                 <p className={styles.serviceDesc}>{s.label}</p>
                 <span className={styles.serviceArrow}>See If You Qualify →</span>
@@ -171,7 +175,7 @@ export default function FireInsuranceClaimsPage() {
           <div className={styles.dayOneGrid}>
             {CLUSTERS.map((c) => (
               <Link key={c.slug} href={`/fire-insurance-claims/${c.slug}`} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>{c.icon}</div>
+                <div className={styles.dayOneIcon}><LIcon name={c.icon} /></div>
                 <h3>{c.title}</h3>
                 <p>{c.desc}</p>
               </Link>
@@ -224,32 +228,32 @@ export default function FireInsuranceClaimsPage() {
           <h2 className={styles.sectionTitleLight}>Fire Damage Attorneys Who Fight for You</h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚖️</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" /></div>
               <h3>Licensed Trial Attorneys</h3>
               <p>We are licensed Florida attorneys — not public adjusters. We can take your insurer to court and win if they refuse to pay your fire claim.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>💰</div>
+              <div className={styles.whyCardIcon}><LIcon name="💰" /></div>
               <h3>Zero Upfront Cost</h3>
               <p>We work on contingency. You pay nothing unless we recover money for your fire damage claim.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🔍</div>
+              <div className={styles.whyCardIcon}><LIcon name="🔍" /></div>
               <h3>Independent Fire Investigation</h3>
               <p>We bring independent fire investigators and forensic experts — not your insurer&apos;s. This is how we prove the true cause and extent of your fire damage.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📋</div>
+              <div className={styles.whyCardIcon}><LIcon name="📋" /></div>
               <h3>Fire Claim Specialists</h3>
               <p>From arson defense to smoke damage disputes to ALE claims — we handle every aspect of fire insurance litigation.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🏛️</div>
+              <div className={styles.whyCardIcon}><LIcon name="🏛️" /></div>
               <h3>Courtroom Ready</h3>
               <p>We prepare every fire claim for trial — which is why insurers offer more when Louis Law Group is on the other side.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📍</div>
+              <div className={styles.whyCardIcon}><LIcon name="📍" /></div>
               <h3>All of Florida</h3>
               <p>We represent fire damage victims across Florida — from Miami-Dade to the Panhandle.</p>
             </div>
@@ -290,7 +294,7 @@ export default function FireInsuranceClaimsPage() {
           <a href={CTA_URL} className={styles.ctaFinal}>See If You Qualify Now — Free →</a>
           <p className={styles.finalCtaNote}>Available 24/7 · No Obligation · No Upfront Cost</p>
           <div className={styles.finalTrust}>
-            <span>📞 (833) 657-4812</span>
+            <span><LIcon name="📞" size={16} /> (833) 657-4812</span>
             <span>·</span>
             <span>Licensed Attorneys</span>
             <span>·</span>

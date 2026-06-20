@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Hero.module.css";
 import HeroForm from "./components/HeroForm";
+import { Home, Scale, Lock } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -125,21 +126,21 @@ export default function Hero() {
             </div>
             <div className={styles.practiceButtons}>
               <a href="/property-damage-claims/qualify" className={styles.practiceBtn}>
-                <span className={styles.practiceBtnIcon}>🏠</span>
+                <span className={styles.practiceBtnIcon}><Home size={20} /></span>
                 <span className={styles.practiceBtnText}>
                   <strong>Property Damage</strong>
                   <small>Insurance claims, denied or underpaid</small>
                 </span>
               </a>
               <a href="/ssdi/qualify" className={styles.practiceBtn}>
-                <span className={styles.practiceBtnIcon}>⚖️</span>
+                <span className={styles.practiceBtnIcon}><Scale size={20} /></span>
                 <span className={styles.practiceBtnText}>
                   <strong>Social Security Disability</strong>
                   <small>SSDI &amp; SSI benefits claims</small>
                 </span>
               </a>
               <a href="/privacy-torts" className={styles.practiceBtn}>
-                <span className={styles.practiceBtnIcon}>🔒</span>
+                <span className={styles.practiceBtnIcon}><Lock size={20} /></span>
                 <span className={styles.practiceBtnText}>
                   <strong>Privacy Torts</strong>
                   <small>Data privacy &amp; consumer protection</small>

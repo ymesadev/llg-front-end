@@ -1,5 +1,9 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import { Droplets, Leaf, Home, AlertCircle, Wrench, Building2 } from "lucide-react";
+
+const LUCIDE_ICON_MAP = { "💧": Droplets, "🍃": Leaf, "🏠": Home, "🚨": AlertCircle, "🔧": Wrench, "🏢": Building2 };
+const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const metadata = {
   title: "Water Damage Restoration & Mold Remediation Claims | Louis Law Group",
@@ -223,7 +227,7 @@ export default function WaterDamageRestorationPage() {
           <div className={styles.servicesGrid}>
             {SERVICES.map((s) => (
               <a href={CTA_URL} key={s.title} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} /></div>
                 <h3 className={styles.serviceTitle}>{s.title}</h3>
                 <div className={styles.serviceKeywords}>
                   {s.keywords.map((k) => (
