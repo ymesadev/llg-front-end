@@ -134,6 +134,14 @@ public/*
 !src/app/api/ssdi-intake/
 !src/app/api/ssdi-intake/**
 
+# allow contractor damage claims (TPL) hub + qualifier
+!src/app/contractor-damage-claims/
+!src/app/contractor-damage-claims/**
+
+# allow qualify-intake-tpl API route
+!src/app/api/qualify-intake-tpl/
+!src/app/api/qualify-intake-tpl/**
+
 # allow public adjuster resources landing page
 !src/app/public-adjuster-resources-florida/
 !src/app/public-adjuster-resources-florida/**
