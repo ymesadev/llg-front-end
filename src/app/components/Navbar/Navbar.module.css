@@ -230,6 +230,21 @@
   color: #ffb800;
 }
 
+/* Mobile click-to-call CTA */
+.mobilePhoneBtn {
+  display: block;
+  margin: 1.5rem 0 0.5rem;
+  padding: 0.85rem 1rem;
+  background: #ffb800;
+  color: #1a2b49;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 30px;
+  letter-spacing: 0.04em;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
   .navLinks {

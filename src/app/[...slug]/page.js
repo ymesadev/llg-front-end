@@ -14,6 +14,7 @@ import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import parse from "html-react-parser";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { Phone } from "lucide-react";
 import Link from "next/link";
 import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
@@ -1842,7 +1843,7 @@ export default async function Page(props) {
           )}
           {/* Sticky mobile CTA */}
           <div className={styles.stickyMobileCta}>
-            <OpenChatButton className={styles.stickyCall}>{articleLang === "es" ? "Pregúntenos en Vivo" : "Ask Us a Question Live"}</OpenChatButton>
+            <a href="tel:+18336574812" className={styles.stickyPhone}><Phone size={14} /> (833) 657-4812</a>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →"}</Link>
           </div>
           {/* Sticky desktop CTA — all article types */}
@@ -1862,6 +1863,7 @@ export default async function Page(props) {
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyDesktopBtn}>
               {articleLang === "es" ? "Vea Si Califica →" : "Check Your Eligibility →"}
             </Link>
+            <a href="tel:+18336574812" className={styles.stickyPhone}><Phone size={14} /> (833) 657-4812</a>
           </div>
           <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} articleType={articleType} />
           <SocialProofToast />

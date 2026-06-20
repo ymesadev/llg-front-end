@@ -217,6 +217,9 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
+        <a href="tel:+18336574812" className={styles.mobilePhoneBtn}>
+          Call (833) 657-4812
+        </a>
       </nav>
     </header>
   );

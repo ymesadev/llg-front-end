@@ -199,6 +199,13 @@ export default function PropertyDamageClaimsPage() {
               See If You Qualify — Free →
             </a>
             <p className={styles.ctaNote}>Takes 3 minutes · No obligation · No upfront cost</p>
+            <div className={styles.trustBar}>
+              <span>★★★★★ 4.9</span>
+              <span>|</span>
+              <span>$200M+ Recovered</span>
+              <span>|</span>
+              <span>No Win, No Fee</span>
+            </div>
           </div>
           <div className={styles.heroCard}>
             <div className={styles.heroCardBadge}>Free Case Evaluation</div>
