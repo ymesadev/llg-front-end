@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import styles from "./Navbar.module.css";
 import AskAI from "../AskAI/AskAI";
+import QualifyDropdown from "../QualifyDropdown/QualifyDropdown";
 
 export default function Navbar() {
   const [navBackground, setNavBackground] = useState(false);
@@ -13,9 +14,6 @@ export default function Navbar() {
   const pathname = usePathname();
 
   const isES = /\b(abogado|abogados|discapacidad|calificar|reclamos-propiedad|seguro-social|negaron)\b/.test(pathname || "");
-  const qualifyHref = isES
-    ? (/\b(discapacidad|seguro-social|ssdi)\b/.test(pathname || "") ? "/ssdi/calificar" : "/reclamos-propiedad/calificar")
-    : "/free-case-evaluation";
 
   // Change navbar background on scroll
   useEffect(() => {
@@ -223,9 +221,8 @@ export default function Navbar() {
           ))}
         </ul>
         <div className={styles.mobileMenuCta}>
-          <Link href={qualifyHref} className={styles.mobileQualifyBtn} onClick={toggleMenu}>
-            {isES ? "Vea Si Califica — Gratis →" : "See If You Qualify — Free →"}
-          </Link>
+          {/* Issue-selector dropdown → routes to the correct qualifier per case type */}
+          <QualifyDropdown variant="dropdown" onNavigate={toggleMenu} />
           <a href="tel:+18336574812" className={styles.mobilePhoneBtn}>
             {isES ? "O llame (833) 657-4812" : "Or call (833) 657-4812"}
           </a>

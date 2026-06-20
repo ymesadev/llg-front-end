@@ -108,6 +108,14 @@ public/*
 !src/app/components/AIChatBot/
 !src/app/components/AIChatBot/**
 
+# allow QualifyDropdown issue-selector component
+!src/app/components/QualifyDropdown/
+!src/app/components/QualifyDropdown/**
+
+# allow free-case-evaluation chooser styles
+!src/app/free-case-evaluation/
+!src/app/free-case-evaluation/**
+
 # allow water damage restoration landing page
 !src/app/water-damage-restoration/
 !src/app/water-damage-restoration/**
