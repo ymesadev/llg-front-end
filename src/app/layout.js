@@ -1,7 +1,6 @@
 import "./globals.css";
 import { Anton, Montserrat, Work_Sans } from "next/font/google";
 import Script from "next/script";
-import CookieConsent from "./components/CookieConsent/CookieConsent";
 import TrackingScripts from "./components/TrackingScripts/TrackingScripts";
 import ConditionalPopup from "./components/ConditionalPopup/ConditionalPopup";
 import ConditionalNavbar from "./components/ConditionalNavbar/ConditionalNavbar";
@@ -85,7 +84,6 @@ export default function RootLayout({ children }) {
         <Script src="/scripts/lead-attribution.js" strategy="afterInteractive" />
 
         <ClientDynamics />
-        <CookieConsent />
         {/* Vercel Analytics — cookieless, fires for ALL visitors regardless of consent */}
         <Analytics />
 

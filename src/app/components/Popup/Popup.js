@@ -7,15 +7,14 @@ import styles from "./Popup.module.css";
 import { ChatUsPopup, ClosePopup, TextUsPopup } from "../../../../public/icons";
 import { trackEvent } from "@/app/utils/analytics";
 
-const POPUP_EXCLUDED_PATHS = ["/property-damage-claims/qualify", "/personal-injury/qualify"];
-
 const Popup = () => {
   const pathname = usePathname();
   const [isTermsOpen, setIsTermsOpen] = useState(false);
   const [isConsultationOpen, setIsConsultationOpen] = useState(false);
   const [isArticlePage, setIsArticlePage] = useState(false);
 
-  const isExcludedPage = POPUP_EXCLUDED_PATHS.includes(pathname);
+  // Suppress all popups on any qualifier page across all practice areas
+  const isExcludedPage = /\/qualify\b|\/calificar\b/.test(pathname);
 
   useEffect(() => {
     const check = () => setIsArticlePage(document.body.hasAttribute("data-article-page"));
