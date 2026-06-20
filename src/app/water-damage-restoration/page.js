@@ -1,8 +1,8 @@
 import styles from "./page.module.css";
 import Link from "next/link";
-import { Droplets, Leaf, Home, AlertCircle, Wrench, Building2 } from "lucide-react";
+import { Droplets, Leaf, Home, AlertCircle, Wrench, Building2, AlertTriangle, Camera, OctagonX, FileText, Timer, Hammer, Scale, DollarSign, MapPin, Zap, ShieldCheck, ClipboardList, Phone } from "lucide-react";
 
-const LUCIDE_ICON_MAP = { "💧": Droplets, "🍃": Leaf, "🏠": Home, "🚨": AlertCircle, "🔧": Wrench, "🏢": Building2 };
+const LUCIDE_ICON_MAP = { "💧": Droplets, "🍃": Leaf, "🏠": Home, "🚨": AlertCircle, "🔧": Wrench, "🏢": Building2, "⚠️": AlertTriangle, "📸": Camera, "🛑": OctagonX, "📄": FileText, "⏱️": Timer, "🏗️": Hammer, "⚖️": Scale, "💰": DollarSign, "📍": MapPin, "⚡": Zap, "🛡️": ShieldCheck, "📋": ClipboardList, "📞": Phone };
 const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const metadata = {
@@ -205,7 +205,7 @@ export default function WaterDamageRestorationPage() {
 
       {/* URGENCY BANNER */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" size={24} /></span>
         <span>
           <strong>Florida Deadline Alert:</strong> Water damage claims have strict filing windows.
           If your loss occurred within the last 2 years,{" "}
@@ -269,32 +269,32 @@ export default function WaterDamageRestorationPage() {
           </p>
           <div className={styles.dayOneGrid}>
             <div className={styles.dayOneCard}>
-              <div className={styles.dayOneIcon}>📸</div>
+              <div className={styles.dayOneIcon}><LIcon name="📸" size={32} /></div>
               <h3>Evidence Preserved Immediately</h3>
               <p>Water damage deteriorates fast. An attorney documents the full scope of loss before it&apos;s repaired, dried out, or questioned by an adjuster. That documentation becomes your leverage.</p>
             </div>
             <div className={styles.dayOneCard}>
-              <div className={styles.dayOneIcon}>🛑</div>
+              <div className={styles.dayOneIcon}><LIcon name="🛑" size={32} /></div>
               <h3>Stop Lowball Offers Before They&apos;re Made</h3>
               <p>Insurers send adjusters whose job is to minimize payouts. When an attorney is already on record, carriers know a lowball offer will be challenged — so they often settle fairly from the start.</p>
             </div>
             <div className={styles.dayOneCard}>
-              <div className={styles.dayOneIcon}>📄</div>
+              <div className={styles.dayOneIcon}><LIcon name="📄" size={32} /></div>
               <h3>Your Statements Are Protected</h3>
               <p>Anything you say to your insurance company can be used to reduce your claim. Your attorney speaks for you — ensuring no recorded statement, EUO, or document request harms your case.</p>
             </div>
             <div className={styles.dayOneCard}>
-              <div className={styles.dayOneIcon}>⏱️</div>
+              <div className={styles.dayOneIcon}><LIcon name="⏱️" size={32} /></div>
               <h3>Deadlines Met Without Mistakes</h3>
               <p>Florida insurance claims have strict notice requirements and proof-of-loss deadlines. Missing even one can void your right to recover. We track every deadline from the day we take your case.</p>
             </div>
             <div className={styles.dayOneCard}>
-              <div className={styles.dayOneIcon}>🏗️</div>
+              <div className={styles.dayOneIcon}><LIcon name="🏗️" size={32} /></div>
               <h3>Scope of Damage Fully Captured</h3>
               <p>Insurance adjusters often miss hidden damage — inside walls, under flooring, in the HVAC system. We bring in independent experts to ensure every affected area is documented and claimed.</p>
             </div>
             <div className={styles.dayOneCard}>
-              <div className={styles.dayOneIcon}>⚖️</div>
+              <div className={styles.dayOneIcon}><LIcon name="⚖️" size={32} /></div>
               <h3>Bad Faith Leverage From the Start</h3>
               <p>Under Florida law, insurers who act in bad faith — delaying, underpaying, or misrepresenting your policy — can owe you extra damages. That leverage only exists if an attorney is monitoring the process.</p>
             </div>
@@ -337,32 +337,32 @@ export default function WaterDamageRestorationPage() {
           </h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚖️</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" size={32} /></div>
               <h3>Attorney-Level Representation</h3>
               <p>Unlike public adjusters, we can take your case to court and file bad-faith claims against your insurer.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>💰</div>
+              <div className={styles.whyCardIcon}><LIcon name="💰" size={32} /></div>
               <h3>No Fees Unless We Win</h3>
               <p>We work on contingency. If we don&apos;t recover money for you, you owe us nothing. Zero risk.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📍</div>
+              <div className={styles.whyCardIcon}><LIcon name="📍" size={32} /></div>
               <h3>Local South Florida Experts</h3>
               <p>We know Florida insurance law, local contractors, and the tactics insurers use in Miami-Dade, Broward, and Palm Beach.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚡</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚡" size={32} /></div>
               <h3>Fast Response</h3>
               <p>Water damage worsens every hour. We move quickly to document your claim and stop further delays from your insurer.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🛡️</div>
+              <div className={styles.whyCardIcon}><LIcon name="🛡️" size={32} /></div>
               <h3>Full Coverage Disputes</h3>
               <p>We handle denied claims, underpaid settlements, delayed responses, and bad-faith insurance practices.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📋</div>
+              <div className={styles.whyCardIcon}><LIcon name="📋" size={32} /></div>
               <h3>Complete Documentation</h3>
               <p>We coordinate with water damage restoration contractors, mold specialists, and engineers to build an airtight claim.</p>
             </div>
@@ -435,7 +435,7 @@ export default function WaterDamageRestorationPage() {
             Serving Miami-Dade · Broward · Palm Beach · Available 24/7
           </p>
           <div className={styles.finalTrust}>
-            <span>📞 (833) 657-4812</span>
+            <span><LIcon name="📞" size={16} /> (833) 657-4812</span>
             <span>·</span>
             <span>Licensed Florida Attorneys</span>
             <span>·</span>

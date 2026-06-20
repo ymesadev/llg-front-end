@@ -1,9 +1,9 @@
 "use client";
 import styles from "./page.module.css";
 import Link from "next/link";
-import { XCircle, TrendingUp, DollarSign, Scale, Clock, ShieldCheck, Home, Droplets, Hammer, Flame, ClipboardList } from "lucide-react";
+import { XCircle, TrendingUp, DollarSign, Scale, Clock, ShieldCheck, Home, Droplets, Hammer, Flame, ClipboardList, Search, Landmark, MapPin, AlertTriangle, Phone } from "lucide-react";
 
-const LUCIDE_ICON_MAP = { "❌": XCircle, "📈": TrendingUp, "💰": DollarSign, "⚖️": Scale, "⏰": Clock, "🛡️": ShieldCheck, "🏠": Home, "💧": Droplets, "🔨": Hammer, "🔥": Flame, "📋": ClipboardList };
+const LUCIDE_ICON_MAP = { "❌": XCircle, "📈": TrendingUp, "💰": DollarSign, "⚖️": Scale, "⏰": Clock, "🛡️": ShieldCheck, "🏠": Home, "💧": Droplets, "🔨": Hammer, "🔥": Flame, "📋": ClipboardList, "🔍": Search, "🏛️": Landmark, "📍": MapPin, "⚠️": AlertTriangle, "📞": Phone };
 const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 const CTA_URL = "/property-damage-claims/qualify";
@@ -233,7 +233,7 @@ export default function PropertyDamageClaimsPage() {
 
       {/* URGENCY BANNER */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" size={24} /></span>
         <span>
           <strong>Florida Deadline Alert:</strong> You have 60 days to submit proof of loss once your insurer requests it.{" "}
           <a href={CTA_URL} className={styles.urgencyLink}>
@@ -340,32 +340,32 @@ export default function PropertyDamageClaimsPage() {
           </h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚖️</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" size={28} /></div>
               <h3>Licensed Trial Attorneys</h3>
               <p>We are licensed Florida attorneys — not public adjusters or claim consultants. We can take your insurer to court and win if they refuse to pay.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>💰</div>
+              <div className={styles.whyCardIcon}><LIcon name="💰" size={28} /></div>
               <h3>Zero Upfront Cost</h3>
               <p>We work on contingency. You pay nothing unless we recover money for you. Our interests are 100% aligned with yours.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🔍</div>
+              <div className={styles.whyCardIcon}><LIcon name="🔍" size={28} /></div>
               <h3>Independent Inspections</h3>
               <p>We bring our own inspectors, engineers, and experts — not your insurer&apos;s. This is how we prove the true extent of your damage and force fair payment.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📋</div>
+              <div className={styles.whyCardIcon}><LIcon name="📋" size={28} /></div>
               <h3>Policy Experts</h3>
               <p>Insurance policies are complex and full of exclusions. Our attorneys know how to read every clause and find coverage the insurer doesn&apos;t want to pay.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🏛️</div>
+              <div className={styles.whyCardIcon}><LIcon name="🏛️" size={28} /></div>
               <h3>Courtroom Ready</h3>
               <p>Most property damage firms settle early. We prepare every case for trial — which is exactly why insurers offer more when we&apos;re on the other side.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📍</div>
+              <div className={styles.whyCardIcon}><LIcon name="📍" size={28} /></div>
               <h3>Statewide Coverage</h3>
               <p>We represent property owners across Florida — from Miami-Dade to the Panhandle. Hurricane, water, fire, or mold — wherever the damage is, we fight.</p>
             </div>
@@ -440,7 +440,7 @@ export default function PropertyDamageClaimsPage() {
             Available 24/7 · No Obligation · No Upfront Cost
           </p>
           <div className={styles.finalTrust}>
-            <span>📞 (833) 657-4812</span>
+            <span><LIcon name="📞" size={18} /> (833) 657-4812</span>
             <span>·</span>
             <span>Licensed Attorneys</span>
             <span>·</span>

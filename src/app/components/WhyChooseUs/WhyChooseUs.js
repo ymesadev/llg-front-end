@@ -1,4 +1,23 @@
 import styles from "./WhyChooseUs.module.css";
+import { Scale, Trophy, Phone, Lock, Flag, Users } from "lucide-react";
+
+const LUCIDE_ICON_MAP = {
+  "⚖️": Scale,
+  "🏆": Trophy,
+  "📞": Phone,
+  "🔒": Lock,
+  "🇺🇸": Flag,
+  "👥": Users,
+};
+
+const LIcon = ({ name, size = 28, className }) => {
+  const C = LUCIDE_ICON_MAP[name];
+  return C ? (
+    <C size={size} className={className} strokeWidth={1.5} />
+  ) : (
+    <span>{name}</span>
+  );
+};
 
 const reasons = [
   {
@@ -46,7 +65,7 @@ export default function WhyChooseUs() {
         <div className={styles.grid}>
           {reasons.map((r, i) => (
             <div key={i} className={styles.card}>
-              <span className={styles.icon}>{r.icon}</span>
+              <span className={styles.icon}><LIcon name={r.icon} /></span>
               <h3 className={styles.cardTitle}>{r.title}</h3>
               <p className={styles.cardBody}>{r.body}</p>
             </div>

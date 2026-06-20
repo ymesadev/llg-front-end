@@ -1,8 +1,8 @@
 import styles from "./page.module.css";
 import Link from "next/link";
-import { Snowflake, Wrench, Home, Zap, Microscope, Search, XCircle, DollarSign, Clock, AlertTriangle, ShieldCheck } from "lucide-react";
+import { Snowflake, Wrench, Home, Zap, Microscope, Search, XCircle, DollarSign, Clock, AlertTriangle, ShieldCheck, Scale, ClipboardList, Landmark, MapPin } from "lucide-react";
 
-const LUCIDE_ICON_MAP = { "❄️": Snowflake, "🔧": Wrench, "🏠": Home, "⚡": Zap, "🦠": Microscope, "🔍": Search, "❌": XCircle, "💰": DollarSign, "⏰": Clock, "⚠️": AlertTriangle, "🛡️": ShieldCheck };
+const LUCIDE_ICON_MAP = { "❄️": Snowflake, "🔧": Wrench, "🏠": Home, "⚡": Zap, "🦠": Microscope, "🔍": Search, "❌": XCircle, "💰": DollarSign, "⏰": Clock, "⚠️": AlertTriangle, "🛡️": ShieldCheck, "⚖️": Scale, "📋": ClipboardList, "🏛️": Landmark, "📍": MapPin };
 const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const metadata = {
@@ -340,7 +340,7 @@ export default function ContractorDamageClaimsPage() {
           </h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚖️</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" /></div>
               <h3>Licensed Trial Attorneys</h3>
               <p>We are licensed Florida attorneys who can take contractors and their insurers to court. We do not just write demand letters — we file lawsuits and win.</p>
             </div>
@@ -355,17 +355,17 @@ export default function ContractorDamageClaimsPage() {
               <p>We work on contingency — no fee unless we recover. Our interests are 100% aligned with getting you the maximum recovery from the contractor and their insurer.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📋</div>
+              <div className={styles.whyCardIcon}><LIcon name="📋" /></div>
               <h3>Contractor Bond &amp; GL Experts</h3>
               <p>Contractor damage claims involve multiple insurance layers — GL policies, professional liability, licensing bonds, and manufacturer warranties. We know how to attack every layer.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🏛️</div>
+              <div className={styles.whyCardIcon}><LIcon name="🏛️" /></div>
               <h3>Courtroom Ready</h3>
               <p>Most contractors settle once they see we are prepared to litigate. We prepare every case for trial — which is why contractors&apos; insurers pay more when we are on the other side.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📍</div>
+              <div className={styles.whyCardIcon}><LIcon name="📍" /></div>
               <h3>Statewide Coverage</h3>
               <p>We represent property owners across Florida against HVAC, plumbing, roofing, and electrical contractors. Wherever the damage is in Florida, we fight.</p>
             </div>

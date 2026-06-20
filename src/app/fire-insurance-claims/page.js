@@ -1,8 +1,8 @@
 import styles from "./page.module.css";
 import Link from "next/link";
-import { Flame, XCircle, ClipboardList, Scale, Landmark, Zap, MapPin, TrendingUp, DollarSign, Clock, ShieldCheck, Phone, Search } from "lucide-react";
+import { Flame, XCircle, ClipboardList, Scale, Landmark, Zap, MapPin, TrendingUp, DollarSign, Clock, ShieldCheck, Phone, Search, AlertTriangle } from "lucide-react";
 
-const LUCIDE_ICON_MAP = { "🔥": Flame, "❌": XCircle, "📋": ClipboardList, "⚖️": Scale, "🏛️": Landmark, "⚡": Zap, "📍": MapPin, "📈": TrendingUp, "💰": DollarSign, "⏰": Clock, "🛡️": ShieldCheck, "📞": Phone, "🔍": Search };
+const LUCIDE_ICON_MAP = { "🔥": Flame, "❌": XCircle, "📋": ClipboardList, "⚖️": Scale, "🏛️": Landmark, "⚡": Zap, "📍": MapPin, "📈": TrendingUp, "💰": DollarSign, "⏰": Clock, "🛡️": ShieldCheck, "📞": Phone, "🔍": Search, "⚠️": AlertTriangle };
 const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const metadata = {
@@ -133,7 +133,7 @@ export default function FireInsuranceClaimsPage() {
 
       {/* URGENCY BANNER */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" size={20} /></span>
         <span>
           <strong>Florida Deadline Alert:</strong> You have 60 days to submit proof of loss once requested.{" "}
           <a href={CTA_URL} className={styles.urgencyLink}>

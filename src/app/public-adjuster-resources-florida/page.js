@@ -1,5 +1,63 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import {
+  ClipboardList,
+  Scale,
+  Home,
+  Wind,
+  BarChart3,
+  Newspaper,
+  TrendingUp,
+  DollarSign,
+  Timer,
+  ShieldCheck,
+  Mail,
+  Phone,
+  Ban,
+  AlertTriangle,
+  FileText,
+  Mic,
+  Search,
+  CircleDashed,
+  Handshake,
+  MapPin,
+  Zap,
+  MessageCircle,
+} from "lucide-react";
+
+const LUCIDE_ICON_MAP = {
+  "📋": ClipboardList,
+  "⚖️": Scale,
+  "🏠": Home,
+  "🌀": Wind,
+  "📊": BarChart3,
+  "📰": Newspaper,
+  "📈": TrendingUp,
+  "💰": DollarSign,
+  "⏱️": Timer,
+  "🛡️": ShieldCheck,
+  "📬": Mail,
+  "📞": Phone,
+  "🚫": Ban,
+  "⚠️": AlertTriangle,
+  "📄": FileText,
+  "🎤": Mic,
+  "🔍": Search,
+  "🕳️": CircleDashed,
+  "🤝": Handshake,
+  "📍": MapPin,
+  "⚡": Zap,
+  "💬": MessageCircle,
+};
+
+const LIcon = ({ name, size = 28, className }) => {
+  const C = LUCIDE_ICON_MAP[name];
+  return C ? (
+    <C size={size} className={className} strokeWidth={1.5} />
+  ) : (
+    <span>{name}</span>
+  );
+};
 
 export const metadata = {
   title: "Florida Public Adjuster Resources | Louis Law Group",
@@ -244,7 +302,7 @@ export default function PublicAdjusterResourcesPage() {
               Submit a Policy for Review →
             </Link>
             <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerHeroCta}>
-              💬 Ask A Lawyer — Text Us Now
+              <LIcon name="💬" size={18} /> Ask A Lawyer — Text Us Now
             </a>
             <p className={styles.ctaNote}>Free review · No obligation · No upfront cost</p>
           </div>
@@ -274,7 +332,7 @@ export default function PublicAdjusterResourcesPage() {
 
       {/* URGENCY BANNER */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" size={20} /></span>
         <span>
           <strong>Carrier Deadline:</strong> Under F.S. 627.70131, insurers must pay or deny within 90 days.{" "}
           <a href="tel:8336574812" className={styles.urgencyLink}>
@@ -297,7 +355,7 @@ export default function PublicAdjusterResourcesPage() {
           <div className={styles.servicesGrid}>
             {SERVICES.map((s) => (
               <a href={s.link} key={s.title} className={styles.serviceCard} target="_blank" rel="noopener noreferrer">
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} size={32} /></div>
                 <h3 className={styles.serviceTitle}>{s.title}</h3>
                 <div className={styles.serviceKeywords}>
                   {s.keywords.map((k) => (
@@ -322,7 +380,7 @@ export default function PublicAdjusterResourcesPage() {
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
               <div key={s.label} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} size={32} /></div>
                 <h3 className={styles.statNumber}>{s.number}</h3>
                 <p className={styles.serviceDesc}>{s.label}</p>
               </div>
@@ -345,7 +403,7 @@ export default function PublicAdjusterResourcesPage() {
           <div className={styles.dayOneGrid}>
             {STATUTES.map((s) => (
               <div key={s.statute} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>⚖️</div>
+                <div className={styles.dayOneIcon}><LIcon name="⚖️" /></div>
                 <h3>{s.statute} — {s.title}</h3>
                 <p>{s.desc}</p>
               </div>
@@ -367,7 +425,7 @@ export default function PublicAdjusterResourcesPage() {
             Submit Policy for Review — Free
           </Link>
           <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerMidCta}>
-            💬 Ask A Lawyer — Text Us Now
+            <LIcon name="💬" size={18} /> Ask A Lawyer — Text Us Now
           </a>
         </div>
       </section>
@@ -386,7 +444,7 @@ export default function PublicAdjusterResourcesPage() {
           <div className={styles.dayOneGrid}>
             {REFERRAL_TRIGGERS.map((s) => (
               <div key={s.title} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>{s.icon}</div>
+                <div className={styles.dayOneIcon}><LIcon name={s.icon} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
@@ -432,32 +490,32 @@ export default function PublicAdjusterResourcesPage() {
           </h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚖️</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" /></div>
               <h3>Licensed FL Attorneys</h3>
               <p>We are licensed Florida attorneys who can file lawsuits, pursue bad faith claims, and escalate to appellate court — capabilities PAs need but cannot exercise themselves.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>💰</div>
+              <div className={styles.whyCardIcon}><LIcon name="💰" /></div>
               <h3>Zero Upfront Cost</h3>
               <p>No upfront cost to the policyholder. We work on contingency — we only get paid if we recover.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🤝</div>
+              <div className={styles.whyCardIcon}><LIcon name="🤝" /></div>
               <h3>PA-Friendly Approach</h3>
               <p>We don&apos;t replace PAs — we complement them. You handle the damage assessment and estimate. We handle the legal fight. Together, the policyholder wins.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🌀</div>
+              <div className={styles.whyCardIcon}><LIcon name="🌀" /></div>
               <h3>Hurricane Claim Experience</h3>
               <p>We&apos;ve handled thousands of post-hurricane property claims across Florida. We understand the unique challenges of catastrophe claims — from carrier delays to AOB disputes.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📍</div>
+              <div className={styles.whyCardIcon}><LIcon name="📍" /></div>
               <h3>Statewide Coverage</h3>
               <p>From Miami to Pensacola, we represent policyholders in every Florida county. No matter where your claim is, we can help.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚡</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚡" /></div>
               <h3>Fast Response</h3>
               <p>Deadlines matter in property claims. We respond within 24 hours and can file emergency motions when carriers act in bad faith.</p>
             </div>
@@ -499,13 +557,13 @@ export default function PublicAdjusterResourcesPage() {
             Submit a Policy for Review — Free →
           </Link>
           <a href="sms:7864360687?body=I%20have%20a%20question%20in%20regards%20to%20a%20claim." className={styles.askLawyerFinalCta}>
-            💬 Ask A Lawyer — Text Us Now
+            <LIcon name="💬" size={18} /> Ask A Lawyer — Text Us Now
           </a>
           <p className={styles.finalCtaNote}>
             Available 24/7 · No Obligation · No Upfront Cost
           </p>
           <div className={styles.finalTrust}>
-            <span>📞 (833) 657-4812</span>
+            <span><LIcon name="📞" size={16} /> (833) 657-4812</span>
             <span>·</span>
             <span>Licensed Attorneys</span>
             <span>·</span>

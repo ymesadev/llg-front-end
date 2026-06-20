@@ -5,8 +5,26 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { trackGoogleConversion } from "@/app/utils/analytics";
+import { Home, Accessibility, Car, Scale, Lock, ClipboardList, MapPin, Phone, MessageCircle } from "lucide-react";
 
 const CTA_URL = "/reclamos-propiedad/calificar";
+
+const LUCIDE_ICON_MAP = {
+  "🏠": Home,
+  "♿": Accessibility,
+  "🚗": Car,
+  "⚖️": Scale,
+  "🔒": Lock,
+  "📋": ClipboardList,
+  "📍": MapPin,
+  "📞": Phone,
+  "💬": MessageCircle,
+};
+
+const LIcon = ({ name, size = 28, className }) => {
+  const C = LUCIDE_ICON_MAP[name];
+  return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>;
+};
 
 export default function AbogadosFlorida() {
   const router = useRouter();
@@ -193,7 +211,7 @@ export default function AbogadosFlorida() {
           <div className={styles.areasGrid}>
             {practiceAreas.map((area) => (
               <div key={area.title} className={styles.areaCard}>
-                <span className={styles.areaIcon}>{area.icon}</span>
+                <span className={styles.areaIcon}><LIcon name={area.icon} /></span>
                 <h3 className={styles.areaTitle}>{area.title}</h3>
                 <p className={styles.areaDesc}>{area.desc}</p>
                 {area.link && (
@@ -219,7 +237,7 @@ export default function AbogadosFlorida() {
                 <li><span className={styles.whyCheck}>✓</span> Representamos clientes en todo el estado de Florida</li>
                 <li><span className={styles.whyCheck}>✓</span> Experiencia en casos contra grandes aseguradoras</li>
               </ul>
-              <a href="tel:8336574812" className={styles.ctaCallInline}>📞 (833) 657-4812 — Llame Ahora</a>
+              <a href="tel:8336574812" className={styles.ctaCallInline}><LIcon name="📞" size={18} /> (833) 657-4812 — Llame Ahora</a>
             </div>
             <div className={styles.whyStats}>
               <div className={styles.statBox}>
@@ -246,7 +264,7 @@ export default function AbogadosFlorida() {
           <div className={styles.citiesGrid}>
             {cities.map(({ city, desc }) => (
               <div key={city} className={styles.cityCard}>
-                <h3 className={styles.cityName}>📍 {city}</h3>
+                <h3 className={styles.cityName}><LIcon name="📍" size={18} /> {city}</h3>
                 <p className={styles.cityDesc}>{desc}</p>
               </div>
             ))}
@@ -279,8 +297,8 @@ export default function AbogadosFlorida() {
             <h2 className={styles.ctaTitle}>¿Necesita un Abogado en Florida? Hable con Nosotros Hoy — Gratis</h2>
             <p className={styles.ctaSubtitle}>Sin costo. Sin compromiso. Atendemos en español.</p>
             <div className={styles.ctaBtns}>
-              <a href="tel:8336574812" className={styles.ctaCall}>📞 (833) 657-4812</a>
-              <a href="sms:8336574812" className={styles.ctaSms}>💬 Enviar Texto</a>
+              <a href="tel:8336574812" className={styles.ctaCall}><LIcon name="📞" size={20} /> (833) 657-4812</a>
+              <a href="sms:8336574812" className={styles.ctaSms}><LIcon name="💬" size={20} /> Enviar Texto</a>
             </div>
             <p className={styles.ctaNote}>Consulta gratis · Sin pago adelantado · Solo cobramos si ganamos</p>
           </div>

@@ -1,7 +1,7 @@
 import styles from "./page.module.css";
-import { Car, Home, Wrench, Hammer, Snowflake, ClipboardList, Scale, DollarSign, ShieldCheck, ScrollText, CheckCircle2 } from "lucide-react";
+import { Car, Home, Wrench, Hammer, Snowflake, ClipboardList, Scale, DollarSign, ShieldCheck, ScrollText, CheckCircle2, AlertTriangle, Search, Landmark, MapPin, FileText, Phone } from "lucide-react";
 
-const LUCIDE_ICON_MAP = { "🚗": Car, "🏠": Home, "🧰": Wrench, "🏗️": Hammer, "❄️": Snowflake, "📋": ClipboardList, "⚖️": Scale, "💰": DollarSign, "🛡️": ShieldCheck, "📜": ScrollText, "✅": CheckCircle2 };
+const LUCIDE_ICON_MAP = { "🚗": Car, "🏠": Home, "🧰": Wrench, "🏗️": Hammer, "❄️": Snowflake, "📋": ClipboardList, "⚖️": Scale, "💰": DollarSign, "🛡️": ShieldCheck, "📜": ScrollText, "✅": CheckCircle2, "⚠️": AlertTriangle, "🔍": Search, "🏛️": Landmark, "📍": MapPin, "📄": FileText, "📞": Phone };
 const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
 export const revalidate = 3600;
@@ -265,7 +265,7 @@ export default async function WarrantyClaimsPage() {
 
       {/* URGENCY BANNER */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" /></span>
         <span>
           <strong>Don&apos;t wait:</strong> warranty contracts can impose short deadlines to dispute a denial.{" "}
           <a href={CTA_URL} className={styles.urgencyLink}>
@@ -382,7 +382,7 @@ export default async function WarrantyClaimsPage() {
               <p>We work on contingency for qualifying cases. You pay nothing unless we recover for you. Our interests are aligned with yours.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🔍</div>
+              <div className={styles.whyCardIcon}><LIcon name="🔍" /></div>
               <h3>We Read the Fine Print</h3>
               <p>Warranty and service contracts are dense and full of exclusions. We know how to find the coverage the company is trying to avoid paying.</p>
             </div>
@@ -392,12 +392,12 @@ export default async function WarrantyClaimsPage() {
               <p>From Chapter 634 service-warranty regulation to non-binding arbitration clauses, we use Florida law to keep your case in front of a judge when it counts.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🏛️</div>
+              <div className={styles.whyCardIcon}><LIcon name="🏛️" /></div>
               <h3>Courtroom Ready</h3>
               <p>Many disputes settle once the company sees we&apos;re prepared to litigate. We build every case to be trial-ready — which is exactly why warranty companies pay more.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📍</div>
+              <div className={styles.whyCardIcon}><LIcon name="📍" /></div>
               <h3>Serving Florida Consumers</h3>
               <p>We represent warranty and service-contract holders across Florida — auto, home, appliance, HVAC, and builder warranties alike.</p>
             </div>
@@ -466,7 +466,7 @@ export default async function WarrantyClaimsPage() {
             <div className={styles.dayOneGrid}>
               {articles.map((post) => (
                 <a key={post.id} href={`/${post.slug}`} className={styles.dayOneCard} style={{ textDecoration: "none" }}>
-                  <div className={styles.dayOneIcon}>📄</div>
+                  <div className={styles.dayOneIcon}><LIcon name="📄" /></div>
                   <h3>{post.title}</h3>
                   <p>{post.description}</p>
                   <span className={styles.serviceArrow}>Read more →</span>
@@ -505,7 +505,7 @@ export default async function WarrantyClaimsPage() {
             Free Case Review · No Obligation · No Upfront Cost
           </p>
           <div className={styles.finalTrust}>
-            <span>📞 (833) 657-4812</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem" }}><LIcon name="📞" size={18} /> (833) 657-4812</span>
             <span>·</span>
             <span>Licensed Attorneys</span>
             <span>·</span>

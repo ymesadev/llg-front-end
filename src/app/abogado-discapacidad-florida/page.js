@@ -2,10 +2,23 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { AlertTriangle, Clock, MapPin, Phone } from "lucide-react";
 import styles from "./page.module.css";
 import { trackGoogleConversion } from "@/app/utils/analytics";
 
 const CTA_URL = "/ssdi/calificar";
+
+const LUCIDE_ICON_MAP = {
+  "⚠️": AlertTriangle,
+  "⏰": Clock,
+  "📍": MapPin,
+  "📞": Phone,
+};
+
+const LIcon = ({ name, size = 28, className }) => {
+  const C = LUCIDE_ICON_MAP[name];
+  return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>;
+};
 
 export default function AbogadoDiscapacidadFlorida() {
   const router = useRouter();
@@ -100,7 +113,7 @@ export default function AbogadoDiscapacidadFlorida() {
 
       {/* Urgency Banner */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" size={20} /></span>
         <strong>PLAZO CRÍTICO:</strong> Si le negaron la discapacidad, tiene solo <strong>60 días</strong> para apelar. No pierda su derecho. Llame ahora: <a href="tel:8336574812">(833) 657-4812</a>
       </div>
 
@@ -209,7 +222,7 @@ export default function AbogadoDiscapacidadFlorida() {
       <section className={styles.solSection}>
         <div className="container">
           <div className={styles.solCard}>
-            <div className={styles.solIcon}>⏰</div>
+            <div className={styles.solIcon}><LIcon name="⏰" size={32} /></div>
             <div className={styles.solContent}>
               <h2 className={styles.solTitle}>El Tiempo Es Crucial — Plazos Legales en Florida</h2>
               <div className={styles.solGrid}>
@@ -307,7 +320,7 @@ export default function AbogadoDiscapacidadFlorida() {
           <div className={styles.citiesGrid}>
             {cities.map((city) => (
               <div key={city} className={styles.cityItem}>
-                <span className={styles.cityPin}>📍</span>
+                <span className={styles.cityPin}><LIcon name="📍" size={18} /></span>
                 <span>{city}</span>
               </div>
             ))}
@@ -344,7 +357,7 @@ export default function AbogadoDiscapacidadFlorida() {
             </p>
             <div className={styles.ctaBtns}>
               <a href="tel:8336574812" className={styles.ctaCall}>
-                📞 Llamar Ahora: (833) 657-4812
+                <LIcon name="📞" size={20} /> Llamar Ahora: (833) 657-4812
               </a>
               <a href="sms:8336574812" className={styles.ctaText2}>
                 💬 Enviar Mensaje de Texto

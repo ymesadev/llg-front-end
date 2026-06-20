@@ -1,5 +1,49 @@
 import styles from "./page.module.css";
 import Link from "next/link";
+import {
+  ClipboardList,
+  Scale,
+  Landmark,
+  FolderOpen,
+  Briefcase,
+  RefreshCw,
+  XCircle,
+  TrendingUp,
+  DollarSign,
+  Banknote,
+  CheckCircle2,
+  ShieldCheck,
+  AlertTriangle,
+  MapPin,
+  Phone,
+} from "lucide-react";
+
+const LUCIDE_ICON_MAP = {
+  "📋": ClipboardList,
+  "⚖️": Scale,
+  "🏛️": Landmark,
+  "📁": FolderOpen,
+  "💼": Briefcase,
+  "🔄": RefreshCw,
+  "❌": XCircle,
+  "📈": TrendingUp,
+  "💰": DollarSign,
+  "💵": Banknote,
+  "✅": CheckCircle2,
+  "🛡️": ShieldCheck,
+  "⚠️": AlertTriangle,
+  "📍": MapPin,
+  "📞": Phone,
+};
+
+const LIcon = ({ name, size = 28, className }) => {
+  const C = LUCIDE_ICON_MAP[name];
+  return C ? (
+    <C size={size} className={className} strokeWidth={1.5} />
+  ) : (
+    <span>{name}</span>
+  );
+};
 
 export const metadata = {
   title: "SSDI Disability Lawyers | Social Security Disability Attorneys | Louis Law Group",
@@ -236,7 +280,7 @@ export default function SSDILawyersPage() {
 
       {/* URGENCY BANNER */}
       <div className={styles.urgencyBanner}>
-        <span className={styles.urgencyIcon}>⚠️</span>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" size={20} /></span>
         <span>
           <strong>SSDI Deadline Alert:</strong> You have only 60 days from a denial notice to appeal.{" "}
           <a href={CTA_URL} className={styles.urgencyLink}>
@@ -259,7 +303,7 @@ export default function SSDILawyersPage() {
           <div className={styles.servicesGrid}>
             {STATS.map((s) => (
               <a href={CTA_URL} key={s.label} className={styles.serviceCard}>
-                <div className={styles.serviceIcon}>{s.icon}</div>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} /></div>
                 <h3 className={styles.statNumber}>{s.number}</h3>
                 <p className={styles.serviceDesc}>{s.label}</p>
                 <span className={styles.serviceArrow}>See If You Qualify →</span>
@@ -297,7 +341,7 @@ export default function SSDILawyersPage() {
           <div className={styles.dayOneGrid}>
             {SERVICES.map((s) => (
               <div key={s.title} className={styles.dayOneCard}>
-                <div className={styles.dayOneIcon}>{s.icon}</div>
+                <div className={styles.dayOneIcon}><LIcon name={s.icon} /></div>
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
@@ -343,32 +387,32 @@ export default function SSDILawyersPage() {
           </h2>
           <div className={styles.whyGrid}>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>⚖️</div>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" size={32} /></div>
               <h3>Attorneys, Not Advocates</h3>
               <p>We are licensed Florida attorneys — not non-attorney representatives. We can escalate to federal court if needed, which advocates cannot.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>💰</div>
+              <div className={styles.whyCardIcon}><LIcon name="💰" size={32} /></div>
               <h3>Zero Upfront Cost</h3>
               <p>Our fee is SSA-regulated: 25% of back pay or $7,200 — whichever is less. If we don&apos;t win your benefits, you owe us nothing.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📋</div>
+              <div className={styles.whyCardIcon}><LIcon name="📋" size={32} /></div>
               <h3>Medical Record Mastery</h3>
               <p>SSDI cases are won or lost on medical evidence. We obtain, organize, and present your records in exactly the format ALJ judges need to approve your claim.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🏛️</div>
+              <div className={styles.whyCardIcon}><LIcon name="🏛️" size={32} /></div>
               <h3>Hearing Preparation</h3>
               <p>We prepare you for your ALJ hearing — what to expect, how to answer, and how to describe your limitations accurately so nothing is understated or overlooked.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>📍</div>
+              <div className={styles.whyCardIcon}><LIcon name="📍" size={32} /></div>
               <h3>Available Nationwide</h3>
               <p>We represent SSDI claimants across the country. Social Security disability hearings can be handled remotely — no matter where you are, we can fight for you.</p>
             </div>
             <div className={styles.whyCard}>
-              <div className={styles.whyCardIcon}>🔄</div>
+              <div className={styles.whyCardIcon}><LIcon name="🔄" size={32} /></div>
               <h3>We Don&apos;t Give Up</h3>
               <p>If your ALJ denies your case, we appeal to the Appeals Council and federal court. Most firms stop at the hearing. We go further.</p>
             </div>
@@ -458,7 +502,7 @@ export default function SSDILawyersPage() {
             Available 24/7 · No Obligation · No Upfront Cost
           </p>
           <div className={styles.finalTrust}>
-            <span>📞 (833) 657-4812</span>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}><LIcon name="📞" size={16} /> (833) 657-4812</span>
             <span>·</span>
             <span>Licensed Attorneys</span>
             <span>·</span>

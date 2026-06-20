@@ -1,28 +1,30 @@
 "use client";
 
 import Link from "next/link";
+import { Scale, Home, ScrollText, Hammer, ShieldCheck, Lock, FileText } from "lucide-react";
 import styles from "./RelatedArticles.module.css";
 
+// Professional Lucide icons per article type (replaces emoji to match site-wide icon modernization)
 const ICONS = {
-  ssdi: "\u2696\uFE0F",
-  "property-damage": "\uD83C\uDFE0",
-  "case-law": "\uD83D\uDCDC",
-  "personal-injury": "\u2696\uFE0F",
-  "contractor-damage": "\uD83D\uDD28",
-  "warranty": "\uD83D\uDEE1\uFE0F",
-  "privacy-tort": "\uD83D\uDD12",
-  "ahs": "\uD83D\uDEE1\uFE0F",
-  "kin": "\uD83C\uDFE0",
-  "slide": "\uD83C\uDFE0",
-  "tower-hill": "\uD83C\uDFE0",
-  "american-integrity": "\uD83C\uDFE0",
-  default: "\uD83D\uDCC4",
+  ssdi: Scale,
+  "property-damage": Home,
+  "case-law": ScrollText,
+  "personal-injury": Scale,
+  "contractor-damage": Hammer,
+  "warranty": ShieldCheck,
+  "privacy-tort": Lock,
+  "ahs": ShieldCheck,
+  "kin": Home,
+  "slide": Home,
+  "tower-hill": Home,
+  "american-integrity": Home,
+  default: FileText,
 };
 
 export default function RelatedArticles({ title, links, articleType }) {
   if (!links || links.length === 0) return null;
 
-  const icon = ICONS[articleType] || ICONS.default;
+  const Icon = ICONS[articleType] || ICONS.default;
   const display = links.slice(0, 4);
 
   return (
@@ -31,7 +33,7 @@ export default function RelatedArticles({ title, links, articleType }) {
       <div className={styles.grid}>
         {display.map((link, i) => (
           <Link href={link.href} key={i} className={styles.card}>
-            <span className={styles.icon}>{icon}</span>
+            <span className={styles.icon}><Icon size={20} strokeWidth={1.5} /></span>
             <span className={styles.label}>{link.label}</span>
             <span className={styles.arrow}>&rarr;</span>
           </Link>

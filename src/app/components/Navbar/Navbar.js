@@ -122,7 +122,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className={styles.logo}>
           <Link href="/">
-            <img src="/images/logo.png" alt="Louis Law Group" width={1000} height={1000} fetchPriority="high" decoding="async" />
+            <img src="/images/logo.png" alt="Louis Law Group" fetchPriority="high" decoding="async" />
           </Link>
         </div>
 
