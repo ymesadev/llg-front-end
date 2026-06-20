@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 
 const CAL_BASE = 'https://bookings.louislawgroup.com/api/v2';
-const CAL_KEY = 'cal_27d4a14aa24a92b4deb38bbc9ab89e0a22e5bd2a61b3c9e2';
+// TODO(security): move to CALCOM_API_KEY in Vercel and rotate; literal is a transitional fallback.
+const CAL_KEY = process.env.CALCOM_API_KEY || 'cal_27d4a14aa24a92b4deb38bbc9ab89e0a22e5bd2a61b3c9e2';
 // 4 = property-insurance consult, 7 = warranty consult, 2 = generic 30-min consult (PI/SSDI/privacy)
 const ALLOWED_EVENTS = new Set([2, 4, 7]);
 
