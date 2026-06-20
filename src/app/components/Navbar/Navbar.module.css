@@ -52,6 +52,53 @@
   position: relative;
 }
 
+/* Dropdown trigger */
+.hasDropdown {
+  position: relative;
+}
+
+.caret {
+  margin-left: 4px;
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+/* Dropdown panel */
+.dropdownMenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #1a2b49;
+  border-top: 2px solid #ffb800;
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+  min-width: 210px;
+  z-index: 1100;
+  white-space: nowrap;
+}
+
+.hasDropdown:hover .dropdownMenu {
+  display: block;
+}
+
+.dropdownItem a {
+  display: block;
+  padding: 0.6rem 1.2rem;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdownItem a:hover {
+  background: rgba(255, 184, 0, 0.12);
+  color: #ffb800;
+}
+
 .navLink {
   color: #ffffff;
   text-decoration: none;
@@ -155,6 +202,32 @@
   font-size: 1.1rem;
   padding: 0.5rem 0;
   display: block;
+}
+
+/* Mobile dropdown parent label */
+.mobileNavParent {
+  display: block;
+  color: #ffb800;
+  font-size: 1.1rem;
+  padding: 0.5rem 0 0.25rem;
+  font-weight: 600;
+}
+
+/* Mobile sub-menu */
+.mobileSubMenu {
+  list-style: none;
+  padding: 0 0 0.25rem 1rem;
+  margin: 0;
+}
+
+.mobileSubMenu li a {
+  font-size: 0.95rem;
+  padding: 0.35rem 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.mobileSubMenu li a:hover {
+  color: #ffb800;
 }
 
 /* Responsive Adjustments */
