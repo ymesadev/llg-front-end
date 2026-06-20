@@ -81,8 +81,11 @@ function getArticleType(slug) {
     return "warranty";
   }
   // TPL / Contractor damage — third-party liability against contractors
-  const tplKeywords = ["contractor-damage", "contractor-scam", "contractor-fraud", "contractor-negligence", "sue-contractor", "roto-rooter", "contractor-water-damage", "contractor-liability", "contractor-dispute", "contractor-mold", "contractor-leak"];
-  if (tplKeywords.some(k => s.includes(k))) return "contractor-damage";
+  // Explicit keyword patterns
+  const tplKeywords = ["contractor-damage", "contractor-scam", "contractor-fraud", "contractor-negligence", "sue-contractor", "roto-rooter", "contractor-water-damage", "contractor-liability", "contractor-dispute", "contractor-mold", "contractor-leak", "contractor-caused", "contractor-damaged", "contractor-negligent", "contractor-claims", "contractor-fire", "hvac-company-damage", "plumbing-company-damage", "roofing-company-damage", "electrical-company-damage"];
+  // Pattern: "suing-<trade>" or "<trade>-company-property-damage" slug shapes
+  const tplByPattern = /suing[-_](hvac|plumb|roof|electric|general[-_]contract|contractor)|hvac[-_]company[-_]property[-_]damage|plumb(ing)?[-_]company[-_]property[-_]damage|roof(ing)?[-_]company[-_]property[-_]damage/.test(s);
+  if (tplKeywords.some(k => s.includes(k)) || tplByPattern) return "contractor-damage";
   // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {

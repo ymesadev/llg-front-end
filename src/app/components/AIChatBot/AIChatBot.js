@@ -108,7 +108,7 @@ function getContextFromUrl(pathname) {
       opener = "Disability claims can be a process. Where are you at with yours — just starting or dealing with a denial?";
     } else if (/personal[-_]?injury|accident/.test(slug)) {
       opener = "Sorry to hear about your situation. What happened? I can point you in the right direction.";
-    } else if (/contractor[-_]?damage|contractor[-_]?scam|contractor[-_]?fraud|roto[-_]?rooter|sue[-_]?contractor|contractor[-_]?negligence/.test(slug)) {
+    } else if (/contractor[-_]?damage|contractor[-_]?scam|contractor[-_]?fraud|roto[-_]?rooter|sue[-_]?contractor|contractor[-_]?negligence|suing[-_]?hvac|suing[-_]?plumb|suing[-_]?roof|suing[-_]?electric|suing[-_]?contractor|contractor[-_]?claims/.test(slug)) {
       opener = "Contractor mess up your property? That's on their liability insurance, not yours. What did they do — and are they taking responsibility?";
     } else if (/warranty|service[-_]?contract|vehicle[-_]?service[-_]?contract/.test(slug)) {
       opener = "Warranty denied? These companies fight everything on purpose. What did they claim isn't covered?";
@@ -663,7 +663,7 @@ const AIChatBot = () => {
 
   const isES = isSpanishPage(pathname);
 
-  const isTplPage = /contractor[-_]damage|contractor[-_]scam|roto[-_]rooter|sue[-_]contractor|contractor[-_]fraud|contractor[-_]negligence/.test((pathname || '').toLowerCase());
+  const isTplPage = /contractor[-_]damage|contractor[-_]scam|roto[-_]rooter|sue[-_]contractor|contractor[-_]fraud|contractor[-_]negligence|suing[-_]hvac|suing[-_]plumb|suing[-_]roof|suing[-_]electric|suing[-_]contractor|contractor[-_]claims/.test((pathname || '').toLowerCase());
   const isWarrantyPage = !isTplPage && /warranty|service[-_]contract/.test((pathname || '').toLowerCase());
 
   const quickReplies = isES ? [
