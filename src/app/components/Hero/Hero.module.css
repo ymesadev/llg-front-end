@@ -145,6 +145,74 @@
   color: #aaa;
 }
 
+/* Property Damage branches into First Party / Third Party — same pattern as the header nav. */
+.practiceGroup {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.practiceGroup .practiceBtn {
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  text-align: inherit;
+}
+.practiceCaret {
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+.practiceGroup.pdOpen .practiceCaret {
+  transform: rotate(180deg);
+}
+.practiceSub {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.practiceGroup.pdOpen .practiceSub {
+  display: flex;
+}
+.practiceSubBtn {
+  color: #ddd;
+  text-decoration: none;
+  text-align: start;
+  font-size: 0.95rem;
+  padding: 0.7rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+.practiceSubBtn:hover {
+  background: rgba(255, 184, 0, 0.15);
+  border-color: #ffb800;
+  color: #fff;
+  transform: translateX(4px);
+}
+/* desktop: float the branch as a dropdown (like the header) so it doesn't push the cards below */
+@media screen and (min-width: 980px) {
+  .practiceSub {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #22335a;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+  }
+  .practiceGroup:hover .practiceSub {
+    display: flex;
+  }
+  .practiceGroup:hover .practiceCaret {
+    transform: rotate(180deg);
+  }
+}
+
 .phoneText {
   color: #ccc;
   text-align: center;

@@ -1,14 +1,16 @@
 "use client"; // Ensure this is a client component for hooks and GSAP
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Hero.module.css";
 import HeroForm from "./components/HeroForm";
-import { Home, ShieldCheck, Scale, Users, Lock } from "lucide-react";
+import { Home, ShieldCheck, Scale, Users, Lock, ChevronDown } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
+  const [pdOpen, setPdOpen] = useState(false);
+
   useLayoutEffect(() => {
     let ctx = gsap.context(() => {
       gsap.set(
@@ -125,13 +127,29 @@ export default function Hero() {
               </p>
             </div>
             <div className={styles.practiceButtons}>
-              <a href="/property-damage-claims/qualify" className={styles.practiceBtn}>
-                <span className={styles.practiceBtnIcon}><Home size={20} /></span>
-                <span className={styles.practiceBtnText}>
-                  <strong>Property Damage</strong>
-                  <small>Insurance claims, denied or underpaid</small>
-                </span>
-              </a>
+              <div className={`${styles.practiceGroup} ${pdOpen ? styles.pdOpen : ""}`}>
+                <button
+                  type="button"
+                  className={styles.practiceBtn}
+                  onClick={() => setPdOpen((v) => !v)}
+                  aria-expanded={pdOpen}
+                >
+                  <span className={styles.practiceBtnIcon}><Home size={20} /></span>
+                  <span className={styles.practiceBtnText}>
+                    <strong>Property Damage</strong>
+                    <small>Insurance claims, denied or underpaid</small>
+                  </span>
+                  <ChevronDown size={18} className={styles.practiceCaret} aria-hidden="true" />
+                </button>
+                <div className={styles.practiceSub}>
+                  <a href="/property-damage-claims/qualify" className={styles.practiceSubBtn}>
+                    First Party Claims
+                  </a>
+                  <a href="/contractor-damage-claims/qualify" className={styles.practiceSubBtn}>
+                    Third Party (Contractor)
+                  </a>
+                </div>
+              </div>
               <a href="/warranty-claims/qualify" className={styles.practiceBtn}>
                 <span className={styles.practiceBtnIcon}><ShieldCheck size={20} /></span>
                 <span className={styles.practiceBtnText}>
