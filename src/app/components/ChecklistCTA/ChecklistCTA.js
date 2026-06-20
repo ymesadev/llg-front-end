@@ -35,7 +35,8 @@ export default function ChecklistCTA({ articleType = "property-damage" }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const config = CONFIG[articleType] || CONFIG["property-damage"];
+  if (!CONFIG[articleType]) return null;
+  const config = CONFIG[articleType];
 
   const handleSubmit = async (e) => {
     e.preventDefault();

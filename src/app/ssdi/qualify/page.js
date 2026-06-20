@@ -530,17 +530,17 @@ export default function SSDIQualify() {
               <div className={styles.inputRow}>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Full name</label>
-                  <input className={styles.input} placeholder="Jane Smith" value={contact.name}
+                  <input className={styles.input} type="text" autoComplete="name" placeholder="Jane Smith" value={contact.name}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, name: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Phone number</label>
-                  <input className={styles.input} placeholder="(954) 555-0100" value={contact.phone}
+                  <input className={styles.input} type="tel" inputMode="tel" autoComplete="tel" placeholder="(954) 555-0100" value={contact.phone}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, phone: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Email address</label>
-                  <input className={styles.input} type="email" placeholder="jane@example.com" value={contact.email}
+                  <input className={styles.input} type="email" inputMode="email" autoComplete="email" placeholder="jane@example.com" value={contact.email}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }} />
                 </div>
               </div>

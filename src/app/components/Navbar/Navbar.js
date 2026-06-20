@@ -122,7 +122,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className={styles.logo}>
           <Link href="/">
-            <img src="/images/logo.png" alt="Logo" />
+            <img src="/images/logo.png" alt="Louis Law Group" width={1000} height={1000} fetchPriority="high" decoding="async" />
           </Link>
         </div>
 
@@ -217,9 +217,14 @@ export default function Navbar() {
             </li>
           ))}
         </ul>
-        <a href="tel:+18336574812" className={styles.mobilePhoneBtn}>
-          Call (833) 657-4812
-        </a>
+        <div className={styles.mobileMenuCta}>
+          <Link href="/free-case-evaluation" className={styles.mobileQualifyBtn} onClick={toggleMenu}>
+            See If You Qualify — Free →
+          </Link>
+          <a href="tel:+18336574812" className={styles.mobilePhoneBtn}>
+            Or call (833) 657-4812
+          </a>
+        </div>
       </nav>
     </header>
   );

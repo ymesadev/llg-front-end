@@ -14,6 +14,12 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // ── CRO 2026-06-20: recover 404 on canonical SSDI slug → live SSDI landing page ──
+      { source: '/social-security-disability', destination: '/ssdi-lawyers', permanent: true },
+      // ── P0 redirects: 404 → live canonical pages ──
+      { source: '/property-damage-insurance-claim', destination: '/property-damage-claims', permanent: true },
+      { source: '/tower-hill-insurance-denied-claim-florida', destination: '/tower-hill-insurance-denied-claim-florida-2026', permanent: true },
+      { source: '/water-damage-insurance-claim-florida-homeowner', destination: '/property-damage-claims', permanent: true },
       // ── SEO P0b 2026-06-18: SSDI twin consolidation (base -> -N earner) ──
       { source: '/anxiety-disability-benefits-2026', destination: '/anxiety-disability-benefits-2026-11', permanent: true },
       { source: '/average-ssdi-payment-arizona-2026', destination: '/average-ssdi-payment-arizona-2026-3', permanent: true },

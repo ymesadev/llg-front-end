@@ -12,6 +12,7 @@ export default function MobileExitIntent({ intakeHref = "/ssdi/qualify", lang = 
   const lastT = useRef(0);
   const armed = useRef(false);
   const idleTimer = useRef(null);
+  const returnPending = useRef(false);
 
   const headlines = {
     "ssdi": { en: "Wait — Don’t Leave Without Checking", es: "Espere — No se vaya sin verificar" },
@@ -19,6 +20,9 @@ export default function MobileExitIntent({ intakeHref = "/ssdi/qualify", lang = 
     "personal-injury": { en: "Don’t Settle for Less Than You Deserve", es: "No acepte menos de lo que merece" },
     "contractor-damage": { en: "Contractor Did the Damage — They Should Pay", es: "El contratista causó el daño — deben pagar" },
     "warranty": { en: "Your Warranty Claim Doesn’t Have to Stay Denied", es: "Su reclamo de garantía puede ser apelado" },
+    "case-law": { en: "Submit Your Policy for a Free Attorney Review", es: "Envíe su póliza para revisión gratuita" },
+    "ahs": { en: "American Home Shield Claim Denied? You Have Options", es: "¿Le negaron su reclamo? Tiene opciones" },
+    "privacy-tort": { en: "Your Privacy Rights May Have Been Violated", es: "Sus derechos de privacidad pueden haber sido violados" },
   };
   const subs = {
     "ssdi": { en: "67% of initial SSDI claims are denied. See if you qualify for benefits — free, takes 2 minutes.", es: "El 67% de las solicitudes iniciales son denegadas. Verifique si califica — gratis, toma 2 minutos." },
@@ -26,6 +30,9 @@ export default function MobileExitIntent({ intakeHref = "/ssdi/qualify", lang = 
     "personal-injury": { en: "Injury victims with attorneys recover 3x more on average. Check if you have a case — free, 2 minutes.", es: "Las víctimas con abogados recuperan 3 veces más. Verifique si tiene un caso — gratis, 2 minutos." },
     "contractor-damage": { en: "Contractors carry liability insurance for exactly this. Free case review — takes 2 minutes.", es: "Los contratistas tienen seguro de responsabilidad para esto. Revisión gratuita en 2 minutos." },
     "warranty": { en: "Warranty companies routinely deny valid claims. An attorney can often reverse that denial — free review, 2 minutes.", es: "Las empresas de garantía niegan reclamos válidos. Revisión gratuita en 2 minutos." },
+    "case-law": { en: "Our attorneys review insurance policies and denial letters free — response within 24 hours. Don’t leave without submitting yours.", es: "Revisamos pólizas y cartas de denegación gratis — respuesta en 24 horas." },
+    "ahs": { en: "American Home Shield routinely denies valid warranty claims. An attorney review is free and takes 2 minutes.", es: "Las empresas de garantía niegan reclamos válidos. Revisión gratuita en 2 minutos." },
+    "privacy-tort": { en: "Find out if your data privacy rights were violated and what compensation you may be owed — free, 2 minutes.", es: "Verifique si sus derechos de privacidad fueron violados y qué compensación puede recibir." },
   };
 
   const headline = (headlines[articleType] || headlines["property-damage"])[isES ? "es" : "en"];
@@ -74,8 +81,12 @@ export default function MobileExitIntent({ intakeHref = "/ssdi/qualify", lang = 
     // ── BOTH: back button / tab switch ──
     const onVisibilityChange = () => {
       if (document.hidden && armed.current) {
+        // Guard against duplicate listeners accumulating across multiple tab switches
+        if (returnPending.current) return;
+        returnPending.current = true;
         // User switched tabs or hit back — show when they return
         const onReturn = () => {
+          returnPending.current = false;
           trigger();
           document.removeEventListener("visibilitychange", onReturn);
         };
@@ -93,6 +104,7 @@ export default function MobileExitIntent({ intakeHref = "/ssdi/qualify", lang = 
     return () => {
       clearTimeout(armTimer);
       clearTimeout(idleTimer.current);
+      returnPending.current = false;
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("mouseleave", onMouseLeave);
       document.removeEventListener("visibilitychange", onVisibilityChange);
@@ -120,7 +132,9 @@ export default function MobileExitIntent({ intakeHref = "/ssdi/qualify", lang = 
           className={styles.cta}
           onClick={() => trackEvent("exit_intent_clicked", { href: intakeHref, articleType })}
         >
-          {isES ? "Verifique Si Califica \u2192" : "See If You Qualify — Free \u2192"}
+          {articleType === "case-law"
+            ? (isES ? "Envíe Para Revisión Gratis \u2192" : "Submit for Review — Free \u2192")
+            : (isES ? "Verifique Si Califica \u2192" : "See If You Qualify — Free \u2192")}
         </Link>
         <p className={styles.note}>{isES ? "Sin costo. Sin compromiso." : "No cost. No obligation. Takes 2 minutes."}</p>
         <button className={styles.dismiss} onClick={dismiss}>

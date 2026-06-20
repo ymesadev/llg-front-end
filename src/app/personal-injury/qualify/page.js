@@ -558,6 +558,8 @@ export default function PersonalInjuryQualify() {
                   <label className={styles.inputLabel}>Full name</label>
                   <input
                     className={styles.input}
+                    type="text"
+                    autoComplete="name"
                     placeholder="Jane Smith"
                     value={contact.name}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, name: e.target.value })); }}
@@ -567,6 +569,9 @@ export default function PersonalInjuryQualify() {
                   <label className={styles.inputLabel}>Phone number</label>
                   <input
                     className={styles.input}
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
                     placeholder="(954) 555-0100"
                     value={contact.phone}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, phone: e.target.value })); }}
@@ -577,6 +582,8 @@ export default function PersonalInjuryQualify() {
                   <input
                     className={styles.input}
                     type="email"
+                    inputMode="email"
+                    autoComplete="email"
                     placeholder="jane@example.com"
                     value={contact.email}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }}

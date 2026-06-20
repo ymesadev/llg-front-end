@@ -3,10 +3,12 @@ import styles from "./page.module.css";
 import HeroForm from "../components/Hero/components/HeroForm";
 import ServicesCarousel from "../components/ServicesCarousel/ServicesCarousel";
 import Results from "../components/Results/Results";
-import dynamic from "next/dynamic";
-// Lazy-load Lottie-heavy components so the 305KB animation chunk never blocks article LCP
-const Steps = dynamic(() => import("../components/Steps/Steps"), { ssr: false });
-const Contact = dynamic(() => import("../components/Contact/ContactSection"), { ssr: false });
+// Steps + ContactSection are "use client" components that already lazy-load lottie-react
+// internally (dynamic import with ssr:false), so the Lottie bundle is split out regardless.
+// They must be imported statically here because this page is a Server Component, where
+// next/dynamic with { ssr: false } is not allowed.
+import Steps from "../components/Steps/Steps";
+import Contact from "../components/Contact/ContactSection";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -87,7 +89,7 @@ function getArticleType(slug) {
   // Explicit keyword patterns
   const tplKeywords = ["contractor-damage", "contractor-scam", "contractor-fraud", "contractor-negligence", "sue-contractor", "roto-rooter", "contractor-water-damage", "contractor-liability", "contractor-dispute", "contractor-mold", "contractor-leak", "contractor-caused", "contractor-damaged", "contractor-negligent", "contractor-claims", "contractor-fire", "hvac-company-damage", "plumbing-company-damage", "roofing-company-damage", "electrical-company-damage"];
   // Pattern: "suing-<trade>" or "<trade>-company-property-damage" slug shapes
-  const tplByPattern = /suing[-_](hvac|plumb|roof|electric|general[-_]contract|contractor)|hvac[-_]company[-_]property[-_]damage|plumb(ing)?[-_]company[-_]property[-_]damage|roof(ing)?[-_]company[-_]property[-_]damage/.test(s);
+  const tplByPattern = /suing[-_](hvac|plumb|roof|electric|general[-_]contract|contractor)|hvac[-_]company[-_]|plumb(ing)?[-_]company[-_]|roof(ing)?[-_]company[-_]/.test(s);
   if (tplKeywords.some(k => s.includes(k)) || tplByPattern) return "contractor-damage";
   // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
@@ -211,6 +213,42 @@ function getRelatedLinks(slug, articleType) {
       ],
     };
   }
+  if (articleType === "personal-injury") {
+    return {
+      title: "Related Personal Injury Resources",
+      links: [
+        { href: "/personal-injury", label: "Personal Injury Claims Hub" },
+        { href: "/personal-injury/qualify", label: "See If You Have a Case — Free Review" },
+        { href: "/car-accident-lawyer-florida-2026", label: "Car Accident Lawyer in Florida" },
+        { href: "/faq", label: "Legal FAQ — Common Questions" },
+        { href: "/resources", label: "All Legal Resources & Guides" },
+      ],
+    };
+  }
+  if (articleType === "warranty") {
+    return {
+      title: "Related Warranty Claim Resources",
+      links: [
+        { href: "/warranty-claims", label: "Warranty Claims Hub" },
+        { href: "/warranty-claims/qualify", label: "See If Your Claim Qualifies — Free" },
+        { href: "/american-home-shield-privacy-torts", label: "American Home Shield Claim Guide" },
+        { href: "/faq", label: "Legal FAQ — Common Questions" },
+        { href: "/resources", label: "All Legal Resources & Guides" },
+      ],
+    };
+  }
+  if (articleType === "ahs" || articleType === "privacy-tort" || articleType === "kin" || articleType === "slide" || articleType === "tower-hill" || articleType === "american-integrity" || articleType === "vuori") {
+    return {
+      title: "Related Privacy & Warranty Resources",
+      links: [
+        { href: "/privacy-torts", label: "Privacy Torts & Warranty Claims Hub" },
+        { href: "/american-home-shield-privacy-torts", label: "American Home Shield Claim Guide" },
+        { href: "/warranty-claims", label: "Warranty Claims — Know Your Rights" },
+        { href: "/faq", label: "Legal FAQ — Common Questions" },
+        { href: "/resources", label: "All Legal Resources & Guides" },
+      ],
+    };
+  }
   if (articleType === "ssdi") {
     const stateLinks = state ? [
       { href: `/how-much-does-ssdi-pay-in-${state}-2026`, label: `How Much Does SSDI Pay in ${stateName}?` },
@@ -222,7 +260,7 @@ function getRelatedLinks(slug, articleType) {
       { href: "/request-for-reconsideration-form-ssa-561", label: "SSA-561: How to File a Request for Reconsideration" },
       { href: "/ssa-3373-function-report-adult", label: "SSA-3373 — Function Report Adult" },
       { href: "/how-long-does-ssdi-approval-take", label: "How Long Does SSDI Approval Take?" },
-      { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI in 2026" },
+      { href: "/ssdi/qualify", label: "Conditions That Qualify for SSDI — Free Check" },
       { href: "/how-to-win-ssdi-appeal", label: "How to Win Your SSDI Appeal" },
     ];
     return { title: `Related SSDI Resources${stateName ? ` — ${stateName}` : ""}`, links: [...stateLinks, ...baseLinks].slice(0, 8) };
@@ -267,8 +305,11 @@ function getIntakeHref(slug, articleType) {
   const isES = isSpanishArticle(slug);
   if (isES) {
     switch (articleType) {
-      case "ssdi":            return "/ssdi/calificar";
-      default:                return "/reclamos-propiedad/calificar";
+      case "ssdi":              return "/ssdi/calificar";
+      case "personal-injury":   return "/personal-injury/qualify";
+      case "warranty":          return "/warranty-claims/qualify";
+      case "contractor-damage": return "/contractor-damage-claims/qualify";
+      default:                  return "/reclamos-propiedad/calificar";
     }
   }
   switch (articleType) {
@@ -1446,8 +1487,8 @@ export default async function Page(props) {
               <nav aria-label="Breadcrumb" className={styles.breadcrumb}>
                 <Link href="/">Home</Link>
                 <span aria-hidden="true"> › </span>
-                <Link href={articleType === "case-law" ? "/case-law-updates" : articleType === "ssdi" ? "/social-security-disability" : articleType === "personal-injury" ? "/personal-injury" : "/property-damage-insurance-claim"}>
-                  {articleType === "case-law" ? "Case Law Updates" : articleType === "ssdi" ? "SSDI" : articleType === "personal-injury" ? "Personal Injury" : "Property Damage"}
+                <Link href={articleType === "case-law" ? "/case-law-updates" : articleType === "ssdi" ? "/ssdi-lawyers" : articleType === "personal-injury" ? "/personal-injury" : articleType === "contractor-damage" ? "/contractor-damage-claims" : articleType === "warranty" ? "/warranty-claims" : (articleType === "ahs" || articleType === "privacy-tort" || articleType === "kin" || articleType === "slide" || articleType === "tower-hill" || articleType === "american-integrity" || articleType === "vuori") ? "/privacy-torts" : "/property-damage-claims"}>
+                  {articleType === "case-law" ? "Case Law Updates" : articleType === "ssdi" ? "SSDI" : articleType === "personal-injury" ? "Personal Injury" : articleType === "contractor-damage" ? "Contractor Damage" : articleType === "warranty" ? "Warranty Claims" : (articleType === "ahs" || articleType === "privacy-tort" || articleType === "kin" || articleType === "slide" || articleType === "tower-hill" || articleType === "american-integrity" || articleType === "vuori") ? "Privacy Torts" : "Property Damage"}
                 </Link>
                 <span aria-hidden="true"> › </span>
                 <span>{page.title}</span>
@@ -1730,23 +1771,23 @@ export default async function Page(props) {
               {/* Cross-practice area links — boost internal linking */}
               {(() => {
                 const crossLinks = articleType === "ssdi" ? [
-                  { href: "/property-damage-insurance-claim", label: "Property Damage Insurance Claims" },
+                  { href: "/property-damage-claims", label: "Property Damage Insurance Claims" },
                   { href: "/insurance-claim-denied-fl", label: "Insurance Claim Denied in Florida?" },
                   { href: "/water-damage-attorney-florida", label: "Water Damage Attorney in Florida" },
                   { href: "/case-law-updates", label: "Latest Case Law Updates" },
                   { href: "/faq", label: "Legal FAQ — Common Questions" },
                   { href: "/resources", label: "All Legal Resources & Guides" },
                 ] : articleType === "case-law" ? [
-                  { href: "/property-damage-insurance-claim", label: "Property Damage Claims Guide" },
-                  { href: "/social-security-disability", label: "SSDI Benefits Guide" },
-                  { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI" },
+                  { href: "/property-damage-claims", label: "Property Damage Claims Guide" },
+                  { href: "/ssdi-lawyers", label: "SSDI Benefits Guide" },
+                  { href: "/ssdi/qualify", label: "Check SSDI Eligibility — Free" },
                   { href: "/faq", label: "Legal FAQ — Common Questions" },
                   { href: "/resources", label: "All Legal Resources & Guides" },
                   { href: "/team", label: "Meet Our Attorneys" },
                 ] : [
-                  { href: "/social-security-disability", label: "SSDI Benefits — Are You Eligible?" },
+                  { href: "/ssdi-lawyers", label: "SSDI Benefits — Are You Eligible?" },
                   { href: "/how-long-does-ssdi-approval-take", label: "How Long Does SSDI Approval Take?" },
-                  { href: "/what-conditions-qualify-for-ssdi-2026", label: "Conditions That Qualify for SSDI" },
+                  { href: "/ssdi/qualify", label: "Conditions That Qualify for SSDI" },
                   { href: "/case-law-updates", label: "Latest Case Law Updates" },
                   { href: "/faq", label: "Legal FAQ — Common Questions" },
                   { href: "/resources", label: "All Legal Resources & Guides" },
@@ -1841,12 +1882,12 @@ export default async function Page(props) {
             </div>
           </section>
           )}
-          {/* Sticky mobile CTA */}
+          {/* Sticky mobile CTA — qualifier-first: eligibility check is the primary action, phone is a compact secondary */}
           <div className={styles.stickyMobileCta}>
-            <a href="tel:+18336574812" className={styles.stickyPhone}><Phone size={14} /> (833) 657-4812</a>
-            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →"}</Link>
+            <Link href={getIntakeHref(slug, articleType)} className={styles.stickyReview}>{articleType === "case-law" ? (articleLang === "es" ? "Enviar para Revisión →" : "Submit for Review →") : (articleLang === "es" ? "Vea Si Califica →" : "See If You Qualify →")}</Link>
+            <a href="tel:+18336574812" className={styles.stickyPhoneSecondary} aria-label={articleLang === "es" ? "Llámenos" : "Call us"}><Phone size={20} /></a>
           </div>
-          {/* Sticky desktop CTA — all article types */}
+          {/* Sticky desktop CTA — all article types; qualifier is the primary CTA, chat + phone are secondary */}
           <div className={styles.stickyDesktopCta}>
             <span className={styles.stickyDesktopText}>
               {articleLang === "es"
@@ -1855,15 +1896,16 @@ export default async function Page(props) {
                 : articleType === "personal-injury" ? "Injured? Find out if you have a case — free, no obligation."
                 : articleType === "contractor-damage" ? "Contractor damaged your home? See if you have a case — free."
                 : articleType === "warranty" ? "Warranty claim denied? You may have legal options — find out free."
+                : articleType === "case-law" ? "Have a policy or denial letter? Get a free attorney review — 24-hour response."
                 : "Insurance claim issues? Find out if you have a case — free, no obligation."}
             </span>
-            <OpenChatButton className={styles.stickyDesktopBtn}>
-              {articleLang === "es" ? "Pregúntenos en Vivo →" : "Ask Us a Question Live →"}
-            </OpenChatButton>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyDesktopBtn}>
               {articleLang === "es" ? "Vea Si Califica →" : "Check Your Eligibility →"}
             </Link>
-            <a href="tel:+18336574812" className={styles.stickyPhone}><Phone size={14} /> (833) 657-4812</a>
+            <OpenChatButton className={styles.stickyDesktopBtnSecondary}>
+              {articleLang === "es" ? "Pregúntenos en Vivo" : "Ask a Question"}
+            </OpenChatButton>
+            <a href="tel:+18336574812" className={styles.stickyDesktopPhone}><Phone size={14} /> (833) 657-4812</a>
           </div>
           <MobileExitIntent intakeHref={getIntakeHref(slug, articleType)} lang={articleLang} articleType={articleType} />
           <SocialProofToast />
@@ -2041,7 +2083,7 @@ export default async function Page(props) {
                       const deepHref = __heroButtonFromDeep?.href || null;
                       const deepLabel = __heroButtonFromDeep?.label || null;
 
-                      const defaultHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : articleType === 'personal-injury' ? '/personal-injury/qualify' : articleType === 'warranty' ? '/warranty-claims/qualify' : '/free-case-evaluation';
+                      const defaultHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : articleType === 'personal-injury' ? '/personal-injury/qualify' : articleType === 'warranty' ? '/warranty-claims/qualify' : articleType === 'contractor-damage' ? '/contractor-damage-claims/qualify' : '/free-case-evaluation';
                       let finalHref = href || deepHref || fallbackBtn?.href || defaultHref;
                       let finalLabel = label || deepLabel || fallbackBtn?.label || 'See if you qualify';
 
@@ -2147,7 +2189,7 @@ export default async function Page(props) {
                       </svg>
                     );
 
-                    const sectionFallbackHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : articleType === 'personal-injury' ? '/personal-injury/qualify' : '/free-case-evaluation';
+                    const sectionFallbackHref = articleType === 'property-damage' ? '/property-damage-claims/qualify' : articleType === 'ssdi' ? '/ssdi/qualify' : articleType === 'personal-injury' ? '/personal-injury/qualify' : articleType === 'contractor-damage' ? '/contractor-damage-claims/qualify' : '/free-case-evaluation';
                     return isExternal ? (
                       <a href={href} target="_blank" rel="noopener noreferrer" className={className}>
                         {label} <Icon />

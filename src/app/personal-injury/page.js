@@ -13,6 +13,9 @@ export const metadata = {
       "Injured in Florida? Personal injury attorneys at Louis Law Group fight for maximum compensation. Free consultation — no fees unless we win.",
     url: "https://www.louislawgroup.com/personal-injury",
   },
+  alternates: {
+    canonical: "https://www.louislawgroup.com/personal-injury",
+  },
 };
 
 const CTA_URL = "/personal-injury/qualify";

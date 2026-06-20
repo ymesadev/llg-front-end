@@ -10,6 +10,9 @@ export const metadata = {
     siteName: "Louis Law Group",
     type: "website",
   },
+  alternates: {
+    canonical: "https://www.louislawgroup.com/personal-injury/qualify",
+  },
 };
 
 export default function QualifyLayout({ children }) {

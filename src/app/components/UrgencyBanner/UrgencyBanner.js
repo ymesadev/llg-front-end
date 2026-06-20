@@ -1,5 +1,7 @@
 "use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { AlertTriangle, X } from "lucide-react";
 import styles from "./UrgencyBanner.module.css";
 
 const INTAKE_ROUTES = {
@@ -15,6 +17,7 @@ const INTAKE_ROUTES = {
   "warranty":           "/warranty-claims/qualify",
   "privacy-tort":       "/privacy-torts",
   "case-law":           "/case-law-updates#submit-policy",
+  "contractor-damage":  "/contractor-damage-claims/qualify",
 };
 
 function getPersonalizedMessage({ articleType, insurer, damageType, city }) {
@@ -61,23 +64,49 @@ function getPersonalizedMessage({ articleType, insurer, damageType, city }) {
   return null;
 }
 
+// Stronger default per article type — concrete deadline + loss framing beats a vague "statute may apply"
+const DEFAULT_HEADLINES = {
+  "property-damage": "Every day you wait, your insurer keeps money that may be yours.",
+  "ssdi": "SSDI back pay accrues from your filing date — waiting can cost you months of benefits.",
+  "personal-injury": "Florida injury claims have a hard filing deadline. Miss it and your case is gone for good.",
+  "warranty": "A denied warranty claim doesn't have to be the final answer — but deadlines apply.",
+  "contractor-damage": "The contractor's liability insurer is hoping you wait too long to act.",
+};
+
 export default function UrgencyBanner({ articleType = "property-damage", small = false, insurer = null, damageType = null, city = null }) {
   const href = INTAKE_ROUTES[articleType] || "/property-damage-claims/qualify";
   const personalizedMsg = getPersonalizedMessage({ articleType, insurer, damageType, city });
 
-  const headline = personalizedMsg || "Statute of limitations may apply.";
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
+    if (sessionStorage.getItem("urgencyBannerDismissed") === "1") setDismissed(true);
+  }, []);
+
+  if (dismissed) return null;
+
+  const headline = personalizedMsg || DEFAULT_HEADLINES[articleType] || "Statute of limitations may apply — don't wait.";
   const subtext = personalizedMsg
     ? "Free eligibility check — takes under 2 minutes, no obligation."
     : "See if you qualify — free eligibility check, takes under 2 minutes.";
 
+  const dismiss = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    sessionStorage.setItem("urgencyBannerDismissed", "1");
+    setDismissed(true);
+  };
+
   return (
     <Link href={href} className={`${styles.banner} ${small ? styles.small : ''}`}>
-      <span className={styles.icon}>⚠️</span>
+      <span className={styles.icon}><AlertTriangle size={18} strokeWidth={2} /></span>
       <span className={styles.text}>
         <strong>{headline}</strong>{" "}
         {subtext}
       </span>
       <span className={styles.cta}>See If You Qualify →</span>
+      <button className={styles.dismiss} onClick={dismiss} aria-label="Dismiss" type="button">
+        <X size={16} />
+      </button>
     </Link>
   );
 }

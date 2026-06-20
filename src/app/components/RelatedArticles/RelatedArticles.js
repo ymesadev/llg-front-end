@@ -7,6 +7,15 @@ const ICONS = {
   ssdi: "\u2696\uFE0F",
   "property-damage": "\uD83C\uDFE0",
   "case-law": "\uD83D\uDCDC",
+  "personal-injury": "\u2696\uFE0F",
+  "contractor-damage": "\uD83D\uDD28",
+  "warranty": "\uD83D\uDEE1\uFE0F",
+  "privacy-tort": "\uD83D\uDD12",
+  "ahs": "\uD83D\uDEE1\uFE0F",
+  "kin": "\uD83C\uDFE0",
+  "slide": "\uD83C\uDFE0",
+  "tower-hill": "\uD83C\uDFE0",
+  "american-integrity": "\uD83C\uDFE0",
   default: "\uD83D\uDCC4",
 };
 

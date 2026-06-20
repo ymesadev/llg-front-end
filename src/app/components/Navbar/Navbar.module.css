@@ -231,18 +231,36 @@
 }
 
 /* Mobile click-to-call CTA */
-.mobilePhoneBtn {
-  display: block;
+/* Qualifier-first: eligibility check is the primary mobile-menu CTA */
+.mobileMenuCta {
   margin: 1.5rem 0 0.5rem;
-  padding: 0.85rem 1rem;
+}
+
+.mobileQualifyBtn {
+  display: block;
+  padding: 0.9rem 1rem;
   background: #ffb800;
   color: #1a2b49;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 800;
   text-align: center;
   text-decoration: none;
   border-radius: 30px;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
+}
+
+/* Phone is the secondary option, visually subordinate to the qualifier button */
+.mobilePhoneBtn {
+  display: block;
+  margin-top: 0.6rem;
+  padding: 0.65rem 1rem;
+  background: transparent;
+  color: #1a2b49;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  letter-spacing: 0.02em;
 }
 
 /* Responsive Adjustments */

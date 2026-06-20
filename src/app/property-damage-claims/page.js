@@ -200,7 +200,7 @@ export default function PropertyDamageClaimsPage() {
             </a>
             <p className={styles.ctaNote}>Takes 3 minutes · No obligation · No upfront cost</p>
             <div className={styles.trustBar}>
-              <span>★★★★★ 4.9</span>
+              <span>★★★★★ 4.7 · 67 Google Reviews</span>
               <span>|</span>
               <span>$200M+ Recovered</span>
               <span>|</span>

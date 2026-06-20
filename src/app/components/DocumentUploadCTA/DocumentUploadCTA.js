@@ -14,6 +14,7 @@ const INTAKE_MAP = {
   "american-integrity": { href: "/american-integrity-insurance-privacy-torts/qualify", headline: "See If You Qualify — American Integrity Claim",   sub: "Check your eligibility for the American Integrity Insurance case — takes under 2 minutes." },
   "warranty":           { href: "/warranty-claims/qualify",                            headline: "Warranty Claim Denied? See If You Qualify",         sub: "Take our 2-minute qualifier and find out if your denied warranty or service-contract claim qualifies for representation — at no cost." },
   "privacy-tort":       { href: "/privacy-torts",                                       headline: "Your Privacy May Have Been Violated — Learn Your Rights", sub: "Find out if your data-privacy claim qualifies for legal action — review your options at no cost." },
+  "contractor-damage":  { href: "/contractor-damage-claims/qualify",                    headline: "Contractor Damaged Your Property? See If You Have a Case", sub: "Take our 2-minute qualifier and find out if you qualify for compensation against a negligent contractor — free, no obligation." },
 };
 
 const INTAKE_MAP_ES = {

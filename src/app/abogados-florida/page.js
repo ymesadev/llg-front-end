@@ -6,6 +6,8 @@ import Link from "next/link";
 import styles from "./page.module.css";
 import { trackGoogleConversion } from "@/app/utils/analytics";
 
+const CTA_URL = "/reclamos-propiedad/calificar";
+
 export default function AbogadosFlorida() {
   const router = useRouter();
   const formLoadTime = useRef(Date.now());
@@ -120,6 +122,11 @@ export default function AbogadosFlorida() {
                 <span className={styles.trustNum}>Sin riesgo</span>
                 <span className={styles.trustLabel}>Solo pagamos si ganamos</span>
               </div>
+            </div>
+            <div style={{ marginTop: "24px" }}>
+              <Link href={CTA_URL} style={{ display: "inline-block", background: "#1a56db", color: "#fff", padding: "14px 28px", borderRadius: "6px", fontWeight: 700, fontSize: "1rem", textDecoration: "none" }}>
+                Vea Si Califica — Gratis →
+              </Link>
             </div>
           </div>
 

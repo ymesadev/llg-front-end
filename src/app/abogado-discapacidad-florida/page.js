@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import { trackGoogleConversion } from "@/app/utils/analytics";
 
+const CTA_URL = "/ssdi/calificar";
+
 export default function AbogadoDiscapacidadFlorida() {
   const router = useRouter();
   const formLoadTime = useRef(Date.now());
@@ -264,6 +266,11 @@ export default function AbogadoDiscapacidadFlorida() {
                 <span>{cond}</span>
               </div>
             ))}
+          </div>
+          <div style={{ textAlign: "center", marginTop: "32px" }}>
+            <a href={CTA_URL} style={{ display: "inline-block", background: "#1a56db", color: "#fff", padding: "16px 32px", borderRadius: "6px", fontWeight: 700, fontSize: "1.05rem", textDecoration: "none" }}>
+              Vea Si Califica — Gratis →
+            </a>
           </div>
         </div>
       </section>

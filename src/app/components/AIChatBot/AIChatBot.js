@@ -81,6 +81,8 @@ function getContextFromUrl(pathname) {
       opener = "Que le negaron el reclamo no significa que se acabo. Cuenteme que paso.";
     } else if (/discapacidad|ssdi|seguro-social/.test(slug)) {
       opener = "Los reclamos de discapacidad pueden ser un proceso largo. En que etapa esta — apenas empezando o lidiando con una negacion?";
+    } else if (/contratista|danos-contratista|sue-contractor|suing[-_]?hvac|suing[-_]?plumb/.test(slug)) {
+      opener = "Danos causados por un contratista? Eso puede ser responsabilidad de su seguro de responsabilidad civil. Que hizo el contratista y esta respondiendo?";
     } else if (/dano-propiedad|property|reclamos-propiedad/.test(slug)) {
       opener = "Tiene un reclamo por danos a su propiedad? Cuenteme que paso y le digo si podemos ayudarle.";
     } else {
@@ -88,7 +90,10 @@ function getContextFromUrl(pathname) {
     }
   } else {
     // English openers
-    if (/qualify/.test(slug)) {
+    // contractor check MUST come before water/flood to handle compound slugs like sue-contractor-for-water-damage
+    if (/contractor[-_]?damage|contractor[-_]?scam|contractor[-_]?fraud|roto[-_]?rooter|sue[-_]?contractor|contractor[-_]?negligence|suing[-_]?hvac|suing[-_]?plumb|suing[-_]?roof|suing[-_]?electric|suing[-_]?contractor|contractor[-_]?claims|plumb(ing)?[-_]company|hvac[-_]company|roofing[-_]company/.test(slug)) {
+      opener = "Contractor mess up your property? That's on their liability insurance, not yours. What did they do — and are they taking responsibility?";
+    } else if (/qualify/.test(slug) && !/ssdi|disability|social[-_]?security/.test(slug)) {
       opener = "Hey! I see you're checking if you qualify. Need a hand with anything? I'm right here.";
     } else if (insurer) {
       opener = `Ugh, ${insurer}. We deal with them all the time. What happened with your claim?`;
@@ -108,8 +113,6 @@ function getContextFromUrl(pathname) {
       opener = "Disability claims can be a process. Where are you at with yours — just starting or dealing with a denial?";
     } else if (/personal[-_]?injury|accident/.test(slug)) {
       opener = "Sorry to hear about your situation. What happened? I can point you in the right direction.";
-    } else if (/contractor[-_]?damage|contractor[-_]?scam|contractor[-_]?fraud|roto[-_]?rooter|sue[-_]?contractor|contractor[-_]?negligence|suing[-_]?hvac|suing[-_]?plumb|suing[-_]?roof|suing[-_]?electric|suing[-_]?contractor|contractor[-_]?claims/.test(slug)) {
-      opener = "Contractor mess up your property? That's on their liability insurance, not yours. What did they do — and are they taking responsibility?";
     } else if (/warranty|service[-_]?contract|vehicle[-_]?service[-_]?contract/.test(slug)) {
       opener = "Warranty denied? These companies fight everything on purpose. What did they claim isn't covered?";
     } else if (/property[-_]?damage/.test(slug)) {
@@ -663,8 +666,9 @@ const AIChatBot = () => {
 
   const isES = isSpanishPage(pathname);
 
-  const isTplPage = /contractor[-_]damage|contractor[-_]scam|roto[-_]rooter|sue[-_]contractor|contractor[-_]fraud|contractor[-_]negligence|suing[-_]hvac|suing[-_]plumb|suing[-_]roof|suing[-_]electric|suing[-_]contractor|contractor[-_]claims/.test((pathname || '').toLowerCase());
-  const isWarrantyPage = !isTplPage && /warranty|service[-_]contract/.test((pathname || '').toLowerCase());
+  const isTplPage = /contractor[-_]damage|contractor[-_]scam|roto[-_]rooter|sue[-_]contractor|contractor[-_]fraud|contractor[-_]negligence|suing[-_]?(hvac|plumb|roof|electric|general[-_]?contract|contractor)|contractor[-_](claims|water[-_]damage|mold|leak|caused|damaged|negligent|liability|dispute|fire)|hvac[-_]company[-_]|plumb(ing)?[-_]company[-_]|roof(ing)?[-_]company[-_]/.test((pathname || '').toLowerCase());
+  const isAhsPage = /american-home-shield|\bahs[-_]/.test((pathname || '').toLowerCase());
+  const isWarrantyPage = !isTplPage && (isAhsPage || /warranty|service[-_]contract/.test((pathname || '').toLowerCase()));
 
   const quickReplies = isES ? [
     "Mi seguro me esta dando vueltas",

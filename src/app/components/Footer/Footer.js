@@ -103,6 +103,18 @@ export default function Footer() {
               </Link>
             </div>
             <ul className={styles.navList}>
+              {/* Static SSR fallback — always rendered so crawlers and SSR see practice area links */}
+              {(!navLinks || navLinks.length === 0) && (
+                <>
+                  <li className={styles.navItem}><Link href="/property-damage-claims" className={styles.navLink}>Property Damage Claims</Link></li>
+                  <li className={styles.navItem}><Link href="/ssdi-lawyers" className={styles.navLink}>SSDI / Social Security Disability</Link></li>
+                  <li className={styles.navItem}><Link href="/personal-injury" className={styles.navLink}>Personal Injury</Link></li>
+                  <li className={styles.navItem}><Link href="/contractor-damage-claims" className={styles.navLink}>Contractor Damage Claims</Link></li>
+                  <li className={styles.navItem}><Link href="/warranty-claims" className={styles.navLink}>Warranty Claims</Link></li>
+                  <li className={styles.navItem}><Link href="/fire-insurance-claims" className={styles.navLink}>Fire Insurance Claims</Link></li>
+                  <li className={styles.navItem}><Link href="/privacy-torts" className={styles.navLink}>Privacy Torts</Link></li>
+                </>
+              )}
               {navLinks && navLinks.length > 0 && navLinks.map((section) => (
                 section && section.display_footer && (
                   <li key={section.id} className={styles.navItem}>
@@ -139,13 +151,33 @@ export default function Footer() {
           <div className={styles.column}>
             <div className={styles.sectionHeader}>
               <Link href="#" className={styles.sectionLink}>
-                <h2>Resources</h2>
+                <h2>Helpful Links</h2>
               </Link>
             </div>
             <ul className={styles.navList}>
               <li className={styles.navItem}>
                 <Link href="/personal-injury" className={styles.navLink}>
                   Personal Injury
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/property-damage-claims" className={styles.navLink}>
+                  Water Damage Claims
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/ssdi-lawyers" className={styles.navLink}>
+                  SSDI Disability Lawyers
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/fire-insurance-claims" className={styles.navLink}>
+                  Fire Insurance Claims
+                </Link>
+              </li>
+              <li className={styles.navItem}>
+                <Link href="/privacy-torts" className={styles.navLink}>
+                  Privacy Torts
                 </Link>
               </li>
               <li className={styles.navItem}>
@@ -156,16 +188,6 @@ export default function Footer() {
               <li className={styles.navItem}>
                 <Link href="/job-id-00001" className={styles.navLink}>
                   Careers
-                </Link>
-              </li>
-              <li className={styles.navItem}>
-                <Link href="/water-damage-restoration" className={styles.navLink}>
-                  Water Damage Claims
-                </Link>
-              </li>
-              <li className={styles.navItem}>
-                <Link href="/ssdi-lawyers" className={styles.navLink}>
-                  SSDI Disability Lawyers
                 </Link>
               </li>
               <li className={styles.navItem}>
@@ -192,11 +214,6 @@ export default function Footer() {
                 <a href="/reports/fee-reform-case-outcomes-dashboard" className={styles.navLink}>
                   Fee Reform Case Outcomes
                 </a>
-              </li>
-              <li className={styles.navItem}>
-                <Link href="/fire-insurance-claims" className={styles.navLink}>
-                  Fire Insurance Claims
-                </Link>
               </li>
             </ul>
           </div>

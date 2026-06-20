@@ -56,7 +56,7 @@ export default function Services() {
             </span>
           </a>
           <a
-            href="/social-security-disability-lawyers"
+            href="/ssdi-lawyers"
             className={styles.serviceBox}
           >
             <h3>SSDI</h3>
