@@ -672,7 +672,16 @@ const AIChatBot = () => {
 
   const isES = isSpanishPage(pathname);
 
-  const isTplPage = /contractor[-_]damage|contractor[-_]scam|roto[-_]rooter|sue[-_]contractor|contractor[-_]fraud|contractor[-_]negligence|suing[-_]?(hvac|plumb|roof|electric|general[-_]?contract|contractor)|contractor[-_](claims|water[-_]damage|mold|leak|caused|damaged|negligent|liability|dispute|fire)|hvac[-_]company[-_]|plumb(ing)?[-_]company[-_]|roof(ing)?[-_]company[-_]/.test((pathname || '').toLowerCase());
+  const __tplPath = (pathname || '').toLowerCase();
+  const isTplPage = (
+    /contractor[-_](damage|scam|fraud|negligence|negligent|water[-_]damage|liability|dispute|mold|leak|caused|damaged|claims|fire|bond|law|statute)|roto[-_]rooter|unlicensed[-_]contractor|sue[-_]contractor/.test(__tplPath)
+    || /(sue|suing|sued)[-_]((a|an|your|the|my)[-_])?(plumber|roofer|electrician|contractor|handyman|builder|remodeler|hvac)s?(?![a-z])/.test(__tplPath)
+    || /(sue|suing|sued)[-_]((a|an|your|the|my)[-_])?(roofing|plumbing|electrical|hvac|general[-_]?contract\w*)[-_](contractor|company)/.test(__tplPath)
+    || /(plumber|roofer|electrician|contractor|handyman|builder|remodeler|hvac)s?[-_](damaged?|flooded|negligen\w*|caused|ruined|destroyed|responsible|liable|liabilit\w*|defective|botched)/.test(__tplPath)
+    || /(negligent|defective|botched|faulty|shoddy)[-_](plumb\w*|roof\w*|electric\w*|hvac|contractor|construction)/.test(__tplPath)
+    || /(hvac|plumb(ing)?|roof(ing)?|electric(al)?)[-_]company[-_]/.test(__tplPath)
+    || /are[-_](roofers|plumbers|contractors|electricians|builders)[-_]responsible/.test(__tplPath)
+  );
   const isAhsPage = /american-home-shield|\bahs[-_]/.test((pathname || '').toLowerCase());
   const isPrivacyTort = /privacy[-_]?tort|session[-_]?replay/.test((pathname || '').toLowerCase());
   const isWarrantyPage = !isTplPage && !isPrivacyTort && (isAhsPage || /warranty|service[-_]contract/.test((pathname || '').toLowerCase()));

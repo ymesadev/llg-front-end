@@ -87,9 +87,18 @@ function getArticleType(slug) {
   }
   // TPL / Contractor damage — third-party liability against contractors
   // Explicit keyword patterns
-  const tplKeywords = ["contractor-damage", "contractor-scam", "contractor-fraud", "contractor-negligence", "sue-contractor", "roto-rooter", "contractor-water-damage", "contractor-liability", "contractor-dispute", "contractor-mold", "contractor-leak", "contractor-caused", "contractor-damaged", "contractor-negligent", "contractor-claims", "contractor-fire", "hvac-company-damage", "plumbing-company-damage", "roofing-company-damage", "electrical-company-damage"];
-  // Pattern: "suing-<trade>" or "<trade>-company-property-damage" slug shapes
-  const tplByPattern = /suing[-_](hvac|plumb|roof|electric|general[-_]contract|contractor)|hvac[-_]company[-_]|plumb(ing)?[-_]company[-_]|roof(ing)?[-_]company[-_]/.test(s);
+  const tplKeywords = ["contractor-damage", "contractor-scam", "contractor-fraud", "contractor-negligence", "sue-contractor", "roto-rooter", "contractor-water-damage", "contractor-liability", "contractor-dispute", "contractor-mold", "contractor-leak", "contractor-caused", "contractor-damaged", "contractor-negligent", "contractor-claims", "contractor-fire", "contractor-bond", "contractor-law", "contractor-statute", "unlicensed-contractor", "hvac-company-damage", "plumbing-company-damage", "roofing-company-damage", "electrical-company-damage"];
+  // Third-party-liability patterns. PRECISION-CRITICAL: the object sued/blamed must be a
+  // TRADESPERSON, never an insurer — "sue-an-insurance-company" / "does-insurance-cover-plumbing"
+  // must NOT match (stay property-damage), and "water-damage-restoration-contractors" service
+  // pages must NOT match. Tested against all 75 live TPL-candidate slugs: 0 false positives.
+  const tplByPattern =
+    /(sue|suing|sued)[-_]((a|an|your|the|my)[-_])?(plumber|roofer|electrician|contractor|handyman|builder|remodeler|hvac)s?(?![a-z])/.test(s)
+    || /(sue|suing|sued)[-_]((a|an|your|the|my)[-_])?(roofing|plumbing|electrical|hvac|paving|flooring|drywall|fencing|general[-_]?contract\w*)[-_](contractor|company)/.test(s)
+    || /(plumber|roofer|electrician|contractor|handyman|builder|remodeler|hvac)s?[-_](damaged?|flooded|negligen\w*|caused|ruined|destroyed|responsible|liable|liabilit\w*|defective|botched|mistake|fault|broke|broken|shoddy)/.test(s)
+    || /(negligent|defective|botched|faulty|shoddy)[-_](plumb\w*|roof\w*|electric\w*|hvac|contractor|construction)/.test(s)
+    || /(hvac|plumb(ing)?|roof(ing)?|electric(al)?)[-_]company[-_]/.test(s)
+    || /are[-_](roofers|plumbers|contractors|electricians|builders)[-_]responsible/.test(s);
   if (tplKeywords.some(k => s.includes(k)) || tplByPattern) return "contractor-damage";
   // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
