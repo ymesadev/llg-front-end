@@ -1,41 +1,55 @@
 import { NextResponse } from 'next/server';
 
-export async function GET() {
+const CAL_BASE = 'https://bookings.louislawgroup.com/api/v2';
+const CAL_KEY = 'cal_27d4a14aa24a92b4deb38bbc9ab89e0a22e5bd2a61b3c9e2';
+// 4 = property-insurance consult, 7 = warranty consult, 2 = generic 30-min consult (PI/SSDI/privacy)
+const ALLOWED_EVENTS = new Set([2, 4, 7]);
+
+export async function GET(request) {
   try {
+    const { searchParams } = new URL(request.url);
+    let eventTypeId = parseInt(searchParams.get('eventTypeId') || '4', 10);
+    if (!ALLOWED_EVENTS.has(eventTypeId)) eventTypeId = 4;
+
     const now = new Date();
     const startTime = now.toISOString();
-    const endTime = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000).toISOString();
+    const endTime = new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000).toISOString();
 
     const res = await fetch(
-      `https://bookings.louislawgroup.com/api/v2/slots/available?startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}&eventTypeId=4`,
+      `${CAL_BASE}/slots/available?startTime=${encodeURIComponent(startTime)}&endTime=${encodeURIComponent(endTime)}&eventTypeId=${eventTypeId}`,
       {
-        headers: {
-          'Authorization': 'Bearer cal_27d4a14aa24a92b4deb38bbc9ab89e0a22e5bd2a61b3c9e2',
-        },
-        next: { revalidate: 300 }, // cache for 5 minutes
+        headers: { Authorization: `Bearer ${CAL_KEY}` },
+        next: { revalidate: 300 }, // cache 5 min
       }
     );
 
     const data = await res.json();
-
     if (data.status === 'error') {
-      return NextResponse.json({ slots: [] }, { status: 200 });
+      return NextResponse.json({ slots: [], eventTypeId }, { status: 200 });
     }
 
-    // Flatten and pick first 4 slots
-    const allSlots = [];
-    const slotData = data?.data?.slots || data?.slots || {};
-    for (const [, daySlots] of Object.entries(slotData)) {
-      if (Array.isArray(daySlots)) {
-        for (const slot of daySlots) {
-          allSlots.push(slot.time || slot);
-        }
+    const byDay = data?.data?.slots || data?.slots || {};
+    const days = Object.keys(byDay).sort();
+    const slots = [];
+
+    // Prefer one slot per day so the visitor sees 5-6 distinct DATES to choose from.
+    for (const day of days) {
+      const arr = byDay[day];
+      if (Array.isArray(arr) && arr.length) slots.push(arr[0].time || arr[0]);
+      if (slots.length >= 6) break;
+    }
+    // If fewer than 6 days are open, top up with additional times from the days we have.
+    if (slots.length < 6) {
+      for (const day of days) {
+        const arr = byDay[day] || [];
+        for (let i = 1; i < arr.length && slots.length < 6; i++) slots.push(arr[i].time || arr[i]);
+        if (slots.length >= 6) break;
       }
     }
 
-    return NextResponse.json({ slots: allSlots.slice(0, 4) });
+    return NextResponse.json({ slots: slots.slice(0, 6), eventTypeId });
   } catch (error) {
     console.error('Cal.com slots error:', error);
-    return NextResponse.json({ slots: [] }, { status: 200 });
+    return NextResponse.json({ slots: [], eventTypeId: 4 }, { status: 200 });
   }
 }

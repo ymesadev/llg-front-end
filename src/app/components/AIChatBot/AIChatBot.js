@@ -40,6 +40,20 @@ const INSURER_MAP = {
   'security-first': 'Security First', 'fednat': 'FedNat',
 };
 
+// Where a qualified lead goes, by practice area. All Florida-litigation areas converge on an
+// in-chat Cal.com consult (the "flows merge" step); family law hands off to its own site.
+// Cal.com event types: 4 = property-insurance consult, 7 = warranty consult, 2 = generic 30-min consult.
+const BOOKING_CONFIG = {
+  'property':        { mode: 'calcom', eventTypeId: 4, slug: 'property-insurance-claim-consultation' },
+  'contractor':      { mode: 'calcom', eventTypeId: 4, slug: 'property-insurance-claim-consultation' },
+  'warranty':        { mode: 'calcom', eventTypeId: 7, slug: 'warranty-claim-consultation' },
+  'personal-injury': { mode: 'calcom', eventTypeId: 2, slug: '30min' },
+  'ssdi':            { mode: 'calcom', eventTypeId: 2, slug: '30min' },
+  'privacy':         { mode: 'calcom', eventTypeId: 2, slug: '30min' },
+  'family':          { mode: 'external', url: 'https://family.louislawgroup.com/' },
+};
+const getBookingConfig = (area) => BOOKING_CONFIG[area] || BOOKING_CONFIG['property'];
+
 const ES_SLUG_KEYWORDS = [
   "abogado", "abogados", "discapacidad", "seguro-social", "negaron",
   "apelar", "calificar", "beneficios-discapacidad", "consulta-gratis",
@@ -151,7 +165,6 @@ function trackChat(event, data = {}) {
 
 const AIChatBot = () => {
   const pathname = usePathname();
-  const isSsdiPage = /ssdi|disability|social[-_]?security|discapacidad/.test(pathname);
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState("");
@@ -408,12 +421,34 @@ const AIChatBot = () => {
     return () => clearTimeout(timer);
   }, [isOpen]);
 
+  const bookingInFlightRef = useRef(false);
+
+  // After a lead qualifies, route them to the right consult for their practice area.
   const fetchCalSlots = async (lead) => {
+    const cfg = getBookingConfig(lead?.area);
+
+    // Family law lives on its own site — hand off (prefilled) instead of in-chat booking.
+    if (cfg.mode === 'external') {
+      const params = new URLSearchParams();
+      if (lead?.name) params.set('name', lead.name);
+      if (lead?.email) params.set('email', lead.email);
+      if (lead?.phone) params.set('phone', lead.phone);
+      const url = `${cfg.url}${params.toString() ? `?${params.toString()}` : ''}`;
+      setMessages(prev => [...prev, {
+        id: Date.now() + 2,
+        text: `Our family law team will take great care of you. <a href="${url}" target="_blank" rel="noopener noreferrer" style="color:#0078ff;text-decoration:underline;font-weight:600;">Click here to get started with our family law team →</a>`,
+        sender: 'bot',
+        timestamp: new Date(),
+      }]);
+      trackChat('booking_external_handoff', { area: lead?.area || null });
+      return;
+    }
+
     try {
-      const res = await fetch('/api/cal-slots');
+      const res = await fetch(`/api/cal-slots?eventTypeId=${cfg.eventTypeId}`);
       const data = await res.json();
-      const nextSlots = (data?.slots || []).slice(0, 4);
-      if (nextSlots.length === 0) return;
+      const nextSlots = (data?.slots || []).slice(0, 6);
+      if (nextSlots.length === 0) throw new Error('no slots available');
 
       const slotButtons = nextSlots.map(t => {
         const d = new Date(t);
@@ -422,59 +457,92 @@ const AIChatBot = () => {
         return { label: `${day} at ${time}`, time: t };
       });
 
-      const bookingMsg = {
+      setMessages(prev => [...prev, {
         id: Date.now() + 2,
-        text: 'Choose a time for your free consultation:',
+        text: 'Pick a time and I’ll book your free consultation right here:',
         sender: 'bot',
         timestamp: new Date(),
         isBooking: true,
         slots: slotButtons,
         lead,
-      };
-      setMessages(prev => [...prev, bookingMsg]);
+      }]);
     } catch (err) {
       console.error('Cal.com slot fetch error:', err);
-      // Fallback: show direct booking link
-      const fallbackMsg = {
+      // Fallback: link straight to the right consult booking page
+      setMessages(prev => [...prev, {
         id: Date.now() + 2,
-        text: '<a href="https://bookings.louislawgroup.com/pierre-louislawgroup.com/property-insurance-claim-consultation" target="_blank" rel="noopener noreferrer" style="color:#0078ff;text-decoration:underline;font-weight:600;">Click here to schedule your free consultation</a>',
+        text: `<a href="https://bookings.louislawgroup.com/pierre-louislawgroup.com/${cfg.slug}" target="_blank" rel="noopener noreferrer" style="color:#0078ff;text-decoration:underline;font-weight:600;">Click here to schedule your free consultation</a>`,
         sender: 'bot',
         timestamp: new Date(),
-      };
-      setMessages(prev => [...prev, fallbackMsg]);
+      }]);
     }
   };
 
+  // Book the chosen slot directly via Cal.com — no tab switch. Falls back to the booking page on error.
   const handleBookSlot = async (slot, lead) => {
-    // Open cal.com booking page with prefilled data
-    const params = new URLSearchParams({
-      name: lead?.name || '',
-      phone: lead?.phone || '',
-      'damage-type': lead?.damage || '',
-    });
-    const bookingUrl = `https://bookings.louislawgroup.com/pierre-louislawgroup.com/property-insurance-claim-consultation?${params.toString()}&date=${encodeURIComponent(slot.time)}`;
-    window.open(bookingUrl, '_blank', 'noopener,noreferrer');
+    if (bookingInFlightRef.current) return;
+    bookingInFlightRef.current = true;
 
-    trackChat('booking_slot_clicked', {
-      slot_label: slot.label,
-      damage_type: lead?.damage || null,
-    });
+    const cfg = getBookingConfig(lead?.area);
+    trackChat('booking_slot_clicked', { slot_label: slot.label, area: lead?.area || null });
 
-    // Confirm in chat
-    const confirmMsg = {
-      id: Date.now() + 3,
-      text: `Opening booking for <strong>${slot.label}</strong>. Complete the form in the new tab to confirm your free consultation.`,
+    const pendingId = Date.now() + 3;
+    setMessages(prev => [...prev, {
+      id: pendingId,
+      text: `Booking <strong>${slot.label}</strong>…`,
       sender: 'bot',
       timestamp: new Date(),
-    };
-    setMessages(prev => [...prev, confirmMsg]);
+    }]);
 
-    if (typeof window !== 'undefined' && window.gtag) {
-      window.gtag('event', 'booking_slot_selected', {
-        event_category: 'Chat',
-        event_label: slot.label,
-        value: 1
+    const tz = (typeof Intl !== 'undefined' && Intl.DateTimeFormat().resolvedOptions().timeZone) || 'America/New_York';
+
+    try {
+      if (!lead?.email) throw new Error('missing email for in-chat booking');
+
+      const res = await fetch('/api/cal-book', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eventTypeId: cfg.eventTypeId,
+          start: slot.time,
+          name: lead?.name || '',
+          email: lead?.email || '',
+          phone: lead?.phone || '',
+          timeZone: tz,
+          notes: lead?.details || lead?.damage || '',
+        }),
       });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error || 'booking failed');
+
+      setMessages(prev => [...prev, {
+        id: Date.now() + 4,
+        text: `You’re all booked for <strong>${slot.label}</strong>! 🎉 A confirmation is on its way to ${lead?.email}. One of our attorneys will meet with you then — talk soon!`,
+        sender: 'bot',
+        timestamp: new Date(),
+      }]);
+      trackChat('booking_confirmed', { slot_label: slot.label, area: lead?.area || null });
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'booking_confirmed', { event_category: 'Chat', event_label: slot.label, value: 1 });
+      }
+    } catch (err) {
+      console.error('In-chat booking failed, falling back to booking page:', err);
+      const params = new URLSearchParams({
+        name: lead?.name || '',
+        email: lead?.email || '',
+        smsReminderNumber: lead?.phone || '',
+        'callback-phone': lead?.phone || '',
+      });
+      const bookingUrl = `https://bookings.louislawgroup.com/pierre-louislawgroup.com/${cfg.slug}?${params.toString()}`;
+      if (typeof window !== 'undefined') window.open(bookingUrl, '_blank', 'noopener,noreferrer');
+      setMessages(prev => [...prev, {
+        id: Date.now() + 4,
+        text: `I opened the booking page for <strong>${slot.label}</strong> in a new tab — just confirm there and you’re all set.`,
+        sender: 'bot',
+        timestamp: new Date(),
+      }]);
+    } finally {
+      bookingInFlightRef.current = false;
     }
   };
 
@@ -573,20 +641,11 @@ const AIChatBot = () => {
           setConversationId(data.conversationId);
         }
 
-        // If qualified, route based on practice area
+        // If qualified, route to the right consult by practice area.
+        // fetchCalSlots reads data.lead.area: property/contractor -> event 4, warranty -> 7,
+        // personal-injury/ssdi/privacy -> event 2, family -> family.louislawgroup.com handoff.
         if (data.qualified && data.lead) {
-          if (isSsdiPage) {
-            // SSDI leads go to retainer flow, not FPP booking
-            const ssdiMsg = {
-              id: Date.now() + 2,
-              text: `Great news — it sounds like we may be able to help! <a href="https://app.louislawgroup.com/ssdi-retainer/?name=${encodeURIComponent(data.lead.name || '')}&phone=${encodeURIComponent(data.lead.phone || '')}&email=${encodeURIComponent(data.lead.email || '')}" target="_blank" rel="noopener noreferrer" style="color:#0078ff;text-decoration:underline;font-weight:600;">Click here to start your disability application</a>`,
-              sender: 'bot',
-              timestamp: new Date(),
-            };
-            setMessages(prev => [...prev, ssdiMsg]);
-          } else {
-            fetchCalSlots(data.lead);
-          }
+          fetchCalSlots(data.lead);
         }
 
         trackChat('chat_response_received', {
