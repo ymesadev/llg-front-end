@@ -4,7 +4,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import styles from "./Hero.module.css";
 import HeroForm from "./components/HeroForm";
-import { Home, Scale, Lock } from "lucide-react";
+import { Home, ShieldCheck, Scale, Users, Lock } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -132,11 +132,25 @@ export default function Hero() {
                   <small>Insurance claims, denied or underpaid</small>
                 </span>
               </a>
+              <a href="/warranty-claims/qualify" className={styles.practiceBtn}>
+                <span className={styles.practiceBtnIcon}><ShieldCheck size={20} /></span>
+                <span className={styles.practiceBtnText}>
+                  <strong>Warranty</strong>
+                  <small>Home or vehicle warranty claim denied</small>
+                </span>
+              </a>
               <a href="/ssdi/qualify" className={styles.practiceBtn}>
                 <span className={styles.practiceBtnIcon}><Scale size={20} /></span>
                 <span className={styles.practiceBtnText}>
                   <strong>Social Security Disability</strong>
                   <small>SSDI &amp; SSI benefits claims</small>
+                </span>
+              </a>
+              <a href="https://family.louislawgroup.com/" className={styles.practiceBtn}>
+                <span className={styles.practiceBtnIcon}><Users size={20} /></span>
+                <span className={styles.practiceBtnText}>
+                  <strong>Family Law</strong>
+                  <small>Divorce, custody &amp; support</small>
                 </span>
               </a>
               <a href="/privacy-torts" className={styles.practiceBtn}>
