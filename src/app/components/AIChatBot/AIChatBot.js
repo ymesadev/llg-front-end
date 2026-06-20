@@ -42,17 +42,21 @@ const INSURER_MAP = {
 
 // Where a qualified lead goes, by practice area. All Florida-litigation areas converge on an
 // in-chat Cal.com consult (the "flows merge" step); family law hands off to its own site.
-// Cal.com event types: 4 = property-insurance consult, 7 = warranty consult, 2 = generic 30-min consult.
+// Cal.com event types: 4 = property (first-party), 8 = third-party liability (contractor),
+// 7 = warranty consult, 2 = generic 30-min consult. 4/7/8 all sync to Pierre's Teams/O365 calendar.
 const BOOKING_CONFIG = {
   'property':        { mode: 'calcom', eventTypeId: 4, slug: 'property-insurance-claim-consultation' },
-  'contractor':      { mode: 'calcom', eventTypeId: 4, slug: 'property-insurance-claim-consultation' },
+  'contractor':      { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
+  'tpl':             { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
+  'third-party':     { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
   'warranty':        { mode: 'calcom', eventTypeId: 7, slug: 'warranty-claim-consultation' },
   'personal-injury': { mode: 'calcom', eventTypeId: 2, slug: '30min' },
   'ssdi':            { mode: 'calcom', eventTypeId: 2, slug: '30min' },
   'privacy':         { mode: 'calcom', eventTypeId: 2, slug: '30min' },
   'family':          { mode: 'external', url: 'https://family.louislawgroup.com/' },
 };
-const getBookingConfig = (area) => BOOKING_CONFIG[area] || BOOKING_CONFIG['property'];
+// Unknown/blank area → generic consult (event 2), never silently into a property claim.
+const getBookingConfig = (area) => BOOKING_CONFIG[area] || { mode: 'calcom', eventTypeId: 2, slug: '30min' };
 
 const ES_SLUG_KEYWORDS = [
   "abogado", "abogados", "discapacidad", "seguro-social", "negaron",

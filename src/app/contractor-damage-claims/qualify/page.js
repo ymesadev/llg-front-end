@@ -47,7 +47,7 @@ const STEP_NAMES = ["trade", "contractor_name", "damage_type", "damage_date", "i
 
 // Cal.com embed config
 const CAL_ORIGIN = "https://bookings.louislawgroup.com";
-const CAL_LINK = "pierre-louislawgroup.com/property-insurance-claim-consultation";
+const CAL_LINK = "pierre-louislawgroup.com/third-party-liability-consultation";
 const CAL_NAMESPACE = "llg-tpl-booker";
 
 export default function ContractorDamageQualify() {
