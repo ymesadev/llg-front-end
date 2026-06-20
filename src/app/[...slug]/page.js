@@ -3,8 +3,10 @@ import styles from "./page.module.css";
 import HeroForm from "../components/Hero/components/HeroForm";
 import ServicesCarousel from "../components/ServicesCarousel/ServicesCarousel";
 import Results from "../components/Results/Results";
-import Steps from "../components/Steps/Steps";
-import Contact from "../components/Contact/ContactSection";
+import dynamic from "next/dynamic";
+// Lazy-load Lottie-heavy components so the 305KB animation chunk never blocks article LCP
+const Steps = dynamic(() => import("../components/Steps/Steps"), { ssr: false });
+const Contact = dynamic(() => import("../components/Contact/ContactSection"), { ssr: false });
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
