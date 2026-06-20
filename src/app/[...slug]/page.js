@@ -80,6 +80,9 @@ function getArticleType(slug) {
   if (s.includes("warranty") || s.includes("service-contract") || s.includes("vehicle-service-contract")) {
     return "warranty";
   }
+  // TPL / Contractor damage — third-party liability against contractors
+  const tplKeywords = ["contractor-damage", "contractor-scam", "contractor-fraud", "contractor-negligence", "sue-contractor", "roto-rooter", "contractor-water-damage", "contractor-liability", "contractor-dispute", "contractor-mold", "contractor-leak"];
+  if (tplKeywords.some(k => s.includes(k))) return "contractor-damage";
   // SSDI detection
   const ssdiKeywords = ["ssdi","ssi","social-security","social security","disability-benefit","supplemental-security","ssa-","function-report","disability-report","reconsideration","appointment-of-representative","authorization-to-disclose","disability-attorney","disability-lawyer","disability-appeal","disability-insurance","disability-hearing","sga","ssdi-pay","ssdi-payment","disability"];
   if (ssdiKeywords.some(k => k.includes('-') ? s.includes(k) : parts.includes(k))) {
@@ -192,6 +195,16 @@ function getRelatedLinks(slug, articleType) {
   const state = getStateFromSlug(slug);
   const stateName = state ? STATE_MAP[state] : null;
 
+  if (articleType === "contractor-damage") {
+    return {
+      title: "More on Contractor Damage Claims",
+      links: [
+        { href: "/contractor-damage-claims", label: "FL Contractor Damage Claims Hub" },
+        { href: "/contractor-damage-claims/qualify", label: "See If You Qualify for Compensation" },
+        { href: "/sue-contractor-for-water-damage-florida-miami", label: "Suing a Contractor for Water Damage in FL" },
+      ],
+    };
+  }
   if (articleType === "ssdi") {
     const stateLinks = state ? [
       { href: `/how-much-does-ssdi-pay-in-${state}-2026`, label: `How Much Does SSDI Pay in ${stateName}?` },
@@ -264,6 +277,7 @@ function getIntakeHref(slug, articleType) {
     case "ssdi":            return "/ssdi/qualify";
     case "personal-injury":  return "/personal-injury/qualify";
     case "warranty":        return "/warranty-claims/qualify";
+    case "contractor-damage": return "/contractor-damage-claims/qualify";
     default:                return "/property-damage-claims/qualify";
   }
 }
@@ -1833,6 +1847,8 @@ export default async function Page(props) {
                 ? (articleType === "ssdi" ? "¿Tiene una discapacidad? Podría calificar para beneficios de SSDI." : "¿Problemas con su reclamo de seguro? Podemos ayudarle.")
                 : articleType === "ssdi" ? "Living with a disability? You may qualify for SSDI benefits."
                 : articleType === "personal-injury" ? "Injured? Find out if you have a case — free, no obligation."
+                : articleType === "contractor-damage" ? "Contractor damaged your home? See if you have a case — free."
+                : articleType === "warranty" ? "Warranty claim denied? You may have legal options — find out free."
                 : "Insurance claim issues? Find out if you have a case — free, no obligation."}
             </span>
             <OpenChatButton className={styles.stickyDesktopBtn}>

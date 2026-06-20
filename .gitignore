@@ -104,6 +104,10 @@ public/*
 !src/app/components/ClientDynamics/
 !src/app/components/ClientDynamics/**
 
+# allow AIChatBot component
+!src/app/components/AIChatBot/
+!src/app/components/AIChatBot/**
+
 # allow water damage restoration landing page
 !src/app/water-damage-restoration/
 !src/app/water-damage-restoration/**

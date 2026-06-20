@@ -108,6 +108,10 @@ function getContextFromUrl(pathname) {
       opener = "Disability claims can be a process. Where are you at with yours — just starting or dealing with a denial?";
     } else if (/personal[-_]?injury|accident/.test(slug)) {
       opener = "Sorry to hear about your situation. What happened? I can point you in the right direction.";
+    } else if (/contractor[-_]?damage|contractor[-_]?scam|contractor[-_]?fraud|roto[-_]?rooter|sue[-_]?contractor|contractor[-_]?negligence/.test(slug)) {
+      opener = "Contractor mess up your property? That's on their liability insurance, not yours. What did they do — and are they taking responsibility?";
+    } else if (/warranty|service[-_]?contract|vehicle[-_]?service[-_]?contract/.test(slug)) {
+      opener = "Warranty denied? These companies fight everything on purpose. What did they claim isn't covered?";
     } else if (/property[-_]?damage/.test(slug)) {
       opener = "Property damage claim? Tell me what happened and I'll let you know if we can help.";
     } else {
@@ -659,11 +663,24 @@ const AIChatBot = () => {
 
   const isES = isSpanishPage(pathname);
 
+  const isTplPage = /contractor[-_]damage|contractor[-_]scam|roto[-_]rooter|sue[-_]contractor|contractor[-_]fraud|contractor[-_]negligence/.test((pathname || '').toLowerCase());
+  const isWarrantyPage = !isTplPage && /warranty|service[-_]contract/.test((pathname || '').toLowerCase());
+
   const quickReplies = isES ? [
     "Mi seguro me esta dando vueltas",
     "Tuve un accidente",
     "Necesito ayuda con discapacidad",
     "Puedo hacer una pregunta rapida?",
+  ] : isTplPage ? [
+    "A contractor damaged my property",
+    "The contractor won't pay for the damage",
+    "I need to know my legal options",
+    "Can I just ask a quick question?",
+  ] : isWarrantyPage ? [
+    "My warranty claim was denied",
+    "The company refused to honor my warranty",
+    "I need help disputing a warranty claim",
+    "Can I just ask a quick question?",
   ] : [
     "My insurance is giving me the runaround",
     "I was in an accident",
