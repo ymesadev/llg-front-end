@@ -144,8 +144,13 @@ export default function Footer() {
             </div>
             <ul className={styles.navList}>
               <li className={styles.navItem}>
+                <Link href="/personal-injury" className={styles.navLink}>
+                  Personal Injury
+                </Link>
+              </li>
+              <li className={styles.navItem}>
                 <Link href="/resources" className={styles.navLink}>
-                  Blog
+                  Blog / Resources
                 </Link>
               </li>
               <li className={styles.navItem}>

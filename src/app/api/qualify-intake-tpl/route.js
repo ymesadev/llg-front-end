@@ -19,7 +19,7 @@ export async function POST(request) {
       `On Priority List: ${contractorOnList ? "YES — priority contractor" : "No"}`,
       `Damage Type: ${damageType || "Not provided"}`,
       `Damage Date: ${damageDate || "Not provided"}`,
-      `Insurance Status: ${insuranceStatus || "Not provided"}`,
+      `Contractor Intent: ${insuranceStatus || "Not provided"}`,
       `Estimated Damage Value: ${damageValue || "Not provided"}`,
       `Property Address: ${propertyAddress || "Not provided"}`,
     ].join("\n");

@@ -31,7 +31,7 @@ export default function Navbar() {
         if (!response.ok) throw new Error("Failed to fetch navigation links");
 
         const data = await response.json();
-        const hiddenLabels = ["faq", "free case evaluation"];
+        const hiddenLabels = ["faq", "free case evaluation", "resources", "personal injury"];
         const sortedNav = data.data
           .sort((a, b) => a.Order - b.Order)
           .filter((link) => !hiddenLabels.includes(link.label.toLowerCase()));

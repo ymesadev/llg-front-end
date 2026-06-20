@@ -43,12 +43,12 @@ const DAMAGE_TYPE_LABELS = [
   "Other",
 ];
 
-const INSURANCE_LABELS = [
-  "Denied — they said it was the contractor's fault",
-  "Denied — for another reason",
-  "Pending — no decision yet",
-  "Approved but underpaid",
-  "No claim filed yet",
+const CONTRACTOR_INTENT_LABELS = [
+  "I want to hold them legally accountable and get compensated",
+  "They denied fault — I need someone to fight for me",
+  "They're ignoring my calls or refusing to respond",
+  "I'm still negotiating with them directly",
+  "I haven't decided yet — I want to understand my options",
 ];
 
 const DAMAGE_VALUE_LABELS = [
@@ -56,6 +56,7 @@ const DAMAGE_VALUE_LABELS = [
   "$5,000 – $25,000",
   "$25,000 – $100,000",
   "Over $100,000",
+  "Unknown / Not sure yet",
 ];
 
 // Flow: trade → contractor_name → damage_type → damage_date → insurance_status → damage_value → florida_check → contact_info → book_consultation
@@ -140,7 +141,7 @@ export default function ContractorDamageQualify() {
     if (a.contractorName) qa.push({ q: "Contractor name", a: a.contractorName });
     if (a.damageType) qa.push({ q: "Damage type", a: a.damageType });
     if (a.damageDate) qa.push({ q: "Damage date", a: a.damageDate });
-    if (a.insuranceStatus) qa.push({ q: "Insurance status", a: a.insuranceStatus });
+    if (a.insuranceStatus) qa.push({ q: "Contractor intent", a: a.insuranceStatus });
     if (a.damageValue) qa.push({ q: "Estimated damage value", a: a.damageValue });
     if (a.florida !== undefined) qa.push({ q: "Property in Florida", a: a.florida ? "Yes" : "No" });
     const addr = a.propertyAddress || c.propertyAddress;
@@ -258,9 +259,12 @@ export default function ContractorDamageQualify() {
     if (answers.damageValue === "Over $100,000") score += 40;
     else if (answers.damageValue === "$25,000 – $100,000") score += 30;
     else if (answers.damageValue === "$5,000 – $25,000") score += 15;
-    if (answers.insuranceStatus === "Denied — they said it was the contractor's fault") score += 25;
-    else if (answers.insuranceStatus === "Denied — for another reason") score += 15;
-    else if (answers.insuranceStatus === "Approved but underpaid") score += 10;
+    else if (answers.damageValue === "Under $5,000") score += 5;
+    if (answers.insuranceStatus === "I want to hold them legally accountable and get compensated") score += 25;
+    else if (answers.insuranceStatus === "They denied fault — I need someone to fight for me") score += 20;
+    else if (answers.insuranceStatus === "They're ignoring my calls or refusing to respond") score += 20;
+    else if (answers.insuranceStatus === "I'm still negotiating with them directly") score += 15;
+    else if (answers.insuranceStatus === "I haven't decided yet — I want to understand my options") score += 10;
     if (answers.contractorOnList) score += 10;
     score = Math.min(score, 95);
 
@@ -730,24 +734,24 @@ export default function ContractorDamageQualify() {
             </div>
           )}
 
-          {/* Step 4: Insurance status */}
+          {/* Step 4: Contractor intent */}
           {cur === 4 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Question 5 of 7</div>
-              <div className={styles.question}>What did your homeowners insurance say about the damage?</div>
-              <div className={styles.hint}>Select the closest match to your situation</div>
+              <div className={styles.question}>What is your intent with the contractor?</div>
+              <div className={styles.hint}>Select the option closest to your current situation</div>
               <div className={styles.opts}>
-                {INSURANCE_LABELS.map((label, i) => (
+                {CONTRACTOR_INTENT_LABELS.map((label, i) => (
                   <button
                     key={i}
                     className={`${styles.opt} ${answers.insuranceStatus === label ? styles.selected : ""}`}
                     onClick={() => {
-                      setAnswer("insuranceStatus", INSURANCE_LABELS[i]);
-                      trackEvent("qualify_step_answered", { case_type: "contractor-tpl", step: 4, step_name: "insurance_status", answer: INSURANCE_LABELS[i] });
-                      if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep5Complete", { insurance_status: INSURANCE_LABELS[i] });
-                      if (typeof gtag !== "undefined") gtag("event", "qualify_step_5", { event_category: "Qualifier", insurance_status: INSURANCE_LABELS[i] });
+                      setAnswer("insuranceStatus", CONTRACTOR_INTENT_LABELS[i]);
+                      trackEvent("qualify_step_answered", { case_type: "contractor-tpl", step: 4, step_name: "contractor_intent", answer: CONTRACTOR_INTENT_LABELS[i] });
+                      if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep5Complete", { contractor_intent: CONTRACTOR_INTENT_LABELS[i] });
+                      if (typeof gtag !== "undefined") gtag("event", "qualify_step_5", { event_category: "Qualifier", contractor_intent: CONTRACTOR_INTENT_LABELS[i] });
                       window.dataLayer = window.dataLayer || [];
-                      window.dataLayer.push({ event: "qualify_step_complete", step: 5, step_name: "insurance_status", insurance_status: INSURANCE_LABELS[i] });
+                      window.dataLayer.push({ event: "qualify_step_complete", step: 5, step_name: "contractor_intent", contractor_intent: CONTRACTOR_INTENT_LABELS[i] });
                       setTimeout(next, 320);
                     }}
                   >
@@ -770,11 +774,6 @@ export default function ContractorDamageQualify() {
                     key={i}
                     className={`${styles.opt} ${answers.damageValue === label ? styles.selected : ""}`}
                     onClick={() => {
-                      if (i === 0) {
-                        // Under $5,000 — DQ
-                        setTimeout(() => showDQ("below-threshold"), 320);
-                        return;
-                      }
                       setAnswer("damageValue", DAMAGE_VALUE_LABELS[i]);
                       trackEvent("qualify_step_answered", { case_type: "contractor-tpl", step: 5, step_name: "damage_value", answer: DAMAGE_VALUE_LABELS[i] });
                       if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyStep6Complete", { damage_value: DAMAGE_VALUE_LABELS[i] });
