@@ -16,7 +16,7 @@ import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import parse from "html-react-parser";
 import { FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
-import { Phone } from "lucide-react";
+import { Phone, ClipboardList, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import UrgencyBanner from "@/app/components/UrgencyBanner/UrgencyBanner";
 import { renderContentBlocks, processHeroContent, processSectionsContent } from "../utils/contentFormatter";
@@ -1522,7 +1522,7 @@ export default async function Page(props) {
               {articleType === "case-law" ? (
                 <>
                   <Link href="/case-law-updates#submit-policy" className={styles.caseLawTopCta}>
-                    <span className={styles.caseLawTopCtaIcon}>📋</span>
+                    <span className={styles.caseLawTopCtaIcon}><ClipboardList size={20} strokeWidth={1.5} /></span>
                     <span className={styles.caseLawTopCtaText}>
                       <strong>Submit a Policy or Denial Letter for Review</strong>{" "}
                       Free review by our property damage attorneys — response within 24 hours.
@@ -1530,7 +1530,7 @@ export default async function Page(props) {
                     <span className={styles.caseLawTopCtaBtn}>Submit for Review →</span>
                   </Link>
                   <OpenChatButton className={styles.askLawyerCta}>
-                    <span className={styles.askLawyerCtaIcon}>💬</span>
+                    <span className={styles.askLawyerCtaIcon}><MessageCircle size={20} strokeWidth={1.5} /></span>
                     <span className={styles.askLawyerCtaText}>
                       <strong>Ask A Lawyer</strong>{" "}
                       Ask us anything about your claim — we're online now.
@@ -1891,12 +1891,13 @@ export default async function Page(props) {
           <div className={styles.stickyDesktopCta}>
             <span className={styles.stickyDesktopText}>
               {articleLang === "es"
-                ? (articleType === "ssdi" ? "¿Tiene una discapacidad? Podría calificar para beneficios de SSDI." : "¿Problemas con su reclamo de seguro? Podemos ayudarle.")
+                ? (articleType === "ssdi" ? "¿Tiene una discapacidad? Podría calificar para beneficios de SSDI." : (articleType === "ahs" || articleType === "kin" || articleType === "slide" || articleType === "tower-hill" || articleType === "american-integrity" || articleType === "vuori" || articleType === "privacy-tort") ? "¿Rastrearon su actividad en línea sin consentimiento? Podría tener un reclamo de privacidad." : "¿Problemas con su reclamo de seguro? Podemos ayudarle.")
                 : articleType === "ssdi" ? "Living with a disability? You may qualify for SSDI benefits."
                 : articleType === "personal-injury" ? "Injured? Find out if you have a case — free, no obligation."
                 : articleType === "contractor-damage" ? "Contractor damaged your home? See if you have a case — free."
                 : articleType === "warranty" ? "Warranty claim denied? You may have legal options — find out free."
                 : articleType === "case-law" ? "Have a policy or denial letter? Get a free attorney review — 24-hour response."
+                : (articleType === "ahs" || articleType === "kin" || articleType === "slide" || articleType === "tower-hill" || articleType === "american-integrity" || articleType === "vuori" || articleType === "privacy-tort") ? "Tracked online without your consent? See if you have a privacy claim — free."
                 : "Insurance claim issues? Find out if you have a case — free, no obligation."}
             </span>
             <Link href={getIntakeHref(slug, articleType)} className={styles.stickyDesktopBtn}>

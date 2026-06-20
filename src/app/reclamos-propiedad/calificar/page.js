@@ -444,17 +444,17 @@ export default function ReclamosCalificar() {
               <div className={styles.inputRow}>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Nombre completo</label>
-                  <input className={styles.input} placeholder="Juan Perez" value={contact.name}
+                  <input className={styles.input} type="text" autoComplete="name" placeholder="Juan Perez" value={contact.name}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, name: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Numero de telefono</label>
-                  <input className={styles.input} placeholder="(954) 555-0100" value={contact.phone}
+                  <input className={styles.input} type="tel" inputMode="tel" autoComplete="tel" placeholder="(954) 555-0100" value={contact.phone}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, phone: e.target.value })); }} />
                 </div>
                 <div className={styles.inputGroup}>
                   <label className={styles.inputLabel}>Correo electronico</label>
-                  <input className={styles.input} type="email" placeholder="juan@ejemplo.com" value={contact.email}
+                  <input className={styles.input} type="email" inputMode="email" autoComplete="email" placeholder="juan@ejemplo.com" value={contact.email}
                     onChange={(e) => { trackContactStart(); setContact((c) => ({ ...c, email: e.target.value })); }} />
                 </div>
               </div>

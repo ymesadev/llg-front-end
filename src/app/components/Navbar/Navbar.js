@@ -12,6 +12,11 @@ export default function Navbar() {
   const [navLinks, setNavLinks] = useState([]);
   const pathname = usePathname();
 
+  const isES = /\b(abogado|abogados|discapacidad|calificar|reclamos-propiedad|seguro-social|negaron)\b/.test(pathname || "");
+  const qualifyHref = isES
+    ? (/\b(discapacidad|seguro-social|ssdi)\b/.test(pathname || "") ? "/ssdi/calificar" : "/reclamos-propiedad/calificar")
+    : "/free-case-evaluation";
+
   // Change navbar background on scroll
   useEffect(() => {
     const handleScroll = () => {
@@ -218,11 +223,11 @@ export default function Navbar() {
           ))}
         </ul>
         <div className={styles.mobileMenuCta}>
-          <Link href="/free-case-evaluation" className={styles.mobileQualifyBtn} onClick={toggleMenu}>
-            See If You Qualify — Free →
+          <Link href={qualifyHref} className={styles.mobileQualifyBtn} onClick={toggleMenu}>
+            {isES ? "Vea Si Califica — Gratis →" : "See If You Qualify — Free →"}
           </Link>
           <a href="tel:+18336574812" className={styles.mobilePhoneBtn}>
-            Or call (833) 657-4812
+            {isES ? "O llame (833) 657-4812" : "Or call (833) 657-4812"}
           </a>
         </div>
       </nav>

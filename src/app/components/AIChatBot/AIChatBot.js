@@ -59,9 +59,13 @@ function getContextFromUrl(pathname) {
   const slug = (pathname || '').toLowerCase().replace(/^\//, '');
   const isES = isSpanishPage(pathname);
 
+  const isPrivacyTort = /privacy[-_]?tort|session[-_]?replay/.test(slug);
+
   let insurer = null;
-  for (const [key, name] of Object.entries(INSURER_MAP)) {
-    if (slug.includes(key)) { insurer = name; break; }
+  if (!isPrivacyTort) {
+    for (const [key, name] of Object.entries(INSURER_MAP)) {
+      if (slug.includes(key)) { insurer = name; break; }
+    }
   }
 
   let opener;
@@ -95,6 +99,8 @@ function getContextFromUrl(pathname) {
       opener = "Contractor mess up your property? That's on their liability insurance, not yours. What did they do — and are they taking responsibility?";
     } else if (/qualify/.test(slug) && !/ssdi|disability|social[-_]?security/.test(slug)) {
       opener = "Hey! I see you're checking if you qualify. Need a hand with anything? I'm right here.";
+    } else if (isPrivacyTort) {
+      opener = "You may have been tracked on this company's website without your consent. Did you visit their site in the last 2 years? I can check if you qualify for a privacy claim.";
     } else if (insurer) {
       opener = `Ugh, ${insurer}. We deal with them all the time. What happened with your claim?`;
     } else if (/roof[-_]?(damage|leak|claim)/.test(slug)) {
@@ -668,7 +674,8 @@ const AIChatBot = () => {
 
   const isTplPage = /contractor[-_]damage|contractor[-_]scam|roto[-_]rooter|sue[-_]contractor|contractor[-_]fraud|contractor[-_]negligence|suing[-_]?(hvac|plumb|roof|electric|general[-_]?contract|contractor)|contractor[-_](claims|water[-_]damage|mold|leak|caused|damaged|negligent|liability|dispute|fire)|hvac[-_]company[-_]|plumb(ing)?[-_]company[-_]|roof(ing)?[-_]company[-_]/.test((pathname || '').toLowerCase());
   const isAhsPage = /american-home-shield|\bahs[-_]/.test((pathname || '').toLowerCase());
-  const isWarrantyPage = !isTplPage && (isAhsPage || /warranty|service[-_]contract/.test((pathname || '').toLowerCase()));
+  const isPrivacyTort = /privacy[-_]?tort|session[-_]?replay/.test((pathname || '').toLowerCase());
+  const isWarrantyPage = !isTplPage && !isPrivacyTort && (isAhsPage || /warranty|service[-_]contract/.test((pathname || '').toLowerCase()));
 
   const quickReplies = isES ? [
     "Mi seguro me esta dando vueltas",
@@ -679,6 +686,11 @@ const AIChatBot = () => {
     "A contractor damaged my property",
     "The contractor won't pay for the damage",
     "I need to know my legal options",
+    "Can I just ask a quick question?",
+  ] : isPrivacyTort ? [
+    "I used this company's website",
+    "Was I tracked without consent?",
+    "Do I qualify for a privacy claim?",
     "Can I just ask a quick question?",
   ] : isWarrantyPage ? [
     "My warranty claim was denied",
