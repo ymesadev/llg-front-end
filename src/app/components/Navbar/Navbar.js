@@ -77,6 +77,27 @@ export default function Navbar() {
           }
         }
 
+        // Add dropdown children to "Property Damage" — First Party vs Third Party.
+        const pdItem = sortedNav.find((link) =>
+          (link.label?.toLowerCase() || "").includes("property damage")
+        );
+        if (pdItem && !pdItem.children) {
+          pdItem.children = [
+            {
+              id: "pd-first-party",
+              label: "First Party Claims",
+              URL: "/property-damage-claims",
+              external: false,
+            },
+            {
+              id: "pd-third-party",
+              label: "Third Party (Contractor)",
+              URL: "/contractor-damage-claims",
+              external: false,
+            },
+          ];
+        }
+
         setNavLinks(sortedNav);
       } catch (error) {
         console.error("❌ Error fetching navigation:", error);
@@ -109,22 +130,35 @@ export default function Navbar() {
         <nav className={styles.navLinks}>
           <ul className={styles.navLinksWrapper}>
             {navLinks.map((link) => {
-              const isActive = pathname === link.URL;
+              const isActive = pathname === link.URL ||
+                (link.children && link.children.some((c) => pathname === c.URL));
+              const hasDropdown = !!(link.children && link.children.length);
               return (
                 <li
                   key={link.id}
-                  className={`${styles.navItem} ${
-                    isActive ? styles.activeNavItem : ""
-                  }`}
+                  className={`${styles.navItem} ${isActive ? styles.activeNavItem : ""} ${hasDropdown ? styles.hasDropdown : ""}`}
                 >
                   {link.external ? (
                     <a href={link.URL} className={styles.navLink}>
-                      {link.label}
+                      {link.label}{hasDropdown && <span className={styles.caret}>▾</span>}
                     </a>
                   ) : (
-                    <Link href={link.URL} className={styles.navLink}>
-                      {link.label}
+                    <Link href={hasDropdown ? "#" : link.URL} className={styles.navLink}>
+                      {link.label}{hasDropdown && <span className={styles.caret}>▾</span>}
                     </Link>
+                  )}
+                  {hasDropdown && (
+                    <ul className={styles.dropdownMenu}>
+                      {link.children.map((child) => (
+                        <li key={child.id} className={styles.dropdownItem}>
+                          {child.external ? (
+                            <a href={child.URL}>{child.label}</a>
+                          ) : (
+                            <Link href={child.URL}>{child.label}</Link>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
                   )}
                 </li>
               );
@@ -156,7 +190,22 @@ export default function Navbar() {
         <ul>
           {navLinks.map((link) => (
             <li key={link.id} className={styles.mobileNavItem}>
-              {link.external ? (
+              {link.children ? (
+                <>
+                  <span className={styles.mobileNavParent}>{link.label}</span>
+                  <ul className={styles.mobileSubMenu}>
+                    {link.children.map((child) => (
+                      <li key={child.id}>
+                        {child.external ? (
+                          <a href={child.URL} onClick={toggleMenu}>{child.label}</a>
+                        ) : (
+                          <Link href={child.URL} onClick={toggleMenu}>{child.label}</Link>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : link.external ? (
                 <a href={link.URL} onClick={toggleMenu}>
                   {link.label}
                 </a>
