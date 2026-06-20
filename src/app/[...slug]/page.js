@@ -81,6 +81,17 @@ function getArticleType(slug) {
   if (s.includes("american-home-shield") || s.startsWith("ahs-") || s.includes("-ahs-")) {
     return "ahs";
   }
+  // Contractor legal-process topics (liens, surety bonds, abandonment, construction defect,
+  // licensing, withholding payment). MUST run BEFORE warranty detection, since
+  // "sue-a-contractor-after-the-warranty-expires" is a contractor (TPL) topic, not a warranty dispute.
+  // Excludes restoration/repair *service* pages ("water-damage-restoration-contractors").
+  const isContractorService = /restoration-contractor|damage-contractor|repair-contractor|contractors-near-me|water-damage-contractor/.test(s);
+  const isContractorLegal =
+    !isContractorService && (
+      (/\bcontractor\b/.test(s) && /(lien|surety|bond|abandon|defect|licens|withhold|wrong-material|unpaid|charge-more|liabl|negligen|hit-a-|caused|complaint-against|sue-a-contractor|sue-the-contractor)/.test(s))
+      || /notice-of-commencement|construction-defect|chapter-558|surety-bond|unlicensed-contractor/.test(s)
+    );
+  if (isContractorLegal) return "contractor-damage";
   // Warranty-dispute detection (extended car warranty / home warranty / service contract claims)
   if (s.includes("warranty") || s.includes("service-contract") || s.includes("vehicle-service-contract")) {
     return "warranty";
