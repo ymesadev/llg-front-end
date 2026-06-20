@@ -142,6 +142,10 @@ public/*
 !src/app/contractor-damage-claims/
 !src/app/contractor-damage-claims/**
 
+# allow DBPR contractor data
+!src/data/
+!src/data/**
+
 # allow qualify-intake-tpl API route
 !src/app/api/qualify-intake-tpl/
 !src/app/api/qualify-intake-tpl/**

@@ -7,24 +7,6 @@ import { trackEvent, trackConversion } from "@/app/utils/analytics";
 import useGclid, { getStoredGclid } from "@/app/utils/useGclid";
 import { useDropoffBeacon, sendDropoff } from "@/app/utils/dropoffBeacon";
 
-const CONTRACTORS_BY_TRADE = {
-  "HVAC / Air Conditioning": ["Air Pros USA", "ARS Rescue Rooter", "Frank Gay Services", "Del-Air Heating & Air Conditioning", "Bayonet Plumbing & Air", "One Hour Air Conditioning & Heating", "Aire Serv (Franchise)"],
-  "Plumbing": ["Roto-Rooter Plumbing & Water Cleanup", "ARS Rescue Rooter", "Benjamin Franklin Plumbing", "Frank Gay Services", "Bayonet Plumbing & Air", "Shamrock Plumbing / Seacoast Service Partners", "W.W. Gay Mechanical", "Del-Air Plumbing"],
-  "Roofing": ["CMR Construction & Roofing", "The Blue Team", "RoofCrafters", "Simon Roofing", "Nations Roof", "Storm Tight Windows & Roofing"],
-  "Electrical": ["Frank Gay Services", "B&I Contractors", "Sunshine Plumbing & Gas"],
-  "General Contractor": [],
-  "Other / Not Listed": [],
-};
-
-const PRIORITY_CONTRACTOR_NAMES = [
-  "Air Pros USA", "ARS Rescue Rooter", "Frank Gay Services",
-  "Roto-Rooter Plumbing & Water Cleanup", "Bayonet Plumbing & Air",
-  "Del-Air Heating & Air Conditioning", "CMR Construction & Roofing",
-  "The Blue Team", "RoofCrafters", "Simon Roofing", "Nations Roof",
-  "Shamrock Plumbing / Seacoast Service Partners", "W.W. Gay Mechanical",
-  "B&I Contractors", "Sunshine Plumbing & Gas",
-];
-
 const TRADE_LABELS = [
   "HVAC / Air Conditioning",
   "Plumbing",
@@ -84,6 +66,9 @@ export default function ContractorDamageQualify() {
   const [contractorSelected, setContractorSelected] = useState("");
   const [contractorManual, setContractorManual] = useState(false);
   const [contractorManualName, setContractorManualName] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const searchTimer = useRef(null);
 
   // Damage date state (Step 3)
   const [damageDate, setDamageDate] = useState("");
@@ -412,6 +397,7 @@ export default function ContractorDamageQualify() {
     setContractorSelected("");
     setContractorManual(false);
     setContractorManualName("");
+    setSearchResults([]);
     setDamageDate("");
   };
 
@@ -478,14 +464,6 @@ export default function ContractorDamageQualify() {
       </div>
     );
   }
-
-  // ── Contractor list for the selected trade ──
-  const tradeContractors = CONTRACTORS_BY_TRADE[answers.trade] || [];
-  const allContractors = Object.values(CONTRACTORS_BY_TRADE).flat().filter((v, i, arr) => arr.indexOf(v) === i);
-  const contractorPool = tradeContractors.length > 0 ? tradeContractors : allContractors;
-  const filteredContractors = contractorSearch.trim()
-    ? contractorPool.filter((c) => c.toLowerCase().includes(contractorSearch.toLowerCase()))
-    : contractorPool;
 
   // ── Damage date warnings ──
   const msPerYear = 365.25 * 24 * 60 * 60 * 1000;
@@ -561,7 +539,7 @@ export default function ContractorDamageQualify() {
             <div className={styles.step}>
               <div className={styles.stepLabel}>Question 2 of 7</div>
               <div className={styles.question}>Which company performed the work?</div>
-              <div className={styles.hint}>Search by name — we track the largest FL contractors</div>
+              <div className={styles.hint}>Search by name — powered by Florida DBPR license database</div>
 
               {!contractorSelected && !contractorManual && (
                 <div className={styles.ddWrap}>
@@ -572,27 +550,46 @@ export default function ContractorDamageQualify() {
                     value={contractorSearch}
                     autoComplete="off"
                     onFocus={() => setContractorPickerOpen(true)}
-                    onChange={(e) => { setContractorSearch(e.target.value); setContractorPickerOpen(true); }}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setContractorSearch(val);
+                      setContractorPickerOpen(true);
+                      if (searchTimer.current) clearTimeout(searchTimer.current);
+                      if (val.length >= 2) {
+                        setSearchLoading(true);
+                        searchTimer.current = setTimeout(async () => {
+                          try {
+                            const res = await fetch(`/api/contractor-search?q=${encodeURIComponent(val)}&trade=${encodeURIComponent(answers.trade || '')}`);
+                            const data = await res.json();
+                            setSearchResults(data.results || []);
+                          } catch(e) { setSearchResults([]); }
+                          setSearchLoading(false);
+                        }, 300);
+                      } else {
+                        setSearchResults([]);
+                        setSearchLoading(false);
+                      }
+                    }}
                   />
                   <div className={`${styles.ddList} ${contractorPickerOpen ? styles.open : ""}`}>
-                    {filteredContractors.length > 0
-                      ? filteredContractors.map((name, i) => (
-                          <div
-                            key={i}
-                            className={styles.ddItem}
-                            onClick={() => {
-                              setContractorSelected(name);
-                              setContractorSearch(name);
-                              setContractorPickerOpen(false);
-                            }}
-                          >
-                            {name}
-                          </div>
-                        ))
-                      : (
-                          <div className={styles.ddEmpty}>No matches — try &ldquo;Other&rdquo; below</div>
-                        )
-                    }
+                    {searchLoading && (
+                      <div className={styles.ddEmpty}>Searching DBPR database…</div>
+                    )}
+                    {!searchLoading && contractorSearch.length >= 2 && searchResults.length === 0 && (
+                      <div className={styles.ddEmpty}>No licensed contractor found — enter name manually below</div>
+                    )}
+                    {!searchLoading && searchResults.map((c, i) => (
+                      <div key={i} className={styles.ddItem} onClick={() => {
+                        setContractorSelected(c.name);
+                        setContractorSearch(c.name);
+                        setContractorPickerOpen(false);
+                        setSearchResults([]);
+                      }}>
+                        <span style={{fontWeight:500}}>{c.name}</span>
+                        {c.city && <span style={{color:'#667085', fontSize:'12px', marginLeft:'8px'}}>{c.city}</span>}
+                        {c.license_number && <span style={{color:'#98a2b3', fontSize:'11px', marginLeft:'6px'}}>#{c.license_number}</span>}
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -602,7 +599,7 @@ export default function ContractorDamageQualify() {
                   <span>{contractorSelected}</span>
                   <button
                     className={styles.ddClear}
-                    onClick={() => { setContractorSelected(""); setContractorSearch(""); setContractorPickerOpen(false); }}
+                    onClick={() => { setContractorSelected(""); setContractorSearch(""); setSearchResults([]); setContractorPickerOpen(false); }}
                   >×</button>
                 </div>
               )}
@@ -645,7 +642,7 @@ export default function ContractorDamageQualify() {
                 disabled={!contractorSelected && !contractorManualName.trim()}
                 onClick={() => {
                   const finalName = contractorSelected || contractorManualName.trim();
-                  const onList = PRIORITY_CONTRACTOR_NAMES.includes(contractorSelected);
+                  const onList = !!contractorSelected; // selected from DBPR live search = licensed
                   setAnswer("contractorName", finalName);
                   setAnswer("contractorOnList", onList);
                   trackEvent("qualify_step_answered", { case_type: "contractor-tpl", step: 1, step_name: "contractor_name", answer: finalName, on_list: onList });
