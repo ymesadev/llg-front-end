@@ -68,6 +68,20 @@ export default function Navbar() {
           label: "Warranty",
           URL: "/warranty-claims",
           external: false,
+          children: [
+            {
+              id: "warranty-claims",
+              label: "Warranty Claims",
+              URL: "/warranty-claims",
+              external: false,
+            },
+            {
+              id: "warranty-arbitration",
+              label: "Warranty Arbitration",
+              URL: "/warranty-claims/arbitration",
+              external: false,
+            },
+          ],
         };
         if (!sortedNav.some((link) => link.label?.toLowerCase() === "warranty")) {
           const pdIndex = sortedNav.findIndex((link) =>
