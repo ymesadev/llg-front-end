@@ -1,509 +1,523 @@
-"use client";
+import styles from "../page.module.css";
+import { Car, Home, Wrench, Hammer, Snowflake, ClipboardList, Scale, DollarSign, ShieldCheck, ScrollText, CheckCircle2, AlertTriangle, Search, Landmark, MapPin, FileText, Phone, Gavel } from "lucide-react";
 
-import { useState, useEffect, useRef } from "react";
-import Script from "next/script";
-import styles from "../qualify/page.module.css";
-import { trackEvent, trackConversion } from "@/app/utils/analytics";
-import useGclid, { getStoredGclid } from "@/app/utils/useGclid";
-import { useDropoffBeacon, sendDropoff } from "@/app/utils/dropoffBeacon";
-import {
-  WARRANTY_COMPANIES,
-  NOT_LISTED_VALUE,
-  isCoveredCompany,
-  companyLabel,
-  COMPANY_TYPE_IDX,
-} from "../data/arbitrationCompanies";
+const LUCIDE_ICON_MAP = { "🚗": Car, "🏠": Home, "🧰": Wrench, "🏗️": Hammer, "❄️": Snowflake, "📋": ClipboardList, "⚖️": Scale, "💰": DollarSign, "🛡️": ShieldCheck, "📜": ScrollText, "✅": CheckCircle2, "⚠️": AlertTriangle, "🔍": Search, "🏛️": Landmark, "📍": MapPin, "📄": FileText, "📞": Phone, "🔨": Gavel };
+const LIcon = ({ name, size = 28, className }) => { const C = LUCIDE_ICON_MAP[name]; return C ? <C size={size} className={className} strokeWidth={1.5} /> : <span>{name}</span>; };
 
-const WARRANTY_TYPE_LABELS = [
-  "Auto / Vehicle Service Contract",
-  "Home Warranty (systems & appliances)",
-  "Appliance / Electronics Protection",
-  "New-Home / Builder Structural Warranty",
-  "HVAC / Service Contract",
-  "Other Warranty or Service Contract",
+export const revalidate = 3600;
+
+export const metadata = {
+  title: "Warranty Claim Denied? Fight It in Arbitration | Louis Law Group",
+  description:
+    "Denied, delayed, or underpaid by your warranty company? Many contracts force arbitration — but under the contract and AAA / JAMS consumer rules, the company pays the arbitration fees. Louis Law Group files your Florida warranty arbitration for you. Free review: (833) 657-4812.",
+  keywords:
+    "warranty arbitration attorney florida, forced arbitration warranty claim, denied warranty claim arbitration lawyer, AAA consumer arbitration warranty, JAMS arbitration warranty company, vehicle service contract arbitration florida, home warranty arbitration lawyer",
+  alternates: { canonical: "https://www.louislawgroup.com/warranty-claims/arbitration" },
+  openGraph: {
+    title: "Forced Into Arbitration? Make Them Pay For It | Louis Law Group",
+    description:
+      "Your warranty contract may force arbitration instead of court — but the company pays the arbitration fees under the contract and AAA / JAMS consumer rules. Louis Law Group files your Florida warranty arbitration for you. Free review — no upfront cost.",
+    url: "https://www.louislawgroup.com/warranty-claims/arbitration",
+  },
+};
+
+const CTA_URL = "/warranty-claims/arbitration/qualify";
+
+const SERVICES = [
+  {
+    icon: "🔨",
+    title: "They Forced You Into Arbitration",
+    desc: "Buried in your warranty or service contract is a clause that bars court and sends disputes to private arbitration. That clause cuts both ways — it is also the path to make the company answer for a denied claim.",
+  },
+  {
+    icon: "💰",
+    title: "The Company Pays the Costs",
+    desc: "Under the contract and the AAA and JAMS consumer arbitration rules, the warranty company — not you — pays the arbitration filing and arbitrator fees. You can pursue your claim without those costs falling on you.",
+  },
+  {
+    icon: "📋",
+    title: "We File the Arbitration for You",
+    desc: "Arbitration has its own demand, deadlines, and procedures. Louis Law Group prepares and files the arbitration, builds the record, and presents your case — so you are not navigating it alone.",
+  },
+  {
+    icon: "🚗",
+    title: "Auto & Vehicle Service Contracts",
+    desc: "Denied engine, transmission, or covered-component repairs. When your extended warranty or vehicle service contract company refuses a repair it should cover, we pursue it through the arbitration the contract requires.",
+  },
+  {
+    icon: "🏠",
+    title: "Home & Appliance Warranties",
+    desc: "AC, plumbing, electrical, and appliance failures denied as 'pre-existing' or 'improper maintenance.' We take bad-faith home and appliance warranty denials into arbitration and demand the coverage you paid for.",
+  },
+  {
+    icon: "📜",
+    title: "Florida Warranty Contracts",
+    desc: "We read the actual arbitration clause in your Florida warranty or service contract — including any AAA or JAMS reference and any fee-shifting language — and hold the company to what it agreed to.",
+  },
 ];
 
-const DISPUTE_STATUS_LABELS = [
-  "Denied — claim was refused",
-  "Delayed — no decision yet",
-  "Underpaid — paid less than owed",
-  "Not sure",
+const STATS = [
+  {
+    number: "Arbitration",
+    label: "your contract may force arbitration instead of court — but that does not mean you lose your right to fight a denied claim.",
+    icon: "⚖️",
+  },
+  {
+    number: "$200M+",
+    label: "recovered for clients in insurance and claim disputes across Louis Law Group's practice.",
+    icon: "💰",
+  },
+  {
+    number: "$0",
+    label: "upfront cost — we work on contingency, and under the contract and AAA / JAMS consumer rules the company pays the arbitration fees.",
+    icon: "🛡️",
+  },
+  {
+    number: "AAA / JAMS",
+    label: "consumer arbitration rules generally shift the filing and arbitrator fees to the company — not the consumer.",
+    icon: "📜",
+  },
+  {
+    number: "Day 1",
+    label: "a licensed attorney on your warranty arbitration from the start — not a call-center adjuster.",
+    icon: "⚖️",
+  },
+  {
+    number: "Free",
+    label: "no-cost, no-obligation review of your warranty or service-contract dispute and your arbitration clause.",
+    icon: "✅",
+  },
 ];
 
-// Flow: type → company (HARD GATE) → dispute status → florida → contact → booking
-const TOTAL_STEPS = 5;
-const STEP_NAMES = ["warranty_type", "warranty_company", "dispute_status", "florida_check", "contact_info", "book_consultation"];
+const STEPS = [
+  {
+    num: "01",
+    title: "Free Qualification Check",
+    desc: "Answer a few questions about your warranty, the company, and what happened with your claim. Takes about 2 minutes to see if your dispute is a fit for arbitration.",
+  },
+  {
+    num: "02",
+    title: "Attorney Review of Your Clause",
+    desc: "Our attorneys review your warranty or service contract, the arbitration clause, the denial, and the company's conduct — and identify exactly where they breached the agreement.",
+  },
+  {
+    num: "03",
+    title: "We File — You Pursue Your Claim",
+    desc: "We prepare and file the arbitration and present your case. The company pays the arbitration fees, and you pay us nothing unless we recover for you.",
+  },
+];
 
-const CAL_ORIGIN = "https://bookings.louislawgroup.com";
-const CAL_LINK = "pierre-louislawgroup.com/warranty-claim-consultation";
-const CAL_NAMESPACE = "warranty-arb-consultation";
+const FAQS = [
+  {
+    q: "My contract says I must arbitrate — can I still fight a denied claim?",
+    a: "Yes. An arbitration clause does not mean you have to accept a wrongful denial — it just changes where your dispute is heard. Instead of court, your breach-of-contract claim goes to a private arbitrator. Louis Law Group prepares and files the arbitration and presents your case, so a forced-arbitration clause becomes the path to challenge the denial rather than a dead end. An attorney can review your specific clause and explain your options.",
+  },
+  {
+    q: "Who pays the arbitration fees?",
+    a: "In consumer warranty disputes, the company generally does. Most warranty and service contracts reference AAA or JAMS, and under those organizations' consumer arbitration rules the business — not the consumer — pays the arbitration filing and arbitrator fees. Many contracts contain their own fee-shifting language to the same effect. We review the actual clause in your contract to confirm how the costs are allocated before we proceed.",
+  },
+  {
+    q: "What does it cost me to fight this?",
+    a: "Nothing upfront. We review your warranty dispute and arbitration clause for free and work on a contingency basis for qualifying cases — our fee comes from what we recover for you, and if we don't recover, you owe us no attorney's fee. On top of that, the company typically bears the arbitration filing and arbitrator fees under the contract and the AAA / JAMS consumer rules.",
+  },
+  {
+    q: "Which warranty companies do you handle?",
+    a: "We handle arbitration disputes involving vehicle service contracts (extended auto warranties), home warranties, appliance and electronics protection plans, new-home and builder structural warranties, and HVAC and other service contracts — when the company denies, underpays, or delays a covered claim and the contract sends the dispute to arbitration.",
+  },
+  {
+    q: "Is this only for Florida?",
+    a: "Louis Law Group represents Florida residents and holders of Florida-issued warranty and service contracts in arbitration. If your contract was issued outside Florida, we are generally unable to take the matter, but we may be able to point you toward an attorney in your state.",
+  },
+  {
+    q: "The company says my problem is 'pre-existing' or 'wear and tear.' Is that the final answer?",
+    a: "No. 'Pre-existing condition,' 'improper maintenance,' and 'normal wear and tear' are among the most common denial tactics. We examine your contract's actual coverage and exclusions, gather documentation, and present the case to the arbitrator to challenge an improper denial — what the company calls 'excluded' is often, in fact, covered.",
+  },
+];
 
-export default function WarrantyArbitrationQualify() {
-  const [cur, setCur] = useState(0);
-  const [answers, setAnswers] = useState({});
-  const [result, setResult] = useState(null);
-  const [bookingEmbedded, setBookingEmbedded] = useState(false);
-  const [contact, setContact] = useState({ name: "", email: "", phone: "", propertyAddress: "" });
-  const [contactConsent, setContactConsent] = useState(false);
-  const [contactSubmitting, setContactSubmitting] = useState(false);
-  const [contactError, setContactError] = useState("");
-  const [companyError, setCompanyError] = useState("");
-  const [heroCompany, setHeroCompany] = useState("");
-  const [started, setStarted] = useState(false);
+const TESTIMONIALS = [
+  {
+    initial: "E",
+    name: "Edwin M.",
+    type: "Verified Client",
+    outcome: "Google Review",
+    text: "Very professional attorneys with outstanding attention to detail. They will not stop fighting for their clients.",
+  },
+  {
+    initial: "E",
+    name: "Elizabeth M.",
+    type: "Verified Client",
+    outcome: "Google Review",
+    text: "Pierre and his team are amazing. They truly cater to their clients and help you get the most from your claim.",
+  },
+  {
+    initial: "T",
+    name: "Tee T.",
+    type: "Verified Client",
+    outcome: "Google Review",
+    text: "Louis Law Group got results much faster than we expected. Excellent service and great communication.",
+  },
+  {
+    initial: "H",
+    name: "Helen F.",
+    type: "Verified Client",
+    outcome: "Google Review",
+    text: "They accomplished exactly what they set out to do and kept me informed every step of the way.",
+  },
+];
 
-  const gclid = useGclid();
-  useEffect(() => {
-    if (gclid) trackEvent("gclid_captured", { gclid_short: gclid.slice(0, 12), case_type: "warranty-arbitration" });
-  }, [gclid]);
-
-  useEffect(() => {
-    trackEvent("qualify_page_view", { case_type: "warranty-arbitration" });
-  }, []);
-
-  // ── Ad / article prefill ── carry the provider from the click; preselect the
-  // company step. Hard gate preserved: only prefill values that pass isCoveredCompany().
-  useEffect(() => {
-    try {
-      const company = new URLSearchParams(window.location.search).get("company");
-      if (!company || !isCoveredCompany(company)) return;
-      setHeroCompany(company);
-      const typeIdx = COMPANY_TYPE_IDX[company];
-      setAnswers((a) => {
-        const nextA = { ...a, company };
-        if (typeIdx !== undefined && a.warranty_type_idx === undefined) nextA.warranty_type_idx = typeIdx;
-        return nextA;
-      });
-      const companyStep = STEP_NAMES.indexOf("warranty_company");
-      setCur(companyStep === -1 ? 1 : companyStep);
-      setStarted(true);
-      trackEvent("qualify_prefilled", {
-        case_type: "warranty-arbitration",
-        company: companyLabel(company),
-        warranty_type: typeIdx !== undefined ? WARRANTY_TYPE_LABELS[typeIdx] : "",
-        source: "ad_click",
-      });
-    } catch (e) { /* prefill is best-effort */ }
-  }, []);
-
-  useEffect(() => {
-    if (cur <= TOTAL_STEPS) {
-      trackEvent("qualify_step_viewed", { case_type: "warranty-arbitration", step: cur, step_name: STEP_NAMES[cur] });
-    }
-  }, [cur]);
-
-  const curRef = useRef(cur);
-  const answersRef = useRef(answers);
-  useEffect(() => { curRef.current = cur; }, [cur]);
-  useEffect(() => { answersRef.current = answers; }, [answers]);
-  useEffect(() => {
-    const handleExit = () => {
-      if (curRef.current < TOTAL_STEPS) {
-        trackEvent("qualify_abandoned", {
-          case_type: "warranty-arbitration",
-          last_step: curRef.current,
-          last_step_name: STEP_NAMES[curRef.current],
-          answers_given: Object.keys(answersRef.current).length,
-        });
-      }
-    };
-    window.addEventListener("beforeunload", handleExit);
-    return () => window.removeEventListener("beforeunload", handleExit);
-  }, []);
-
-  const contactRef = useRef(contact);
-  const completedRef = useRef(false);
-  useEffect(() => { contactRef.current = contact; }, [contact]);
-  const buildQA = () => {
-    const a = answersRef.current || {};
-    const c = contactRef.current || {};
-    const qa = [];
-    if (a.warranty_type_idx !== undefined) qa.push({ q: "Warranty type", a: WARRANTY_TYPE_LABELS[a.warranty_type_idx] });
-    if (a.company) qa.push({ q: "Warranty company", a: companyLabel(a.company) });
-    if (a.dispute_status_idx !== undefined) qa.push({ q: "Dispute status", a: DISPUTE_STATUS_LABELS[a.dispute_status_idx] });
-    if (a.florida !== undefined) qa.push({ q: "Florida resident / contract", a: a.florida ? "Yes" : "No" });
-    const addr = a.propertyAddress || c.propertyAddress;
-    if (addr) qa.push({ q: "Mailing address", a: addr });
-    return qa;
-  };
-  useDropoffBeacon(() => {
-    const a = answersRef.current || {};
-    const c = contactRef.current || {};
-    return {
-      flow: "Warranty Arbitration",
-      status: "abandoned",
-      engaged: curRef.current >= 1,
-      completed: completedRef.current === true,
-      step: curRef.current,
-      stepName: STEP_NAMES[Math.min(curRef.current, STEP_NAMES.length - 1)],
-      name: (c.name || a.name || "").trim(),
-      email: (c.email || a.email || "").trim(),
-      phone: (c.phone || a.phone || "").trim(),
-      warrantyCompany: a.company ? companyLabel(a.company) : "",
-      answers: buildQA(),
-      gclid: getStoredGclid() || "",
-    };
-  });
-
-  const progress = Math.min(((cur + 1) / (TOTAL_STEPS + 1)) * 100, 100);
-  const setAnswer = (key, val) => setAnswers((a) => ({ ...a, [key]: val }));
-  const next = () => setCur((c) => c + 1);
-  const back = () => setCur((c) => Math.max(0, c - 1));
-
-  const handleType = (idx) => {
-    setAnswer("warranty_type_idx", idx);
-    trackEvent("qualify_step_answered", { case_type: "warranty-arbitration", step: 0, step_name: "warranty_type", answer: WARRANTY_TYPE_LABELS[idx] });
-    if (typeof gtag !== "undefined") gtag("event", "qualify_step_1", { event_category: "Qualifier", warranty_type: WARRANTY_TYPE_LABELS[idx] });
-    setTimeout(next, 320);
-  };
-
-  const showDQ = (reason) => {
-    trackEvent("qualify_disqualified", { case_type: "warranty-arbitration", reason });
-    if (typeof gtag !== "undefined") gtag("event", "qualify_dq", { event_category: "Qualifier", reason });
-    setResult({ dq: true, reason });
-    setCur(TOTAL_STEPS + 1);
-    const a = answersRef.current || {};
-    const c = contactRef.current || {};
-    sendDropoff({
-      flow: "Warranty Arbitration", status: "disqualified", engaged: true, completed: false,
-      step: curRef.current, stepName: reason === "out-of-state" ? "florida_check" : "warranty_company",
-      dqReason: reason, name: (c.name || a.name || "").trim(), email: (c.email || a.email || "").trim(),
-      phone: (c.phone || a.phone || "").trim(), warrantyCompany: a.company ? companyLabel(a.company) : "",
-      answers: buildQA(), gclid: getStoredGclid() || "",
-    });
-  };
-
-  // ── HARD GATE ── company must be on the covered arbitration list.
-  const handleCompanyContinue = () => {
-    const v = answers.company;
-    if (!v) { setCompanyError("Please select your warranty company to continue."); return; }
-    setCompanyError("");
-    const covered = isCoveredCompany(v);
-    const label = covered ? companyLabel(v) : "not-listed";
-    trackEvent("qualify_step_answered", { case_type: "warranty-arbitration", step: 1, step_name: "warranty_company", answer: label, disqualified: !covered });
-    if (typeof gtag !== "undefined") gtag("event", "qualify_step_2", { event_category: "Qualifier", company: label });
-    if (!covered) { setTimeout(() => showDQ("company-not-covered"), 200); return; }
-    setTimeout(next, 200);
-  };
-
-  const handleDisputeStatus = (idx) => {
-    setAnswer("dispute_status_idx", idx);
-    trackEvent("qualify_step_answered", { case_type: "warranty-arbitration", step: 2, step_name: "dispute_status", answer: DISPUTE_STATUS_LABELS[idx] });
-    if (typeof gtag !== "undefined") gtag("event", "qualify_dispute_status", { event_category: "Qualifier", dispute_status: DISPUTE_STATUS_LABELS[idx] });
-    setTimeout(next, 320);
-  };
-
-  const handleFlorida = (isFL) => {
-    setAnswer("florida", isFL);
-    trackEvent("qualify_step_answered", { case_type: "warranty-arbitration", step: 3, step_name: "florida_check", answer: isFL ? "yes" : "no", disqualified: !isFL });
-    if (typeof gtag !== "undefined") gtag("event", "qualify_step_3", { event_category: "Qualifier", in_florida: isFL ? "yes" : "no" });
-    if (!isFL) { setTimeout(() => showDQ("out-of-state"), 320); return; }
-    setTimeout(next, 320);
-  };
-
-  const handleContactSubmit = async (e) => {
-    if (e && e.preventDefault) e.preventDefault();
-    setContactError("");
-    const name = contact.name.trim();
-    const email = contact.email.trim();
-    const phone = contact.phone.trim();
-    const propertyAddress = contact.propertyAddress.trim();
-    if (!name || name.length < 2) { setContactError("Please enter your full name."); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setContactError("Please enter a valid email address."); return; }
-    if (phone.replace(/\D/g, "").length < 10) { setContactError("Please enter a valid phone number."); return; }
-
-    const companyVal = answers.company;
-    const companyName = companyLabel(companyVal);
-    const typeIdx = answers.warranty_type_idx;
-    const warrantyType = (typeIdx !== undefined ? WARRANTY_TYPE_LABELS[typeIdx] : "") || "";
-    const dsIdx = answers.dispute_status_idx;
-    const disputeStatus = (dsIdx !== undefined ? DISPUTE_STATUS_LABELS[dsIdx] : "") || "";
-
-    setContactSubmitting(true);
-    setAnswers((a) => ({ ...a, name, email, phone, propertyAddress }));
-    trackEvent("qualify_step_answered", { case_type: "warranty-arbitration", step: 4, step_name: "contact_info", sms_consent: contactConsent });
-    if (typeof gtag !== "undefined") gtag("event", "qualify_step_4", { event_category: "Qualifier", sms_consent: contactConsent ? "yes" : "no" });
-
-    const storedGclid = getStoredGclid();
-    try {
-      if (typeof window !== "undefined" && typeof window.__or_identify === "function") {
-        window.__or_identify(email, { name, phone, warranty_company: companyName, warranty_type: warrantyType, dispute_status: disputeStatus, gclid: storedGclid || "", case_type: "warranty-arbitration", sms_consent: contactConsent ? "yes" : "no" });
-      }
-    } catch (e) { /* tracker not ready */ }
-
-    const base = {
-      name, phone, email, propertyAddress,
-      caseType: "warranty",
-      matterPath: "arbitration",
-      arbitration: true,
-      warrantyCompany: companyName,
-      warrantyType,
-      disputeStatus,
-      gclid: storedGclid || undefined,
-    };
-    const partialPayload = { ...base };
-    const fullPayload = { ...base, warrantyCompanyValue: companyVal, score: 80 };
-
-    try {
-      await Promise.allSettled([
-        fetch("/api/qualify-intake-partial", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(partialPayload) }),
-        fetch("/api/qualify-intake", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(fullPayload) }),
-      ]);
-    } catch (err) {
-      console.error("[warranty-arb-qualify] contact webhook error:", err && err.message);
-    }
-
-    setContactSubmitting(false);
-    setTimeout(next, 200);
-  };
-
-  useEffect(() => {
-    if (cur !== TOTAL_STEPS || bookingEmbedded) return;
-    const a0 = answersRef.current;
-    const companyName = companyLabel(a0.company);
-    const typeIdx = a0.warranty_type_idx;
-    const warrantyType = (typeIdx !== undefined ? WARRANTY_TYPE_LABELS[typeIdx] : "") || "";
-    const dsIdx = a0.dispute_status_idx;
-    const disputeStatus = (dsIdx !== undefined ? DISPUTE_STATUS_LABELS[dsIdx] : "") || "";
-
-    trackEvent("qualify_booking_shown", { case_type: "warranty-arbitration", warranty_company: companyName });
-    if (typeof gtag !== "undefined") gtag("event", "qualify_booking_shown", { event_category: "Qualifier", warranty_company: companyName });
-    if (typeof gtag !== "undefined") gtag("event", "conversion", { send_to: "AW-658866049/vkM8CLv2tcEcEIH_lboC", value: 25.0, currency: "USD" });
-
-    (function (C, A, L) {
-      let p = function (a, ar) { a.q.push(ar); };
-      let d = C.document;
-      C.Cal = C.Cal || function () {
-        let cal = C.Cal; let ar = arguments;
-        if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; }
-        if (ar[0] === L) {
-          const api = function () { p(api, arguments); };
-          const namespace = ar[1]; api.q = api.q || [];
-          if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar);
-          return;
-        }
-        p(cal, ar);
-      };
-    })(window, `${CAL_ORIGIN}/embed/embed.js`, "init");
-
-    const mount = () => {
-      if (!window.Cal) { setTimeout(mount, 120); return; }
-      window.Cal("init", CAL_NAMESPACE, { origin: CAL_ORIGIN });
-      const a = answersRef.current;
-      const prefill = new URLSearchParams();
-      if (a.name) prefill.set("name", a.name);
-      if (a.email) prefill.set("email", a.email);
-      if (a.phone) prefill.set("smsReminderNumber", a.phone);
-      if (a.phone) prefill.set("callback-phone", a.phone);
-      if (companyName) prefill.set("warranty-company", companyName);
-      if (warrantyType) prefill.set("warranty-type", warrantyType);
-      if (disputeStatus) prefill.set("dispute-status", disputeStatus);
-      const storedGclid = getStoredGclid();
-      if (storedGclid) prefill.set("gclid", storedGclid);
-      const qs = prefill.toString();
-      const calLinkWithPrefill = qs ? `${CAL_LINK}?${qs}` : CAL_LINK;
-      window.Cal.ns[CAL_NAMESPACE]("inline", { elementOrSelector: "#llg-cal-inline", calLink: calLinkWithPrefill, config: { theme: "light", layout: "month_view" } });
-      window.Cal.ns[CAL_NAMESPACE]("ui", { hideEventTypeDetails: false, theme: "light", cssVarsPerTheme: { light: { "cal-brand": "#1a2b49", "cal-brand-emphasis": "#ffb800", "cal-text-emphasis": "#1a2b49" } } });
-      window.Cal.ns[CAL_NAMESPACE]("on", {
-        action: "bookingSuccessful",
-        callback: () => {
-          completedRef.current = true;
-          trackEvent("qualify_submitted", { case_type: "warranty-arbitration", via: "cal_booking" });
-          trackConversion("warranty_qualify", { case_type: "warranty-arbitration", via: "cal_booking" });
-          if (typeof gtag !== "undefined") gtag("event", "conversion", { send_to: "AW-658866049/1DHHCL72tcEcEIH_lboC", value: 200.0, currency: "USD" });
-        },
-      });
-    };
-    mount();
-    setBookingEmbedded(true);
-  }, [cur, bookingEmbedded]);
-
-  const restart = () => { setAnswers({}); setResult(null); setCur(0); setCompanyError(""); };
-
-  const heroLabel = heroCompany ? companyLabel(heroCompany) : "";
-
-  // ── DISQUALIFIED SCREEN ──
-  if (result && result.dq) {
-    const msgs = {
-      "company-not-covered": "Louis Law Group focuses on arbitration claims against a specific list of warranty and service-contract providers. Based on the provider you selected, we are not able to take your matter at this time. If your contract is actually with one of the listed companies, go back and select it — or call us and we will point you in the right direction.",
-      "out-of-state": "Louis Law Group handles warranty and service-contract arbitration for Florida residents and Florida-issued contracts. We are unable to represent out-of-state claims, but we may be able to refer you to an attorney in your state.",
-    };
-    const titles = { "company-not-covered": "Provider not currently covered", "out-of-state": "Outside our practice area" };
-    return (
-      <div className={styles.wrapper}>
-        <Script id="vtag-ai-js" strategy="afterInteractive" src="https://r2.leadsy.ai/tag.js" data-pid="1zt0dyt08LfDX6JhM" data-version="062024" />
-        <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: "100%" }} /></div>
-        <div className={styles.card}>
-          <div className={styles.cardHeader}>
-            <div><div className={styles.badge}>Louis Law Group · Warranty Arbitration</div><h1>Case Evaluation</h1></div>
-          </div>
-          <div className={styles.cardBody}>
-            <div className={styles.resultWrap}>
-              <div className={`${styles.resultIcon} ${styles.iconRed}`}>✕</div>
-              <div className={styles.dqBadge}>We can&apos;t represent you for this provider</div>
-              <div className={styles.resultTitle}>{titles[result.reason]}</div>
-              <div className={styles.resultSub}>{msgs[result.reason]}</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "16px", alignItems: "center" }}>
-                <a href="tel:+18336574812" className={styles.restartBtn} style={{ textDecoration: "none", textAlign: "center" }}>Call (833) 657-4812</a>
-                <button className={styles.restartBtn} onClick={() => { window.dispatchEvent(new Event('openSmileyChat')); }}>Chat with us</button>
-              </div>
-              <button className={styles.restartBtn} onClick={restart}>← Start over</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+async function getLatestWarrantyArticles() {
+  const strapiURL = process.env.NEXT_PUBLIC_STRAPI_API_URL;
+  if (!strapiURL) return [];
+  const kws = ["warranty", "arbitration", "vehicle-service-contract", "service-contract"];
+  const filters = kws.map((kw, i) => `filters[$or][${i}][slug][$containsi]=${kw}`).join("&");
+  const url =
+    `${strapiURL}/api/articles?${filters}` +
+    `&fields[]=title&fields[]=slug&fields[]=description` +
+    `&publicationState=live&sort[0]=publishedAt:desc&pagination[pageSize]=3`;
+  try {
+    const res = await fetch(url, { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+    const json = await res.json();
+    return json.data || [];
+  } catch {
+    return [];
   }
+}
+
+export default async function WarrantyArbitrationLandingPage() {
+  const articles = await getLatestWarrantyArticles();
+
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQS.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+  const serviceLd = {
+    "@context": "https://schema.org",
+    "@type": "LegalService",
+    name: "Louis Law Group — Florida Warranty Arbitration Attorneys",
+    url: "https://www.louislawgroup.com/warranty-claims/arbitration",
+    telephone: "+1-833-657-4812",
+    areaServed: { "@type": "State", name: "Florida" },
+    description:
+      "Florida attorneys representing consumers in warranty and service-contract arbitration — denied, underpaid, and delayed auto, home, appliance, and builder warranty claims where the contract requires arbitration.",
+    priceRange: "No fee unless we win",
+  };
 
   return (
-    <div className={styles.wrapper}>
-      <Script id="vtag-ai-js" strategy="afterInteractive" src="https://r2.leadsy.ai/tag.js" data-pid="1zt0dyt08LfDX6JhM" data-version="062024" />
-      <div className={styles.progressBar}><div className={styles.progressFill} style={{ width: `${progress}%` }} /></div>
+    <main className={styles.page}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }} />
 
-      {/* ── ARBITRATION HERO ── always-visible value prop / message match */}
-      <div style={{ maxWidth: "680px", margin: "0 auto 18px", padding: "0 4px", textAlign: "center" }}>
-        <h1 style={{ fontSize: "clamp(22px,4vw,32px)", lineHeight: 1.2, color: "#1a2b49", margin: "0 0 10px", fontWeight: 800 }}>
-          {heroLabel ? `Denied by ${heroLabel}? You can still fight it.` : "Warranty claim denied? You can still fight it."}
-        </h1>
-        <p style={{ fontSize: "16px", lineHeight: 1.5, color: "#475467", margin: "0 0 14px" }}>
-          {heroLabel ? `${heroLabel}’s` : "Your"} contract may force <strong>arbitration</strong> instead of court — but under the contract and AAA/JAMS consumer rules, <strong>the company pays the arbitration costs</strong>. Louis Law Group files your arbitration for you.
-        </p>
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "10px 18px", fontSize: "14px", color: "#1a2b49", fontWeight: 600 }}>
-          <span>① Forced into arbitration</span>
-          <span>② They pay the costs</span>
-          <span>③ We file for you</span>
-        </div>
-      </div>
-
-      <div className={styles.card}>
-        <div className={styles.cardHeader}>
-          <div>
-            <div className={styles.badge}>Louis Law Group · Warranty Arbitration Qualifier</div>
-            <h1>Warranty Arbitration Case Evaluation</h1>
+      {/* HERO */}
+      <section className={styles.hero}>
+        <div className={styles.heroInner}>
+          <div className={styles.heroContent}>
+            <div className={styles.eyebrow}>Florida Warranty Arbitration Attorneys</div>
+            <h1 className={styles.heroTitle}>
+              <span className={styles.gold}>Forced Into Arbitration?</span>{" "}
+              Make Them <span className={styles.gold}>Pay For It.</span>
+            </h1>
+            <p className={styles.heroSubtitle}>
+              Denied, delayed, or underpaid by your warranty company? Your contract may force binding
+              arbitration instead of court — but under the contract and the AAA / JAMS consumer rules,
+              the company pays the arbitration filing and arbitrator fees. Fight the denial at no upfront
+              cost. We file the arbitration for you.
+            </p>
+            <ul className={styles.heroBullets}>
+              <li>✔ Your contract forced arbitration — we use it against them</li>
+              <li>✔ The company pays the arbitration fees (AAA / JAMS consumer rules)</li>
+              <li>✔ Auto, home, appliance &amp; builder warranties</li>
+              <li>✔ No upfront fees — contingency only</li>
+              <li>✔ Free, no-obligation review of your arbitration clause</li>
+            </ul>
+            <a href={CTA_URL} className={styles.ctaPrimary}>
+              See If You Qualify — Free →
+            </a>
+            <p className={styles.ctaNote}>Takes 2 minutes · No obligation · No upfront cost</p>
+          </div>
+          <div className={styles.heroCard}>
+            <div className={styles.heroCardBadge}>Free Case Review</div>
+            <h2 className={styles.heroCardTitle}>Did Your Warranty Company Deny Your Claim?</h2>
+            <p className={styles.heroCardBody}>
+              A forced-arbitration clause is not a dead end — it is the path to make the company answer.
+              Under the contract and AAA / JAMS consumer rules, the company pays the arbitration costs.
+              Our attorneys read the fine print, find the coverage they owe you, and file the arbitration.
+            </p>
+            <div className={styles.trustRow}>
+              <div className={styles.trustStat}><strong>$200M+</strong><span>Recovered</span></div>
+              <div className={styles.trustStat}><strong>$0</strong><span>Upfront Cost</span></div>
+              <div className={styles.trustStat}><strong>Day 1</strong><span>Lawyer on Your Case</span></div>
+              <div className={styles.trustStat}><strong>No Win</strong><span>No Fee</span></div>
+            </div>
+            <a href={CTA_URL} className={styles.ctaCard}>
+              See If You Qualify — Free
+            </a>
+            <p className={styles.cardDisclaimer}>
+              Licensed Attorneys · No Win, No Fee
+            </p>
           </div>
         </div>
+      </section>
 
-        <div className={styles.cardBody}>
-          {cur < TOTAL_STEPS && (
-            <div className={styles.urgencyBanner}>
-              ⚠ Arbitration deadlines may apply. Complete this short form to protect your claim.
-            </div>
-          )}
-
-          {cur <= TOTAL_STEPS && (
-            <div className={styles.trustBar}>
-              <span>Free consultation</span>
-              <span className={styles.trustDot} />
-              <span>No fee to start</span>
-              <span className={styles.trustDot} />
-              <span>Florida warranty &amp; service contracts</span>
-            </div>
-          )}
-
-          {cur === 0 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 1 of 4</div>
-              <div className={styles.question}>What kind of warranty or service contract is your claim about?</div>
-              <div className={styles.hint}>Select the option that best fits</div>
-              <div className={styles.optsGrid}>
-                {WARRANTY_TYPE_LABELS.map((label, i) => (
-                  <button key={i} className={`${styles.opt} ${answers.warranty_type_idx === i ? styles.selected : ""}`} onClick={() => handleType(i)}>
-                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {cur === 1 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 2 of 4</div>
-              <div className={styles.question}>Which company issued your warranty or service contract?</div>
-              <div className={styles.hint}>Choose your provider from the list. We handle arbitration claims against the providers shown here.</div>
-              <select
-                aria-label="Warranty company"
-                value={answers.company ?? ""}
-                onChange={(e) => { setCompanyError(""); setAnswer("company", e.target.value); }}
-                style={{ width: "100%", padding: "14px 14px", fontSize: "16px", marginTop: "8px", border: "1px solid #d0d5dd", borderRadius: "8px", background: "#fff", color: "#1a2b49", outline: "none", boxSizing: "border-box", appearance: "auto" }}
-              >
-                <option value="" disabled>— Select your warranty company —</option>
-                {WARRANTY_COMPANIES.map((c) => (<option key={c.value} value={c.value}>{c.label}</option>))}
-                <option value={NOT_LISTED_VALUE}>My provider isn&apos;t listed / I&apos;m not sure</option>
-              </select>
-              {companyError && (
-                <div style={{ color: "#b42318", fontSize: "13px", padding: "8px 12px", background: "#fef3f2", borderRadius: "6px", border: "1px solid #fecdca", marginTop: "10px" }}>{companyError}</div>
-              )}
-              <button onClick={handleCompanyContinue} style={{ width: "100%", padding: "14px 20px", fontSize: "16px", fontWeight: 600, color: "#1a2b49", background: "#ffb800", border: "none", borderRadius: "8px", cursor: "pointer", marginTop: "16px" }}>Continue →</button>
-            </div>
-          )}
-
-          {cur === 2 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 3 of 4</div>
-              <div className={styles.question}>What&rsquo;s the status of your dispute?</div>
-              <div className={styles.hint}>Tell us where things stand with the company</div>
-              <div className={styles.opts}>
-                {DISPUTE_STATUS_LABELS.map((label, i) => (
-                  <button key={i} className={`${styles.opt} ${answers.dispute_status_idx === i ? styles.selected : ""}`} onClick={() => handleDisputeStatus(i)}>
-                    <span className={styles.optKey}>{String.fromCharCode(65 + i)}</span> {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {cur === 3 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Question 4 of 4</div>
-              <div className={styles.question}>Are you a Florida resident, or is your contract a Florida-issued warranty?</div>
-              <div className={styles.hint}>We handle Florida warranty and service-contract claims</div>
-              <div className={styles.opts}>
-                <button className={`${styles.opt} ${answers.florida === true ? styles.selected : ""}`} onClick={() => handleFlorida(true)}><span className={styles.optKey}>A</span> Yes — Florida resident or Florida contract</button>
-                <button className={`${styles.opt} ${answers.florida === false ? styles.selected : ""}`} onClick={() => handleFlorida(false)}><span className={styles.optKey}>B</span> No — outside Florida</button>
-              </div>
-            </div>
-          )}
-
-          {cur === 4 && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Almost done</div>
-              <div className={styles.question}>Where can our team reach you?</div>
-              <div className={styles.hint}>We&rsquo;ll use this to confirm your consultation and prepare for your call.</div>
-              <form onSubmit={handleContactSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "16px" }}>
-                <input type="text" required autoComplete="name" placeholder="Full name" value={contact.name} onChange={(e) => setContact((c) => ({ ...c, name: e.target.value }))} style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
-                <input type="email" required autoComplete="email" placeholder="Email address" value={contact.email} onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))} style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
-                <input type="tel" required autoComplete="tel" placeholder="Phone number" value={contact.phone} onChange={(e) => setContact((c) => ({ ...c, phone: e.target.value.replace(/[^\d+\-() ]/g, "") }))} maxLength={20} style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
-                <input type="text" autoComplete="street-address" placeholder="Mailing address (optional)" value={contact.propertyAddress} onChange={(e) => setContact((c) => ({ ...c, propertyAddress: e.target.value }))} style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
-                <label style={{ display: "flex", alignItems: "flex-start", gap: "8px", fontSize: "13px", color: "#475467", lineHeight: 1.45 }}>
-                  <input type="checkbox" checked={contactConsent} onChange={(e) => setContactConsent(e.target.checked)} style={{ marginTop: "3px", flexShrink: 0 }} />
-                  <span>I agree to receive text messages from Louis Law Group about my case. Msg &amp; data rates may apply. Reply STOP to opt out.</span>
-                </label>
-                {contactError && (<div style={{ color: "#b42318", fontSize: "13px", padding: "8px 12px", background: "#fef3f2", borderRadius: "6px", border: "1px solid #fecdca" }}>{contactError}</div>)}
-                <button type="submit" disabled={contactSubmitting} style={{ padding: "14px 20px", fontSize: "16px", fontWeight: 600, color: "#1a2b49", background: contactSubmitting ? "#e8c97a" : "#ffb800", border: "none", borderRadius: "8px", cursor: contactSubmitting ? "wait" : "pointer", marginTop: "4px", transition: "background 0.2s" }}>{contactSubmitting ? "Saving…" : "Continue to scheduling →"}</button>
-                <div style={{ fontSize: "12px", color: "#667085", textAlign: "center", marginTop: "4px" }}>🔒 Confidential — protected by attorney-client privilege.</div>
-              </form>
-            </div>
-          )}
-
-          {cur === TOTAL_STEPS && (
-            <div className={styles.step}>
-              <div className={styles.stepLabel}>Final Step — Book Your Free Consultation</div>
-              <div className={styles.question}>You qualify. Pick a time that works for you.</div>
-              <div className={styles.hint}>Based on your answers, your claim appears eligible for a free review{answers.company ? ` (provider: ${companyLabel(answers.company)})` : ""}.</div>
-              <div id="llg-cal-inline" className={styles.calEmbed} />
-              <div className={styles.hint} style={{ marginTop: "10px", fontSize: "12px" }}>🔒 Your information is confidential and protected by attorney-client privilege.</div>
-            </div>
-          )}
-        </div>
-
-        <div className={styles.cardFooter}>
-          <button className={styles.backBtn} onClick={back} style={{ visibility: cur > 0 && cur <= TOTAL_STEPS ? "visible" : "hidden" }}>← Back</button>
-          <span className={styles.stepCounter}>{cur < TOTAL_STEPS ? `Step ${cur + 1} of ${TOTAL_STEPS + 1}` : `Step ${TOTAL_STEPS + 1} of ${TOTAL_STEPS + 1}`}</span>
-        </div>
+      {/* URGENCY BANNER */}
+      <div className={styles.urgencyBanner}>
+        <span className={styles.urgencyIcon}><LIcon name="⚠️" /></span>
+        <span>
+          <strong>Don&apos;t wait:</strong> warranty contracts and arbitration rules can impose short deadlines to file your demand.{" "}
+          <a href={CTA_URL} className={styles.urgencyLink}>
+            Check your options before your window closes
+          </a>.
+        </span>
       </div>
 
-      <div className={styles.phoneCta}>
-        Prefer to talk? Call <a href="tel:8336574812" onClick={() => { if (typeof window !== 'undefined' && window.gtag) { window.gtag('event', 'phone_click', { event_category: 'Conversion', event_label: 'warranty_arbitration_qualifier' }); } }}>(833) 657-4812</a> for a free case review
-      </div>
-    </div>
+      {/* STATS */}
+      <section className={styles.services}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Why It Matters</div>
+          <h2 className={styles.sectionTitle}>
+            Why Arbitration Can <span className={styles.gold}>Work in Your Favor</span>
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Warranty companies write arbitration into their contracts expecting you to give up. But the
+            same clause — and the AAA / JAMS consumer rules behind it — puts the cost of arbitration on
+            them, not you. We know the difference.
+          </p>
+          <div className={styles.servicesGrid}>
+            {STATS.map((s) => (
+              <a href={CTA_URL} key={s.label} className={styles.serviceCard}>
+                <div className={styles.serviceIcon}><LIcon name={s.icon} /></div>
+                <h3 className={styles.statNumber}>{s.number}</h3>
+                <p className={styles.serviceDesc}>{s.label}</p>
+                <span className={styles.serviceArrow}>See If You Qualify →</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* MID-PAGE CTA */}
+      <section className={styles.midCta}>
+        <div className={styles.midCtaInner}>
+          <h2 className={styles.midCtaTitle}>They Sent You to Arbitration to Make You Quit. Don&apos;t.</h2>
+          <p className={styles.midCtaBody}>
+            Warranty and service-contract companies have adjusters and lawyers working to minimize what they pay —
+            and they count on arbitration feeling out of reach. It isn&apos;t. The company pays the arbitration costs,
+            and our attorneys file and present your case.
+          </p>
+          <a href={CTA_URL} className={styles.ctaPrimary}>
+            Check If You Have a Case — Free
+          </a>
+        </div>
+      </section>
+
+      {/* WHAT WE HANDLE */}
+      <section className={styles.dayOne}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>What We Handle</div>
+          <h2 className={styles.sectionTitle}>
+            Warranty Disputes <span className={styles.gold}>Headed to Arbitration</span>
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            From extended auto warranties to home and builder structural coverage — when the contract forces
+            arbitration, we file it for Florida consumers whose warranty companies won&apos;t pay.
+          </p>
+          <div className={styles.dayOneGrid}>
+            {SERVICES.map((s) => (
+              <div key={s.title} className={styles.dayOneCard}>
+                <div className={styles.dayOneIcon}><LIcon name={s.icon} /></div>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div className={styles.dayOneCta}>
+            <p className={styles.dayOneCtaNote}>
+              The sooner you get an attorney involved, the more leverage you have — and the cleaner your arbitration record.
+            </p>
+            <a href={CTA_URL} className={styles.ctaPrimary}>
+              Get an Attorney on Your Claim — Free
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS */}
+      <section className={styles.steps}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Simple Process</div>
+          <h2 className={styles.sectionTitle}>How It Works</h2>
+          <div className={styles.stepsGrid}>
+            {STEPS.map((s) => (
+              <div key={s.num} className={styles.stepCard}>
+                <div className={styles.stepNum}>{s.num}</div>
+                <h3 className={styles.stepTitle}>{s.title}</h3>
+                <p className={styles.stepDesc}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+          <a href={CTA_URL} className={styles.ctaPrimary} style={{ marginTop: "2.5rem" }}>
+            Start Step 01 Now — It&apos;s Free
+          </a>
+        </div>
+      </section>
+
+      {/* WHY LLG */}
+      <section className={styles.why}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrowLight}>Why Louis Law Group</div>
+          <h2 className={styles.sectionTitleLight}>
+            Attorneys Who File Arbitration for You
+          </h2>
+          <div className={styles.whyGrid}>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}><LIcon name="⚖️" /></div>
+              <h3>Licensed Florida Attorneys</h3>
+              <p>We are licensed Florida attorneys — not a claims-consulting service. We prepare, file, and present your warranty arbitration when the company refuses to honor your contract.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}><LIcon name="💰" /></div>
+              <h3>Zero Upfront Cost</h3>
+              <p>We work on contingency for qualifying cases — you pay nothing unless we recover for you — and the company typically pays the arbitration fees under the contract and AAA / JAMS consumer rules.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}><LIcon name="🔍" /></div>
+              <h3>We Read the Arbitration Clause</h3>
+              <p>Warranty and service contracts are dense and full of exclusions and arbitration terms. We find the coverage the company is trying to avoid — and the fee-shifting language that helps you.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}><LIcon name="🔨" /></div>
+              <h3>We File the Arbitration</h3>
+              <p>From the arbitration demand to the AAA or JAMS filing, the deadlines, and the hearing, we handle the process and build the record — so you are not facing the company&apos;s lawyers alone.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}><LIcon name="📜" /></div>
+              <h3>Florida Contract &amp; Consumer Law</h3>
+              <p>We use Florida contract and consumer law alongside the AAA / JAMS consumer rules to hold warranty companies to the agreements — and the costs — they signed up for.</p>
+            </div>
+            <div className={styles.whyCard}>
+              <div className={styles.whyCardIcon}><LIcon name="📍" /></div>
+              <h3>Serving Florida Consumers</h3>
+              <p>We represent warranty and service-contract holders across Florida — auto, home, appliance, HVAC, and builder warranties alike — in arbitration.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className={styles.testimonials}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>★★★★★ 4.7 · 67 Google Reviews</div>
+          <h2 className={styles.sectionTitle}>What Clients Say About Louis Law Group</h2>
+          <p className={styles.sectionSubtitle}>Real reviews from Florida clients who trusted Louis Law Group to fight for them.</p>
+          <div className={styles.testimonialsGrid}>
+            {TESTIMONIALS.map((t) => (
+              <div key={t.name} className={styles.testimonialCard}>
+                <div className={styles.testimonialTop}>
+                  <div className={styles.testimonialAvatar}>{t.initial}</div>
+                  <div>
+                    <div className={styles.testimonialName}>{t.name}</div>
+                    <div className={styles.testimonialLocation}>{t.type}</div>
+                  </div>
+                  <div className={styles.outcomeBadge}>{t.outcome}</div>
+                </div>
+                <div className={styles.stars}>★★★★★</div>
+                <p className={styles.testimonialText}>&ldquo;{t.text}&rdquo;</p>
+              </div>
+            ))}
+          </div>
+          <p className={styles.testimonialDisclaimer}>* Reviews from Google. Reviews reflect the firm generally; results may vary by case.</p>
+          <a href={CTA_URL} className={styles.ctaSecondary}>
+            Start Your Free Case Review →
+          </a>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className={styles.faq}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Common Questions</div>
+          <h2 className={styles.sectionTitle}>
+            Warranty Arbitration FAQs
+          </h2>
+          <div className={styles.faqGrid}>
+            {FAQS.map((f) => (
+              <div key={f.q} className={styles.faqItem}>
+                <h3 className={styles.faqQ}>{f.q}</h3>
+                <p className={styles.faqA}>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* RESOURCES / BLOG */}
+      <section className={styles.services}>
+        <div className={styles.sectionInner}>
+          <div className={styles.sectionEyebrow}>Arbitration Resources</div>
+          <h2 className={styles.sectionTitle}>
+            Learn Your <span className={styles.gold}>Rights</span>
+          </h2>
+          <p className={styles.sectionSubtitle}>
+            Guides on forced arbitration, who pays the costs, denied warranty claims, and your legal options in Florida.
+          </p>
+          {articles.length > 0 ? (
+            <div className={styles.dayOneGrid}>
+              {articles.map((post) => (
+                <a key={post.id} href={`/${post.slug}`} className={styles.dayOneCard} style={{ textDecoration: "none" }}>
+                  <div className={styles.dayOneIcon}><LIcon name="📄" /></div>
+                  <h3>{post.title}</h3>
+                  <p>{post.description}</p>
+                  <span className={styles.serviceArrow}>Read more →</span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p className={styles.sectionSubtitle} style={{ marginTop: "0" }}>
+              New warranty arbitration guides are publishing soon.
+            </p>
+          )}
+          <div className={styles.dayOneCta}>
+            <a href="/warranty-claims/resources" className={styles.ctaSecondary}>
+              Browse All Warranty Resources →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className={styles.finalCta}>
+        <div className={styles.finalCtaInner}>
+          <h2 className={styles.finalCtaTitle}>
+            Forced Into Arbitration? Don&apos;t Face It Alone.
+          </h2>
+          <p className={styles.finalCtaBody}>
+            Warranty and service-contract companies have adjusters, lawyers, and a playbook for saying no —
+            and they hope arbitration scares you off. It shouldn&apos;t. The company pays the arbitration costs
+            under the contract and AAA / JAMS consumer rules, and our attorneys file and present your case.
+            Denied, underpaid, or delayed — we review your case for free.{" "}
+            <strong>No fees unless we win your case.</strong>
+          </p>
+          <a href={CTA_URL} className={styles.ctaFinal}>
+            See If You Qualify Now — Free →
+          </a>
+          <p className={styles.finalCtaNote}>
+            Free Case Review · No Obligation · No Upfront Cost
+          </p>
+          <div className={styles.finalTrust}>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: "0.35rem" }}><LIcon name="📞" size={18} /> (833) 657-4812</span>
+            <span>·</span>
+            <span>Licensed Attorneys</span>
+            <span>·</span>
+            <span>No Win, No Fee</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
   );
 }
