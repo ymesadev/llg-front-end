@@ -10,7 +10,7 @@ export default function robots() {
         disallow: ['/api/', '/admin', '/preview', '/draft', '/private', '/_next'],
       },
     ],
-    sitemap: `${site}/sitemap.xml`,
+    sitemap: [`${site}/sitemap.xml`, `${site}/news-sitemap.xml`],
     host: site,
   }
 }
