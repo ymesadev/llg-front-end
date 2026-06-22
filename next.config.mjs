@@ -692,8 +692,30 @@ const nextConfig = {
   },
 
   async rewrites() {
+    // Visitor-intelligence collector forwards: the browser only ever talks to
+    // same-origin /collect and /vi-config; these rewrites forward them
+    // server-side to the collector origin (Cloudflare tunnel). The origin is
+    // HARDCODED to the production collector so nothing depends on a Vercel env
+    // var — COLLECTOR_ORIGIN is only an optional local override.
+    //   /collect   → collector ingest (events / server-side submit join)
+    //   /vi-config → collector master on/off switch ({enabled:true|false}).
+    //                The consent script + emitter fetch /vi-config on load and
+    //                stay completely dark unless it returns {enabled:true},
+    //                so the collector itself is the live cutover switch.
+    const VI_ORIGIN = process.env.COLLECTOR_ORIGIN || 'https://collect.louislawgroup.com';
+    const viCollectorRewrites = [
+      {
+        source: '/collect',
+        destination: `${VI_ORIGIN}/collect`,
+      },
+      {
+        source: '/vi-config',
+        destination: `${VI_ORIGIN}/config`,
+      },
+    ];
     return {
       beforeFiles: [
+        ...viCollectorRewrites,
         {
           // Static article page with custom UI — must come before catch-all route
           source: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform',

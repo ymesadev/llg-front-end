@@ -20,6 +20,71 @@ export function trackEvent(eventName, properties = {}) {
   if (window.__or_event) {
     window.__or_event(eventName, properties);
   }
+  // First-party visitor-intelligence emit. Self-gates at runtime: window.LLGTrack
+  // only dispatches once the collector's /vi-config returns {enabled:true}.
+  emitFirstParty(eventName, properties);
+}
+
+/**
+ * First-party visitor-intelligence bridge.
+ *
+ * Mirrors the existing qualify_* funnel events onto window.LLGTrack
+ * (public/scripts/llg-vi.js), which POSTs behavior+timing to same-origin /collect.
+ *
+ * Gated at runtime by the collector: window.LLGTrack (public/scripts/llg-vi.js)
+ * fetches /vi-config once on load and only dispatches when it returns
+ * {enabled:true} (fail-closed). This bridge just needs LLGTrack to be loaded.
+ * PRIVACY: answer/value text is NEVER forwarded. qualify_step_answered is reduced to
+ * a had_value BOOLEAN. LLGTrack additionally scrubs any value-bearing meta key.
+ *
+ * Event mapping (see visitor-intel/ARCHITECTURE.md):
+ *   qualify_step_viewed   -> step_enter
+ *   qualify_step_answered -> field_filled{had_value} + step_complete
+ *   qualify_submitted     -> submit{gate_passed:true}
+ *   qualify_disqualified  -> submit{gate_passed:false}
+ *   qualify_abandoned     -> step_abandon
+ */
+function emitFirstParty(eventName, properties = {}) {
+  const T = typeof window !== "undefined" && window.LLGTrack;
+  if (!T) return;
+  try {
+    const q = properties.case_type || null;
+    const step = properties.step ?? properties.step_name ?? null;
+    switch (eventName) {
+      case "qualify_step_viewed":
+        T.stepEnter(q, step, properties.step_index ?? properties.step ?? null);
+        break;
+      case "qualify_step_answered": {
+        // Derive a had_value BOOLEAN — never read or forward the answer text itself.
+        // SSDI passes `answer`/`answer_key`; other qualifiers pass `field`/`value`.
+        const rawAnswer = properties.answer ?? properties.value ?? properties.answer_value;
+        const hadValue =
+          rawAnswer !== undefined &&
+          rawAnswer !== null &&
+          String(rawAnswer).trim() !== "" &&
+          rawAnswer !== "disqualified";
+        const field = properties.answer_key || properties.field || properties.step_name || null;
+        T.fieldFilled(q, step, field, hadValue);
+        T.stepComplete(q, step);
+        break;
+      }
+      case "qualify_submitted":
+        T.submit(q, true, properties.utm || null);
+        break;
+      case "qualify_disqualified":
+        T.submit(q, false, properties.utm || null);
+        break;
+      case "qualify_abandoned":
+        T.stepAbandon(q, step, properties.last_field || properties.field || null);
+        break;
+      default:
+        // page_view / prefilled / gclid_captured / booking_shown are not part of the
+        // locked v1 funnel mapping — intentionally not forwarded.
+        break;
+    }
+  } catch (e) {
+    /* never let analytics break the qualifier */
+  }
 }
 
 /**

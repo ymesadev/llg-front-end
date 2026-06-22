@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { getLlgVid } from "@/app/utils/viServerJoin";
 
 export async function POST(request) {
   try {
@@ -8,6 +9,10 @@ export async function POST(request) {
     if (!name || !phone || !email) {
       return NextResponse.json({ error: "Missing required contact fields" }, { status: 400 });
     }
+
+    // First-party visitor id (opaque, no PII) — forwarded so n8n can join the
+    // funnel to the created CRM contact via the collector's /link.
+    const llg_vid = getLlgVid(request);
 
     const scoreLabel = score >= 70 ? "STRONG CANDIDATE" : score >= 45 ? "POSSIBLE CANDIDATE" : "REVIEW NEEDED";
 
@@ -29,7 +34,7 @@ export async function POST(request) {
     let sent = false;
 
     try {
-      const n8nPayload = { name, phone, email, propertyAddress, caseType: "contractor-tpl", trade, contractorName, contractorOnList: !!contractorOnList, damageType, damageDate, insuranceStatus, damageValue, score, smsConsent: !!smsConsent, gclid: gclid || null };
+      const n8nPayload = { name, phone, email, propertyAddress, caseType: "contractor-tpl", trade, contractorName, contractorOnList: !!contractorOnList, damageType, damageDate, insuranceStatus, damageValue, score, smsConsent: !!smsConsent, gclid: gclid || null, llg_vid };
       const n8nRes = await fetch(n8nWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
