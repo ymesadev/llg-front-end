@@ -10,17 +10,48 @@
  *   - Consent-gated client-side: nothing behavioral is sent until the visitor
  *     has accepted (localStorage llg_consent === "accept").
  *
- * Browser only ever talks to same-origin /collect. A Vercel rewrite forwards
- * /collect server-side to COLLECTOR_ORIGIN (see next.config.mjs).
+ * Browser only ever talks to same-origin /collect and /vi-config. Vercel
+ * rewrites forward them server-side to the collector (see next.config.mjs).
  *
- * This file ships DARK. window.LLGTrack is created here, but analytics.js only
- * calls it when NEXT_PUBLIC_VI_ENABLED === "true". Loading the script alone
- * emits nothing except (optionally) a consent-gated pageview.
+ * COLLECTOR-GATED, FAIL-CLOSED. This script loads unconditionally but, on load,
+ * fetches /vi-config ONCE (shared with the consent prompt via the
+ * window.__llgViConfig promise). window.LLGTrack is always created so callers
+ * never throw, but every send() no-ops until /vi-config resolves {enabled:true}.
+ * If that fetch fails OR enabled is false, the emitter stays completely dark:
+ * no events, no cookies beyond any that already exist. The collector's /config
+ * is the master on/off switch.
  */
 (function () {
-  var COLLECT_URL = "/collect"; // first-party origin — rewritten to COLLECTOR_ORIGIN server-side
+  var COLLECT_URL = "/collect"; // first-party origin — rewritten to the collector server-side
+  var CONFIG_URL = "/vi-config"; // first-party origin — rewritten to the collector's /config
   var VID_KEY = "llg_vid";
 
+  // Shared, single-flight /vi-config probe. Resolves to TRUE only when the
+  // collector explicitly returns {enabled:true}; fail-closed on any error.
+  // The consent prompt reuses this same promise so /vi-config is hit ONCE.
+  if (!window.__llgViConfig) {
+    window.__llgViConfig = fetch(CONFIG_URL, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      credentials: "same-origin",
+    })
+      .then(function (r) {
+        return r && r.ok ? r.json() : null;
+      })
+      .then(function (cfg) {
+        return !!(cfg && cfg.enabled === true);
+      })
+      .catch(function () {
+        return false; // fail CLOSED — any error ⇒ stay dark
+      });
+  }
+  var viEnabledP = window.__llgViConfig;
+
+  // Resolve the first-party visitor id. Reads the existing cookie if present.
+  // MINTS a new llg_vid cookie ONLY when the collector is enabled — so a
+  // disabled / fail-closed site sets no new cookie (privacy invariant: nothing
+  // beyond what already exists). Called from dispatch(), which only runs when
+  // enabled. session ids likewise are minted lazily inside dispatch().
   function getVid() {
     var m = document.cookie.match(/(?:^|;\s*)llg_vid=([^;]+)/);
     if (m) return m[1];
@@ -32,11 +63,14 @@
       "llg_vid=" + v + ";path=/;max-age=" + 60 * 60 * 24 * 365 + ";samesite=lax;secure";
     return v;
   }
-  var vid = getVid();
-  var sessionId =
-    sessionStorage.getItem("llg_sid") ||
-    (window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
-  sessionStorage.setItem("llg_sid", sessionId);
+
+  function getSid() {
+    var s = sessionStorage.getItem("llg_sid");
+    if (s) return s;
+    s = window.crypto && crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+    sessionStorage.setItem("llg_sid", s);
+    return s;
+  }
 
   function hasConsent() {
     return localStorage.getItem("llg_consent") === "accept";
@@ -54,12 +88,11 @@
     return clean;
   }
 
-  function send(type, qualifier, step, meta) {
-    // Consent gate: emit nothing behavioral until accepted. consent events pass.
-    if (type !== "consent" && !hasConsent()) return;
+  function dispatch(type, qualifier, step, meta) {
+    // vid/sid minted here (enabled-only path) — never on a dark/disabled load.
     var body = JSON.stringify({
-      llg_vid: vid,
-      session_id: sessionId,
+      llg_vid: getVid(),
+      session_id: getSid(),
       type: type,
       qualifier: qualifier || null,
       step: step == null ? null : step,
@@ -81,6 +114,20 @@
     } catch (e) {
       /* never throw into the host page */
     }
+  }
+
+  function send(type, qualifier, step, meta) {
+    // Consent gate: emit nothing behavioral until accepted. consent events pass.
+    if (type !== "consent" && !hasConsent()) return;
+    // Collector master switch (fail-closed): defer the dispatch until /vi-config
+    // resolves {enabled:true}. If it failed or is disabled, this never fires.
+    // Snapshot ts here so deferred sends keep their true event time. sendBeacon
+    // still works post-await (the page is alive — these aren't unload events;
+    // unload events only fire after consent, by which point config has resolved).
+    var snapshotMeta = meta;
+    viEnabledP.then(function (enabled) {
+      if (enabled) dispatch(type, qualifier, step, snapshotMeta);
+    });
   }
 
   function secs() {
@@ -125,6 +172,7 @@
     },
   };
 
-  // If the visitor previously accepted, log a pageview on load.
+  // If the visitor previously accepted, log a pageview on load. send() still
+  // defers this behind the /vi-config gate, so it stays dark if disabled.
   if (hasConsent()) window.LLGTrack.pageview();
 })();

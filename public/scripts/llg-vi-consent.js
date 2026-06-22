@@ -14,7 +14,11 @@
  *     existing ConditionalPopup owns the advertising-cookie banner.
  *   - On Decline it leaves Consent Mode at its default-denied state.
  *
- * Ships DARK: layout.js only loads this script when NEXT_PUBLIC_VI_ENABLED==="true".
+ * COLLECTOR-GATED, FAIL-CLOSED: this script loads unconditionally but renders
+ * the banner ONLY after /vi-config resolves {enabled:true}. It reuses the
+ * single-flight window.__llgViConfig promise created by llg-vi.js (so
+ * /vi-config is fetched ONCE per page). If the fetch fails or enabled is false,
+ * no banner is shown and no consent cookie is written — completely dark.
  *
  * ⚠️ PLACEHOLDER COPY — the wording below names analytics/tracking explicitly but
  * is NOT final. Pierre approves the production text + the privacy-policy link.
@@ -23,6 +27,26 @@
   // Bump CONSENT_VERSION whenever the wording changes -> re-prompts every visitor.
   var CONSENT_VERSION = "v1";
   var POLICY_URL = "/privacy";
+  var CONFIG_URL = "/vi-config"; // first-party origin — rewritten to the collector's /config
+
+  // Shared, single-flight /vi-config probe (also created by llg-vi.js). Resolves
+  // TRUE only when the collector returns {enabled:true}; fail-closed on any error.
+  if (!window.__llgViConfig) {
+    window.__llgViConfig = fetch(CONFIG_URL, {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      credentials: "same-origin",
+    })
+      .then(function (r) {
+        return r && r.ok ? r.json() : null;
+      })
+      .then(function (cfg) {
+        return !!(cfg && cfg.enabled === true);
+      })
+      .catch(function () {
+        return false; // fail CLOSED — any error ⇒ stay dark
+      });
+  }
 
   // Already decided THIS version? Do nothing (re-prompt only on a version bump).
   try {
@@ -108,6 +132,14 @@
     document.body.appendChild(box);
   }
 
-  if (document.body) build();
-  else document.addEventListener("DOMContentLoaded", build);
+  function maybeBuild() {
+    if (document.body) build();
+    else document.addEventListener("DOMContentLoaded", build);
+  }
+
+  // Gate everything behind the collector master switch (fail-closed): only
+  // prompt for consent when /vi-config says enabled:true.
+  window.__llgViConfig.then(function (enabled) {
+    if (enabled) maybeBuild();
+  });
 })();

@@ -692,18 +692,27 @@ const nextConfig = {
   },
 
   async rewrites() {
-    // Visitor-intelligence collector forward (ships dark): browser POSTs stay
-    // first-party at /collect; this rewrites them server-side to the collector
-    // origin (Cloudflare tunnel). Only active once COLLECTOR_ORIGIN is set at
-    // cutover — otherwise /collect is left unmapped (no rewrite to undefined).
-    const viCollectorRewrites = process.env.COLLECTOR_ORIGIN
-      ? [
-          {
-            source: '/collect',
-            destination: `${process.env.COLLECTOR_ORIGIN}/collect`,
-          },
-        ]
-      : [];
+    // Visitor-intelligence collector forwards: the browser only ever talks to
+    // same-origin /collect and /vi-config; these rewrites forward them
+    // server-side to the collector origin (Cloudflare tunnel). The origin is
+    // HARDCODED to the production collector so nothing depends on a Vercel env
+    // var — COLLECTOR_ORIGIN is only an optional local override.
+    //   /collect   → collector ingest (events / server-side submit join)
+    //   /vi-config → collector master on/off switch ({enabled:true|false}).
+    //                The consent script + emitter fetch /vi-config on load and
+    //                stay completely dark unless it returns {enabled:true},
+    //                so the collector itself is the live cutover switch.
+    const VI_ORIGIN = process.env.COLLECTOR_ORIGIN || 'https://collect.louislawgroup.com';
+    const viCollectorRewrites = [
+      {
+        source: '/collect',
+        destination: `${VI_ORIGIN}/collect`,
+      },
+      {
+        source: '/vi-config',
+        destination: `${VI_ORIGIN}/config`,
+      },
+    ];
     return {
       beforeFiles: [
         ...viCollectorRewrites,

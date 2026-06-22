@@ -8,7 +8,7 @@ import Link from "next/link";
  * copy below describes the first-party analytics + internal-use posture that the
  * visitor-intelligence build introduces. It is NOT legal-reviewed final text —
  * Pierre / counsel must approve the production wording before the cutover that turns
- * tracking on (NEXT_PUBLIC_VI_ENABLED=true).
+ * tracking on (the collector's /vi-config returning {enabled:true}).
  */
 
 export const metadata = {

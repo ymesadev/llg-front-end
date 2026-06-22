@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { fireViSubmit } from "@/app/utils/viServerJoin";
+import { getLlgVid } from "@/app/utils/viServerJoin";
 
 export async function POST(request) {
   try {
@@ -12,6 +12,10 @@ export async function POST(request) {
 
     const damageLabels = ["Hurricane / Wind", "Water / Flood", "Roof Damage", "Fire / Smoke", "Plumbing Leak", "Mold", "Other"];
     const isWarranty = caseType === "warranty";
+
+    // First-party visitor id (opaque, no PII) — forwarded so n8n can join the
+    // funnel to the created CRM contact via the collector's /link.
+    const llg_vid = getLlgVid(request);
 
     // Send to partial lead n8n webhook
     const webhookUrl = "https://n8n.louislawgroup.com/webhook/llg-fpp-partial-lead";
@@ -30,6 +34,7 @@ export async function POST(request) {
           warrantyCompany: isWarranty ? (warrantyCompany || "Not provided") : undefined,
           partialLead: true,
           gclid,
+          llg_vid,
         }),
       });
       if (res.ok) sent = true;
@@ -41,10 +46,6 @@ export async function POST(request) {
     // (src/app/utils/dropoffBeacon.js) -> n8n llg-dropoff-watch, which fires
     // only on a genuine un-booked exit. A server-side forward here would
     // false-alert for every partial lead, including those who go on to book.
-
-    // Visitor-intelligence server-side join (fire-and-forget, no PII, dark until cutover).
-    // Partial lead = qualifier gate not completed -> gate_passed:false.
-    fireViSubmit(request, { qualifier: caseType || "property-damage", gatePassed: false });
 
     return NextResponse.json({ success: sent });
   } catch (err) {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isCoveredCompany } from "@/app/warranty-claims/data/warrantyCompanies";
-import { fireViSubmit } from "@/app/utils/viServerJoin";
+import { getLlgVid } from "@/app/utils/viServerJoin";
 
 export async function POST(request) {
   try {
@@ -10,6 +10,10 @@ export async function POST(request) {
     if (!name || !phone || !email) {
       return NextResponse.json({ error: "Missing required contact fields" }, { status: 400 });
     }
+
+    // First-party visitor id (opaque, no PII) — forwarded so n8n can join the
+    // funnel to the created CRM contact via the collector's /link.
+    const llg_vid = getLlgVid(request);
 
     const isPI = body.caseType === "personal-injury";
     const isWarranty = body.caseType === "warranty";
@@ -56,10 +60,10 @@ export async function POST(request) {
 
     try {
       const n8nPayload = isPI
-        ? body // Send full PI payload (injuryType, dateOfInjury, medicalTreatment, etc.)
+        ? { ...body, llg_vid } // Send full PI payload (injuryType, dateOfInjury, medicalTreatment, etc.)
         : isWarranty
-        ? { name, phone, email, propertyAddress, caseType: "warranty", warrantyCompany: body.warrantyCompany, warrantyCompanyValue: body.warrantyCompanyValue, warrantyType: body.warrantyType, companyCovered, score, gclid }
-        : { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score, gclid };
+        ? { name, phone, email, propertyAddress, caseType: "warranty", warrantyCompany: body.warrantyCompany, warrantyCompanyValue: body.warrantyCompanyValue, warrantyType: body.warrantyType, companyCovered, score, gclid, llg_vid }
+        : { name, phone, email, propertyAddress, carrier, damageType, dateOfLoss, insurerResponse, score, gclid, llg_vid };
       const n8nRes = await fetch(n8nWebhookUrl, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -93,12 +97,6 @@ export async function POST(request) {
         console.error("[qualify-intake] Email relay fallback failed:", relayErr.message);
       }
     }
-
-    // Visitor-intelligence server-side join (fire-and-forget, no PII, dark until cutover).
-    fireViSubmit(request, {
-      qualifier: isPI ? "personal-injury" : isWarranty ? "warranty" : "property-damage",
-      gatePassed: true,
-    });
 
     return NextResponse.json({ success: sent, score });
   } catch (err) {

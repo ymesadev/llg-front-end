@@ -20,7 +20,8 @@ export function trackEvent(eventName, properties = {}) {
   if (window.__or_event) {
     window.__or_event(eventName, properties);
   }
-  // First-party visitor-intelligence emit (ships dark behind NEXT_PUBLIC_VI_ENABLED).
+  // First-party visitor-intelligence emit. Self-gates at runtime: window.LLGTrack
+  // only dispatches once the collector's /vi-config returns {enabled:true}.
   emitFirstParty(eventName, properties);
 }
 
@@ -30,7 +31,9 @@ export function trackEvent(eventName, properties = {}) {
  * Mirrors the existing qualify_* funnel events onto window.LLGTrack
  * (public/scripts/llg-vi.js), which POSTs behavior+timing to same-origin /collect.
  *
- * Gated on NEXT_PUBLIC_VI_ENABLED === "true" (default off) AND LLGTrack being loaded.
+ * Gated at runtime by the collector: window.LLGTrack (public/scripts/llg-vi.js)
+ * fetches /vi-config once on load and only dispatches when it returns
+ * {enabled:true} (fail-closed). This bridge just needs LLGTrack to be loaded.
  * PRIVACY: answer/value text is NEVER forwarded. qualify_step_answered is reduced to
  * a had_value BOOLEAN. LLGTrack additionally scrubs any value-bearing meta key.
  *
@@ -42,7 +45,6 @@ export function trackEvent(eventName, properties = {}) {
  *   qualify_abandoned     -> step_abandon
  */
 function emitFirstParty(eventName, properties = {}) {
-  if (process.env.NEXT_PUBLIC_VI_ENABLED !== "true") return;
   const T = typeof window !== "undefined" && window.LLGTrack;
   if (!T) return;
   try {
