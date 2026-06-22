@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { fireViSubmit } from "@/app/utils/viServerJoin";
 
 export async function POST(request) {
   try {
@@ -68,6 +69,9 @@ export async function POST(request) {
         }
       }
     }
+
+    // Visitor-intelligence server-side join (fire-and-forget, no PII, dark until cutover).
+    fireViSubmit(request, { qualifier: "contractor-tpl", gatePassed: true });
 
     return NextResponse.json({ success: sent, score });
   } catch (err) {

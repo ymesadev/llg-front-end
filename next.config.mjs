@@ -692,8 +692,21 @@ const nextConfig = {
   },
 
   async rewrites() {
+    // Visitor-intelligence collector forward (ships dark): browser POSTs stay
+    // first-party at /collect; this rewrites them server-side to the collector
+    // origin (Cloudflare tunnel). Only active once COLLECTOR_ORIGIN is set at
+    // cutover — otherwise /collect is left unmapped (no rewrite to undefined).
+    const viCollectorRewrites = process.env.COLLECTOR_ORIGIN
+      ? [
+          {
+            source: '/collect',
+            destination: `${process.env.COLLECTOR_ORIGIN}/collect`,
+          },
+        ]
+      : [];
     return {
       beforeFiles: [
+        ...viCollectorRewrites,
         {
           // Static article page with custom UI — must come before catch-all route
           source: '/case-law-insurance-claim-worth-pursuing-florida-2022-reform',

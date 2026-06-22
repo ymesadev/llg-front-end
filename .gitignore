@@ -1,5 +1,6 @@
 *
 !.env.local
+!.env.local.example
 
 # allow sitemaps in public
 !public/
@@ -35,6 +36,13 @@ public/*
 !src/app/utils/
 !src/app/utils/seoOverrides.js
 !src/app/utils/useGclid.js
+
+# allow visitor-intelligence server-side join helper (Workstream C)
+!src/app/utils/viServerJoin.js
+
+# allow visitor-intelligence privacy policy page (Workstream C)
+!src/app/privacy/
+!src/app/privacy/**
 
 # allow case landing pages
 !src/

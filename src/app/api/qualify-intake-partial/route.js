@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { fireViSubmit } from "@/app/utils/viServerJoin";
 
 export async function POST(request) {
   try {
@@ -40,6 +41,10 @@ export async function POST(request) {
     // (src/app/utils/dropoffBeacon.js) -> n8n llg-dropoff-watch, which fires
     // only on a genuine un-booked exit. A server-side forward here would
     // false-alert for every partial lead, including those who go on to book.
+
+    // Visitor-intelligence server-side join (fire-and-forget, no PII, dark until cutover).
+    // Partial lead = qualifier gate not completed -> gate_passed:false.
+    fireViSubmit(request, { qualifier: caseType || "property-damage", gatePassed: false });
 
     return NextResponse.json({ success: sent });
   } catch (err) {

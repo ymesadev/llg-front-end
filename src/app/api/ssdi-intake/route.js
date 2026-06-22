@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { fireViSubmit } from "@/app/utils/viServerJoin";
 
 export async function POST(request) {
   try {
@@ -23,6 +24,9 @@ export async function POST(request) {
     } catch (err) {
       console.error("[ssdi-intake] n8n webhook failed:", err.message);
     }
+
+    // Visitor-intelligence server-side join (fire-and-forget, no PII, dark until cutover).
+    fireViSubmit(request, { qualifier: "ssdi", gatePassed: true });
 
     return NextResponse.json({ success: sent, score });
   } catch (err) {

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isCoveredCompany } from "@/app/warranty-claims/data/warrantyCompanies";
+import { fireViSubmit } from "@/app/utils/viServerJoin";
 
 export async function POST(request) {
   try {
@@ -92,6 +93,12 @@ export async function POST(request) {
         console.error("[qualify-intake] Email relay fallback failed:", relayErr.message);
       }
     }
+
+    // Visitor-intelligence server-side join (fire-and-forget, no PII, dark until cutover).
+    fireViSubmit(request, {
+      qualifier: isPI ? "personal-injury" : isWarranty ? "warranty" : "property-damage",
+      gatePassed: true,
+    });
 
     return NextResponse.json({ success: sent, score });
   } catch (err) {

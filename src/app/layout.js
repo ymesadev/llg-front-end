@@ -89,6 +89,19 @@ export default function RootLayout({ children }) {
 
         {/* Visitor beacon — deferred to lazyOnload */}
         <Script src="/scripts/visitor-beacon.js" strategy="lazyOnload" />
+
+        {/* ── Visitor Intelligence (Workstream C) — STAGED, ships dark ──
+            Renders ONLY when NEXT_PUBLIC_VI_ENABLED==="true" (default off, Pierre's
+            cutover). Emitter loads first (defines window.LLGTrack); consent prompt
+            loads after and gates behavioral emission. Behavior+timing only — never
+            field values. Browser POSTs to same-origin /collect (rewritten to
+            COLLECTOR_ORIGIN in next.config.mjs). */}
+        {process.env.NEXT_PUBLIC_VI_ENABLED === "true" && (
+          <>
+            <Script src="/scripts/llg-vi.js" strategy="afterInteractive" />
+            <Script src="/scripts/llg-vi-consent.js" strategy="afterInteractive" />
+          </>
+        )}
       </body>
     </html>
   );
