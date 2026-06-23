@@ -37,6 +37,13 @@ export const QUALIFY_OPTIONS_EN = [
     href: "/warranty-claims/qualify",
     icon: "ShieldCheck",
   },
+  {
+    key: "contract-dispute",
+    label: "Contract Dispute",
+    desc: "Breach of contract, broken agreement, or non-payment",
+    href: "/contract-disputes/qualify",
+    icon: "FileText",
+  },
 ];
 
 // Spanish-language qualifiers that currently exist (property + disability).

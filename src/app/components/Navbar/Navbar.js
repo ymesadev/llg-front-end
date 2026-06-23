@@ -94,6 +94,39 @@ export default function Navbar() {
           }
         }
 
+        // Contract Dispute is a coded practice-area page (not yet in the Strapi
+        // navigation), so inject it manually right after "Warranty".
+        const contractDispute = {
+          id: "contract-disputes-internal",
+          label: "Contract Dispute",
+          URL: "/contract-disputes",
+          external: false,
+          children: [
+            {
+              id: "contract-disputes",
+              label: "Contract Disputes",
+              URL: "/contract-disputes",
+              external: false,
+            },
+            {
+              id: "contract-disputes-qualify",
+              label: "Check If You Qualify",
+              URL: "/contract-disputes/qualify",
+              external: false,
+            },
+          ],
+        };
+        if (!sortedNav.some((link) => link.label?.toLowerCase() === "contract dispute")) {
+          const wIndex = sortedNav.findIndex(
+            (link) => link.label?.toLowerCase() === "warranty"
+          );
+          if (wIndex !== -1) {
+            sortedNav.splice(wIndex + 1, 0, contractDispute);
+          } else {
+            sortedNav.push(contractDispute);
+          }
+        }
+
         // Add dropdown children to "Property Damage" — First Party vs Third Party.
         const pdItem = sortedNav.find((link) =>
           (link.label?.toLowerCase() || "").includes("property damage")
