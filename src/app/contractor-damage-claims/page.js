@@ -83,11 +83,6 @@ const STATS = [
     icon: "⏰",
   },
   {
-    number: "Oct 2025",
-    label: "Air Pros USA (Florida's largest HVAC contractor) filed Chapter 11 — time-limited window to file claims against the bankruptcy estate",
-    icon: "⚠️",
-  },
-  {
     number: "$0",
     label: "upfront cost — we work on contingency. No recovery, no fee.",
     icon: "🛡️",
@@ -123,7 +118,7 @@ const FAQS = [
   },
   {
     q: "What if the contractor is out of business or has filed bankruptcy?",
-    a: "A dissolved or bankrupt contractor does not end your claim. General liability policies remain in force for claims filed during the policy period. Florida licensing law also requires contractor bonding. For franchise contractors, the franchisor may have direct liability exposure. For bankruptcies like Air Pros USA (Chapter 11, Oct 2025), there is a time-limited window to file claims with the bankruptcy estate.",
+    a: "A dissolved or bankrupt contractor does not end your claim. General liability policies remain in force for claims filed during the policy period. Florida licensing law also requires contractor bonding. For franchise contractors, the franchisor may have direct liability exposure.",
   },
   {
     q: "Can I sue the contractor even if my insurance already paid something?",
