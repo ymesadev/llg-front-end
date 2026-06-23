@@ -136,6 +136,10 @@ public/*
 !src/app/warranty-claims/
 !src/app/warranty-claims/**
 
+# allow contract disputes hub + qualifier (w/ contract-upload gate) + booking
+!src/app/contract-disputes/
+!src/app/contract-disputes/**
+
 # allow qualify-intake API route
 !src/app/api/qualify-intake/
 !src/app/api/qualify-intake/**
