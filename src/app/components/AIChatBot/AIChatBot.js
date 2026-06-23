@@ -43,17 +43,20 @@ const INSURER_MAP = {
 // Where a qualified lead goes, by practice area. All Florida-litigation areas converge on an
 // in-chat Cal.com consult (the "flows merge" step); family law hands off to its own site.
 // Cal.com event types: 4 = property (first-party), 8 = third-party liability (contractor),
-// 7 = warranty consult, 2 = generic 30-min consult. 4/7/8 all sync to Pierre's Teams/O365 calendar.
+// 7 = warranty consult, 9 = contract dispute, 10 = eviction (landlords), 2 = generic 30-min
+// consult. 4/7/8/9/10 all sync to Pierre's Teams/O365 calendar.
 const BOOKING_CONFIG = {
-  'property':        { mode: 'calcom', eventTypeId: 4, slug: 'property-insurance-claim-consultation' },
-  'contractor':      { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
-  'tpl':             { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
-  'third-party':     { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
-  'warranty':        { mode: 'calcom', eventTypeId: 7, slug: 'warranty-claim-consultation' },
-  'personal-injury': { mode: 'calcom', eventTypeId: 2, slug: '30min' },
-  'ssdi':            { mode: 'calcom', eventTypeId: 2, slug: '30min' },
-  'privacy':         { mode: 'calcom', eventTypeId: 2, slug: '30min' },
-  'family':          { mode: 'external', url: 'https://family.louislawgroup.com/' },
+  'property':          { mode: 'calcom', eventTypeId: 4, slug: 'property-insurance-claim-consultation' },
+  'contractor':        { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
+  'tpl':               { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
+  'third-party':       { mode: 'calcom', eventTypeId: 8, slug: 'third-party-liability-consultation' },
+  'warranty':          { mode: 'calcom', eventTypeId: 7, slug: 'warranty-claim-consultation' },
+  'contract-dispute':  { mode: 'calcom', eventTypeId: 9, slug: 'contract-dispute-consultation' },
+  'eviction':          { mode: 'calcom', eventTypeId: 10, slug: 'eviction-consultation' },
+  'personal-injury':   { mode: 'calcom', eventTypeId: 2, slug: '30min' },
+  'ssdi':              { mode: 'calcom', eventTypeId: 2, slug: '30min' },
+  'privacy':           { mode: 'calcom', eventTypeId: 2, slug: '30min' },
+  'family':            { mode: 'external', url: 'https://family.louislawgroup.com/' },
 };
 // Unknown/blank area → generic consult (event 2), never silently into a property claim.
 const getBookingConfig = (area) => BOOKING_CONFIG[area] || { mode: 'calcom', eventTypeId: 2, slug: '30min' };
@@ -115,6 +118,10 @@ function getContextFromUrl(pathname) {
     // contractor check MUST come before water/flood to handle compound slugs like sue-contractor-for-water-damage
     if (/contractor[-_]?damage|contractor[-_]?scam|contractor[-_]?fraud|roto[-_]?rooter|sue[-_]?contractor|contractor[-_]?negligence|suing[-_]?hvac|suing[-_]?plumb|suing[-_]?roof|suing[-_]?electric|suing[-_]?contractor|contractor[-_]?claims|plumb(ing)?[-_]company|hvac[-_]company|roofing[-_]company/.test(slug)) {
       opener = "Contractor mess up your property? That's on their liability insurance, not yours. What did they do — and are they taking responsibility?";
+    } else if (/evict/.test(slug)) {
+      opener = "Need to remove a tenant? We handle Florida evictions for landlords. What's going on — non-payment, a lease violation, or a tenant who won't leave?";
+    } else if (/contract[-_]?dispute|breach[-_]?of[-_]?contract/.test(slug)) {
+      opener = "Contract dispute? If someone broke an agreement with you, we can help you enforce it. What happened?";
     } else if (/qualify/.test(slug) && !/ssdi|disability|social[-_]?security/.test(slug)) {
       opener = "Hey! I see you're checking if you qualify. Need a hand with anything? I'm right here.";
     } else if (isPrivacyTort) {

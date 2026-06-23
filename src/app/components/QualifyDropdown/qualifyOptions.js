@@ -44,6 +44,13 @@ export const QUALIFY_OPTIONS_EN = [
     href: "/contract-disputes/qualify",
     icon: "FileText",
   },
+  {
+    key: "eviction",
+    label: "Eviction (Landlords)",
+    desc: "Florida landlords: evict for non-payment, lease violation, or holdover",
+    href: "/evictions/qualify",
+    icon: "KeyRound",
+  },
 ];
 
 // Spanish-language qualifiers that currently exist (property + disability).

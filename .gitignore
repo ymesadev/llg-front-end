@@ -140,6 +140,10 @@ public/*
 !src/app/contract-disputes/
 !src/app/contract-disputes/**
 
+# allow evictions hub + qualifier (landlord-only) + booking
+!src/app/evictions/
+!src/app/evictions/**
+
 # allow qualify-intake API route
 !src/app/api/qualify-intake/
 !src/app/api/qualify-intake/**

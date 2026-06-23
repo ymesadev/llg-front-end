@@ -114,6 +114,12 @@ export default function Navbar() {
               URL: "/contract-disputes/qualify",
               external: false,
             },
+            {
+              id: "evictions",
+              label: "Evictions (Landlords)",
+              URL: "/evictions",
+              external: false,
+            },
           ],
         };
         if (!sortedNav.some((link) => link.label?.toLowerCase() === "contract dispute")) {

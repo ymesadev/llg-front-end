@@ -3,11 +3,11 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Hammer, Accessibility, Car, ShieldCheck, FileText, ChevronDown } from "lucide-react";
+import { Home, Hammer, Accessibility, Car, ShieldCheck, FileText, KeyRound, ChevronDown } from "lucide-react";
 import { QUALIFY_OPTIONS_EN, QUALIFY_OPTIONS_ES } from "./qualifyOptions";
 import styles from "./QualifyDropdown.module.css";
 
-const ICONS = { Home, Hammer, Accessibility, Car, ShieldCheck, FileText };
+const ICONS = { Home, Hammer, Accessibility, Car, ShieldCheck, FileText, KeyRound };
 
 /**
  * Generic "See If You Qualify" control that asks the client which issue they're
