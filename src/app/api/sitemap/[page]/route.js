@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic';
 export const maxDuration = 60;
 
-import { collectUrlsRange, toUrlsetXml, getEndpointCounts, SITE } from '../../../sitemap.xml/chunked-helpers';
+import { collectUrlsRange, toUrlsetXml, getTotalPages, SITE } from '../../../sitemap.xml/chunked-helpers';
 
 const PAGE_SIZE = Number(process.env.SITEMAP_PAGE_SIZE || 2000);
 
@@ -12,10 +12,9 @@ export async function GET(request, { params }) {
       return new Response('Not Found', { status: 404 });
     }
 
-    // Calculate total to validate page number
-    const counts = await getEndpointCounts();
-    const total = counts.reduce((s, c) => s + (Number(c.count) || 0), 0) + 1; // +1 for root
-    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    // Validate page number against the same cheap, cached count the index uses
+    // (keeps index/chunk page counts consistent without a second full-list fetch).
+    const totalPages = await getTotalPages(PAGE_SIZE);
 
     if (pageNum > totalPages) {
       return new Response('Not Found', { status: 404 });

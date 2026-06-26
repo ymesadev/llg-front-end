@@ -1,7 +1,8 @@
 // src/app/sitemap.xml/route.js
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // headroom for the rare cold-count fallback (normal path is ~1-2s)
 
-import { SITE, getEndpointCounts } from './chunked-helpers';
+import { SITE, getTotalPages } from './chunked-helpers';
 
 const PAGE_SIZE = Number(process.env.SITEMAP_PAGE_SIZE || 2000);
 
@@ -15,9 +16,7 @@ function toIndexXml(locEntries) {
 
 export async function GET() {
   try {
-    const counts = await getEndpointCounts();
-    const total = counts.reduce((s, c) => s + (Number(c.count) || 0), 0) + 1;
-    const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const totalPages = await getTotalPages(PAGE_SIZE);
 
     const indexEntries = [];
     for (let i = 1; i <= totalPages; i++) {

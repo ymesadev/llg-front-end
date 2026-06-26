@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { unstable_cache } from 'next/cache';
 
 export const SITE  = 'https://www.louislawgroup.com';
 const STRAPI = (process.env.NEXT_PUBLIC_STRAPI_API_URL || process.env.STRAPI_URL || 'https://login.louislawgroup.com').replace(/\/+$/,'');
@@ -258,6 +259,49 @@ export async function getEndpointCounts() {
   // Return a single synthetic count based on the filtered list
   const urls = await getFilteredUrls();
   return [{ endpoint: 'all', count: urls.length, fields: [], prefix: '' }];
+}
+
+// --- Cheap total count for the sitemap INDEX (no full-list fetch) -----------
+// The index route only needs a PAGE COUNT. Previously it called getEndpointCounts(),
+// which fetched every published URL (~40k) just to count them — ~21s of work that
+// blew the index route's default timeout and returned 504. Instead, sum Strapi's
+// withCount totals (one tiny pageSize=1 request per collection) + discovered static
+// pages + root. Throws if the dominant `articles` count is missing so the caller can
+// fall back to the exact (slow) count rather than silently under-serving the sitemap.
+export async function getRawTotal() {
+  const counts = {};
+  await Promise.all(MAP.map(async ({ endpoint }) => {
+    const r = await fetchPage(endpoint, 1, 1); // fetchPage throws on !res.ok
+    counts[endpoint] = Number(r?.meta?.pagination?.total || 0);
+  }));
+  if (!counts.articles) {
+    throw new Error('sitemap getRawTotal: articles total is 0 (suspect a failed count, not an empty site)');
+  }
+  const collectionTotal = Object.values(counts).reduce((s, n) => s + n, 0);
+  const staticTotal = getStaticPages().length + 1; // +1 for root
+  return collectionTotal + staticTotal;
+}
+
+// 1h Data Cache (a single integer — far under the 2MB entry limit), bustable via the
+// existing `sitemap` revalidate tag (see src/app/api/revalidate/route.js).
+export const getRawTotalCached = unstable_cache(
+  getRawTotal,
+  ['sitemap-raw-total-v1'],
+  { revalidate: 3600, tags: ['sitemap'] }
+);
+
+// Total page count for the index/chunk routes: fast path via getRawTotalCached,
+// falling back to the exact filtered-list count if the cheap count is unavailable.
+export async function getTotalPages(pageSize) {
+  let total;
+  try {
+    total = await getRawTotalCached();
+  } catch (e) {
+    console.error('[sitemap] cheap count failed, falling back to full count:', e?.message || e);
+    const counts = await getEndpointCounts();
+    total = counts.reduce((s, c) => s + (Number(c.count) || 0), 0) + 1;
+  }
+  return Math.max(1, Math.ceil(total / pageSize));
 }
 
 // collect urls for a flattened range [start, start+limit)
