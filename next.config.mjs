@@ -356,6 +356,10 @@ const nextConfig = {
       { source: '/team/kellei-johnson', destination: '/team', permanent: true },
       { source: '/monica-abay', destination: '/team', permanent: true },
       { source: '/team/monica-abay', destination: '/team', permanent: true },
+      { source: '/yonel-mesa', destination: '/team', permanent: true },
+      { source: '/team/yonel-mesa', destination: '/team', permanent: true },
+      { source: '/brett-conger-esq', destination: '/team', permanent: true },
+      { source: '/team/brett-conger-esq', destination: '/team', permanent: true },
 
       // ── AHS consolidation (2,568 thin city pages → 1 hub) ──
       // Redirects all AHS article variants to the privacy torts landing page.

@@ -18,12 +18,10 @@ const teamMembers = [
   { name: "Melissa Romero, Esq", photo: "/images/Melissa-Romero-Esq.jpg", description: "West Palm Beach, FL", link: "/melissa-romero-esq" },
   { name: "Magdaline Mintz, Esq", photo: "/images/Magdaline-Mintz-Esq-LLG.jpg", description: "Atlanta, GA" },
 
-  { name: "Brett Conger, Esq", photo: "/images/brett-conger.jpg", description: "Miami, Fl", link:"/brett-conger-esq" },
   { name: "Stephanie Corbin, Esq", photo: "/images/stephanie-corbin.jpg", description: "Miami, Fl", link:"/stephanie-corbin-esq" },
   { name: "Marie Fabre", photo: "/images/marie-fabre.jpg", description: "Miami, FL",link: "/marie-fabre" },
   { name: "Olena Perez", photo: "/images/olena-perez.jpg", description: "Tallahassee, FL", link: "/olena-perez" },
   { name: "Matthew Mobley", photo: "/images/matthew-mobley.jpg", description: "Miami, FL", link: "/matthew-mobley"},
-  { name: "Yonel Mesa", photo: "/images/yonel-mesa.jpg", description: "Miami, FL", link: "/yonel-mesa" },
   { name: "Marie Augustin", photo: "/images/marie-augustine.jpg", description: "Miami, FL", link: "/marie-augustin" },
   { name: "Diana “Dee” Vergara", photo: "/images/dee-vergara.jpg", description: "Winter Haven, FL",link: "/diana-vergara" },
    
