@@ -102,7 +102,9 @@ export default function RootLayout({ children }) {
             Behavior+timing only — never field values. Browser POSTs to
             same-origin /collect. */}
         <Script src="/scripts/llg-vi.js" strategy="afterInteractive" />
-        <Script src="/scripts/llg-vi-consent.js" strategy="afterInteractive" />
+        {/* llg-vi-consent.js banner removed per Pierre 2026-06-30 — the bottom
+            first-party-analytics consent notice is gone; VI behavioral emission
+            stays fail-closed dark since llg_consent is never set to "accept". */}
       </body>
     </html>
   );
