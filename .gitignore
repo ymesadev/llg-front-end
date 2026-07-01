@@ -67,6 +67,8 @@ public/*
 !src/app/abogados-florida/**
 !src/app/faq/
 !src/app/faq/**
+!src/app/news/
+!src/app/news/**
 
 # allow layout/globals/components perf fixes
 !src/app/layout.js

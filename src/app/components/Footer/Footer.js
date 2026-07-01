@@ -181,6 +181,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li className={styles.navItem}>
+                <Link href="/news" className={styles.navLink}>
+                  News
+                </Link>
+              </li>
+              <li className={styles.navItem}>
                 <Link href="/resources" className={styles.navLink}>
                   Blog / Resources
                 </Link>
