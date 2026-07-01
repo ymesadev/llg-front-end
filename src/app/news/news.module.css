@@ -1,158 +1,217 @@
 .page {
-  padding: 56px 0 96px;
+  padding: 40px 0 90px;
 }
 
-/* Masthead */
-.masthead {
+/* ---- top bar ---- */
+.topbar {
   display: flex;
+  align-items: baseline;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: 32px;
-  padding-bottom: 20px;
+  gap: 20px;
   border-bottom: 3px solid #1a2b49;
-  margin-bottom: 40px;
+  padding-bottom: 14px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
 }
-.kicker {
-  display: block;
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
+.brandRow {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+}
+.brandTag {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #c9a84c;
-  font-weight: 700;
-  margin-bottom: 6px;
+  font-weight: 800;
 }
 .title {
-  font-size: 3rem;
+  font-size: 2.4rem;
   line-height: 1;
   margin: 0;
   color: #1a2b49;
   letter-spacing: -0.02em;
+  font-weight: 800;
 }
 .tagline {
-  max-width: 430px;
-  font-size: 0.98rem;
-  line-height: 1.5;
-  color: #3a4a6a;
-  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7a99;
 }
 
-/* Lead story */
-.lead {
-  display: block;
-  text-decoration: none;
+/* ---- hero + right rail ---- */
+.top {
+  display: grid;
+  grid-template-columns: 1.9fr 1fr;
+  gap: 28px;
   margin-bottom: 44px;
-  border: 1px solid #e0e4ef;
+}
+.topSolo {
+  display: block;
+  margin-bottom: 44px;
+}
+
+.hero {
+  position: relative;
+  display: block;
   border-radius: 14px;
   overflow: hidden;
-  background: #fff;
-  transition: box-shadow 0.2s, transform 0.2s;
+  text-decoration: none;
+  min-height: 460px;
+  background: #1a2b49;
 }
-.lead:hover {
-  box-shadow: 0 14px 40px rgba(26, 43, 73, 0.12);
-  transform: translateY(-2px);
-}
-.leadImg {
+.heroImg {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 380px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
-.leadBody {
-  padding: 36px;
-  border-left: 5px solid #c9a84c;
+.heroOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 30px 32px 28px;
+  background: linear-gradient(to top, rgba(11, 22, 40, 0.94), rgba(11, 22, 40, 0.5) 55%, transparent);
+  color: #fff;
 }
-.leadSection {
+.heroSection {
   display: inline-block;
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #c9a84c;
-  font-weight: 700;
-  margin-bottom: 14px;
-}
-.leadTitle {
-  font-size: 2.1rem;
-  line-height: 1.15;
+  background: #c9a84c;
   color: #1a2b49;
-  margin: 0 0 16px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.heroTitle {
+  font-size: 2rem;
+  line-height: 1.15;
+  margin: 0 0 10px;
+  color: #fff;
+  font-weight: 800;
   letter-spacing: -0.01em;
 }
-.leadDek {
-  font-size: 1.12rem;
-  line-height: 1.6;
-  color: #3a4a6a;
-  margin: 0 0 18px;
-  max-width: 760px;
-}
-.meta {
-  font-size: 0.85rem;
-  letter-spacing: 0.02em;
-  color: #6b7a99;
-  font-weight: 600;
+.heroDek {
+  font-size: 1.02rem;
+  line-height: 1.5;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 660px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-/* Grid */
+.rail {
+  display: flex;
+  flex-direction: column;
+}
+.railItem {
+  display: flex;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e0e4ef;
+  text-decoration: none;
+}
+.railItem:first-child {
+  padding-top: 0;
+}
+.railThumb {
+  width: 108px;
+  height: 74px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.railBody {
+  display: flex;
+  flex-direction: column;
+}
+.railSection {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c9a84c;
+  margin-bottom: 6px;
+}
+.railTitle {
+  font-size: 1.02rem;
+  line-height: 1.25;
+  color: #1a2b49;
+  margin: 0;
+  font-weight: 700;
+}
+
+/* ---- section divider ---- */
+.sectionHead {
+  border-top: 2px solid #1a2b49;
+  margin: 8px 0 22px;
+}
+.sectionHead span {
+  display: inline-block;
+  background: #1a2b49;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+}
+
+/* ---- card grid ---- */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 1px;
-  background: #e0e4ef;
-  border: 1px solid #e0e4ef;
-  border-radius: 14px;
-  overflow: hidden;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
 }
 .card {
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  background: #fff;
-  transition: background 0.2s;
-}
-.card:hover {
-  background: #f8f9fb;
 }
 .cardImg {
   width: 100%;
-  height: 180px;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
-  display: block;
-}
-.cardBody {
-  padding: 24px 22px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-.cardSection {
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #c9a84c;
-  font-weight: 700;
+  border-radius: 10px;
   margin-bottom: 12px;
 }
+.cardBody {
+  display: flex;
+  flex-direction: column;
+}
+.cardSection {
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c9a84c;
+  margin-bottom: 7px;
+}
 .cardTitle {
-  font-size: 1.22rem;
+  font-size: 1.08rem;
   line-height: 1.3;
   color: #1a2b49;
-  margin: 0 0 12px;
+  margin: 0 0 8px;
   font-weight: 700;
 }
-.cardDek {
-  font-size: 0.96rem;
-  line-height: 1.55;
-  color: #5a6a86;
-  margin: 0 0 16px;
-  flex: 1;
-}
 .cardDate {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #8a94a6;
-  font-weight: 600;
+}
+.card:hover .cardTitle,
+.railItem:hover .railTitle {
+  color: #c9a84c;
 }
 
-/* Empty state */
+/* ---- empty state ---- */
 .empty {
   text-align: center;
   padding: 80px 20px;
@@ -160,26 +219,35 @@
   border-radius: 14px;
 }
 .empty h2 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   color: #1a2b49;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
 }
 .empty p {
   color: #6b7a99;
   margin: 0;
 }
 
-@media (max-width: 640px) {
-  .title {
-    font-size: 2.2rem;
+@media (max-width: 900px) {
+  .top {
+    grid-template-columns: 1fr;
   }
-  .leadTitle {
+  .hero {
+    min-height: 320px;
+  }
+  .heroTitle {
     font-size: 1.5rem;
   }
-  .lead {
-    padding: 24px;
+}
+@media (max-width: 560px) {
+  .title {
+    font-size: 1.9rem;
   }
-  .grid {
-    grid-template-columns: 1fr;
+  .heroTitle {
+    font-size: 1.3rem;
+  }
+  .railThumb {
+    width: 92px;
+    height: 64px;
   }
 }
