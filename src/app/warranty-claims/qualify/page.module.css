@@ -80,6 +80,40 @@
   margin-bottom: 1.25rem;
 }
 
+/* No-fee badge — headline contingency-fee reassurance */
+.noFeeBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 0.75rem;
+  padding: 0.5rem 1.1rem;
+  background: #e8f5e9;
+  border: 1px solid #66bb6a;
+  border-radius: 999px;
+  font-family: "Work Sans", sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: #1b5e20;
+  text-align: center;
+}
+.noFeeCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
 /* Trust bar */
 .trustBar {
   display: flex;

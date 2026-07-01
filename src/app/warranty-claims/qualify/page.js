@@ -484,13 +484,16 @@ export default function WarrantyQualify() {
           )}
 
           {cur <= TOTAL_STEPS && (
-            <div className={styles.trustBar}>
-              <span>Free case review</span>
-              <span className={styles.trustDot} />
-              <span>No fees unless we win</span>
-              <span className={styles.trustDot} />
-              <span>Florida warranty &amp; service contracts</span>
-            </div>
+            <>
+              <div className={styles.noFeeBadge}>
+                <span className={styles.noFeeCheck}>✓</span> No fees unless we win
+              </div>
+              <div className={styles.trustBar}>
+                <span>Free case review</span>
+                <span className={styles.trustDot} />
+                <span>Florida warranty &amp; service contracts</span>
+              </div>
+            </>
           )}
 
           {/* Step 0: Warranty type */}
