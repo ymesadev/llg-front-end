@@ -21,7 +21,14 @@ export const viewport = {
 export const metadata = {
   title: "Louis Law Group | Florida Property Damage & SSDI Attorneys",
   description: "Louis Law Group helps Florida residents fight denied insurance claims and win SSDI/SSI benefits. Free consultation — no fees unless we win.",
-  alternates: { canonical: "https://www.louislawgroup.com" },
+  alternates: {
+    canonical: "https://www.louislawgroup.com",
+    types: {
+      "application/rss+xml": [
+        { url: "https://www.louislawgroup.com/feed.xml", title: "Louis Law Group — Florida Legal News" },
+      ],
+    },
+  },
 };
 
 const legalServiceSchema = {
