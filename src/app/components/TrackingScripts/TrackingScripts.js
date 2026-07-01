@@ -97,6 +97,7 @@ export default function TrackingScripts() {
               s.parentNode.insertBefore(t,s)
             }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
             fbq("init", "909380096123158");
+            fbq("init", "2000097270194523");
             fbq("track", "PageView");
           `,
         }}
@@ -136,6 +137,16 @@ export default function TrackingScripts() {
           width="1"
           style={{ display: "none" }}
           src="https://www.facebook.com/tr?id=909380096123158&ev=PageView&noscript=1"
+        />
+      </noscript>
+
+      {/* Facebook Pixel NoScript — LLG business pixel */}
+      <noscript>
+        <img
+          height="1"
+          width="1"
+          style={{ display: "none" }}
+          src="https://www.facebook.com/tr?id=2000097270194523&ev=PageView&noscript=1"
         />
       </noscript>
 
