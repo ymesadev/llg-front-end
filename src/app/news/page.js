@@ -87,12 +87,18 @@ export default async function NewsPage() {
             <>
               {lead && (
                 <Link href={lead.href} className={styles.lead}>
-                  <span className={styles.leadSection}>{lead.section}</span>
-                  <h2 className={styles.leadTitle}>{lead.title}</h2>
-                  {lead.dek && <p className={styles.leadDek}>{lead.dek}</p>}
-                  <span className={styles.meta}>
-                    {fmtDate(lead.published)} · Read the full story →
-                  </span>
+                  {lead.image && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={lead.image} alt="" className={styles.leadImg} loading="eager" />
+                  )}
+                  <div className={styles.leadBody}>
+                    <span className={styles.leadSection}>{lead.section}</span>
+                    <h2 className={styles.leadTitle}>{lead.title}</h2>
+                    {lead.dek && <p className={styles.leadDek}>{lead.dek}</p>}
+                    <span className={styles.meta}>
+                      {fmtDate(lead.published)} · Read the full story →
+                    </span>
+                  </div>
                 </Link>
               )}
 
@@ -100,10 +106,16 @@ export default async function NewsPage() {
                 <div className={styles.grid}>
                   {rest.map((a) => (
                     <Link key={a.slug} href={a.href} className={styles.card}>
-                      <span className={styles.cardSection}>{a.section}</span>
-                      <h3 className={styles.cardTitle}>{a.title}</h3>
-                      {a.dek && <p className={styles.cardDek}>{a.dek}</p>}
-                      <span className={styles.cardDate}>{fmtDate(a.published)}</span>
+                      {a.image && (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={a.image} alt="" className={styles.cardImg} loading="lazy" />
+                      )}
+                      <div className={styles.cardBody}>
+                        <span className={styles.cardSection}>{a.section}</span>
+                        <h3 className={styles.cardTitle}>{a.title}</h3>
+                        {a.dek && <p className={styles.cardDek}>{a.dek}</p>}
+                        <span className={styles.cardDate}>{fmtDate(a.published)}</span>
+                      </div>
                     </Link>
                   ))}
                 </div>
