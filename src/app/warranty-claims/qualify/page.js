@@ -53,14 +53,12 @@ const DISPUTE_STATUS_LABELS = [
   "Not sure",
 ];
 
-// Flow: type → company (HARD GATE) → dispute status → florida → contact → booking
+// Flow: type → company (HARD GATE) → dispute status → florida → contact → retainer
 const TOTAL_STEPS = 5;
 const STEP_NAMES = ["warranty_type", "warranty_company", "dispute_status", "florida_check", "contact_info", "book_consultation"];
 
-// Cal.com embed config — warranty-specific event type, routed to Pierre's calendar
-const CAL_ORIGIN = "https://bookings.louislawgroup.com";
-const CAL_LINK = "pierre-louislawgroup.com/warranty-claim-consultation";
-const CAL_NAMESPACE = "warranty-consultation";
+// After passing the qualifier, send the client straight to the retainer (not a booking link).
+const RETAINER_URL = "https://app.louislawgroup.com/warranty-retainer";
 
 export default function WarrantyQualify() {
   const [cur, setCur] = useState(0);
@@ -369,16 +367,12 @@ export default function WarrantyQualify() {
     setTimeout(next, 200);
   };
 
-  // Mount cal.com inline embed when user reaches booking step
+  // Fire tracking when the user reaches the final (passed-qualifier) step.
   useEffect(() => {
     if (cur !== TOTAL_STEPS || bookingEmbedded) return;
 
     const a0 = answersRef.current;
     const companyName = companyLabel(a0.company);
-    const typeIdx = a0.warranty_type_idx;
-    const warrantyType = (typeIdx !== undefined ? WARRANTY_TYPE_LABELS[typeIdx] : "") || "";
-    const dsIdx = a0.dispute_status_idx;
-    const disputeStatus = (dsIdx !== undefined ? DISPUTE_STATUS_LABELS[dsIdx] : "") || "";
 
     trackEvent("qualify_booking_shown", { case_type: "warranty", warranty_company: companyName });
     if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyBookingShown", { warranty_company: companyName });
@@ -388,79 +382,29 @@ export default function WarrantyQualify() {
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: "qualify_booking_shown", warranty_company: companyName });
 
-    (function (C, A, L) {
-      let p = function (a, ar) { a.q.push(ar); };
-      let d = C.document;
-      C.Cal = C.Cal || function () {
-        let cal = C.Cal;
-        let ar = arguments;
-        if (!cal.loaded) {
-          cal.ns = {};
-          cal.q = cal.q || [];
-          d.head.appendChild(d.createElement("script")).src = A;
-          cal.loaded = true;
-        }
-        if (ar[0] === L) {
-          const api = function () { p(api, arguments); };
-          const namespace = ar[1];
-          api.q = api.q || [];
-          if (typeof namespace === "string") {
-            cal.ns[namespace] = cal.ns[namespace] || api;
-            p(cal.ns[namespace], ar);
-            p(cal, ["initNamespace", namespace]);
-          } else p(cal, ar);
-          return;
-        }
-        p(cal, ar);
-      };
-    })(window, `${CAL_ORIGIN}/embed/embed.js`, "init");
-
-    const mount = () => {
-      if (!window.Cal) { setTimeout(mount, 120); return; }
-      window.Cal("init", CAL_NAMESPACE, { origin: CAL_ORIGIN });
-      const a = answersRef.current;
-      const prefill = new URLSearchParams();
-      if (a.name) prefill.set("name", a.name);
-      if (a.email) prefill.set("email", a.email);
-      if (a.phone) prefill.set("smsReminderNumber", a.phone);
-      if (a.phone) prefill.set("callback-phone", a.phone);
-      if (companyName) prefill.set("warranty-company", companyName);
-      if (warrantyType) prefill.set("warranty-type", warrantyType);
-      if (disputeStatus) prefill.set("dispute-status", disputeStatus);
-      const storedGclid = getStoredGclid();
-      if (storedGclid) prefill.set("gclid", storedGclid);
-      const qs = prefill.toString();
-      const calLinkWithPrefill = qs ? `${CAL_LINK}?${qs}` : CAL_LINK;
-      window.Cal.ns[CAL_NAMESPACE]("inline", {
-        elementOrSelector: "#llg-cal-inline",
-        calLink: calLinkWithPrefill,
-        config: { theme: "light", layout: "month_view" },
-      });
-      window.Cal.ns[CAL_NAMESPACE]("ui", {
-        hideEventTypeDetails: false,
-        theme: "light",
-        cssVarsPerTheme: {
-          light: {
-            "cal-brand": "#1a2b49",
-            "cal-brand-emphasis": "#ffb800",
-            "cal-text-emphasis": "#1a2b49",
-          },
-        },
-      });
-      window.Cal.ns[CAL_NAMESPACE]("on", {
-        action: "bookingSuccessful",
-        callback: () => {
-          completedRef.current = true; // booked -> suppress any drop-off beacon
-          trackEvent("qualify_submitted", { case_type: "warranty", via: "cal_booking" });
-          trackConversion("warranty_qualify", { case_type: "warranty", via: "cal_booking" });
-          // Warranty-specific Google Ads conversion — "Consult Booked" (primary optimization signal)
-          if (typeof gtag !== "undefined") gtag("event", "conversion", { send_to: "AW-658866049/1DHHCL72tcEcEIH_lboC", value: 200.0, currency: "USD" });
-        },
-      });
-    };
-    mount();
+    // Reaching this step = passed the qualifier. Instead of a booking embed we now
+    // present the retainer link, so record the pass as the terminal qualifier event.
+    completedRef.current = true; // reached the retainer offer -> suppress drop-off beacon
+    trackEvent("qualify_submitted", { case_type: "warranty", via: "retainer" });
+    trackConversion("warranty_qualify", { case_type: "warranty", via: "retainer" });
     setBookingEmbedded(true);
   }, [cur, bookingEmbedded]);
+
+  // Build the retainer URL, prefilling contact + warranty context so the retainer app can use it.
+  const retainerHref = (() => {
+    const a = answers || {};
+    const p = new URLSearchParams();
+    if (a.name) p.set("name", a.name);
+    if (a.email) p.set("email", a.email);
+    if (a.phone) p.set("phone", a.phone);
+    if (a.company) p.set("warranty-company", companyLabel(a.company));
+    const typeIdx = a.warranty_type_idx;
+    if (typeIdx !== undefined && WARRANTY_TYPE_LABELS[typeIdx]) p.set("warranty-type", WARRANTY_TYPE_LABELS[typeIdx]);
+    const storedGclid = getStoredGclid();
+    if (storedGclid) p.set("gclid", storedGclid);
+    const qs = p.toString();
+    return qs ? `${RETAINER_URL}?${qs}` : RETAINER_URL;
+  })();
 
   const restart = () => {
     setAnswers({}); setResult(null); setCur(0); setCompanyError("");
@@ -665,7 +609,7 @@ export default function WarrantyQualify() {
                 )}
                 <button type="submit" disabled={contactSubmitting}
                   style={{ padding: "14px 20px", fontSize: "16px", fontWeight: 600, color: "#1a2b49", background: contactSubmitting ? "#e8c97a" : "#ffb800", border: "none", borderRadius: "8px", cursor: contactSubmitting ? "wait" : "pointer", marginTop: "4px", transition: "background 0.2s" }}>
-                  {contactSubmitting ? "Saving…" : "Continue to scheduling →"}
+                  {contactSubmitting ? "Saving…" : "Continue →"}
                 </button>
                 <div style={{ fontSize: "12px", color: "#667085", textAlign: "center", marginTop: "4px" }}>
                   🔒 Confidential — protected by attorney-client privilege.
@@ -674,16 +618,20 @@ export default function WarrantyQualify() {
             </div>
           )}
 
-          {/* Step 5: BOOKING (final step — cal.com inline embed) */}
+          {/* Step 5: RETAINER (final step — client passed the qualifier) */}
           {cur === TOTAL_STEPS && (
             <div className={styles.step}>
-              <div className={styles.stepLabel}>Final Step — Book Your Free Consultation</div>
-              <div className={styles.question}>You qualify. Pick a time that works for you.</div>
+              <div className={styles.stepLabel}>You Qualify — Final Step</div>
+              <div className={styles.question}>Congratulations, your claim qualifies. Let&rsquo;s get you started.</div>
               <div className={styles.hint}>
-                Based on your answers, your claim appears eligible for a free review
+                Based on your answers, your claim appears eligible for representation
                 {answers.company ? ` (provider: ${companyLabel(answers.company)})` : ""}.
+                Continue to review and sign your retainer so we can begin work on your case.
               </div>
-              <div id="llg-cal-inline" className={styles.calEmbed} />
+              <a href={retainerHref}
+                style={{ display: "block", textAlign: "center", padding: "16px 20px", fontSize: "17px", fontWeight: 600, color: "#1a2b49", background: "#ffb800", border: "none", borderRadius: "8px", cursor: "pointer", marginTop: "18px", textDecoration: "none" }}>
+                Continue to your retainer →
+              </a>
               <div className={styles.hint} style={{ marginTop: "10px", fontSize: "12px" }}>
                 🔒 Your information is confidential and protected by attorney-client privilege.
               </div>
