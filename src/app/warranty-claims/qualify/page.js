@@ -55,7 +55,7 @@ const DISPUTE_STATUS_LABELS = [
 
 // Flow: type → company (HARD GATE) → dispute status → florida → contact → retainer
 const TOTAL_STEPS = 5;
-const STEP_NAMES = ["warranty_type", "warranty_company", "dispute_status", "florida_check", "contact_info", "book_consultation"];
+const STEP_NAMES = ["warranty_type", "warranty_company", "dispute_status", "florida_check", "contact_info", "retainer_offer"];
 
 // After passing the qualifier, send the client straight to the retainer (not a booking link).
 const RETAINER_URL = "https://app.louislawgroup.com/warranty-retainer";
@@ -139,7 +139,7 @@ export default function WarrantyQualify() {
     return () => window.removeEventListener("beforeunload", handleExit);
   }, []);
 
-  // ── Drop-off beacon ── notify Pierre the instant a client leaves un-booked.
+  // ── Drop-off beacon ── notify Pierre the instant a qualified client leaves without signing the retainer.
   const contactRef = useRef(contact);
   const completedRef = useRef(false);
   useEffect(() => { contactRef.current = contact; }, [contact]);
@@ -267,6 +267,7 @@ export default function WarrantyQualify() {
 
   const handleContactSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
+    if (contactSubmitting) return; // guard against double-submit (rapid click / Enter)
     setContactError("");
 
     const name = contact.name.trim();
@@ -287,7 +288,7 @@ export default function WarrantyQualify() {
 
     setContactSubmitting(true);
 
-    // Persist contact so the booking embed can read them
+    // Persist contact so the retainer URL prefill can read them
     setAnswers((a) => ({ ...a, name, email, phone, propertyAddress }));
 
     trackEvent("qualify_step_answered", {
@@ -383,12 +384,23 @@ export default function WarrantyQualify() {
     window.dataLayer.push({ event: "qualify_booking_shown", warranty_company: companyName });
 
     // Reaching this step = passed the qualifier. Instead of a booking embed we now
-    // present the retainer link, so record the pass as the terminal qualifier event.
-    completedRef.current = true; // reached the retainer offer -> suppress drop-off beacon
+    // present the retainer link. Do NOT mark completed here — a qualified lead who
+    // reaches the offer but leaves without signing should still trigger the drop-off
+    // beacon so Pierre can follow up. completedRef is set only when they click through.
     trackEvent("qualify_submitted", { case_type: "warranty", via: "retainer" });
     trackConversion("warranty_qualify", { case_type: "warranty", via: "retainer" });
     setBookingEmbedded(true);
   }, [cur, bookingEmbedded]);
+
+  // Fired when the client actually clicks through to the retainer (strongest on-page signal).
+  const handleRetainerClick = () => {
+    completedRef.current = true; // proceeding to sign -> not a drop-off
+    trackEvent("qualify_retainer_clicked", { case_type: "warranty", warranty_company: companyLabel(answers.company) });
+    if (typeof fbq !== "undefined") fbq("trackCustom", "QualifyRetainerClicked", { warranty_company: companyLabel(answers.company) });
+    if (typeof gtag !== "undefined") gtag("event", "qualify_retainer_clicked", { event_category: "Qualifier", warranty_company: companyLabel(answers.company) });
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "qualify_retainer_clicked", warranty_company: companyLabel(answers.company) });
+  };
 
   // Build the retainer URL, prefilling contact + warranty context so the retainer app can use it.
   const retainerHref = (() => {
@@ -450,7 +462,7 @@ export default function WarrantyQualify() {
     );
   }
 
-  // ── QUALIFIER STEPS + BOOKING UI ──
+  // ── QUALIFIER STEPS + RETAINER UI ──
   return (
     <div className={styles.wrapper}>
       <Script id="vtag-ai-js" strategy="afterInteractive" src="https://r2.leadsy.ai/tag.js" data-pid="1zt0dyt08LfDX6JhM" data-version="062024" />
@@ -473,7 +485,7 @@ export default function WarrantyQualify() {
 
           {cur <= TOTAL_STEPS && (
             <div className={styles.trustBar}>
-              <span>Free consultation</span>
+              <span>Free case review</span>
               <span className={styles.trustDot} />
               <span>No fees unless we win</span>
               <span className={styles.trustDot} />
@@ -572,29 +584,29 @@ export default function WarrantyQualify() {
             </div>
           )}
 
-          {/* Step 4: Contact info (captures lead before booking) */}
+          {/* Step 4: Contact info (captures lead before the retainer offer) */}
           {cur === 4 && (
             <div className={styles.step}>
               <div className={styles.stepLabel}>Almost done</div>
               <div className={styles.question}>Where can our team reach you?</div>
               <div className={styles.hint}>
-                We&rsquo;ll use this to confirm your consultation and prepare for your call.
+                We&rsquo;ll use this to prepare your retainer and keep you updated on your case.
               </div>
               <form onSubmit={handleContactSubmit} style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "16px" }}>
-                <input type="text" required autoComplete="name" placeholder="Full name"
+                <input type="text" required autoComplete="name" placeholder="Full name" aria-label="Full name" maxLength={100}
                   value={contact.name}
                   onChange={(e) => setContact((c) => ({ ...c, name: e.target.value }))}
                   style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
-                <input type="email" required autoComplete="email" placeholder="Email address"
+                <input type="email" required autoComplete="email" placeholder="Email address" aria-label="Email address" maxLength={254}
                   value={contact.email}
                   onChange={(e) => setContact((c) => ({ ...c, email: e.target.value }))}
                   style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
-                <input type="tel" required autoComplete="tel" placeholder="Phone number"
+                <input type="tel" required autoComplete="tel" placeholder="Phone number" aria-label="Phone number"
                   value={contact.phone}
                   onChange={(e) => setContact((c) => ({ ...c, phone: e.target.value.replace(/[^\d+\-() ]/g, "") }))}
                   maxLength={20}
                   style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
-                <input type="text" autoComplete="street-address" placeholder="Mailing address (optional)"
+                <input type="text" autoComplete="street-address" placeholder="Mailing address (optional)" aria-label="Mailing address (optional)" maxLength={200}
                   value={contact.propertyAddress}
                   onChange={(e) => setContact((c) => ({ ...c, propertyAddress: e.target.value }))}
                   style={{ padding: "12px 14px", fontSize: "16px", border: "1px solid #d0d5dd", borderRadius: "8px", outline: "none", width: "100%", boxSizing: "border-box" }} />
@@ -628,7 +640,7 @@ export default function WarrantyQualify() {
                 {answers.company ? ` (provider: ${companyLabel(answers.company)})` : ""}.
                 Continue to review and sign your retainer so we can begin work on your case.
               </div>
-              <a href={retainerHref}
+              <a href={retainerHref} rel="noopener noreferrer" onClick={handleRetainerClick}
                 style={{ display: "block", textAlign: "center", padding: "16px 20px", fontSize: "17px", fontWeight: 600, color: "#1a2b49", background: "#ffb800", border: "none", borderRadius: "8px", cursor: "pointer", marginTop: "18px", textDecoration: "none" }}>
                 Continue to your retainer →
               </a>
@@ -641,7 +653,7 @@ export default function WarrantyQualify() {
 
         <div className={styles.cardFooter}>
           <button className={styles.backBtn} onClick={back}
-            style={{ visibility: cur > 0 && cur <= TOTAL_STEPS ? "visible" : "hidden" }}>
+            style={{ visibility: cur > 0 && cur < TOTAL_STEPS ? "visible" : "hidden" }}>
             ← Back
           </button>
           <span className={styles.stepCounter}>
