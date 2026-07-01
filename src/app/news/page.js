@@ -33,12 +33,27 @@ function fmtDate(d) {
   }
 }
 
+// The manifest lives in a shared Strapi /uploads bucket, so treat it as untrusted input.
+// Never render an href from the manifest directly: reconstruct a same-origin path from the slug
+// and reject anything that isn't a plain [a-z0-9-_] slug (blocks javascript:/data:/external URLs).
+function safeHref(item) {
+  const slug = String(item?.slug || "").replace(/^\/+/, "");
+  // must start alphanumeric, then only slug-safe chars. No ':' (blocks javascript:/data:/http:),
+  // no '.' (blocks external hosts), no whitespace/control chars. Trailing '-' is fine.
+  if (!/^[a-z0-9][a-z0-9/_-]*$/i.test(slug)) return null;
+  return `/${slug}`;
+}
+
 async function getNews() {
   try {
     const res = await fetch(MANIFEST, { next: { revalidate: 300 } });
     if (!res.ok) return [];
     const j = await res.json();
-    return Array.isArray(j.items) ? j.items : [];
+    const raw = Array.isArray(j.items) ? j.items : [];
+    // attach a validated href and drop any item whose slug isn't a safe same-origin path
+    return raw
+      .map((it) => ({ ...it, href: safeHref(it) }))
+      .filter((it) => it.href);
   } catch {
     return [];
   }
@@ -71,7 +86,7 @@ export default async function NewsPage() {
           ) : (
             <>
               {lead && (
-                <Link href={lead.path} className={styles.lead}>
+                <Link href={lead.href} className={styles.lead}>
                   <span className={styles.leadSection}>{lead.section}</span>
                   <h2 className={styles.leadTitle}>{lead.title}</h2>
                   {lead.dek && <p className={styles.leadDek}>{lead.dek}</p>}
@@ -84,7 +99,7 @@ export default async function NewsPage() {
               {rest.length > 0 && (
                 <div className={styles.grid}>
                   {rest.map((a) => (
-                    <Link key={a.slug} href={a.path} className={styles.card}>
+                    <Link key={a.slug} href={a.href} className={styles.card}>
                       <span className={styles.cardSection}>{a.section}</span>
                       <h3 className={styles.cardTitle}>{a.title}</h3>
                       {a.dek && <p className={styles.cardDek}>{a.dek}</p>}
